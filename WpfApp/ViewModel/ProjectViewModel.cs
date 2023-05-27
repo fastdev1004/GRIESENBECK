@@ -112,10 +112,263 @@ namespace WpfApp.ViewModel
             set;
         }
 
+        public ObservableCollection<Superintendent> Superintendents
+        {
+            get;
+            set;
+        }
+
         public ObservableCollection<ProjectManager> ProjectManagers
         {
             get;
             set;
+        }
+
+        public string _projectName;
+        public string _paymentNote;
+        private DateTime _targetDate;
+        private DateTime _completedDate;
+        public string _jobNo;
+        public Boolean _onHold;
+        public string _address;
+        public string _city;
+        public string _state;
+        public string _zip;
+        public string _origTaxAmt;
+        public string _origProfit;
+        public string _origTotalMatCost;
+        public string _billingDate;
+        public int _selectedCustomerId;
+        public int _selectedEstimatorID;
+        public int _selectedProjectCoordID;
+        public int _selectedArchRepID;
+        public int _selectedCCID;
+        public int _selectedArchitectID;
+        public int _selectedCrewID;
+        public int _selectedMCID;
+        public string ProjectName
+        {
+            get => _projectName;
+            set
+            {
+                if (value == _projectName) return;
+                _projectName = value;
+                OnPropertyChanged();
+            }
+        }
+        public string PaymentNote
+        {
+            get => _paymentNote;
+            set
+            {
+                if (value == _paymentNote) return;
+                _paymentNote = value;
+                OnPropertyChanged();
+            }
+        }
+        public DateTime TargetDate
+        {
+            get { return _targetDate; }
+            set
+            {
+                if (_targetDate != value)
+                {
+                    _targetDate = value;
+                    OnPropertyChanged(nameof(TargetDate));
+                }
+            }
+        }
+        public DateTime CompletedDate
+        {
+            get { return _completedDate; }
+            set
+            {
+                if (_completedDate != value)
+                {
+                    _completedDate = value;
+                    OnPropertyChanged(nameof(CompletedDate));
+                }
+            }
+        }
+        public string JobNo
+        {
+            get => _jobNo;
+            set
+            {
+                if (value == _jobNo) return;
+                _jobNo = value;
+                OnPropertyChanged();
+            }
+        }
+        public Boolean OnHold
+        {
+            get => _onHold;
+            set
+            {
+                if (value == _onHold) return;
+                _onHold = value;
+                OnPropertyChanged();
+            }
+        }
+        public String Address
+        {
+            get => _address;
+            set
+            {
+                if (value == _address) return;
+                _address = value;
+                OnPropertyChanged();
+            }
+        }
+        public String City
+        {
+            get => _city;
+            set
+            {
+                if (value == _city) return;
+                _city = value;
+                OnPropertyChanged();
+            }
+        }
+        public String State
+        {
+            get => _state;
+            set
+            {
+                if (value == _state) return;
+                _state = value;
+                OnPropertyChanged();
+            }
+        }
+        public string Zip
+        {
+            get => _zip;
+            set
+            {
+                if (value == _zip) return;
+                _zip = value;
+                OnPropertyChanged();
+            }
+        }
+        public string OrigTaxAmt
+        {
+            get => _origTaxAmt;
+            set
+            {
+                if (value == _origTaxAmt) return;
+                _origTaxAmt = value;
+                OnPropertyChanged();
+            }
+        }
+        public string OrigProfit
+        {
+            get => _origProfit;
+            set
+            {
+                if (value == _origProfit) return;
+                _origProfit = value;
+                OnPropertyChanged();
+            }
+        }
+        public string OrigTotalMatCost
+        {
+            get => _origTotalMatCost;
+            set
+            {
+                if (value == _origTotalMatCost) return;
+                _origTotalMatCost = value;
+                OnPropertyChanged();
+            }
+        }
+        public string BillingDate
+        {
+            get => _billingDate;
+            set
+            {
+                if (value == _billingDate) return;
+                _billingDate = value;
+                OnPropertyChanged();
+            }
+        }
+        public int SelectedCustomerId
+        {
+            get => _selectedCustomerId;
+            set
+            {
+                if (value == _selectedCustomerId) return;
+                _selectedCustomerId = value;
+                OnPropertyChanged();
+            }
+        }
+        public int SelectedEstimatorID
+        {
+            get => _selectedEstimatorID;
+            set
+            {
+                if (value == _selectedEstimatorID) return;
+                _selectedEstimatorID = value;
+                OnPropertyChanged();
+            }
+        }
+        public int SelectedProjectCoordID
+        {
+            get => _selectedProjectCoordID;
+            set
+            {
+                if (value == _selectedProjectCoordID) return;
+                _selectedProjectCoordID = value;
+                OnPropertyChanged();
+            }
+        }
+        public int SelectedArchRepID
+        {
+            get => _selectedArchRepID;
+            set
+            {
+                if (value == _selectedArchRepID) return;
+                _selectedArchRepID = value;
+                OnPropertyChanged();
+            }
+        }
+        public int SelectedCCID
+        {
+            get => _selectedCCID;
+            set
+            {
+                if (value == _selectedCCID) return;
+                _selectedCCID = value;
+                OnPropertyChanged();
+            }
+        }
+        public int SelectedArchitectID
+        {
+            get => _selectedArchitectID;
+            set
+            {
+                if (value == _selectedArchitectID) return;
+                _selectedArchitectID = value;
+                OnPropertyChanged();
+            }
+        }
+        public int SelectedCrewID
+        {
+            get => _selectedCrewID;
+            set
+            {
+                if (value == _selectedCrewID) return;
+                _selectedCrewID = value;
+                OnPropertyChanged();
+            }
+        }
+        public int SelectedMCID
+        {
+            get => _selectedMCID;
+            set
+            {
+                if (value == _selectedMCID) return;
+                _selectedMCID = value;
+                OnPropertyChanged();
+            }
         }
 
         private void LoadProjects()
@@ -332,6 +585,24 @@ namespace WpfApp.ViewModel
 
             PCs = st_pc;
 
+            // Superintendent
+            sqlquery = "SELECT * FROM tblSuperintendents";
+            cmd = new SqlCommand(sqlquery, con);
+            sda = new SqlDataAdapter(cmd);
+            ds = new DataSet();
+            sda.Fill(ds);
+
+            ObservableCollection<Superintendent> st_supt = new ObservableCollection<Superintendent>();
+            foreach (DataRow row in ds.Tables[0].Rows)
+            {
+                int suptID = int.Parse(row["Sup_ID"].ToString());
+                string suptName = row["Sup_Name"].ToString();
+                string suptCellPhone = row["Sup_CellPhone"].ToString();
+                string suptEmail = row["Sup_Email"].ToString();
+                st_supt.Add(new Superintendent { SupID = suptID, SupName = suptName, SupCellPhone = suptCellPhone, SupEmail = suptEmail});
+            }
+
+            Superintendents = st_supt;
             // ProjectManager
             //sqlquery = "select * from tblProjectManagers";
             //cmd = new SqlCommand(sqlquery, con);
@@ -489,252 +760,7 @@ namespace WpfApp.ViewModel
             con.Close();
         }
 
-        public string _projectName;
-        public string _paymentNote;
-        private DateTime _targetDate;
-        private DateTime _completedDate;
-        public string _jobNo;
-        public Boolean _onHold;
-        public string _address;
-        public string _city;
-        public string _state;
-        public string _zip;
-        public string _origTaxAmt;
-        public string _origProfit;
-        public string _origTotalMatCost;
-        public string _billingDate;
-        public int _selectedCustomerId;
-        public int _selectedEstimatorID;
-        public int _selectedProjectCoordID;
-        public int _selectedArchRepID;
-        public int _selectedCCID;
-        public int _selectedArchitectID;
-        public int _selectedCrewID;
-        public int _selectedMCID;
-        public string ProjectName
-        {
-            get => _projectName;
-            set
-            {
-                if (value == _projectName) return;
-                _projectName = value;
-                OnPropertyChanged();
-            }
-        }
-        public string PaymentNote
-        {
-            get => _paymentNote;
-            set
-            {
-                if (value == _paymentNote) return;
-                _paymentNote = value;
-                OnPropertyChanged();
-            }
-        }
-        public DateTime  TargetDate
-        {
-            get { return _targetDate; }
-            set
-            {
-                if (_targetDate != value)
-                {
-                    _targetDate = value;
-                    OnPropertyChanged(nameof(TargetDate));
-                }
-            }
-        }
-        public DateTime CompletedDate
-        {
-            get { return _completedDate; }
-            set
-            {
-                if (_completedDate != value)
-                {
-                    _completedDate = value;
-                    OnPropertyChanged(nameof(CompletedDate));
-                }
-            }
-        }
-        public string JobNo
-        {
-            get => _jobNo;
-            set
-            {
-                if (value == _jobNo) return;
-                _jobNo = value;
-                OnPropertyChanged();
-            }
-        }
-        public Boolean OnHold
-        {
-            get => _onHold;
-            set
-            {
-                if (value == _onHold) return;
-                _onHold = value;
-                OnPropertyChanged();
-            }
-        }
-        public String Address
-        {
-            get => _address;
-            set
-            {
-                if (value == _address) return;
-                _address = value;
-                OnPropertyChanged();
-            }
-        }
-        public String City
-        {
-            get => _city;
-            set
-            {
-                if (value == _city) return;
-                _city = value;
-                OnPropertyChanged();
-            }
-        }
-        public String State
-        {
-            get => _state;
-            set
-            {
-                if (value == _state) return;
-                _state = value;
-                OnPropertyChanged();
-            }
-        }
-        public string Zip
-        {
-            get => _zip;
-            set
-            {
-                if (value == _zip) return;
-                _zip = value;
-                OnPropertyChanged();
-            }
-        }
-        public string OrigTaxAmt
-        {
-            get => _origTaxAmt;
-            set
-            {
-                if (value == _origTaxAmt) return;
-                _origTaxAmt = value;
-                OnPropertyChanged();
-            }
-        }
-        public string OrigProfit
-        {
-            get => _origProfit;
-            set
-            {
-                if (value == _origProfit) return;
-                _origProfit = value;
-                OnPropertyChanged();
-            }
-        }
-        public string OrigTotalMatCost
-        {
-            get => _origTotalMatCost;
-            set
-            {
-                if (value == _origTotalMatCost) return;
-                _origTotalMatCost = value;
-                OnPropertyChanged();
-            }
-        }
-        public string BillingDate
-        {
-            get => _billingDate;
-            set
-            {
-                if (value == _billingDate) return;
-                _billingDate = value;
-                OnPropertyChanged();
-            }
-        }
-        public int SelectedCustomerId
-        {
-            get => _selectedCustomerId;
-            set
-            {
-                if (value == _selectedCustomerId) return;
-                _selectedCustomerId = value;
-                OnPropertyChanged();
-            }
-        }
-        public int SelectedEstimatorID
-        {
-            get => _selectedEstimatorID;
-            set
-            {
-                if (value == _selectedEstimatorID) return;
-                _selectedEstimatorID = value;
-                OnPropertyChanged();
-            }
-        }
-        public int SelectedProjectCoordID
-        {
-            get => _selectedProjectCoordID;
-            set
-            {
-                if (value == _selectedProjectCoordID) return;
-                _selectedProjectCoordID = value;
-                OnPropertyChanged();
-            }
-        }
-        public int SelectedArchRepID
-        {
-            get => _selectedArchRepID;
-            set
-            {
-                if (value == _selectedArchRepID) return;
-                _selectedArchRepID = value;
-                OnPropertyChanged();
-            }
-        }
-        public int SelectedCCID
-        {
-            get => _selectedCCID;
-            set
-            {
-                if (value == _selectedCCID) return;
-                _selectedCCID = value;
-                OnPropertyChanged();
-            }
-        }
-        public int SelectedArchitectID
-        {
-            get => _selectedArchitectID;
-            set
-            {
-                if (value == _selectedArchitectID) return;
-                _selectedArchitectID = value;
-                OnPropertyChanged();
-            }
-        }
-        public int SelectedCrewID
-        {
-            get => _selectedCrewID;
-            set
-            {
-                if (value == _selectedCrewID) return;
-                _selectedCrewID = value;
-                OnPropertyChanged();
-            }
-        }
-        public int SelectedMCID
-        {
-            get => _selectedMCID;
-            set
-            {
-                if (value == _selectedMCID) return;
-                _selectedMCID = value;
-                OnPropertyChanged();
-            }
-        }
+        
     }
 
     public class PaymentItem

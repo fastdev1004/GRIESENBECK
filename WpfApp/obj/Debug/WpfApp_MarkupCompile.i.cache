@@ -4,17 +4,17 @@
 winexe
 C#
 .cs
-G:\Project_Tracking\WpfApp\obj\Debug\
+G:\GRIESENBECK\WpfApp\obj\Debug\
 WpfApp
 none
 false
 DEBUG;TRACE
-G:\Project_Tracking\WpfApp\App.xaml
+G:\GRIESENBECK\WpfApp\App.xaml
 3-1432206158
 
-33-913069251
+40-2063232750
 152084120597
 MainWindow.xaml;View\Start.xaml;View\ProjectView.xaml;
 
-False
+True
 

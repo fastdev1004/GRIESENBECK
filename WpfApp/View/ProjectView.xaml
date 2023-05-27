@@ -842,41 +842,41 @@
                             </Grid.RowDefinitions>
                             <Label Content="Shipping:" HorizontalAlignment="Left" />
                             <Grid Grid.Row="1" Background="#A0783C" Height="30" Margin="2, 1, 2, 1">
-                                    <Grid.ColumnDefinitions>
-                                        <ColumnDefinition Width="2.5*"/>
-                                        <ColumnDefinition Width="2.5*"/>
-                                        <ColumnDefinition Width="2.5*"/>
-                                        <ColumnDefinition Width="2.5*"/>
-                                        <ColumnDefinition Width="2.5*"/>
-                                        <ColumnDefinition Width="4*"/>
-                                        <ColumnDefinition Width="3*"/>
-                                        <ColumnDefinition Width="2.5*"/>
-                                        <ColumnDefinition Width="2.5*"/>
-                                        <ColumnDefinition Width="2*"/>
-                                        <ColumnDefinition Width="2.5*"/>
-                                        <ColumnDefinition Width="2*"/>
-                                        <ColumnDefinition Width="2*"/>
-                                        <ColumnDefinition Width="2*"/>
-                                        <ColumnDefinition Width="3*"/>
-                                        <ColumnDefinition Width="3*"/>
-                                    </Grid.ColumnDefinitions>
-                                    <Label Content="Sched Ship" Foreground="white" HorizontalAlignment="Center" />
-                                    <Label Grid.Column="1" Content="Est Deliv Date" Foreground="white" HorizontalAlignment="Center" />
-                                    <Label Grid.Column="2" Content="Est Install Date" Foreground="white" HorizontalAlignment="Center" />
-                                    <Label Grid.Column="3" Content="Est Weight" Foreground="white" HorizontalAlignment="Center" />
-                                    <Label Grid.Column="4" Content="Est Pallets #" Foreground="white" HorizontalAlignment="Center" />
-                                    <Label Grid.Column="5" Content="Freight Co" Foreground="white" HorizontalAlignment="Center" />
-                                    <Label Grid.Column="6" Content="Tracking #" Foreground="white" HorizontalAlignment="Center" />
-                                    <Label Grid.Column="7" Content="Date Shipped" Foreground="white" HorizontalAlignment="Center" />
-                                    <Label Grid.Column="8" Content="Qty Shipped" Foreground="white" HorizontalAlignment="Center" />
-                                    <Label Grid.Column="9" Content="# Pallets" Foreground="white" HorizontalAlignment="Center" />
-                                    <Label Grid.Column="10" Content= "Date Recvd" Foreground="white" HorizontalAlignment="Center" />
-                                    <Label Grid.Column="11" Content="Qty Recvd" Foreground="white" HorizontalAlignment="Center" />
-                                    <Label Grid.Column="12" Content="Freight Damage?" Foreground="white" HorizontalAlignment="Center" />
-                                    <Label Grid.Column="13" Content="Deliver to Jobsite" Foreground="white" HorizontalAlignment="Center" />
-                                    <Label Grid.Column="14" Content="Stored on Site" Foreground="white" HorizontalAlignment="Center" />
-                                    <Label Grid.Column="15" Content="Storage Detail" Foreground="white" HorizontalAlignment="Center" />
-                                </Grid>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="2.5*"/>
+                                    <ColumnDefinition Width="2.5*"/>
+                                    <ColumnDefinition Width="2.5*"/>
+                                    <ColumnDefinition Width="2.5*"/>
+                                    <ColumnDefinition Width="2.5*"/>
+                                    <ColumnDefinition Width="4*"/>
+                                    <ColumnDefinition Width="3*"/>
+                                    <ColumnDefinition Width="2.5*"/>
+                                    <ColumnDefinition Width="2.5*"/>
+                                    <ColumnDefinition Width="2*"/>
+                                    <ColumnDefinition Width="2.5*"/>
+                                    <ColumnDefinition Width="2*"/>
+                                    <ColumnDefinition Width="2*"/>
+                                    <ColumnDefinition Width="2*"/>
+                                    <ColumnDefinition Width="3*"/>
+                                    <ColumnDefinition Width="3*"/>
+                                </Grid.ColumnDefinitions>
+                                <Label Content="Sched Ship" Foreground="white" HorizontalAlignment="Center" />
+                                <Label Grid.Column="1" Content="Est Deliv Date" Foreground="white" HorizontalAlignment="Center" />
+                                <Label Grid.Column="2" Content="Est Install Date" Foreground="white" HorizontalAlignment="Center" />
+                                <Label Grid.Column="3" Content="Est Weight" Foreground="white" HorizontalAlignment="Center" />
+                                <Label Grid.Column="4" Content="Est Pallets #" Foreground="white" HorizontalAlignment="Center" />
+                                <Label Grid.Column="5" Content="Freight Co" Foreground="white" HorizontalAlignment="Center" />
+                                <Label Grid.Column="6" Content="Tracking #" Foreground="white" HorizontalAlignment="Center" />
+                                <Label Grid.Column="7" Content="Date Shipped" Foreground="white" HorizontalAlignment="Center" />
+                                <Label Grid.Column="8" Content="Qty Shipped" Foreground="white" HorizontalAlignment="Center" />
+                                <Label Grid.Column="9" Content="# Pallets" Foreground="white" HorizontalAlignment="Center" />
+                                <Label Grid.Column="10" Content= "Date Recvd" Foreground="white" HorizontalAlignment="Center" />
+                                <Label Grid.Column="11" Content="Qty Recvd" Foreground="white" HorizontalAlignment="Center" />
+                                <Label Grid.Column="12" Content="Freight Damage?" Foreground="white" HorizontalAlignment="Center" />
+                                <Label Grid.Column="13" Content="Deliver to Jobsite" Foreground="white" HorizontalAlignment="Center" />
+                                <Label Grid.Column="14" Content="Stored on Site" Foreground="white" HorizontalAlignment="Center" />
+                                <Label Grid.Column="15" Content="Storage Detail" Foreground="white" HorizontalAlignment="Center" />
+                            </Grid>
                             <Grid Grid.Row="2" >
                                 <Grid.Resources>
                                     <Style TargetType="{x:Type CheckBox}">
@@ -900,41 +900,41 @@
                                 </Grid.RowDefinitions>
                                 <Grid x:Name="ShippingGrid">
                                     <Grid >
-                                    <Grid.ColumnDefinitions>
-                                        <ColumnDefinition Width="2.5*"/>
-                                        <ColumnDefinition Width="2.5*"/>
-                                        <ColumnDefinition Width="2.5*"/>
-                                        <ColumnDefinition Width="2.5*"/>
-                                        <ColumnDefinition Width="2.5*"/>
-                                        <ColumnDefinition Width="4*"/>
-                                        <ColumnDefinition Width="3*"/>
-                                        <ColumnDefinition Width="2.5*"/>
-                                        <ColumnDefinition Width="2.5*"/>
-                                        <ColumnDefinition Width="2*"/>
-                                        <ColumnDefinition Width="2.5*"/>
-                                        <ColumnDefinition Width="2*"/>
-                                        <ColumnDefinition Width="2*"/>
-                                        <ColumnDefinition Width="2*"/>
-                                        <ColumnDefinition Width="3*"/>
-                                        <ColumnDefinition Width="3*"/>
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="2.5*"/>
+                                            <ColumnDefinition Width="2.5*"/>
+                                            <ColumnDefinition Width="2.5*"/>
+                                            <ColumnDefinition Width="2.5*"/>
+                                            <ColumnDefinition Width="2.5*"/>
+                                            <ColumnDefinition Width="4*"/>
+                                            <ColumnDefinition Width="3*"/>
+                                            <ColumnDefinition Width="2.5*"/>
+                                            <ColumnDefinition Width="2.5*"/>
+                                            <ColumnDefinition Width="2*"/>
+                                            <ColumnDefinition Width="2.5*"/>
+                                            <ColumnDefinition Width="2*"/>
+                                            <ColumnDefinition Width="2*"/>
+                                            <ColumnDefinition Width="2*"/>
+                                            <ColumnDefinition Width="3*"/>
+                                            <ColumnDefinition Width="3*"/>
                                         </Grid.ColumnDefinitions>
-                                    <DatePicker />
-                                    <DatePicker Grid.Column="1" />
-                                    <DatePicker Grid.Column="2" />
-                                    <TextBox Grid.Column="3" />
-                                    <TextBox Grid.Column="4" />
-                                    <ComboBox Grid.Column="5" />
-                                    <TextBox Grid.Column="6" />
-                                    <DatePicker Grid.Column="7" />
-                                    <TextBox Grid.Column="8" />
-                                    <TextBox Grid.Column="9" />
-                                    <DatePicker Grid.Column="10" />
-                                    <TextBox Grid.Column="11" />
-                                    <CheckBox Grid.Column="12" />
-                                    <TextBox Grid.Column="13" />
-                                    <ComboBox Grid.Column="14" />
-                                    <CheckBox Grid.Column="15" />
-                                </Grid>
+                                        <DatePicker />
+                                        <DatePicker Grid.Column="1" />
+                                        <DatePicker Grid.Column="2" />
+                                        <TextBox Grid.Column="3" />
+                                        <TextBox Grid.Column="4" />
+                                        <ComboBox Grid.Column="5" />
+                                        <TextBox Grid.Column="6" />
+                                        <DatePicker Grid.Column="7" />
+                                        <TextBox Grid.Column="8" />
+                                        <TextBox Grid.Column="9" />
+                                        <DatePicker Grid.Column="10" />
+                                        <TextBox Grid.Column="11" />
+                                        <CheckBox Grid.Column="12" />
+                                        <TextBox Grid.Column="13" />
+                                        <ComboBox Grid.Column="14" />
+                                        <CheckBox Grid.Column="15" />
+                                    </Grid>
                                 </Grid>
                             </Grid>
                         </Grid>
@@ -946,158 +946,132 @@
                             <RowDefinition Height="1*" />
                             <RowDefinition Height="1*" />
                         </Grid.RowDefinitions>
-                        <StackPanel>
-                            <Grid Background="#5C83B4" Height="30" Margin="2, 1, 2, 1">
-                                <Grid.ColumnDefinitions>
-                                    <ColumnDefinition Width="2*"/>
-                                    <ColumnDefinition Width="4*"/>
-                                    <ColumnDefinition Width="2*"/>
-                                    <ColumnDefinition Width="4*"/>
-                                    <ColumnDefinition Width="1*"/>
-                                    <ColumnDefinition Width="2*"/>
-                                    <ColumnDefinition Width="2*"/>
-                                    <ColumnDefinition Width="2*"/>
-                                    <ColumnDefinition Width="2*"/>
-                                    <ColumnDefinition Width="2*"/>
-                                    <ColumnDefinition Width="2*"/>
-                                    <ColumnDefinition Width="2*"/>
-                                    <ColumnDefinition Width="3*"/>
-                                    <ColumnDefinition Width="1*"/>
-                                    <ColumnDefinition Width="2*"/>
-                                    <ColumnDefinition Width="2*"/>
-                                    <ColumnDefinition Width="2*"/>
-                                </Grid.ColumnDefinitions>
-                                <Label Content="Matl Reqd" Foreground="white" HorizontalAlignment="Center" />
-                                <Label Grid.Column="1" Content="Manufacturer" Foreground="white" HorizontalAlignment="Center" />
-                                <Label Grid.Column="2" Content="Qty Ord" Foreground="white" HorizontalAlignment="Center" />
-                                <Label Grid.Column="3" Content="Phase" Foreground="white" HorizontalAlignment="Center" />
-                                <Label Grid.Column="4" Content="Type" Foreground="white" HorizontalAlignment="Center" />
-                                <Label Grid.Column="5" Content="Lead Time" Foreground="white" HorizontalAlignment="Center" />
-                                <Label Grid.Column="6" Content="PO Number" Foreground="white" HorizontalAlignment="Center" />
-                                <Label Grid.Column="7" Content="Shop Reqst" Foreground="white" HorizontalAlignment="Center" />
-                                <Label Grid.Column="8" Content="Shop Recvd" Foreground="white" HorizontalAlignment="Center" />
-                                <Label Grid.Column="9" Content="Submit Issue" Foreground="white" HorizontalAlignment="Center" />
-                                <Label Grid.Column="10" Content="Resubmit" Foreground="white" HorizontalAlignment="Center" />
-                                <Label Grid.Column="11" Content="Subm Appr" Foreground="white" HorizontalAlignment="Center" />
-                                <Label Grid.Column="12" Content="Color" Foreground="white" HorizontalAlignment="Center" />
-                                <Label Grid.Column="13" Content="Guar Dim" Foreground="white" HorizontalAlignment="Center" />
-                                <Label Grid.Column="14" Content="Field Dim" Foreground="white" HorizontalAlignment="Center" />
-                                <Label Grid.Column="15" Content="R.F.F." Foreground="white" HorizontalAlignment="Center" />
-                                <Label Grid.Column="16" Content="Complete" Foreground="white" HorizontalAlignment="Center" />
-                            </Grid>
-                            <Grid>
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="225*"/>
+                                <ColumnDefinition Width="602*"/>
+                            </Grid.ColumnDefinitions>
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="Auto" />
+                                <RowDefinition Height="*" />
+                            </Grid.RowDefinitions>
+                            <Grid Background="#5C83B4" Height="30" Margin="2, 1, 2, 1" Grid.ColumnSpan="2">
                                 <Grid.Resources>
-                                    <Style TargetType="{x:Type Border}">
-                                        <Setter Property="Margin" Value="2, 2, 2, 2" />
-                                        <Setter Property="BorderThickness" Value="0,0,0,1" />
-                                        <Setter Property="BorderBrush" Value="Black" />
-                                    </Style>
                                     <Style TargetType="{x:Type Label}">
-                                        <Setter Property="HorizontalAlignment" Value="Center" />
+                                        <Setter Property="HorizontalAlignment" Value="Left"/>
+                                        <Setter Property="Foreground" Value="White" />
                                     </Style>
                                 </Grid.Resources>
                                 <Grid.ColumnDefinitions>
-                                    <ColumnDefinition Width="2*"/>
+                                    <ColumnDefinition Width="2.5*"/>
                                     <ColumnDefinition Width="4*"/>
-                                    <ColumnDefinition Width="2*"/>
-                                    <ColumnDefinition Width="4*"/>
-                                    <ColumnDefinition Width="1*"/>
-                                    <ColumnDefinition Width="2*"/>
-                                    <ColumnDefinition Width="2*"/>
-                                    <ColumnDefinition Width="2*"/>
-                                    <ColumnDefinition Width="2*"/>
-                                    <ColumnDefinition Width="2*"/>
-                                    <ColumnDefinition Width="2*"/>
-                                    <ColumnDefinition Width="2*"/>
+                                    <ColumnDefinition Width="1.5*"/>
                                     <ColumnDefinition Width="3*"/>
-                                    <ColumnDefinition Width="1*"/>
+                                    <ColumnDefinition Width="3*"/>
                                     <ColumnDefinition Width="2*"/>
                                     <ColumnDefinition Width="2*"/>
+                                    <ColumnDefinition Width="2.5*"/>
+                                    <ColumnDefinition Width="2.5*"/>
+                                    <ColumnDefinition Width="2.5*"/>
+                                    <ColumnDefinition Width="2.5*"/>
+                                    <ColumnDefinition Width="2.5*"/>
+                                    <ColumnDefinition Width="2*"/>
+                                    <ColumnDefinition Width="1.5*"/>
+                                    <ColumnDefinition Width="2.5*"/>
+                                    <ColumnDefinition Width="2.5*"/>
                                     <ColumnDefinition Width="2*"/>
                                 </Grid.ColumnDefinitions>
-                                <Border>
-                                    <Label Content="1/1/2020"  />
-                                </Border>
-                                <Label Grid.Column="1" Content="Bobrick" />
-                                <Border Grid.Column="2">
-                                    <Label  />
-                                </Border>
-                                <Label Grid.Column="3" />
-                                <Label Grid.Column="4" Content="TA" />
-                                <Label Grid.Column="5" Content="2020" />
-                                <Border Grid.Column="6" >
-                                    <Label  Content="15224" />
-                                </Border>
-                                <Border Grid.Column="7">
-                                    <Label  Content="1/23/2019" />
-                                </Border>
-                                <Border Grid.Column="8">
-                                    <Label  Content="1/23/2019" />
-                                </Border>
-                                <Border Grid.Column="9">
-                                    <Label  Content="1/23/2019" />
-                                </Border>
-                                <Border Grid.Column="10">
-                                    <Label  Content="" />
-                                </Border>
-                                <Border Grid.Column="11">
-                                    <Label  Content="" />
-                                </Border>
-                                <Label Grid.Column="12" />
-                                <CheckBox Grid.Column="13" HorizontalAlignment="Center" VerticalAlignment="Center" />
-                                <Border Grid.Column="14">
-                                    <Label  Content="" />
-                                </Border>
-                                <Border Grid.Column="15">
-                                    <Label  Content="" />
-                                </Border>
-                                <CheckBox Grid.Column="16" HorizontalAlignment="Center" VerticalAlignment="Center" />
+                                <Label Content="Matl Reqd" />
+                                <Label Grid.Column="1" Content="Manufacturer" />
+                                <Label Grid.Column="2" Content="Qty Ord" />
+                                <Label Grid.Column="3" Content="Phase" />
+                                <Label Grid.Column="4" Content="Type" />
+                                <Label Grid.Column="5" Content="Lead Time" />
+                                <Label Grid.Column="6" Content="PO Number" />
+                                <Label Grid.Column="7" Content="Shop Reqst" />
+                                <Label Grid.Column="8" Content="Shop Recvd" />
+                                <Label Grid.Column="9" Content="Submit Issue" />
+                                <Label Grid.Column="10" Content="Resubmit" />
+                                <Label Grid.Column="11" Content="Subm Appr" />
+                                <Label Grid.Column="12" Content="Color" />
+                                <Label Grid.Column="13" Content="Guar Dim" />
+                                <Label Grid.Column="14" Content="Field Dim" />
+                                <Label Grid.Column="15" Content="R.F.F." />
+                                <Label Grid.Column="16" Content="Complete" />
                             </Grid>
-                        </StackPanel>
-                        <StackPanel Grid.Row="1" Width="1000" HorizontalAlignment="Left">
+                            <ScrollViewer Grid.Row="1" VerticalScrollBarVisibility="Auto" Grid.ColumnSpan="2">
+                                <Grid x:Name="TrackingReportGrid1">
+                                    <Grid.Resources>
+                                        <Style TargetType="{x:Type CheckBox}">
+                                            <Setter Property="VerticalAlignment" Value="Center"/>
+                                            <Setter Property="HorizontalAlignment" Value="Center"/>
+                                        </Style>
+                                        <Style TargetType="{x:Type TextBox}">
+                                            <Setter Property="Margin" Value="4,1,4,1" />
+                                            <Setter Property="BorderThickness" Value="0,0,0,1" />
+                                            <Setter Property="VerticalContentAlignment" Value="Center"/>
+                                        </Style>
+                                        <Style TargetType="{x:Type DatePicker}">
+                                            <Setter Property="Margin" Value="4,1,4,1" />
+                                        </Style>
+                                        <Style TargetType="{x:Type ComboBox}">
+                                            <Setter Property="Margin" Value="4,1,4,1" />
+                                        </Style>
+                                        <Style TargetType="{x:Type Label}">
+                                            <Setter Property="HorizontalAlignment" Value="Left"/>
+                                        </Style>
+                                    </Grid.Resources>
+                                </Grid>
+                            </ScrollViewer>
+                        </Grid>
+                        <Grid Grid.Row="1">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="4*" />
+                                <ColumnDefinition Width="6*" />
+                            </Grid.ColumnDefinitions>
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="Auto" />
+                                <RowDefinition Height="*" />
+                            </Grid.RowDefinitions>
                             <Grid Background="#5C83B4" Height="30" Margin="2, 1, 2, 1">
-                                <Grid.ColumnDefinitions>
-                                    <ColumnDefinition Width="2*"/>
-                                    <ColumnDefinition Width="6*"/>
-                                    <ColumnDefinition Width="2*"/>
-                                    <ColumnDefinition Width="6*"/>
-                                    <ColumnDefinition Width="2*"/>
-                                </Grid.ColumnDefinitions>
-                                <Label Content="Scope Type" Foreground="white" HorizontalAlignment="Center" />
-                                <Label Grid.Column="1" Content="Labor" Foreground="white" HorizontalAlignment="Center" />
-                                <Label Grid.Column="2" Content="CO #" Foreground="white" HorizontalAlignment="Center" />
-                                <Label Grid.Column="3" Content="Phase/Type" Foreground="white" HorizontalAlignment="Center" />
-                                <Label Grid.Column="4" Content="Complete" Foreground="white" HorizontalAlignment="Center" />
-                            </Grid>
-                            <Grid>
                                 <Grid.Resources>
-                                    <Style TargetType="{x:Type Border}">
-                                        <Setter Property="Margin" Value="2, 2, 2, 2" />
-                                        <Setter Property="BorderThickness" Value="0,0,0,1" />
-                                        <Setter Property="BorderBrush" Value="Black" />
-                                    </Style>
                                     <Style TargetType="{x:Type Label}">
-                                        <Setter Property="HorizontalAlignment" Value="Center" />
+                                        <Setter Property="HorizontalAlignment" Value="Left"/>
+                                        <Setter Property="Foreground" Value="White" />
                                     </Style>
                                 </Grid.Resources>
                                 <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="1*"/>
                                     <ColumnDefinition Width="2*"/>
-                                    <ColumnDefinition Width="6*"/>
-                                    <ColumnDefinition Width="2*"/>
-                                    <ColumnDefinition Width="6*"/>
-                                    <ColumnDefinition Width="2*"/>
+                                    <ColumnDefinition Width="1*"/>
+                                    <ColumnDefinition Width="1*"/>
+                                    <ColumnDefinition Width="1*"/>
                                 </Grid.ColumnDefinitions>
-                                <Border>
-                                    <Label Content="TP"  />
-                                </Border>
-                                <Label Grid.Column="1" Content="Toilet Partitions-Plastic/Phenolic/Stainless" />
-                                <Border Grid.Column="2">
-                                    <Label Content="12312" />
-                                </Border>
-                                <Label Grid.Column="3" Content="123" />
-                                <CheckBox Grid.Column="4" HorizontalAlignment="Center" VerticalAlignment="Center" />
+                                <Label Content="Scope Type" />
+                                <Label Grid.Column="1" Content="Labor" />
+                                <Label Grid.Column="2" Content="CO #" />
+                                <Label Grid.Column="3" Content="Phase/Type" />
+                                <Label Grid.Column="4" Content="Complete" />
                             </Grid>
-                        </StackPanel>
+                            <ScrollViewer Grid.Row="1" VerticalScrollBarVisibility="Auto">
+                                <Grid x:Name="TrackingReportGrid2">
+                                    <Grid.Resources>
+                                        <Style TargetType="{x:Type CheckBox}">
+                                            <Setter Property="VerticalAlignment" Value="Center"/>
+                                            <Setter Property="HorizontalAlignment" Value="Center"/>
+                                        </Style>
+                                        <Style TargetType="{x:Type TextBox}">
+                                            <Setter Property="Margin" Value="4,1,4,1" />
+                                            <Setter Property="BorderThickness" Value="0,0,0,1" />
+                                            <Setter Property="VerticalContentAlignment" Value="Center"/>
+                                        </Style>
+                                        <Style TargetType="{x:Type Label}">
+                                            <Setter Property="HorizontalAlignment" Value="Left"/>
+                                        </Style>
+                                    </Grid.Resources>
+                                </Grid>
+                            </ScrollViewer>
+                        </Grid>
                     </Grid>
                 </TabItem>
                 <TabItem Header="Work Orders">
@@ -1108,7 +1082,7 @@
                         </Grid.ColumnDefinitions>
                         <Grid>
                             <Grid.RowDefinitions>
-                                <RowDefinition Height="120" />
+                                <RowDefinition Height="200" />
                                 <RowDefinition Height="Auto" />
                                 <RowDefinition Height="*" />
                             </Grid.RowDefinitions>
@@ -1126,15 +1100,15 @@
                                     <Label Grid.Column="1" FontStyle="Italic">(click to select WO)</Label>
                                 </Grid>
                                 <Grid Grid.Row="1">
-                                    <ListView Name="lvUsers1">
+                                    <ListView x:Name="WOListView" SelectionChanged="SelectWorkOrdersList">
                                         <ListView.View>
                                             <GridView>
-                                                <GridViewColumn Header="WO" Width="50" DisplayMemberBinding="{Binding Name}" />
-                                                <GridViewColumn Header="WO #" Width="60" DisplayMemberBinding="{Binding Age}" />
-                                                <GridViewColumn Header="Crew" Width="100">
+                                                <GridViewColumn Header="WO" Width="50" DisplayMemberBinding="{Binding WoID}" />
+                                                <GridViewColumn Header="WO #" Width="60" DisplayMemberBinding="{Binding WoNumber}" />
+                                                <GridViewColumn Header="Crew" Width="100" DisplayMemberBinding="{Binding CrewName}">
                                                 </GridViewColumn>
-                                                <GridViewColumn Header="Started" Width="100" />
-                                                <GridViewColumn Header="Completed" Width="100" />
+                                                <GridViewColumn Header="Started" Width="100" DisplayMemberBinding="{Binding DateStarted}"/>
+                                                <GridViewColumn Header="Completed" Width="100" DisplayMemberBinding="{Binding DateCompleted}" />
                                             </GridView>
                                         </ListView.View>
                                     </ListView>
@@ -1157,47 +1131,52 @@
                                             <RowDefinition Height="Auto" />
                                         </Grid.RowDefinitions>
                                         <Label Content="WO Number:" Margin="0,4,0,4" />
-                                        <TextBox Grid.Column="1" Width="100" Margin="0,4,0,4" HorizontalAlignment="Left" />
+                                        <TextBox x:Name="WoNbr_TextBox" Grid.Column="1" Width="100" Margin="0,4,0,4" HorizontalAlignment="Left" />
                                         <Label Grid.Row="1" Content="Crew:" Margin="0,4,0,4" />
-                                        <ComboBox Grid.Row="1" Grid.Column="1" Width="200" HorizontalAlignment="Left" Margin="0,4,0,4" />
+                                        <ComboBox x:Name="Crew_ComBo" ItemsSource="{Binding Crews}" SelectedValuePath="ID" DisplayMemberPath="CrewName" Grid.Row="1" Grid.Column="1" Width="200" HorizontalAlignment="Left" Margin="0,4,0,4" />
                                         <Label Grid.Row="2" Content="Sched Start Date:" Margin="0,4,0,4" />
-                                        <DatePicker Grid.Row="2" Grid.Column="1" Width="100" Margin="0,4,0,4" HorizontalAlignment="Left" />
+                                        <DatePicker x:Name="SchedStartDate_Datepicker" Grid.Row="2" Grid.Column="1" Width="100" Margin="0,4,0,4" HorizontalAlignment="Left" />
                                         <Label Grid.Row="3" Content="Sched Compl Date:" Margin="0,4,0,4" />
-                                        <DatePicker Grid.Row="3" Grid.Column="1" Width="100" Margin="0,4,0,4" HorizontalAlignment="Left" />
+                                        <DatePicker x:Name="SchedComplDate_Datepicker" Grid.Row="3" Grid.Column="1" Width="100" Margin="0,4,0,4" HorizontalAlignment="Left" />
                                         <Label Grid.Row="4" Content="Supt:" Margin="0,4,0,4" />
-                                        <ComboBox Grid.Row="4" Grid.Column="1" Width="200" HorizontalAlignment="Left" Margin="0,4,0,4" />
+                                        <ComboBox x:Name="Supt_ComBo" ItemsSource="{Binding Superintendents}" SelectedValuePath="SupID" DisplayMemberPath="SupName" Grid.Row="4" Grid.Column="1" Width="200" HorizontalAlignment="Left" Margin="0,4,0,4" />
                                         <Label Grid.Row="5" Content="Start Date:" Margin="0,4,0,4" />
-                                        <DatePicker Grid.Row="5" Grid.Column="1" Width="100" Margin="0,4,0,4" HorizontalAlignment="Left" />
+                                        <DatePicker x:Name="WoStartDate_Datepicker" Grid.Row="5" Grid.Column="1" Width="100" Margin="0,4,0,4" HorizontalAlignment="Left" />
                                         <Label Grid.Row="6" Content="Compl Date:" Margin="0,4,0,4" />
-                                        <DatePicker Grid.Row="6" Grid.Column="1" Width="100" Margin="0,4,0,4" HorizontalAlignment="Left" />
+                                        <DatePicker x:Name="WoComplDate_Datepicker" Grid.Row="6" Grid.Column="1" Width="100" Margin="0,4,0,4" HorizontalAlignment="Left" />
                                     </Grid>
                                 </Border>
                             </Grid>
-                            <Grid Grid.Row="2">
-                                <Grid>
+                            <ScrollViewer Grid.Row="2" VerticalScrollBarVisibility="Auto">
+                                <Grid x:Name="WorkOrderNoteGrid">
                                     <Grid.RowDefinitions>
                                         <RowDefinition Height="Auto" />
-                                        <RowDefinition Height="Auto" />
+                                        <RowDefinition Height="*" />
                                     </Grid.RowDefinitions>
                                     <Grid>
-                                        <Grid.ColumnDefinitions>
-                                            <ColumnDefinition Width="1*" />
-                                            <ColumnDefinition Width="1*" />
-                                        </Grid.ColumnDefinitions>
-                                        <Label Content="5/14//2020 8:43:20" HorizontalAlignment="Left" />
-                                        <Label Grid.Column="1" Content="deanille" />
-                                    </Grid>
-                                    <Grid Grid.Row="1">
-                                        <TextBox AcceptsReturn="True" ScrollViewer.VerticalScrollBarVisibility="Auto"  Height="40" />
+                                        <Grid.RowDefinitions>
+                                            <RowDefinition Height="Auto" />
+                                            <RowDefinition Height="Auto" />
+                                        </Grid.RowDefinitions>
+                                        <Grid>
+                                            <Grid.ColumnDefinitions>
+                                                <ColumnDefinition Width="1*" />
+                                                <ColumnDefinition Width="1*" />
+                                            </Grid.ColumnDefinitions>
+                                            <Label Content="5/14//2020 8:43:20" HorizontalAlignment="Left" />
+                                            <Label Grid.Column="1" Content="deanille" />
+                                        </Grid>
+                                        <Grid Grid.Row="1">
+                                            <TextBox AcceptsReturn="True" ScrollViewer.VerticalScrollBarVisibility="Auto"  Height="40" />
+                                        </Grid>
                                     </Grid>
                                 </Grid>
-
-                            </Grid>
+                            </ScrollViewer>
                         </Grid>
                         <Grid Grid.Column="1">
                             <Grid.RowDefinitions>
                                 <RowDefinition Height="Auto" />
-                                <RowDefinition Height="Auto" />
+                                <RowDefinition Height="*" />
                             </Grid.RowDefinitions>
                             <Grid>
                                 <StackPanel>
@@ -1212,6 +1191,9 @@
                                 </StackPanel>
                             </Grid>
                             <Grid Grid.Row="1">
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="*" />
+                                </Grid.RowDefinitions>
                                 <TabControl Margin="10" BorderBrush="Gainsboro">
                                     <TabControl.Resources>
                                         <Style TargetType="TabItem">
@@ -1219,11 +1201,7 @@
                                                 <Setter.Value>
                                                     <ControlTemplate TargetType="TabItem">
                                                         <Border Name="Border" BorderThickness="1,1,1,0" BorderBrush="Gainsboro" CornerRadius="4,4,0,0" Margin="2,0">
-                                                            <ContentPresenter x:Name="ContentSite"
-                                        VerticalAlignment="Center"
-                                        HorizontalAlignment="Center"
-                                        ContentSource="Header"
-                                        Margin="10,2"/>
+                                                            <ContentPresenter x:Name="ContentSite" VerticalAlignment="Center" HorizontalAlignment="Center" ContentSource="Header" Margin="10,2"/>
                                                         </Border>
                                                         <ControlTemplate.Triggers>
                                                             <Trigger Property="IsSelected" Value="True">
@@ -1239,13 +1217,13 @@
                                         </Style>
                                     </TabControl.Resources>
                                     <TabItem Header="Project Materials" HorizontalAlignment="Left" Width="114">
-                                        <Grid Margin="10" Height="520">
+                                        <Grid Margin="10">
                                             <Grid.RowDefinitions>
                                                 <RowDefinition Height="1*" />
                                                 <RowDefinition Height="1*" />
                                             </Grid.RowDefinitions>
                                             <Grid>
-                                                <ListView Name="lvUsers11" Background="#E8E8E8">
+                                                <ListView x:Name="ProjMatList" Background="#E8E8E8">
                                                     <ListView.View>
                                                         <GridView>
                                                             <GridView.ColumnHeaderContainerStyle>
@@ -1415,31 +1393,66 @@
                     </Grid>
                 </TabItem>
                 <TabItem Header="Pre-Installation notes">
-                    <StackPanel Margin="10">
+                    <Grid Margin="10">
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="*" />
+                        </Grid.RowDefinitions>
                         <Grid Background="#4BACC6" Height="30" Margin="2, 1, 2, 1">
                             <Label Content="Pre-Installation Notes" HorizontalAlignment="Left" Foreground="white" Margin="32,0,0,0"/>
                         </Grid>
-                        <Grid>
-                            <StackPanel>
-                                <Label Content="1/24/2019 7:36:34 AM" />
-                                <TextBox Height="60" />
-                            </StackPanel>
-                        </Grid>
-                    </StackPanel>
+                        <ScrollViewer Grid.Row="1"  VerticalScrollBarVisibility="Auto">
+                            <Grid x:Name="PreInstallGrid">
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="Auto" />
+                                </Grid.RowDefinitions>
+                                <Grid>
+                                    <Grid.RowDefinitions>
+                                        <RowDefinition Height="Auto" />
+                                        <RowDefinition Height="*" />
+                                    </Grid.RowDefinitions>
+                                    <Label Content="1/24/2019 7:36:34 AM" />
+                                    <TextBox Grid.Row="1" Height="60" />
+                                </Grid>
+                            </Grid>
+                        </ScrollViewer>
+                    </Grid>
                 </TabItem>
                 <TabItem Header="Contracts">
-                    <Grid Margin="10" HorizontalAlignment="Left" Width="1000">
+                    <Grid Margin="10" x:Name="ContractGrid" HorizontalAlignment="Left" Width="1000">
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition Width="1*"/>
                             <ColumnDefinition Width="1*" />
                             <ColumnDefinition Width="1*" />
                         </Grid.ColumnDefinitions>
-                        <StackPanel>
-                            <StackPanel.Resources>
-                                <Style TargetType="Grid">
-                                    <Setter Property="Margin" Value="10, 2, 10, 2"></Setter>
-                                </Style>
-                            </StackPanel.Resources>
+                        <Grid.Resources>
+                            <Style TargetType="{x:Type CheckBox}">
+                                <Setter Property="VerticalAlignment" Value="Center"/>
+                                <Setter Property="HorizontalAlignment" Value="Left"/>
+                            </Style>
+                            <Style TargetType="{x:Type TextBox}">
+                                <Setter Property="Margin" Value="0,1,4,1" />
+                                <Setter Property="BorderThickness" Value="1,1,1,1" />
+                                <Setter Property="VerticalContentAlignment" Value="Center"/>
+                              </Style>
+                            <Style TargetType="{x:Type DatePicker}">
+                                <Setter Property="Margin" Value="0,1,4,1" />
+                            </Style>
+                            <Style TargetType="{x:Type ComboBox}">
+                                <Setter Property="Margin" Value="0,1,4,1" />
+                            </Style>
+                            <Style TargetType="{x:Type Label}">
+                                <Setter Property="HorizontalAlignment" Value="Left"/>
+                            </Style>
+                        </Grid.Resources>
+                        <Grid>
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="Auto"/>
+                                <RowDefinition Height="Auto"/>
+                                <RowDefinition Height="Auto"/>
+                                <RowDefinition Height="Auto"/>
+                                <RowDefinition Height="Auto"/>
+                            </Grid.RowDefinitions>
                             <Grid>
                                 <Grid.ColumnDefinitions>
                                     <ColumnDefinition Width="3*" />
@@ -1448,7 +1461,7 @@
                                 <Label Content="GAP Job #" HorizontalAlignment="Left" />
                                 <TextBox Grid.Column="1" />
                             </Grid>
-                            <Grid>
+                            <Grid Grid.Row="1">
                                 <Grid.ColumnDefinitions>
                                     <ColumnDefinition Width="3*" />
                                     <ColumnDefinition Width="2*" />
@@ -1456,7 +1469,7 @@
                                 <Label Content="Contract #" HorizontalAlignment="Left" />
                                 <TextBox Grid.Column="1" />
                             </Grid>
-                            <Grid>
+                            <Grid Grid.Row="2">
                                 <Grid.ColumnDefinitions>
                                     <ColumnDefinition Width="3*" />
                                     <ColumnDefinition Width="2*" />
@@ -1464,7 +1477,7 @@
                                 <Label Content="Change Order" HorizontalAlignment="Left" />
                                 <CheckBox Grid.Column="1" VerticalAlignment="Center" />
                             </Grid>
-                            <Grid>
+                            <Grid Grid.Row="3">
                                 <Grid.ColumnDefinitions>
                                     <ColumnDefinition Width="3*" />
                                     <ColumnDefinition Width="2*" />
@@ -1472,21 +1485,23 @@
                                 <Label Content="Change Order #" HorizontalAlignment="Left" />
                                 <TextBox Grid.Column="1" />
                             </Grid>
-                            <Grid>
+                            <Grid Grid.Row="4">
                                 <Grid.ColumnDefinitions>
                                     <ColumnDefinition Width="3*" />
                                     <ColumnDefinition Width="2*" />
                                 </Grid.ColumnDefinitions>
                                 <Label Content="Recd Date" HorizontalAlignment="Left" />
-                                <TextBox Grid.Column="1" />
+                                <DatePicker Grid.Column="1" />
                             </Grid>
-                        </StackPanel>
-                        <StackPanel Grid.Column="1">
-                            <StackPanel.Resources>
-                                <Style TargetType="Grid">
-                                    <Setter Property="Margin" Value="10, 2, 10, 2"></Setter>
-                                </Style>
-                            </StackPanel.Resources>
+                        </Grid>
+                        <Grid Grid.Column="1">
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="Auto"/>
+                                <RowDefinition Height="Auto"/>
+                                <RowDefinition Height="Auto"/>
+                                <RowDefinition Height="Auto"/>
+                                <RowDefinition Height="Auto"/>
+                            </Grid.RowDefinitions>
                             <Grid>
                                 <Grid.ColumnDefinitions>
                                     <ColumnDefinition Width="3*" />
@@ -1495,7 +1510,7 @@
                                 <Label Content="Processed Date" HorizontalAlignment="Left" />
                                 <TextBox Grid.Column="1" />
                             </Grid>
-                            <Grid>
+                            <Grid Grid.Row="1">
                                 <Grid.ColumnDefinitions>
                                     <ColumnDefinition Width="3*" />
                                     <ColumnDefinition Width="2*" />
@@ -1503,46 +1518,47 @@
                                 <Label Content="Contract Amt" HorizontalAlignment="Left" />
                                 <TextBox Grid.Column="1" />
                             </Grid>
-                            <Grid>
+                            <Grid Grid.Row="2">
                                 <Grid.ColumnDefinitions>
                                     <ColumnDefinition Width="3*" />
                                     <ColumnDefinition Width="2*" />
                                 </Grid.ColumnDefinitions>
                                 <Label Content="Signed off by Sales" HorizontalAlignment="Left" />
-                                <TextBox Grid.Column="1" />
+                                <DatePicker Grid.Column="1" />
                             </Grid>
-                            <Grid>
+                            <Grid Grid.Row="3">
                                 <Grid.ColumnDefinitions>
                                     <ColumnDefinition Width="3*" />
                                     <ColumnDefinition Width="2*" />
                                 </Grid.ColumnDefinitions>
                                 <Label Content="Given Accting for Review" HorizontalAlignment="Left" />
-                                <TextBox Grid.Column="1" />
+                                <DatePicker Grid.Column="1" />
                             </Grid>
-                            <Grid>
+                            <Grid Grid.Row="4">
                                 <Grid.ColumnDefinitions>
                                     <ColumnDefinition Width="3*" />
                                     <ColumnDefinition Width="2*" />
                                 </Grid.ColumnDefinitions>
                                 <Label Content="Given for Final Signature" HorizontalAlignment="Left" />
-                                <TextBox Grid.Column="1" />
+                                <DatePicker Grid.Column="1" />
                             </Grid>
-                        </StackPanel>
-                        <StackPanel Grid.Column="2">
-                            <StackPanel.Resources>
-                                <Style TargetType="Grid">
-                                    <Setter Property="Margin" Value="10, 2, 10, 2"></Setter>
-                                </Style>
-                            </StackPanel.Resources>
+                        </Grid>
+                        <Grid Grid.Column="2">
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="Auto" />
+                                <RowDefinition Height="Auto" />
+                                <RowDefinition Height="Auto" />
+                                <RowDefinition Height="Auto" />
+                            </Grid.RowDefinitions>
                             <Grid>
                                 <Grid.ColumnDefinitions>
                                     <ColumnDefinition Width="1*" />
                                     <ColumnDefinition Width="2*" />
                                 </Grid.ColumnDefinitions>
                                 <Label Content="Scope" HorizontalAlignment="Left" />
-                                <TextBox Grid.Column="1" Height="40"/>
+                                <TextBox Grid.Column="1" Height="38"/>
                             </Grid>
-                            <Grid>
+                            <Grid Grid.Row="1">
                                 <Grid.ColumnDefinitions>
                                     <ColumnDefinition Width="1*" />
                                     <ColumnDefinition Width="2*" />
@@ -1550,27 +1566,28 @@
                                 <Label Content="Returned Via" HorizontalAlignment="Left" />
                                 <ComboBox Grid.Column="1" />
                             </Grid>
-                            <Grid>
+                            <Grid Grid.Row="2">
                                 <Grid.ColumnDefinitions>
                                     <ColumnDefinition Width="1*" />
-                                    <ColumnDefinition Width="2*" />
+                                    <ColumnDefinition Width="1*" />
+                                    <ColumnDefinition Width="1*" />
                                 </Grid.ColumnDefinitions>
                                 <Label Content="Returned Date" HorizontalAlignment="Left" />
-                                <CheckBox Grid.Column="1" VerticalAlignment="Center" />
+                                <DatePicker Grid.Column="1" />
                             </Grid>
-                            <Grid>
+                            <Grid Grid.Row="3">
                                 <Grid.ColumnDefinitions>
                                     <ColumnDefinition Width="1*" />
                                     <ColumnDefinition Width="2*" />
                                 </Grid.ColumnDefinitions>
                                 <Label Content="Notes" HorizontalAlignment="Left" />
-                                <TextBox Grid.Column="1" Height="45" />
+                                <TextBox AcceptsReturn="True" ScrollViewer.VerticalScrollBarVisibility="Auto" Grid.Column="1" Height="39" />
                             </Grid>
-                        </StackPanel>
+                        </Grid>
                     </Grid>
                 </TabItem>
                 <TabItem Header="CIPs">
-                    <Grid Margin="10" HorizontalAlignment="Left" Width="1000">
+                    <Grid Margin="10" x:Name="CIPGrid" HorizontalAlignment="Left" Width="1000">
                         <Grid.RowDefinitions>
                             <RowDefinition Height="Auto" />
                         </Grid.RowDefinitions>
