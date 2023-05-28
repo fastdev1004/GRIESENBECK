@@ -772,10 +772,6 @@ namespace WpfApp.ViewModel
 
         private void ChangeProject()
         {
-            string connectionString = @"Data Source = DESKTOP-VDIB57T\INSTANCE2023; user id=sa; password=qwe234ASD@#$; Initial Catalog = griesenbeck;";
-            SqlConnection con = new SqlConnection(connectionString);
-            con.Open();
-
             string sqlquery = "SELECT tblProjects.*, tblCustomers.Full_Name, tblCustomers.Customer_ID FROM tblProjects LEFT JOIN tblCustomers ON tblProjects.Customer_ID = tblCustomers.Customer_ID WHERE tblProjects.Project_ID = " + SelectedProjectId.ToString() + ";";
             SqlCommand cmd = new SqlCommand(sqlquery, con);
             SqlDataAdapter sda = new SqlDataAdapter(cmd);
@@ -897,8 +893,6 @@ namespace WpfApp.ViewModel
             cmd.Dispose();
             con.Close();
         }
-
-        
     }
 
     public class PaymentItem

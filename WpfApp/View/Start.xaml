@@ -59,9 +59,9 @@
                                 <RowDefinition Height="Auto" />
                             </Grid.RowDefinitions>
                             <StackPanel>
-                                <Button Click="navigate_project">Projects</Button>
-                                <Button>Work Orders</Button>
-                                <Button>Tracking/Shipping</Button>
+                                <Button Click="navigateProject">Projects</Button>
+                                <Button Click="navigateWorkOrder">Work Orders</Button>
+                                <Button Click="navigateTrackShip">Tracking/Shipping</Button>
                                 <Button>Contracts</Button>
                                 <Button>Close Outs</Button>
                             </StackPanel>

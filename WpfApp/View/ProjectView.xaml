@@ -32,7 +32,7 @@
         <Grid>
             <Border BorderThickness="0 0 0 4" BorderBrush="#B6302D">
                 <Grid Background="#14305F">
-                    <Button Click="goback" Width="40" Height="20" HorizontalAlignment="Left" Margin="10,0,0,0">Back</Button>
+                    <Button Click="goBack" Width="40" Height="20" HorizontalAlignment="Left" Margin="10,0,0,0">Back</Button>
                     <TextBlock Margin="80, 0,0,0" Text="Projects" FontSize="32" Foreground="White" VerticalAlignment="Center">
                     </TextBlock>
                 </Grid>

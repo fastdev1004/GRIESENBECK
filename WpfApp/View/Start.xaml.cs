@@ -13,12 +13,6 @@ namespace WpfApp
         public Start()
         {
             InitializeComponent();
-
-            //BitmapImage bitmap = new BitmapImage();
-            //bitmap.BeginInit();
-            //bitmap.UriSource = new Uri("/images/logo.png");
-            //bitmap.EndInit();
-            //logoImage.Source = bitmap;
         }
 
         private void close_win(object sender, RoutedEventArgs e)
@@ -27,9 +21,19 @@ namespace WpfApp
             w.Close();
         }
 
-        private void navigate_project(object sender, RoutedEventArgs e)
+        private void navigateProject(object sender, RoutedEventArgs e)
         {
             this.NavigationService.Navigate(new Uri("View/ProjectView.xaml", UriKind.Relative));
+        }
+
+        private void navigateWorkOrder(object sender, RoutedEventArgs e)
+        {
+            this.NavigationService.Navigate(new Uri("View/WorkOrderView.xaml", UriKind.Relative));
+        }
+        
+        private void navigateTrackShip(object sender, RoutedEventArgs e)
+        {
+            this.NavigationService.Navigate(new Uri("View/TrackShipView.xaml", UriKind.Relative));
         }
     }
 }

@@ -40,7 +40,6 @@ namespace WpfApp
         private ObservableCollection<ProjectWorkOrder> sb_projectWorkOrder;
         private ObservableCollection<ProjectLabor> sb_projectLabor;
 
-
         private ProjectViewModel ProjectVM;
         public ProjectView()
         {
@@ -65,8 +64,10 @@ namespace WpfApp
             sb_projectLabor = new ObservableCollection<ProjectLabor>();
         }
 
-        private void goback(object sender, RoutedEventArgs e)
+        private void goBack(object sender, RoutedEventArgs e)
         {
+            cmd.Dispose();
+            con.Close();
             this.NavigationService.Navigate(new Uri("View/Start.xaml", UriKind.Relative));
         }
 
@@ -116,8 +117,6 @@ namespace WpfApp
                 });
             }
 
-            //con.Close();
-            //cmd.Dispose();
             int rowCount = 1;
             int rowIndex = 0;
 
@@ -257,7 +256,7 @@ namespace WpfApp
                 rowIndex += 1;
             }
 
-                // SOV Grid 1
+            // SOV Grid 1
             rowIndex = 0;
             sqlquery = "Select tblSOV.*, tblProjectChangeOrders.CO_ItemNo from (Select tblSOV.*, tblScheduleOfValues.SOV_Desc from tblScheduleOfValues Right JOIN (SELECT tblProjectSOV.* From tblProjects LEFT Join tblProjectSOV ON tblProjects.Project_ID = tblProjectSOV.Project_ID where tblProjects.Project_ID = " + selectedProjectID.ToString() + ") AS tblSOV ON tblSOV.SOV_Acronym = tblScheduleOfValues.SOV_Acronym Where tblScheduleOfValues.Active = 'true') AS tblSOV LEFT JOIN tblProjectChangeOrders ON tblProjectChangeOrders.CO_ID = tblSOV.CO_ID ORDER BY tblSOV.SOV_Acronym;";
             cmd = new SqlCommand(sqlquery, con);
@@ -291,7 +290,6 @@ namespace WpfApp
                 if (!row.IsNull("CO_ItemNo"))
                     ChangeOrder_ComboBox.SelectedValue = int.Parse(row["CO_ItemNo"].ToString());
                 ChangeOrder_ComboBox.Margin = new Thickness(4, 1, 4, 1);
-
 
                 SOVItem_Label.Content = row["SOV_Desc"].ToString();
                 SOVItem_Label.HorizontalAlignment = HorizontalAlignment.Left;

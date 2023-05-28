@@ -89,15 +89,20 @@
     <Compile Include="Model\TrackShipRecv.cs" />
     <Compile Include="Model\WorkOrder.cs" />
     <Compile Include="ViewModel\ProjectViewModel.cs" />
+    <Compile Include="ViewModel\TrackShipViewModel.cs" />
     <Compile Include="ViewModel\ViewModelBase.cs" />
+    <Compile Include="ViewModel\WorkOrderViewModel.cs" />
     <Compile Include="View\Start.xaml.cs">
       <DependentUpon>Start.xaml</DependentUpon>
     </Compile>
     <Compile Include="View\ProjectView.xaml.cs">
       <DependentUpon>ProjectView.xaml</DependentUpon>
     </Compile>
-    <Compile Include="View\WorkOrder.xaml.cs">
-      <DependentUpon>WorkOrder.xaml</DependentUpon>
+    <Compile Include="View\TrackShipView.xaml.cs">
+      <DependentUpon>TrackShipView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="View\WorkOrderView.xaml.cs">
+      <DependentUpon>WorkOrderView.xaml</DependentUpon>
     </Compile>
     <Page Include="MainWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
@@ -119,7 +124,11 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="View\WorkOrder.xaml">
+    <Page Include="View\TrackShipView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="View\WorkOrderView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

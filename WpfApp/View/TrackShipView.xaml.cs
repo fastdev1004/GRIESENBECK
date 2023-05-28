@@ -16,13 +16,20 @@ using System.Windows.Shapes;
 namespace WpfApp.View
 {
     /// <summary>
-    /// Interaction logic for WorkOrder.xaml
+    /// Interaction logic for TrackShipView.xaml
     /// </summary>
-    public partial class WorkOrder : Page
+    public partial class TrackShipView : Page
     {
-        public WorkOrder()
+        public TrackShipView()
         {
             InitializeComponent();
+        }
+
+        private void goBack(object sender, RoutedEventArgs e)
+        {
+            //cmd.Dispose();
+            //con.Close();
+            this.NavigationService.Navigate(new Uri("View/Start.xaml", UriKind.Relative));
         }
     }
 }
