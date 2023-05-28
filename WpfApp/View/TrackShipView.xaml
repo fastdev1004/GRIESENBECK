@@ -51,7 +51,7 @@
                 <RowDefinition Height="1*" />
             </Grid.RowDefinitions>
             <Grid>
-                <ListView Margin="10" x:Name="TrackShipList">
+                <ListView Margin="10" x:Name="TrackShipList" ItemsSource="{Binding TrackShipRecvs, Mode=TwoWay}" SelectedValuePath="ProjMatID" SelectionChanged="SelectTrackShipList">
                     <ListView.View>
                         <GridView>
                             <GridViewColumn Header="Material" Width="200" DisplayMemberBinding="{Binding MaterialName}" />
@@ -65,10 +65,10 @@
                         </GridView>
                     </ListView.View>
                     <!--<ListView.ItemContainerStyle>
-                                    <Style TargetType="ListViewItem">
-                                        <EventSetter Event="PreviewMouseLeftButtonDown" Handler="MaterialListSelect" />
-                                    </Style>
-                                </ListView.ItemContainerStyle>-->
+                        <Style TargetType="ListViewItem">
+                            <EventSetter Event="PreviewMouseLeftButtonDown" Handler="MaterialListSelect" />
+                        </Style>
+                    </ListView.ItemContainerStyle>-->
                 </ListView>
             </Grid>
             <Grid Grid.Row="1">

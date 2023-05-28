@@ -3,18 +3,8 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Data;
 using System.Data.SqlClient;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
 using WpfApp.Model;
 using WpfApp.ViewModel;
 
@@ -32,7 +22,6 @@ namespace WpfApp.View
         private SqlDataAdapter sda;
         private DataSet ds;
         private ObservableCollection<Note> sb_notes;
-        private ObservableCollection<WorkOrder> sb_workOrders;
 
         private WorkOrderViewModel WorkOrderVM;
 
@@ -40,16 +29,14 @@ namespace WpfApp.View
         {
             InitializeComponent();
             WorkOrderVM = new WorkOrderViewModel();
-            sb_workOrders = new ObservableCollection<WorkOrder>();
             sb_notes = new ObservableCollection<Note>();
             con = WorkOrderVM.con;
-            con.Open();
             this.DataContext = WorkOrderVM;
         }
 
         private void goBack(object sender, RoutedEventArgs e)
         {
-            cmd.Dispose();
+            //cmd.Dispose();
             con.Close();
             this.NavigationService.Navigate(new Uri("View/Start.xaml", UriKind.Relative));
         }
