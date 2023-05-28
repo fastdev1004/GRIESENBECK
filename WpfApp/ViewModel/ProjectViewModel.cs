@@ -76,6 +76,24 @@ namespace WpfApp.ViewModel
             set;
         }
 
+        public ObservableCollection<ProjectManager> ProjectManagers
+        {
+            get;
+            set;
+        }
+
+        public ObservableCollection<Superintendent> Superintendents
+        {
+            get;
+            set;
+        }
+
+        public ObservableCollection<Manufacturer> Manufacturers
+        {
+            get;
+            set;
+        }
+
         public ObservableCollection<Crew> Crews
         {
             get;
@@ -83,6 +101,12 @@ namespace WpfApp.ViewModel
         }
 
         public ObservableCollection<Salesman> Salesman
+        {
+            get;
+            set;
+        }
+
+        public ObservableCollection<FreightCo> FreightCos
         {
             get;
             set;
@@ -100,6 +124,12 @@ namespace WpfApp.ViewModel
             set;
         }
 
+        public ObservableCollection<Material> Materials
+        {
+            get;
+            set;
+        }
+
         public ObservableCollection<CustomerContact> CustomerContacts
         {
             get;
@@ -112,13 +142,13 @@ namespace WpfApp.ViewModel
             set;
         }
 
-        public ObservableCollection<Superintendent> Superintendents
+        public ObservableCollection<Acronym> Acronyms
         {
             get;
             set;
         }
 
-        public ObservableCollection<ProjectManager> ProjectManagers
+        public ObservableCollection<ReturnedVia> ReturnedViaNames
         {
             get;
             set;
@@ -371,16 +401,21 @@ namespace WpfApp.ViewModel
             }
         }
 
+        public SqlConnection con;
+        public SqlCommand cmd;
+        public SqlDataAdapter sda;
+        public DataSet ds;
+
         private void LoadProjects()
         {
             string connectionString = @"Data Source = DESKTOP-VDIB57T\INSTANCE2023; user id=sa; password=qwe234ASD@#$; Initial Catalog = griesenbeck;";
-            SqlConnection con = new SqlConnection(connectionString);
+            con = new SqlConnection(connectionString);
             con.Open();
 
             string sqlquery = "SELECT tblProjects.Project_ID, tblProjects.Project_Name, tblCustomers.Full_Name FROM tblProjects LEFT JOIN tblCustomers ON tblProjects.Customer_ID = tblCustomers.Customer_ID ORDER BY Project_Name ASC;";
-            SqlCommand cmd = new SqlCommand(sqlquery, con);
-            SqlDataAdapter sda = new SqlDataAdapter(cmd);
-            DataSet ds = new DataSet();
+            cmd = new SqlCommand(sqlquery, con);
+            sda = new SqlDataAdapter(cmd);
+            ds = new DataSet();
             sda.Fill(ds);
 
             ObservableCollection<Project> st_mb = new ObservableCollection<Project>();
@@ -603,30 +638,133 @@ namespace WpfApp.ViewModel
             }
 
             Superintendents = st_supt;
+
+            // ReturnedViaNames
+            sqlquery = "SELECT * FROM tblReturnedVia";
+            cmd = new SqlCommand(sqlquery, con);
+            sda = new SqlDataAdapter(cmd);
+            ds = new DataSet();
+            sda.Fill(ds);
+
+            ObservableCollection<ReturnedVia> st_returnedVia = new ObservableCollection<ReturnedVia>();
+            foreach (DataRow row in ds.Tables[0].Rows)
+            {
+                int viaID = int.Parse(row["ID"].ToString());
+                string viaName = row["ReturnedVia"].ToString();
+                st_returnedVia.Add(new ReturnedVia { ID = viaID, ReturnedViaName = viaName });
+            }
+
+            ReturnedViaNames = st_returnedVia;
+
             // ProjectManager
-            //sqlquery = "select * from tblProjectManagers";
-            //cmd = new SqlCommand(sqlquery, con);
-            //sda = new SqlDataAdapter(cmd);
-            //ds = new DataSet();
-            //sda.Fill(ds);
-            //ObservableCollection<ProjectManager> st_pm = new ObservableCollection<ProjectManager>();
-            //foreach (DataRow row in ds.Tables[0].Rows)
-            //{
-            //    int pmID = int.Parse(row["PM_ID"].ToString());
-            //    string pmName = row["PM_Name"].ToString();
-            //    string pmCellPhone = row["PM_CellPhone"].ToString();
-            //    string pmEmail = row["PM_Email"].ToString();
-            //    st_pm.Add(new ProjectManager
-            //    {
-            //        ID = pmID,
-            //        PMName = pmName,
-            //        PMCellPhone = pmCellPhone,
-            //        PMEmail = pmEmail
-            //    });
-            //}
+            sqlquery = "select * from tblProjectManagers";
+            cmd = new SqlCommand(sqlquery, con);
+            sda = new SqlDataAdapter(cmd);
+            ds = new DataSet();
+            sda.Fill(ds);
+            ObservableCollection<ProjectManager> st_pm = new ObservableCollection<ProjectManager>();
+            foreach (DataRow row in ds.Tables[0].Rows)
+            {
+                int pmID = int.Parse(row["PM_ID"].ToString());
+                string pmName = row["PM_Name"].ToString();
+                string pmCellPhone = row["PM_CellPhone"].ToString();
+                string pmEmail = row["PM_Email"].ToString();
+                st_pm.Add(new ProjectManager
+                {
+                    ID = pmID,
+                    PMName = pmName,
+                    PMCellPhone = pmCellPhone,
+                    PMEmail = pmEmail
+                });
+            }
 
-            //ProjectManagers = st_pm;
+            ProjectManagers = st_pm;
 
+            // Manufacturer
+            sqlquery = "SELECT Manuf_ID, Manuf_Name FROM tblManufacturers;";
+            cmd = new SqlCommand(sqlquery, con);
+            sda = new SqlDataAdapter(cmd);
+            ds = new DataSet();
+            sda.Fill(ds);
+            ObservableCollection<Manufacturer> st_manufacturers = new ObservableCollection<Manufacturer>();
+            foreach (DataRow row in ds.Tables[0].Rows)
+            {
+                int manufID = int.Parse(row["Manuf_ID"].ToString());
+                string manufName = row["Manuf_Name"].ToString();
+                st_manufacturers.Add(new Manufacturer
+                {
+                    ID = manufID,
+                    ManufacturerName = manufName,
+                });
+            }
+
+            Manufacturers = st_manufacturers;
+
+            // FreightCo_Name
+            ObservableCollection<FreightCo> sb_freightCo = new ObservableCollection<FreightCo>();
+
+            sqlquery = "SELECT FreightCo_ID, FreightCo_Name FROM tblFreightCo ORDER BY FreightCo_Name;";
+            cmd = new SqlCommand(sqlquery, con);
+            sda = new SqlDataAdapter(cmd);
+            ds = new DataSet();
+            sda.Fill(ds);
+
+            foreach (DataRow row in ds.Tables[0].Rows)
+            {
+                int freightID = int.Parse(row["FreightCo_ID"].ToString());
+                string freightName = row["FreightCo_Name"].ToString();
+                sb_freightCo.Add(new FreightCo
+                {
+                    FreightCoID = freightID,
+                    FreightName = freightName,
+                });
+            }
+
+            FreightCos = sb_freightCo;
+
+            // Materials
+            ObservableCollection<Material> st_material = new ObservableCollection<Material>();
+
+            sqlquery = "Select * from tblMaterials";
+            cmd = new SqlCommand(sqlquery, con);
+            sda = new SqlDataAdapter(cmd);
+            ds = new DataSet();
+            sda.Fill(ds);
+
+            foreach (DataRow row in ds.Tables[0].Rows)
+            {
+                int matID = int.Parse(row["Material_ID"].ToString());
+                string matDesc = row["Material_Desc"].ToString();
+                st_material.Add(new Material
+                {
+                    ID = matID,
+                    MatDesc = matDesc,
+                });
+            }
+
+            Materials = st_material;
+
+            // Acronym
+            ObservableCollection<Acronym> st_acronym = new ObservableCollection<Acronym>();
+
+            sqlquery = "SELECT * from tblScheduleOfValues";
+            cmd = new SqlCommand(sqlquery, con);
+            sda = new SqlDataAdapter(cmd);
+            ds = new DataSet();
+            sda.Fill(ds);
+
+            foreach (DataRow row in ds.Tables[0].Rows)
+            {
+                //int projectID = int.Parse(row["Project_ID"].ToString());
+                string acronymName = row["SOV_Acronym"].ToString();
+                st_acronym.Add(new Acronym
+                {
+                    //ProjectID = projectID,
+                    AcronymName = acronymName,
+                });
+            }
+
+            Acronyms = st_acronym;
 
             cmd.Dispose();
             con.Close();

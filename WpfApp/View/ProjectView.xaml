@@ -10,75 +10,17 @@
       Title="ViewProject">
     <Page.Resources>
         <Style x:Name="operation" TargetType="Button">
-            <Setter Property="Width" Value="40" />
+            <Setter Property="Width" Value="Auto" />
             <Setter Property="Height" Value="20" />
             <Setter Property="Foreground" Value="White" />
             <Setter Property="Background" Value="#14305F" />
             <Setter Property="FontWeight" Value="Bold" />
+            <Setter Property="Padding" Value="4,0" />
             <Style.Resources>
                 <Style TargetType="Border">
-                    <Setter Property="CornerRadius" Value="5, 5, 0, 0"></Setter>
+                    <Setter Property="CornerRadius" Value="3"></Setter>
                 </Style>
             </Style.Resources>
-        </Style>
-        <Style x:Key="GridViewColumnHeaderStyle1" TargetType="{x:Type GridViewColumnHeader}">
-            <Setter Property="Template">
-                <Setter.Value>
-                    <ControlTemplate TargetType="{x:Type GridViewColumnHeader}">
-                        <Border BorderThickness="0,0,0,0" BorderBrush="Black" Background="#40859C">
-                            <TextBlock x:Name="ContentHeader" Text="{TemplateBinding Content}" Padding="5,5,5,5" Width="{TemplateBinding Width}" TextAlignment="Center" />
-                        </Border>
-                    </ControlTemplate>
-                </Setter.Value>
-            </Setter>
-            <Setter Property="OverridesDefaultStyle" Value="True" />
-            <Setter Property="Foreground" Value="White" />
-            <Setter Property="FontSize" Value="14" />
-        </Style>
-        <Style x:Key="GridViewColumnHeaderStyle2" TargetType="{x:Type GridViewColumnHeader}">
-            <Setter Property="Template">
-                <Setter.Value>
-                    <ControlTemplate TargetType="{x:Type GridViewColumnHeader}">
-                        <Border BorderThickness="0,0,0,0" BorderBrush="Black" Background="#2A7E2A">
-                            <TextBlock x:Name="ContentHeader" Text="{TemplateBinding Content}" Padding="5,5,5,5" Width="{TemplateBinding Width}" TextAlignment="Center" />
-                        </Border>
-                    </ControlTemplate>
-                </Setter.Value>
-            </Setter>
-            <Setter Property="OverridesDefaultStyle" Value="True" />
-            <Setter Property="Foreground" Value="White" />
-            <Setter Property="FontSize" Value="14" />
-        </Style>
-        <Style x:Key="GridViewColumnHeaderStyle3" TargetType="{x:Type GridViewColumnHeader}">
-            <Setter Property="Template">
-                <Setter.Value>
-                    <ControlTemplate TargetType="{x:Type GridViewColumnHeader}">
-                        <Border BorderThickness="0,0,0,0" BorderBrush="Black" Background="#BD623D">
-                            <TextBlock x:Name="ContentHeader" Text="{TemplateBinding Content}" Padding="5,5,5,5" Width="{TemplateBinding Width}" TextAlignment="Center" />
-                        </Border>
-                    </ControlTemplate>
-                </Setter.Value>
-            </Setter>
-            <Setter Property="OverridesDefaultStyle" Value="True" />
-            <Setter Property="Foreground" Value="White" />
-            <Setter Property="FontSize" Value="14" />
-        </Style>
-        <Style x:Key="GridViewColumnHeaderStyle4" TargetType="{x:Type GridViewColumnHeader}">
-            <Setter Property="Template">
-                <Setter.Value>
-                    <ControlTemplate TargetType="{x:Type GridViewColumnHeader}">
-                        <Border BorderThickness="0,0,0,0" BorderBrush="Black" Background="#D79619">
-                            <TextBlock x:Name="ContentHeader" Text="{TemplateBinding Content}" Padding="5,5,5,5" Width="{TemplateBinding Width}" TextAlignment="Center" />
-                        </Border>
-                    </ControlTemplate>
-                </Setter.Value>
-            </Setter>
-            <Setter Property="OverridesDefaultStyle" Value="True" />
-            <Setter Property="Foreground" Value="White" />
-            <Setter Property="FontSize" Value="14" />
-        </Style>
-        <Style TargetType="{x:Type Label}">
-            <Setter Property="HorizontalAlignment" Value="Right" />
         </Style>
     </Page.Resources>
     <Grid>
@@ -142,24 +84,21 @@
                 </TabControl.Resources>
                 <TabItem Header="Project">
                     <Grid>
-                        <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="5*" />
-                            <ColumnDefinition Width="2*" />
-                        </Grid.ColumnDefinitions>
                         <Grid.RowDefinitions>
-                            <RowDefinition Height="Auto" />
-                            <RowDefinition Height="*" />
+                            <RowDefinition Height="1*" />
+                            <RowDefinition Height="1*" />
                         </Grid.RowDefinitions>
-                        <Grid Margin="10">
+                        <Grid Margin="4">
                             <Grid.ColumnDefinitions>
-                                <ColumnDefinition Width="32*"/>
-                                <ColumnDefinition Width="955*"/>
+                                <ColumnDefinition Width="5*" />
+                                <ColumnDefinition Width="2*" />
                             </Grid.ColumnDefinitions>
-                            <Grid.RowDefinitions>
-                                <RowDefinition Height="Auto" />
-                                <RowDefinition Height="*" />
-                            </Grid.RowDefinitions>
-                            <Grid Grid.ColumnSpan="2">
+                            <Grid>
+                                <Grid.Resources>
+                                    <Style TargetType="{x:Type Label}">
+                                        <Setter Property="HorizontalAlignment" Value="Right" />
+                                    </Style>
+                                </Grid.Resources>
                                 <Grid.ColumnDefinitions>
                                     <ColumnDefinition Width="2*" />
                                     <ColumnDefinition Width="1*" />
@@ -356,155 +295,150 @@
                                     </Grid>
                                 </Grid>
                             </Grid>
-                        </Grid>
-                        <ScrollViewer Grid.Column="1" VerticalScrollBarVisibility="Auto">
-                            <Grid Margin="0,4,0,10" Background="Yellow">
-                                <Grid.RowDefinitions>
-                                    <RowDefinition Height="*" />
-                                </Grid.RowDefinitions>
-                                <Grid Margin="10">
-                                    <Grid.RowDefinitions>
-                                        <RowDefinition Height="Auto" />
-                                        <RowDefinition Height="Auto" />
-                                    </Grid.RowDefinitions>
-                                    <Grid>
+
+                            <ScrollViewer Margin="4,0" Grid.Column="1" VerticalScrollBarVisibility="Auto">
+                                <Grid Background="#F5FFAF" x:Name="ProjectNoteGrid">
+                                    <Grid Margin="10">
                                         <Grid.RowDefinitions>
                                             <RowDefinition Height="Auto" />
                                             <RowDefinition Height="Auto" />
                                         </Grid.RowDefinitions>
-                                        <TextBlock>7/13/2021 12:42:52 PM</TextBlock>
-                                        <TextBox Grid.Row="1" AcceptsReturn="True" ScrollViewer.VerticalScrollBarVisibility="Auto"  Height="40"/>
-                                    </Grid>
-                                    <Grid Grid.Row="1">
-                                        <Grid.RowDefinitions>
-                                            <RowDefinition Height="Auto" />
-                                            <RowDefinition Height="Auto" />
-                                        </Grid.RowDefinitions>
-                                        <TextBlock>7/13/2021 12:42:52 PM</TextBlock>
+                                        <!--<TextBlock>7/13/2021 12:42:52 PM</TextBlock>-->
                                         <TextBox Grid.Row="1" AcceptsReturn="True" ScrollViewer.VerticalScrollBarVisibility="Auto"  Height="40"/>
                                     </Grid>
                                 </Grid>
-                            </Grid>
-                        </ScrollViewer>
-                        <Grid Grid.Row="1">
-                            <Grid.RowDefinitions>
-                                <RowDefinition Height="Auto" />
-                                <RowDefinition Height="*" />
-                            </Grid.RowDefinitions>
-                            <Grid Background="#2F528F" Height="30" Margin="2, 1, 2, 1">
-                                <Label Content="Project Contacts" HorizontalAlignment="Left" Foreground="white" Margin="32,0,0,0"/>
-                            </Grid>
-                            <Grid Grid.Row="1">
-                                <Grid.ColumnDefinitions>
-                                    <ColumnDefinition Width="1*" />
-                                    <ColumnDefinition Width="1*" />
-                                    <ColumnDefinition Width="1*" />
-                                </Grid.ColumnDefinitions>
-                                <ScrollViewer VerticalScrollBarVisibility="Auto">
-                                    <Grid Margin="4, 0, 0, 0">
+                            </ScrollViewer>
+                        </Grid>
+                        <Grid Margin="4" Grid.Row="1">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="5*" />
+                                <ColumnDefinition Width="2*" />
+                            </Grid.ColumnDefinitions>
+                            <Grid>
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="Auto" />
+                                    <RowDefinition Height="*" />
+                                </Grid.RowDefinitions>
+                                <Grid Background="#2F528F" Height="30" Margin="2, 1, 2, 1">
+                                    <Label Content="Project Contacts" HorizontalAlignment="Left" Foreground="white" Margin="32,0,0,0"/>
+                                </Grid>
+                                <Grid Grid.Row="1">
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="1*" />
+                                        <ColumnDefinition Width="1*" />
+                                        <ColumnDefinition Width="1*" />
+                                    </Grid.ColumnDefinitions>
+                                    <ScrollViewer VerticalScrollBarVisibility="Auto">
+                                        <Grid Margin="4, 0">
+                                            <Grid.RowDefinitions>
+                                                <RowDefinition Height="Auto" />
+                                                <RowDefinition Height="*" />
+                                            </Grid.RowDefinitions>
+                                            <Label Content="Project Manager" HorizontalAlignment="Left" />
+                                            <Grid Grid.Row="1" x:Name="PMGrid">
+                                                <Grid.RowDefinitions>
+                                                    <RowDefinition Height="Auto" />
+                                                </Grid.RowDefinitions>
+                                                <ComboBox ItemsSource="{Binding ProjectManagers}" DisplayMemberPath="PMName" SelectedValuePath="ID" IsEditable="True" SelectedValue="{Binding SelectedPMId, Mode=TwoWay}" />
+                                            </Grid>
+                                        </Grid>
+                                    </ScrollViewer>
+                                    <Grid Grid.Column="1" Margin="4, 0, 4, 0">
                                         <Grid.RowDefinitions>
                                             <RowDefinition Height="Auto" />
                                             <RowDefinition Height="*" />
                                         </Grid.RowDefinitions>
-                                        <Label Content="Project Manager" HorizontalAlignment="Left" />
-                                        <Grid Grid.Row="1" x:Name="PMGrid">
+                                        <Label Content="Superintendent" HorizontalAlignment="Left" />
+                                        <Grid Grid.Row="1" x:Name="SuptGrid">
                                             <Grid.RowDefinitions>
                                                 <RowDefinition Height="Auto" />
                                             </Grid.RowDefinitions>
-                                            <ComboBox ItemsSource="{Binding ProjectManagers}" DisplayMemberPath="PMName" SelectedValuePath="ID" IsEditable="True" SelectedValue="{Binding SelectedPMId, Mode=TwoWay}" />
+                                            <ComboBox ItemsSource="{Binding Superintendents}" DisplayMemberPath="SupName" SelectedValuePath="ID" IsEditable="True" SelectedValue="{Binding SelectedPMId, Mode=TwoWay}" />
                                         </Grid>
                                     </Grid>
-                                </ScrollViewer>
-                                <Grid Grid.Column="1" Margin="4, 0, 0, 0">
-                                    <Label Content="Superintendent" HorizontalAlignment="Left" />
-                                </Grid>
-                                <Grid Grid.Column="2" Grid.Row="1">
-                                    <Grid Margin="0, 30, 0, 0">
-                                        <Grid.RowDefinitions>
-                                            <RowDefinition Height="Auto" />
-                                            <RowDefinition Height="Auto" />
-                                            <RowDefinition Height="Auto" />
-                                            <RowDefinition Height="Auto" />
-                                            <RowDefinition Height="Auto" />
-                                            <RowDefinition Height="*" />
-                                        </Grid.RowDefinitions>
-                                        <Grid>
-                                            <Grid.ColumnDefinitions>
-                                                <ColumnDefinition Width="2*" />
-                                                <ColumnDefinition Width="3*" />
-                                            </Grid.ColumnDefinitions>
-                                            <Label Margin="0,4,0,4">Estimator:</Label>
-                                            <ComboBox ItemsSource="{Binding Estimators}" Grid.Row="1" Grid.Column="1" Margin="0,4,16,4" DisplayMemberPath="EstimatorName" SelectedValuePath="ID" SelectedValue="{Binding SelectedEstimatorID}" />
-                                        </Grid>
-                                        <Grid Grid.Row="1">
-                                            <Grid.ColumnDefinitions>
-                                                <ColumnDefinition Width="2*" />
-                                                <ColumnDefinition Width="3*" />
-                                            </Grid.ColumnDefinitions>
-                                            <Label Margin="0,4,0,4">Project Coord:</Label>
-                                            <ComboBox ItemsSource="{Binding PCs}" Grid.Row="1" Grid.Column="1" Margin="0,4,16,4" DisplayMemberPath="PCName" SelectedValuePath="ID" SelectedValue="{Binding SelectedProjectCoordID}" />
-                                        </Grid>
-                                        <Grid Grid.Row="2">
-                                            <Grid.ColumnDefinitions>
-                                                <ColumnDefinition Width="2*" />
-                                                <ColumnDefinition Width="3*" />
-                                            </Grid.ColumnDefinitions>
-                                            <Label Margin="0,4,0,4">Arch Rep:</Label>
-                                            <ComboBox ItemsSource="{Binding ArchReps}" Grid.Row="1" Grid.Column="1" Margin="0,4,16,4" DisplayMemberPath="ArchRepName" SelectedValuePath="ID" SelectedValue="{Binding SelectedArchRepID}" />
-                                        </Grid>
-                                        <Grid Grid.Row="3">
-                                            <Grid.ColumnDefinitions>
-                                                <ColumnDefinition Width="2*" />
-                                                <ColumnDefinition Width="3*" />
-                                            </Grid.ColumnDefinitions>
-                                            <Label Margin="0,4,0,4">Submittal Contact:</Label>
-                                            <ComboBox ItemsSource="{Binding CustomerContacts}" Grid.Row="1" Grid.Column="1" Margin="0,4,16,4" DisplayMemberPath="CCName" SelectedValuePath="ID" SelectedValue="{Binding SelectedCCID}" />
-                                        </Grid>
-                                        <Grid Grid.Row="4">
-                                            <Grid.ColumnDefinitions>
-                                                <ColumnDefinition Width="2*" />
-                                                <ColumnDefinition Width="3*" />
-                                            </Grid.ColumnDefinitions>
-                                            <Label Margin="0,4,0,4">Architect:</Label>
-                                            <ComboBox ItemsSource="{Binding Architects}" Grid.Row="1" Grid.Column="1" Margin="0,4,16,4" DisplayMemberPath="ArchCompany" SelectedValuePath="ID" SelectedValue="{Binding SelectedArchitectID}" />
+                                    <Grid Grid.Column="2" Grid.Row="1">
+                                        <Grid Margin="0, 30, 0, 0">
+                                            <Grid.RowDefinitions>
+                                                <RowDefinition Height="Auto" />
+                                                <RowDefinition Height="Auto" />
+                                                <RowDefinition Height="Auto" />
+                                                <RowDefinition Height="Auto" />
+                                                <RowDefinition Height="Auto" />
+                                                <RowDefinition Height="*" />
+                                            </Grid.RowDefinitions>
+                                            <Grid>
+                                                <Grid.ColumnDefinitions>
+                                                    <ColumnDefinition Width="2*" />
+                                                    <ColumnDefinition Width="3*" />
+                                                </Grid.ColumnDefinitions>
+                                                <Label Margin="0,4,0,4">Estimator:</Label>
+                                                <ComboBox ItemsSource="{Binding Estimators}" Grid.Row="1" Grid.Column="1" Margin="0,4,16,4" DisplayMemberPath="EstimatorName" SelectedValuePath="ID" SelectedValue="{Binding SelectedEstimatorID}" />
+                                            </Grid>
+                                            <Grid Grid.Row="1">
+                                                <Grid.ColumnDefinitions>
+                                                    <ColumnDefinition Width="2*" />
+                                                    <ColumnDefinition Width="3*" />
+                                                </Grid.ColumnDefinitions>
+                                                <Label Margin="0,4,0,4">Project Coord:</Label>
+                                                <ComboBox ItemsSource="{Binding PCs}" Grid.Row="1" Grid.Column="1" Margin="0,4,16,4" DisplayMemberPath="PCName" SelectedValuePath="ID" SelectedValue="{Binding SelectedProjectCoordID}" />
+                                            </Grid>
+                                            <Grid Grid.Row="2">
+                                                <Grid.ColumnDefinitions>
+                                                    <ColumnDefinition Width="2*" />
+                                                    <ColumnDefinition Width="3*" />
+                                                </Grid.ColumnDefinitions>
+                                                <Label Margin="0,4,0,4">Arch Rep:</Label>
+                                                <ComboBox ItemsSource="{Binding ArchReps}" Grid.Row="1" Grid.Column="1" Margin="0,4,16,4" DisplayMemberPath="ArchRepName" SelectedValuePath="ID" SelectedValue="{Binding SelectedArchRepID}" />
+                                            </Grid>
+                                            <Grid Grid.Row="3">
+                                                <Grid.ColumnDefinitions>
+                                                    <ColumnDefinition Width="2*" />
+                                                    <ColumnDefinition Width="3*" />
+                                                </Grid.ColumnDefinitions>
+                                                <Label Margin="0,4,0,4">Submittal Contact:</Label>
+                                                <ComboBox ItemsSource="{Binding CustomerContacts}" Grid.Row="1" Grid.Column="1" Margin="0,4,16,4" DisplayMemberPath="CCName" SelectedValuePath="ID" SelectedValue="{Binding SelectedCCID}" />
+                                            </Grid>
+                                            <Grid Grid.Row="4">
+                                                <Grid.ColumnDefinitions>
+                                                    <ColumnDefinition Width="2*" />
+                                                    <ColumnDefinition Width="3*" />
+                                                </Grid.ColumnDefinitions>
+                                                <Label Margin="0,4,0,4">Architect:</Label>
+                                                <ComboBox ItemsSource="{Binding Architects}" Grid.Row="1" Grid.Column="1" Margin="0,4,16,4" DisplayMemberPath="ArchCompany" SelectedValuePath="ID" SelectedValue="{Binding SelectedArchitectID}" />
+                                            </Grid>
                                         </Grid>
                                     </Grid>
                                 </Grid>
                             </Grid>
-                        </Grid>
-                        <Grid Grid.Row="1" Grid.Column="1">
-                            <ListView>
-                                <ListView.Resources>
-                                    <Style TargetType="ComboBox">
-                                        <Setter Property="Width" Value="250"/>
-                                    </Style>
-                                </ListView.Resources>
-                                <ListView.View>
-                                    <GridView AllowsColumnReorder="true" ColumnHeaderContainerStyle="{StaticResource GridViewColumnHeaderStyle4}"  ColumnHeaderToolTip="Employee Information">
-                                        <GridViewColumn Header="Description">
-                                            <!--<GridViewColumn.CellTemplate>
-                                                    <DataTemplate>
-                                                    </DataTemplate>
-                                                </GridViewColumn.CellTemplate>-->
-                                        </GridViewColumn>
-                                    </GridView>
-                                </ListView.View>
-                            </ListView>
+                            <Grid Margin="4,0" Grid.Column="1">
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="Auto" />
+                                    <RowDefinition Height="*" />
+                                </Grid.RowDefinitions>
+                                <Grid Background="#D79619" Height="30">
+                                    <Label Content="Description" HorizontalAlignment="Left" Foreground="white"/>
+                                </Grid>
+                            </Grid>
                         </Grid>
                     </Grid>
                 </TabItem>
                 <TabItem Header="SOV">
                     <Grid Margin="10">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="25*"/>
+                            <ColumnDefinition Width="1629*"/>
+                        </Grid.ColumnDefinitions>
                         <Grid.RowDefinitions>
                             <RowDefinition Height="1*" />
                             <RowDefinition Height="1*" />
                         </Grid.RowDefinitions>
-                        <Grid>
+                        <Grid Grid.ColumnSpan="2">
                             <Grid.ColumnDefinitions>
-                                <ColumnDefinition Width="6*" />
-                                <ColumnDefinition Width="4*" />
+                                <ColumnDefinition Width="19*" />
+                                <ColumnDefinition Width="973*"/>
+                                <ColumnDefinition Width="662*" />
                             </Grid.ColumnDefinitions>
-                            <StackPanel>
+                            <StackPanel Grid.ColumnSpan="2">
                                 <Grid Background="#648278" Height="30" Margin="2, 1, 2, 1">
                                     <Grid.ColumnDefinitions>
                                         <ColumnDefinition Width="3*"/>
@@ -535,7 +469,7 @@
                                 </Grid>
                             </StackPanel>
                         </Grid>
-                        <Grid Grid.Row="1">
+                        <Grid Grid.Row="1" Grid.ColumnSpan="2">
                             <TabControl BorderBrush="Gainsboro">
                                 <TabControl.Resources>
                                     <Style TargetType="TabItem">
@@ -1148,12 +1082,12 @@
                                 </Border>
                             </Grid>
                             <ScrollViewer Grid.Row="2" VerticalScrollBarVisibility="Auto">
-                                <Grid x:Name="WorkOrderNoteGrid">
+                                <Grid x:Name="WorkOrderNoteGrid" Background="#F5FFAF">
                                     <Grid.RowDefinitions>
                                         <RowDefinition Height="Auto" />
                                         <RowDefinition Height="*" />
                                     </Grid.RowDefinitions>
-                                    <Grid>
+                                    <Grid Margin="10, 2, 10, 2">
                                         <Grid.RowDefinitions>
                                             <RowDefinition Height="Auto" />
                                             <RowDefinition Height="Auto" />
@@ -1178,17 +1112,50 @@
                                 <RowDefinition Height="Auto" />
                                 <RowDefinition Height="*" />
                             </Grid.RowDefinitions>
-                            <Grid>
-                                <StackPanel>
-                                    <WrapPanel Margin="60, 0,0,0" >
-                                        <Button Content="New" />
-                                        <Button Content="Print" Margin="8 ,0,0,0" />
-                                        <Button Content="Email" Margin="8 ,0,0,0" />
-                                        <Button Content="Deplicate" Margin="8 ,0,0,0" />
-                                        <Button Content="Delete" Margin="8 ,0,0,0" />
-                                    </WrapPanel>
-                                    <CheckBox>Hide Pricing</CheckBox>
-                                </StackPanel>
+                            <Grid Margin="10, 0, 10, 0">
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="Auto" />
+                                    <RowDefinition Height="Auto" />
+                                </Grid.RowDefinitions>
+                                <Grid Margin="120,0,0,0">
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="Auto" />
+                                        <ColumnDefinition Width="Auto" />
+                                        <ColumnDefinition Width="Auto" />
+                                        <ColumnDefinition Width="Auto" />
+                                        <ColumnDefinition Width="Auto" />
+                                    </Grid.ColumnDefinitions>
+                                    <Button Content="New" />
+                                    <Button Content="Print" Grid.Column="1" Margin="8 ,0,0,0" />
+                                    <Button Content="Email" Grid.Column="2" Margin="8 ,0,0,0" />
+                                    <Button Content="Deplicate" Width="Auto" Grid.Column="3" Margin="8 ,0,0,0" />
+                                    <Button Content="Delete" Grid.Column="4" Margin="8 ,0,0,0" />
+                                </Grid>
+                                <Grid Grid.Row="1" Margin="0,10,0,0">
+                                    <Grid.Resources>
+                                        <Style TargetType="{x:Type Label}">
+                                            <Setter Property="HorizontalAlignment" Value="Left" />
+                                            <!--<Setter Property="FontFamily" Value="italic" />-->
+                                        </Style>
+                                    </Grid.Resources>
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="1*" />
+                                        <ColumnDefinition Width="1*" />
+                                    </Grid.ColumnDefinitions>
+                                    <CheckBox Grid.Row="1" Margin="120, 0,0,0">Hide Pricing</CheckBox>
+                                    <Grid Grid.Column="1">
+                                        <Grid.RowDefinitions>
+                                            <RowDefinition Height="Auto" />
+                                            <RowDefinition Height="Auto" />
+                                            <RowDefinition Height="Auto" />
+                                            <RowDefinition Height="Auto" />
+                                        </Grid.RowDefinitions>
+                                        <Label Content="To Add an item to the Work Order:" />
+                                        <Label Grid.Row="1" Content="double-click the item in the Project list." Margin="0,0,0,10" />
+                                        <Label Grid.Row="2" Content="To Delete an item from a Work Order:" />
+                                        <Label Grid.Row="3" Content="click on the gray box to the left of the item and use your keyboard Delete button." />
+                                    </Grid>
+                                </Grid>
                             </Grid>
                             <Grid Grid.Row="1">
                                 <Grid.RowDefinitions>
@@ -1223,55 +1190,56 @@
                                                 <RowDefinition Height="1*" />
                                             </Grid.RowDefinitions>
                                             <Grid>
-                                                <ListView x:Name="ProjMatList" Background="#E8E8E8">
+                                                <ListView x:Name="ProjectWorkOrderList" Background="#E8E8E8">
                                                     <ListView.View>
                                                         <GridView>
                                                             <GridView.ColumnHeaderContainerStyle>
                                                                 <Style TargetType="{x:Type GridViewColumnHeader}">
                                                                     <Setter Property="Background" Value="#E8E8E8"/>
+                                                                    <Setter Property="HorizontalAlignment" Value="Left" />
                                                                 </Style>
                                                             </GridView.ColumnHeaderContainerStyle>
-                                                            <GridViewColumn Width="120" DisplayMemberBinding="{Binding Name}">
+                                                            <GridViewColumn Width="120" DisplayMemberBinding="{Binding SovAcronym}">
                                                                 <GridViewColumn.Header>
                                                                     <GridViewColumnHeader Tag="Name">SOV</GridViewColumnHeader>
                                                                 </GridViewColumn.Header>
                                                             </GridViewColumn>
-                                                            <GridViewColumn Width="120" DisplayMemberBinding="{Binding Age}">
+                                                            <GridViewColumn Width="120" DisplayMemberBinding="{Binding MatName}">
                                                                 <GridViewColumn.Header>
                                                                     <GridViewColumnHeader Tag="Age">Material</GridViewColumnHeader>
                                                                 </GridViewColumn.Header>
                                                             </GridViewColumn>
-                                                            <GridViewColumn Width="120" DisplayMemberBinding="{Binding Gender}">
+                                                            <GridViewColumn Width="120" DisplayMemberBinding="{Binding ManufName}">
                                                                 <GridViewColumn.Header>
                                                                     <GridViewColumnHeader Tag="Gender">Manufacturer</GridViewColumnHeader>
                                                                 </GridViewColumn.Header>
                                                             </GridViewColumn>
-                                                            <GridViewColumn Width="80" DisplayMemberBinding="{Binding Gender}">
+                                                            <GridViewColumn Width="80" DisplayMemberBinding="{Binding Stock}">
                                                                 <GridViewColumn.Header>
                                                                     <GridViewColumnHeader Tag="Gender">Stock?</GridViewColumnHeader>
                                                                 </GridViewColumn.Header>
                                                             </GridViewColumn>
-                                                            <GridViewColumn Width="100" DisplayMemberBinding="{Binding Gender}">
+                                                            <GridViewColumn Width="100" DisplayMemberBinding="{Binding MatlReqd}">
                                                                 <GridViewColumn.Header>
                                                                     <GridViewColumnHeader Tag="Gender">Matl Reqd</GridViewColumnHeader>
                                                                 </GridViewColumn.Header>
                                                             </GridViewColumn>
-                                                            <GridViewColumn Width="100" DisplayMemberBinding="{Binding Gender}">
+                                                            <GridViewColumn Width="100" DisplayMemberBinding="{Binding QtyReqd}">
                                                                 <GridViewColumn.Header>
                                                                     <GridViewColumnHeader Tag="Gender">Qty Reqd</GridViewColumnHeader>
                                                                 </GridViewColumn.Header>
                                                             </GridViewColumn>
-                                                            <GridViewColumn Width="100" DisplayMemberBinding="{Binding Gender}">
+                                                            <GridViewColumn Width="100" DisplayMemberBinding="{Binding QtyOrd}">
                                                                 <GridViewColumn.Header>
                                                                     <GridViewColumnHeader Tag="Gender">Qty Ord</GridViewColumnHeader>
                                                                 </GridViewColumn.Header>
                                                             </GridViewColumn>
-                                                            <GridViewColumn Width="80" DisplayMemberBinding="{Binding Gender}">
+                                                            <GridViewColumn Width="80" DisplayMemberBinding="{Binding QtyRecvd}">
                                                                 <GridViewColumn.Header>
                                                                     <GridViewColumnHeader Tag="Gender">Qty Recvd</GridViewColumnHeader>
                                                                 </GridViewColumn.Header>
                                                             </GridViewColumn>
-                                                            <GridViewColumn Width="100" DisplayMemberBinding="{Binding Gender}">
+                                                            <GridViewColumn Width="100" DisplayMemberBinding="{Binding MatQty}">
                                                                 <GridViewColumn.Header>
                                                                     <GridViewColumnHeader Tag="Gender">Mat_Qty</GridViewColumnHeader>
                                                                 </GridViewColumn.Header>
@@ -1281,79 +1249,78 @@
                                                 </ListView>
                                             </Grid>
                                             <Grid Grid.Row="1" Margin="0,10,0,0">
-                                                <StackPanel>
-                                                    <Label Content="WO Materials:" HorizontalAlignment="Left" />
-                                                    <Grid Background="#BD623D" Height="30">
-                                                        <Grid.ColumnDefinitions>
-                                                            <ColumnDefinition Width="2*"/>
-                                                            <ColumnDefinition Width="3*"/>
-                                                            <ColumnDefinition Width="4*"/>
-                                                            <ColumnDefinition Width="2*"/>
-                                                            <ColumnDefinition Width="3*"/>
-                                                            <ColumnDefinition Width="2*"/>
-                                                        </Grid.ColumnDefinitions>
-                                                        <Label Content="SOV" Foreground="white" HorizontalAlignment="Center" />
-                                                        <Label Grid.Column="1" Content="Material" Foreground="white" HorizontalAlignment="Center" />
-                                                        <Label Grid.Column="2" Content="Manufacturer" Foreground="white" HorizontalAlignment="Center" />
-                                                        <Label Grid.Column="3" Content="Qty" Foreground="white" HorizontalAlignment="Center" />
-                                                        <Label Grid.Column="4" Content="Charge Order #" Foreground="white" HorizontalAlignment="Center" />
-                                                        <Label Grid.Column="5" Content="Ship Date" Foreground="white" HorizontalAlignment="Center" />
-                                                    </Grid>
-                                                </StackPanel>
+                                                <Grid.RowDefinitions>
+                                                    <RowDefinition Height="Auto" />
+                                                    <RowDefinition Height="Auto" />
+                                                    <RowDefinition Height="*" />
+                                                </Grid.RowDefinitions>
+                                                <Label Content="WO Materials:" HorizontalAlignment="Left" />
+                                                <Grid Grid.Row="1" Background="#BD623D" Height="30">
+                                                    <Grid.ColumnDefinitions>
+                                                        <ColumnDefinition Width="2*"/>
+                                                        <ColumnDefinition Width="3*"/>
+                                                        <ColumnDefinition Width="4*"/>
+                                                        <ColumnDefinition Width="2*"/>
+                                                        <ColumnDefinition Width="3*"/>
+                                                        <ColumnDefinition Width="2*"/>
+                                                    </Grid.ColumnDefinitions>
+                                                    <Label Content="SOV" Foreground="white" HorizontalAlignment="Center" />
+                                                    <Label Grid.Column="1" Content="Material" Foreground="white" HorizontalAlignment="Center" />
+                                                    <Label Grid.Column="2" Content="Manufacturer" Foreground="white" HorizontalAlignment="Center" />
+                                                    <Label Grid.Column="3" Content="Qty" Foreground="white" HorizontalAlignment="Center" />
+                                                    <Label Grid.Column="4" Content="Charge Order #" Foreground="white" HorizontalAlignment="Center" />
+                                                    <Label Grid.Column="5" Content="Ship Date" Foreground="white" HorizontalAlignment="Center" />
+                                                </Grid>
                                             </Grid>
                                         </Grid>
                                     </TabItem>
                                     <TabItem Header="Project Labor">
-                                        <Grid Margin="10" Height="520">
+                                        <Grid Margin="10">
                                             <Grid.RowDefinitions>
                                                 <RowDefinition Height="1*" />
                                                 <RowDefinition Height="1*" />
                                             </Grid.RowDefinitions>
                                             <Grid>
-                                                <ListView Name="ProjectLabor" Background="#E8E8E8">
+                                                <ListView x:Name="ProjectLaborList" Background="#E8E8E8">
                                                     <ListView.View>
                                                         <GridView>
                                                             <GridView.ColumnHeaderContainerStyle>
                                                                 <Style TargetType="{x:Type GridViewColumnHeader}">
                                                                     <Setter Property="Background" Value="#E8E8E8"/>
+                                                                    <Setter Property="HorizontalAlignment" Value="Left" />
                                                                 </Style>
                                                             </GridView.ColumnHeaderContainerStyle>
-                                                            <GridViewColumn Width="120" DisplayMemberBinding="{Binding Name}">
+                                                            <GridViewColumn Width="120" DisplayMemberBinding="{Binding SovAcronym}">
                                                                 <GridViewColumn.Header>
                                                                     <GridViewColumnHeader Tag="Name">SOV</GridViewColumnHeader>
                                                                 </GridViewColumn.Header>
                                                             </GridViewColumn>
-                                                            <GridViewColumn Width="120" DisplayMemberBinding="{Binding Age}">
+                                                            <GridViewColumn Width="120" DisplayMemberBinding="{Binding Labor}">
                                                                 <GridViewColumn.Header>
                                                                     <GridViewColumnHeader Tag="Age">Labor</GridViewColumnHeader>
                                                                 </GridViewColumn.Header>
                                                             </GridViewColumn>
-                                                            <GridViewColumn Width="120" DisplayMemberBinding="{Binding Gender}">
+                                                            <GridViewColumn Width="120" DisplayMemberBinding="{Binding QtyReqd}">
                                                                 <GridViewColumn.Header>
                                                                     <GridViewColumnHeader Tag="Gender">Qty Reqd</GridViewColumnHeader>
                                                                 </GridViewColumn.Header>
                                                             </GridViewColumn>
-                                                            <GridViewColumn Width="80" DisplayMemberBinding="{Binding Gender}">
+                                                            <GridViewColumn Width="80" DisplayMemberBinding="{Binding UnitPrice}">
                                                                 <GridViewColumn.Header>
                                                                     <GridViewColumnHeader Tag="Gender">Unit Price</GridViewColumnHeader>
                                                                 </GridViewColumn.Header>
                                                             </GridViewColumn>
-                                                            <GridViewColumn Width="100" DisplayMemberBinding="{Binding Gender}">
-                                                                <GridViewColumn.Header>
-                                                                    <GridViewColumnHeader Tag="Gender">Unit Price</GridViewColumnHeader>
-                                                                </GridViewColumn.Header>
-                                                            </GridViewColumn>
-                                                            <GridViewColumn Width="100" DisplayMemberBinding="{Binding Gender}">
+                                                            <GridViewColumn Width="100" DisplayMemberBinding="{Binding Total}">
                                                                 <GridViewColumn.Header>
                                                                     <GridViewColumnHeader Tag="Gender">Total</GridViewColumnHeader>
                                                                 </GridViewColumn.Header>
                                                             </GridViewColumn>
-                                                            <GridViewColumn Width="100" DisplayMemberBinding="{Binding Gender}">
+                                                            <GridViewColumn Width="100" DisplayMemberBinding="{Binding ChangeOrder}">
                                                                 <GridViewColumn.Header>
                                                                     <GridViewColumnHeader Tag="Gender">CO</GridViewColumnHeader>
                                                                 </GridViewColumn.Header>
                                                             </GridViewColumn>
-                                                            <GridViewColumn Width="80" DisplayMemberBinding="{Binding Gender}">
+                                                            <GridViewColumn Width="80" DisplayMemberBinding="{Binding Phase}">
                                                                 <GridViewColumn.Header>
                                                                     <GridViewColumnHeader Tag="Gender">Phase</GridViewColumnHeader>
                                                                 </GridViewColumn.Header>
@@ -1363,27 +1330,30 @@
                                                 </ListView>
                                             </Grid>
                                             <Grid Grid.Row="1" Margin="0,10,0,0">
-                                                <StackPanel>
-                                                    <Label Content="WO Labor:" HorizontalAlignment="Left" />
-                                                    <Grid Background="#7A9F35" Height="30">
-                                                        <Grid.ColumnDefinitions>
-                                                            <ColumnDefinition Width="2*"/>
-                                                            <ColumnDefinition Width="3*"/>
-                                                            <ColumnDefinition Width="4*"/>
-                                                            <ColumnDefinition Width="2*"/>
-                                                            <ColumnDefinition Width="3*"/>
-                                                            <ColumnDefinition Width="2*"/>
-                                                            <ColumnDefinition Width="2*"/>
-                                                        </Grid.ColumnDefinitions>
-                                                        <Label Content="SOV" Foreground="white" HorizontalAlignment="Center" />
-                                                        <Label Grid.Column="1" Content="Labor" Foreground="white" HorizontalAlignment="Center" />
-                                                        <Label Grid.Column="2" Content="Phase" Foreground="white" HorizontalAlignment="Center" />
-                                                        <Label Grid.Column="3" Content="Qty" Foreground="white" HorizontalAlignment="Center" />
-                                                        <Label Grid.Column="4" Content="Unit Price" Foreground="white" HorizontalAlignment="Center" />
-                                                        <Label Grid.Column="5" Content="Total" Foreground="white" HorizontalAlignment="Center" />
-                                                        <Label Grid.Column="6" Content="CO #" Foreground="white" HorizontalAlignment="Center" />
-                                                    </Grid>
-                                                </StackPanel>
+                                                <Grid.RowDefinitions>
+                                                    <RowDefinition Height="Auto" />
+                                                    <RowDefinition Height="Auto" />
+                                                    <RowDefinition Height="*" />
+                                                </Grid.RowDefinitions>
+                                                <Label Content="WO Labor:" HorizontalAlignment="Left" />
+                                                <Grid Grid.Row="1" Background="#7A9F35" Height="30">
+                                                    <Grid.ColumnDefinitions>
+                                                        <ColumnDefinition Width="2*"/>
+                                                        <ColumnDefinition Width="3*"/>
+                                                        <ColumnDefinition Width="4*"/>
+                                                        <ColumnDefinition Width="2*"/>
+                                                        <ColumnDefinition Width="3*"/>
+                                                        <ColumnDefinition Width="2*"/>
+                                                        <ColumnDefinition Width="2*"/>
+                                                    </Grid.ColumnDefinitions>
+                                                    <Label Content="SOV" Foreground="white" HorizontalAlignment="Center" />
+                                                    <Label Grid.Column="1" Content="Labor" Foreground="white" HorizontalAlignment="Center" />
+                                                    <Label Grid.Column="2" Content="Phase" Foreground="white" HorizontalAlignment="Center" />
+                                                    <Label Grid.Column="3" Content="Qty" Foreground="white" HorizontalAlignment="Center" />
+                                                    <Label Grid.Column="4" Content="Unit Price" Foreground="white" HorizontalAlignment="Center" />
+                                                    <Label Grid.Column="5" Content="Total" Foreground="white" HorizontalAlignment="Center" />
+                                                    <Label Grid.Column="6" Content="CO #" Foreground="white" HorizontalAlignment="Center" />
+                                                </Grid>
                                             </Grid>
                                         </Grid>
                                     </TabItem>
@@ -1434,7 +1404,7 @@
                                 <Setter Property="Margin" Value="0,1,4,1" />
                                 <Setter Property="BorderThickness" Value="1,1,1,1" />
                                 <Setter Property="VerticalContentAlignment" Value="Center"/>
-                              </Style>
+                            </Style>
                             <Style TargetType="{x:Type DatePicker}">
                                 <Setter Property="Margin" Value="0,1,4,1" />
                             </Style>
@@ -1591,140 +1561,157 @@
                         <Grid.RowDefinitions>
                             <RowDefinition Height="Auto" />
                         </Grid.RowDefinitions>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="1*"/>
+                            <ColumnDefinition Width="1*" />
+                            <ColumnDefinition Width="1*" />
+                        </Grid.ColumnDefinitions>
+                        <Grid.Resources>
+                            <Style TargetType="{x:Type CheckBox}">
+                                <Setter Property="VerticalAlignment" Value="Center"/>
+                                <Setter Property="HorizontalAlignment" Value="Left"/>
+                            </Style>
+                            <Style TargetType="{x:Type TextBox}">
+                                <Setter Property="Margin" Value="0,1,4,1" />
+                                <Setter Property="BorderThickness" Value="1,1,1,1" />
+                                <Setter Property="VerticalContentAlignment" Value="Center"/>
+                            </Style>
+                            <Style TargetType="{x:Type DatePicker}">
+                                <Setter Property="Margin" Value="0,1,4,1" />
+                            </Style>
+                            <Style TargetType="{x:Type ComboBox}">
+                                <Setter Property="Margin" Value="0,1,4,1" />
+                            </Style>
+                            <Style TargetType="{x:Type Label}">
+                                <Setter Property="HorizontalAlignment" Value="Left"/>
+                            </Style>
+                        </Grid.Resources>
                         <Grid>
-                            <Grid.ColumnDefinitions>
-                                <ColumnDefinition Width="1*"/>
-                                <ColumnDefinition Width="1*" />
-                                <ColumnDefinition Width="1*" />
-                            </Grid.ColumnDefinitions>
+                            <Grid.Resources>
+                                <Style TargetType="Grid">
+                                    <Setter Property="Margin" Value="10, 2, 10, 2"></Setter>
+                                </Style>
+                            </Grid.Resources>
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="Auto" />
+                                <RowDefinition Height="Auto" />
+                                <RowDefinition Height="Auto" />
+                                <RowDefinition Height="Auto" />
+                                <RowDefinition Height="Auto" />
+                            </Grid.RowDefinitions>
                             <Grid>
-                                <Grid.Resources>
-                                    <Style TargetType="Grid">
-                                        <Setter Property="Margin" Value="10, 2, 10, 2"></Setter>
-                                    </Style>
-                                </Grid.Resources>
-                                <Grid.RowDefinitions>
-                                    <RowDefinition Height="Auto" />
-                                    <RowDefinition Height="Auto" />
-                                    <RowDefinition Height="Auto" />
-                                    <RowDefinition Height="Auto" />
-                                    <RowDefinition Height="Auto" />
-                                </Grid.RowDefinitions>
-                                <Grid>
-                                    <Grid.ColumnDefinitions>
-                                        <ColumnDefinition Width="3*" />
-                                        <ColumnDefinition Width="2*" />
-                                    </Grid.ColumnDefinitions>
-                                    <Label Content="GAP Job #" HorizontalAlignment="Left" />
-                                    <TextBox Grid.Column="1" />
-                                </Grid>
-                                <Grid Grid.Row="1">
-                                    <Grid.ColumnDefinitions>
-                                        <ColumnDefinition Width="3*" />
-                                        <ColumnDefinition Width="2*" />
-                                    </Grid.ColumnDefinitions>
-                                    <Label Content="CIP Type" HorizontalAlignment="Left" />
-                                    <ComboBox Grid.Column="1" />
-                                </Grid>
-                                <Grid Grid.Row="2">
-                                    <Grid.ColumnDefinitions>
-                                        <ColumnDefinition Width="3*" />
-                                        <ColumnDefinition Width="2*" />
-                                    </Grid.ColumnDefinitions>
-                                    <Label Content="Target Date" HorizontalAlignment="Left" />
-                                    <DatePicker Grid.Column="1" />
-                                </Grid>
-                                <Grid Grid.Row="3">
-                                    <Grid.ColumnDefinitions>
-                                        <ColumnDefinition Width="3*" />
-                                        <ColumnDefinition Width="2*" />
-                                    </Grid.ColumnDefinitions>
-                                    <Label Content="Original Contract Amount" HorizontalAlignment="Left" />
-                                    <TextBox Grid.Column="1" />
-                                </Grid>
-                                <Grid Grid.Row="4">
-                                    <Grid.ColumnDefinitions>
-                                        <ColumnDefinition Width="3*" />
-                                        <ColumnDefinition Width="2*" />
-                                    </Grid.ColumnDefinitions>
-                                    <Label Content="Final Contract Amount" HorizontalAlignment="Left" />
-                                    <TextBox Grid.Column="1" />
-                                </Grid>
-                            </Grid>
-                            <Grid Grid.Column="1">
-                                <Grid.Resources>
-                                    <Style TargetType="Grid">
-                                        <Setter Property="Margin" Value="10, 2, 10, 2"></Setter>
-                                    </Style>
-                                </Grid.Resources>
-                                <Grid.RowDefinitions>
-                                    <RowDefinition Height="Auto" />
-                                    <RowDefinition Height="Auto" />
-                                    <RowDefinition Height="Auto" />
-                                    <RowDefinition Height="Auto" />
-                                    <RowDefinition Height="Auto" />
-                                </Grid.RowDefinitions>
-                                <Grid>
-                                    <Grid.ColumnDefinitions>
-                                        <ColumnDefinition Width="3*" />
-                                        <ColumnDefinition Width="2*" />
-                                    </Grid.ColumnDefinitions>
-                                    <Label Content="Forms Received" HorizontalAlignment="Left" />
-                                    <TextBox Grid.Column="1" />
-                                </Grid>
-                                <Grid Grid.Row="1">
-                                    <Grid.ColumnDefinitions>
-                                        <ColumnDefinition Width="3*" />
-                                        <ColumnDefinition Width="2*" />
-                                    </Grid.ColumnDefinitions>
-                                    <Label Content="Forms Sent" HorizontalAlignment="Left" />
-                                    <TextBox Grid.Column="1" />
-                                </Grid>
-                                <Grid  Grid.Row="2">
-                                    <Grid.ColumnDefinitions>
-                                        <ColumnDefinition Width="3*" />
-                                        <ColumnDefinition Width="2*" />
-                                    </Grid.ColumnDefinitions>
-                                    <Label Content="Certificate Received" HorizontalAlignment="Left" />
-                                    <TextBox Grid.Column="1" />
-                                </Grid>
-                                <Grid Grid.Row="3">
-                                    <Grid.ColumnDefinitions>
-                                        <ColumnDefinition Width="3*" />
-                                        <ColumnDefinition Width="2*" />
-                                    </Grid.ColumnDefinitions>
-                                    <Label Content="Exemption Approved" HorizontalAlignment="Left" />
-                                    <Grid Grid.Column="1" Margin="0">
-                                        <Grid.ColumnDefinitions>
-                                            <ColumnDefinition Width="20" />
-                                            <ColumnDefinition Width="*" />
-                                        </Grid.ColumnDefinitions>
-                                        <CheckBox HorizontalAlignment="Left" VerticalAlignment="Center"/>
-                                        <TextBox Grid.Column="1" />
-                                    </Grid>
-                                </Grid>
-                                <Grid Grid.Row="4">
-                                    <Grid.ColumnDefinitions>
-                                        <ColumnDefinition Width="3*" />
-                                        <ColumnDefinition Width="2*" />
-                                    </Grid.ColumnDefinitions>
-                                    <Label Content="Crew Enrolled" HorizontalAlignment="Left" />
-                                    <ComboBox Grid.Column="1" />
-                                </Grid>
-                            </Grid>
-                            <Grid Grid.Column="2">
                                 <Grid.ColumnDefinitions>
-                                    <ColumnDefinition Width="Auto" />
-                                    <ColumnDefinition Width="*" />
+                                    <ColumnDefinition Width="3*" />
+                                    <ColumnDefinition Width="2*" />
                                 </Grid.ColumnDefinitions>
-                                <Label Content="Notes" HorizontalAlignment="Left" />
+                                <Label Content="GAP Job #" HorizontalAlignment="Left" />
                                 <TextBox Grid.Column="1" />
                             </Grid>
+                            <Grid Grid.Row="1">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="3*" />
+                                    <ColumnDefinition Width="2*" />
+                                </Grid.ColumnDefinitions>
+                                <Label Content="CIP Type" HorizontalAlignment="Left" />
+                                <ComboBox Grid.Column="1" />
+                            </Grid>
+                            <Grid Grid.Row="2">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="3*" />
+                                    <ColumnDefinition Width="2*" />
+                                </Grid.ColumnDefinitions>
+                                <Label Content="Target Date" HorizontalAlignment="Left" />
+                                <DatePicker Grid.Column="1" />
+                            </Grid>
+                            <Grid Grid.Row="3">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="3*" />
+                                    <ColumnDefinition Width="2*" />
+                                </Grid.ColumnDefinitions>
+                                <Label Content="Original Contract Amount" HorizontalAlignment="Left" />
+                                <TextBox Grid.Column="1" />
+                            </Grid>
+                            <Grid Grid.Row="4">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="3*" />
+                                    <ColumnDefinition Width="2*" />
+                                </Grid.ColumnDefinitions>
+                                <Label Content="Final Contract Amount" HorizontalAlignment="Left" />
+                                <TextBox Grid.Column="1" />
+                            </Grid>
+                        </Grid>
+                        <Grid Grid.Column="1">
+                            <Grid.Resources>
+                                <Style TargetType="Grid">
+                                    <Setter Property="Margin" Value="10, 2, 10, 2"></Setter>
+                                </Style>
+                            </Grid.Resources>
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="Auto" />
+                                <RowDefinition Height="Auto" />
+                                <RowDefinition Height="Auto" />
+                                <RowDefinition Height="Auto" />
+                                <RowDefinition Height="Auto" />
+                            </Grid.RowDefinitions>
+                            <Grid>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="3*" />
+                                    <ColumnDefinition Width="2*" />
+                                </Grid.ColumnDefinitions>
+                                <Label Content="Forms Received" HorizontalAlignment="Left" />
+                                <TextBox Grid.Column="1" />
+                            </Grid>
+                            <Grid Grid.Row="1">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="3*" />
+                                    <ColumnDefinition Width="2*" />
+                                </Grid.ColumnDefinitions>
+                                <Label Content="Forms Sent" HorizontalAlignment="Left" />
+                                <TextBox Grid.Column="1" />
+                            </Grid>
+                            <Grid  Grid.Row="2">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="3*" />
+                                    <ColumnDefinition Width="2*" />
+                                </Grid.ColumnDefinitions>
+                                <Label Content="Certificate Received" HorizontalAlignment="Left" />
+                                <TextBox Grid.Column="1" />
+                            </Grid>
+                            <Grid Grid.Row="3">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="3*" />
+                                    <ColumnDefinition Width="2*" />
+                                </Grid.ColumnDefinitions>
+                                <Label Content="Exemption Approved" HorizontalAlignment="Left" />
+                                <Grid Grid.Column="1" Margin="0">
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="20" />
+                                        <ColumnDefinition Width="*" />
+                                    </Grid.ColumnDefinitions>
+                                    <CheckBox HorizontalAlignment="Left" VerticalAlignment="Center"/>
+                                    <TextBox Grid.Column="1" />
+                                </Grid>
+                            </Grid>
+                            <Grid Grid.Row="4">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="3*" />
+                                    <ColumnDefinition Width="2*" />
+                                </Grid.ColumnDefinitions>
+                                <Label Content="Crew Enrolled" HorizontalAlignment="Left" />
+                                <ComboBox Grid.Column="1" />
+                            </Grid>
+                        </Grid>
+                        <Grid Grid.Column="2">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="Auto" />
+                                <ColumnDefinition Width="*" />
+                            </Grid.ColumnDefinitions>
+                            <Label Content="Notes" HorizontalAlignment="Left" />
+                            <TextBox Grid.Column="1" />
                         </Grid>
                     </Grid>
                 </TabItem>
             </TabControl>
         </Grid>
     </Grid>
-
 </Page>
