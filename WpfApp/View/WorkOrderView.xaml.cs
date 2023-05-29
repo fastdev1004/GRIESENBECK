@@ -6,6 +6,7 @@ using System.Data.SqlClient;
 using System.Windows;
 using System.Windows.Controls;
 using WpfApp.Model;
+using WpfApp.Utils;
 using WpfApp.ViewModel;
 
 namespace WpfApp.View
@@ -16,8 +17,8 @@ namespace WpfApp.View
     /// 
     public partial class WorkOrderView : Page
     {
+        private DatabaseConnection dbConnection;
         private string sqlquery;
-        private SqlConnection con;
         private SqlCommand cmd;
         private SqlDataAdapter sda;
         private DataSet ds;
@@ -30,14 +31,14 @@ namespace WpfApp.View
             InitializeComponent();
             WorkOrderVM = new WorkOrderViewModel();
             sb_notes = new ObservableCollection<Note>();
-            con = WorkOrderVM.con;
+            dbConnection = new DatabaseConnection();
+            dbConnection.Open();
             this.DataContext = WorkOrderVM;
         }
 
         private void goBack(object sender, RoutedEventArgs e)
         {
-            //cmd.Dispose();
-            con.Close();
+            //con.Close();
             this.NavigationService.Navigate(new Uri("View/Start.xaml", UriKind.Relative));
         }
 
@@ -51,7 +52,7 @@ namespace WpfApp.View
                 int rowCount = 0;
                 int rowIndex = 0;
                 sqlquery = "SELECT * FROM tblNotes WHERE Notes_PK = " + woID + " AND Notes_PK_Desc = 'WorkOrder';";
-                cmd = new SqlCommand(sqlquery, con);
+                cmd = new SqlCommand(sqlquery, dbConnection.Connection);
                 sda = new SqlDataAdapter(cmd);
                 ds = new DataSet();
                 sda.Fill(ds);

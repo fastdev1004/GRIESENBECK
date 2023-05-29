@@ -68,7 +68,9 @@
     <Compile Include="Model\CustomerContact.cs" />
     <Compile Include="Model\Estimator.cs" />
     <Compile Include="Model\FreightCo.cs" />
+    <Compile Include="Model\InHouseInstaller.cs" />
     <Compile Include="Model\InstallationNote.cs" />
+    <Compile Include="Model\Labor.cs" />
     <Compile Include="Model\Manufacturer.cs" />
     <Compile Include="Model\Material.cs" />
     <Compile Include="Model\Note.cs" />
@@ -80,6 +82,7 @@
     <Compile Include="Model\ProjectMatShip.cs" />
     <Compile Include="Model\ProjectMatTracking.cs" />
     <Compile Include="Model\ProjectWorkOrder.cs" />
+    <Compile Include="Model\Report.cs" />
     <Compile Include="Model\ReturnedVia.cs" />
     <Compile Include="Model\Salesman.cs" />
     <Compile Include="Model\SovCO.cs" />
@@ -87,11 +90,34 @@
     <Compile Include="Model\TrackLaborReport.cs" />
     <Compile Include="Model\TrackReport.cs" />
     <Compile Include="Model\TrackShipRecv.cs" />
+    <Compile Include="Model\User.cs" />
+    <Compile Include="Model\Warranty.cs" />
     <Compile Include="Model\WorkOrder.cs" />
+    <Compile Include="Utils\DatabaseConnection.cs" />
+    <Compile Include="ViewModel\AdminViewModel.cs" />
+    <Compile Include="ViewModel\CloseOutViewModel.cs" />
+    <Compile Include="ViewModel\ContractViewModel.cs" />
+    <Compile Include="ViewModel\ImportViewModel.cs" />
     <Compile Include="ViewModel\ProjectViewModel.cs" />
+    <Compile Include="ViewModel\ReportViewModel.cs" />
     <Compile Include="ViewModel\TrackShipViewModel.cs" />
     <Compile Include="ViewModel\ViewModelBase.cs" />
     <Compile Include="ViewModel\WorkOrderViewModel.cs" />
+    <Compile Include="View\AdminView.xaml.cs">
+      <DependentUpon>AdminView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="View\CloseOutView.xaml.cs">
+      <DependentUpon>CloseOutView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="View\ContractView.xaml.cs">
+      <DependentUpon>ContractView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="View\ImportView.xaml.cs">
+      <DependentUpon>ImportView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="View\ReportView.xaml.cs">
+      <DependentUpon>ReportView.xaml</DependentUpon>
+    </Compile>
     <Compile Include="View\Start.xaml.cs">
       <DependentUpon>Start.xaml</DependentUpon>
     </Compile>
@@ -116,6 +142,26 @@
       <DependentUpon>MainWindow.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
+    <Page Include="View\AdminView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="View\CloseOutView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="View\ContractView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="View\ImportView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="View\ReportView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="View\Start.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>

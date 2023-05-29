@@ -59,3 +59,13 @@ G:\GRIESENBECK\WpfApp\obj\Debug\View\WorkOrderView.g.cs
 G:\GRIESENBECK\WpfApp\obj\Debug\View\WorkOrderView.baml
 G:\GRIESENBECK\WpfApp\obj\Debug\View\TrackShipView.g.cs
 G:\GRIESENBECK\WpfApp\obj\Debug\View\TrackShipView.baml
+G:\GRIESENBECK\WpfApp\obj\Debug\View\ContractView.g.cs
+G:\GRIESENBECK\WpfApp\obj\Debug\View\ContractView.baml
+G:\GRIESENBECK\WpfApp\obj\Debug\View\CloseOutView.g.cs
+G:\GRIESENBECK\WpfApp\obj\Debug\View\CloseOutView.baml
+G:\GRIESENBECK\WpfApp\obj\Debug\View\ReportView.g.cs
+G:\GRIESENBECK\WpfApp\obj\Debug\View\ReportView.baml
+G:\GRIESENBECK\WpfApp\obj\Debug\View\AdminView.g.cs
+G:\GRIESENBECK\WpfApp\obj\Debug\View\AdminView.baml
+G:\GRIESENBECK\WpfApp\obj\Debug\View\ImportView.g.cs
+G:\GRIESENBECK\WpfApp\obj\Debug\View\ImportView.baml

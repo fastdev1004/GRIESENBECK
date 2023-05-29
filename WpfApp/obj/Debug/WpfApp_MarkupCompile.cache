@@ -10,11 +10,11 @@ none
 false
 DEBUG;TRACE
 G:\GRIESENBECK\WpfApp\App.xaml
-51738617996
+10-849331483
 
-44-458318207
+605372851
 152084120597
-MainWindow.xaml;View\Start.xaml;View\ProjectView.xaml;View\TrackShipView.xaml;View\WorkOrderView.xaml;
+MainWindow.xaml;View\AdminView.xaml;View\CloseOutView.xaml;View\ContractView.xaml;View\ImportView.xaml;View\ReportView.xaml;View\Start.xaml;View\ProjectView.xaml;View\TrackShipView.xaml;View\WorkOrderView.xaml;
 
 False
 

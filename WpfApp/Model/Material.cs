@@ -13,6 +13,7 @@ namespace WpfApp.Model
     {
         private int _materialID;
         private string _materialDesc;
+        private bool _active;
 
         public int ID
         {
@@ -32,6 +33,17 @@ namespace WpfApp.Model
             {
                 if (value == _materialDesc) return;
                 _materialDesc = value;
+                OnPropertyChanged();
+            }
+        }
+
+        public bool Active
+        {
+            get => _active;
+            set
+            {
+                if (value == _active) return;
+                _active = value;
                 OnPropertyChanged();
             }
         }

@@ -9,6 +9,7 @@ using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using WpfApp.Model;
+using WpfApp.Utils;
 using WpfApp.ViewModel;
 
 namespace WpfApp.View
@@ -18,8 +19,8 @@ namespace WpfApp.View
     /// </summary>
     public partial class TrackShipView : Page
     {
+        private DatabaseConnection dbConnection;
         private string sqlquery;
-        private SqlConnection con;
         private SqlCommand cmd;
         private SqlDataAdapter sda;
         private DataSet ds;
@@ -30,14 +31,14 @@ namespace WpfApp.View
         {
             InitializeComponent();
             TrackShipVM = new TrackShipViewModel();
-            con = TrackShipVM.con;
+            dbConnection = new DatabaseConnection();
+            dbConnection.Open();
             this.DataContext = TrackShipVM;
         }
 
         private void goBack(object sender, RoutedEventArgs e)
         {
-            cmd.Dispose();
-            con.Close();
+            dbConnection.Close();
             this.NavigationService.Navigate(new Uri("View/Start.xaml", UriKind.Relative));
         }
 
@@ -53,7 +54,7 @@ namespace WpfApp.View
                 if (!string.IsNullOrEmpty(selectedId))
                 {
                     sqlquery = "Select MatReqdDate, Qty_Ord, tblManufacturers.Manuf_ID, TakeFromStock, Manuf_LeadTime, Manuf_Order_No, PO_Number, ShopReqDate, ShopRecvdDate, SubmitIssue, Resubmit_Date, SubmitAppr, No_Sub_Needed, Ship_to_Job, FM_Needed, Guar_Dim, Field_Dim, Finals_Rev,  ReleasedForFab, MatComplete, LaborComplete from tblManufacturers RIGHT JOIN(Select * from tblProjectMaterialsTrack where ProjMat_ID = " + selectedId + ") AS tblProjMat ON tblManufacturers.Manuf_ID = tblProjMat.Manuf_ID;";
-                    cmd = new SqlCommand(sqlquery, con);
+                    cmd = new SqlCommand(sqlquery, dbConnection.Connection);
                     sda = new SqlDataAdapter(cmd);
                     ds = new DataSet();
                     sda.Fill(ds);
@@ -280,7 +281,7 @@ namespace WpfApp.View
                 if (!string.IsNullOrEmpty(selectedId))
                 {
                     sqlquery = "SELECT * FROM tblProjectMaterialsShip RIGHT JOIN (SELECT ProjMT_ID FROM tblProjectMaterialsTrack WHERE ProjMat_ID = " + selectedId + ") AS tblMat ON tblProjectMaterialsShip.ProjMT_ID = tblMat.ProjMT_ID;";
-                    cmd = new SqlCommand(sqlquery, con);
+                    cmd = new SqlCommand(sqlquery, dbConnection.Connection);
                     sda = new SqlDataAdapter(cmd);
                     ds = new DataSet();
                     sda.Fill(ds);

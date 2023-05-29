@@ -7,13 +7,14 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using WpfApp.Model;
+using WpfApp.Utils;
 
 namespace WpfApp.ViewModel
 {
     class WorkOrderViewModel : ViewModelBase
     {
 
-        public SqlConnection con;
+        private DatabaseConnection dbConnection;
         public SqlCommand cmd;
         public SqlDataAdapter sda;
         public DataSet ds;
@@ -21,19 +22,16 @@ namespace WpfApp.ViewModel
 
         public WorkOrderViewModel()
         {
+            dbConnection = new DatabaseConnection();
+            dbConnection.Open();
             LoadWorkOrders();
         }
 
         private void LoadWorkOrders()
         {
-            string connectionString = @"Data Source = DESKTOP-VDIB57T\INSTANCE2023; user id=sa; password=qwe234ASD@#$; Initial Catalog = griesenbeck;";
-            con = new SqlConnection(connectionString);
-            con.Open();
-
-
             // Projects
             string sqlquery = "SELECT tblProjects.Project_ID, tblProjects.Project_Name, tblCustomers.Full_Name FROM tblProjects LEFT JOIN tblCustomers ON tblProjects.Customer_ID = tblCustomers.Customer_ID ORDER BY Project_Name ASC;";
-            cmd = new SqlCommand(sqlquery, con);
+            cmd = new SqlCommand(sqlquery, dbConnection.Connection);
             sda = new SqlDataAdapter(cmd);
             ds = new DataSet();
             sda.Fill(ds);
@@ -54,7 +52,7 @@ namespace WpfApp.ViewModel
 
             //Crew
             sqlquery = "SELECT Crew_ID, Crew_Name FROM tblInstallCrew;";
-            cmd = new SqlCommand(sqlquery, con);
+            cmd = new SqlCommand(sqlquery, dbConnection.Connection);
             sda = new SqlDataAdapter(cmd);
             ds = new DataSet();
             sda.Fill(ds);
@@ -77,7 +75,7 @@ namespace WpfApp.ViewModel
 
             // Superintendent
             sqlquery = "SELECT * FROM tblSuperintendents";
-            cmd = new SqlCommand(sqlquery, con);
+            cmd = new SqlCommand(sqlquery, dbConnection.Connection);
             sda = new SqlDataAdapter(cmd);
             ds = new DataSet();
             sda.Fill(ds);
@@ -95,7 +93,7 @@ namespace WpfApp.ViewModel
             Superintendents = st_supt;
 
             cmd.Dispose();
-            con.Close();
+            dbConnection.Close();
         }
 
         private ObservableCollection<WorkOrder> _workOrders;
@@ -281,7 +279,7 @@ namespace WpfApp.ViewModel
         {
             sqlquery = "SELECT tblWO.WO_ID, tblWO.Wo_Nbr, tblInstallCrew.Crew_ID, tblInstallCrew.Crew_Name, tblWO.SchedStartDate, tblWO.SchedComplDate, tblWO.Sup_ID, tblWO.Date_Started, tblWO.Date_Completed FROM tblInstallCrew RIGHT JOIN (SELECT * FROM tblWorkOrders WHERE Project_ID = " + ProjectID.ToString() + ") AS tblWO ON tblInstallCrew.Crew_ID = tblWO.Crew_ID; ";
 
-            cmd = new SqlCommand(sqlquery, con);
+            cmd = new SqlCommand(sqlquery, dbConnection.Connection);
             sda = new SqlDataAdapter(cmd);
             ds = new DataSet();
             sda.Fill(ds);
@@ -337,7 +335,7 @@ namespace WpfApp.ViewModel
             // Project WorkOrders List
             sqlquery = " SELECT tblWorkOrdersMat.Mat_Qty, tblMat.* FROM tblWorkOrdersMat RIGHT JOIN ( SELECT tblProjectSOV.SOV_Acronym, tblMat.* FROM tblProjectSOV RIGHT JOIN ( SELECT tblMat.*, tblProjectMaterialsShip.Qty_Recvd, tblProjectMaterialsShip.ProjMS_ID FROM tblProjectMaterialsShip RIGHT JOIN ( SELECT tblManufacturers.Manuf_Name, tblMat.* FROM tblManufacturers RIGHT JOIN (  SELECT tblMaterials.Material_Desc,tblMat.* FROM tblMaterials RIGHT JOIN (SELECT tblProjectMaterialsTrack.MatReqdDate, tblProjectMaterialsTrack.TakeFromStock, tblMat.*, tblProjectMaterialsTrack.ProjMT_ID, tblProjectMaterialsTrack.Manuf_ID, tblProjectMaterialsTrack.Qty_Ord  FROM tblProjectMaterialsTrack RIGHT JOIN (SELECT Project_ID, ProjMat_ID, ProjSOV_ID ,Material_ID, Qty_Reqd FROM tblProjectMaterials WHERE Project_ID = " + ProjectID.ToString() + ") AS tblMat ON tblProjectMaterialsTrack.ProjMat_ID = tblMat.ProjMat_ID) AS tblMat ON tblMaterials.Material_ID = tblMat.Material_ID) AS tblMat ON tblMat.Manuf_ID = tblManufacturers.Manuf_ID) AS tblMat ON tblMat.ProjMT_ID = tblProjectMaterialsShip.ProjMT_ID) AS tblMat ON tblMat.ProjSOV_ID = tblProjectSOV.ProjSOV_ID) AS tblMat ON tblWorkOrdersMat.ProjMS_ID = tblMat.ProjMS_ID ORDER BY Material_Desc";
 
-            cmd = new SqlCommand(sqlquery, con);
+            cmd = new SqlCommand(sqlquery, dbConnection.Connection);
             sda = new SqlDataAdapter(cmd);
             ds = new DataSet();
             sda.Fill(ds);

@@ -4,12 +4,13 @@ using System.Collections.ObjectModel;
 using System.Data;
 using System.Data.SqlClient;
 using WpfApp.Model;
+using WpfApp.Utils;
 
 namespace WpfApp.ViewModel
 {
     class TrackShipViewModel:ViewModelBase
     {
-        public SqlConnection con;
+        private DatabaseConnection dbConnection;
         public SqlCommand cmd;
         public SqlDataAdapter sda;
         public DataSet ds;
@@ -17,18 +18,16 @@ namespace WpfApp.ViewModel
 
         public TrackShipViewModel()
         {
+            dbConnection = new DatabaseConnection();
+            dbConnection.Open();
             LoadTrackShip();
         }
 
         private void LoadTrackShip()
         {
-            string connectionString = @"Data Source = DESKTOP-VDIB57T\INSTANCE2023; user id=sa; password=qwe234ASD@#$; Initial Catalog = griesenbeck;";
-            con = new SqlConnection(connectionString);
-            con.Open();
-
             // Projects
             sqlquery = "SELECT tblProjects.Project_ID, tblProjects.Project_Name, tblCustomers.Full_Name FROM tblProjects LEFT JOIN tblCustomers ON tblProjects.Customer_ID = tblCustomers.Customer_ID ORDER BY Project_Name ASC;";
-            cmd = new SqlCommand(sqlquery, con);
+            cmd = new SqlCommand(sqlquery, dbConnection.Connection);
             sda = new SqlDataAdapter(cmd);
             ds = new DataSet();
             sda.Fill(ds);
@@ -49,7 +48,7 @@ namespace WpfApp.ViewModel
 
             // Manufacturer
             sqlquery = "SELECT Manuf_ID, Manuf_Name FROM tblManufacturers;";
-            cmd = new SqlCommand(sqlquery, con);
+            cmd = new SqlCommand(sqlquery, dbConnection.Connection);
             sda = new SqlDataAdapter(cmd);
             ds = new DataSet();
             sda.Fill(ds);
@@ -71,7 +70,7 @@ namespace WpfApp.ViewModel
             ObservableCollection<FreightCo> sb_freightCo = new ObservableCollection<FreightCo>();
 
             sqlquery = "SELECT FreightCo_ID, FreightCo_Name FROM tblFreightCo ORDER BY FreightCo_Name;";
-            cmd = new SqlCommand(sqlquery, con);
+            cmd = new SqlCommand(sqlquery, dbConnection.Connection);
             sda = new SqlDataAdapter(cmd);
             ds = new DataSet();
             sda.Fill(ds);
@@ -82,7 +81,7 @@ namespace WpfApp.ViewModel
                 string freightName = row["FreightCo_Name"].ToString();
                 sb_freightCo.Add(new FreightCo
                 {
-                    FreightCoID = freightID,
+                    ID = freightID,
                     FreightName = freightName,
                 });
             }
@@ -94,7 +93,7 @@ namespace WpfApp.ViewModel
         {
             // Track Ship
             sqlquery = "Select tblMat.*, tblMaterials.Material_Desc from(Select tblSOV.SOV_Acronym, tblSOV.CO_ItemNo, tblSOV.Material_Only, tblSOV.SOV_Desc, tblProjectMaterials.ProjMat_ID, tblProjectMaterials.Mat_Phase, tblProjectMaterials.Mat_Type,tblProjectMaterials.Color_Selected, tblProjectMaterials.Qty_Reqd, tblProjectMaterials.TotalCost, Material_ID from(Select tblSOV.*, tblProjectChangeOrders.CO_ItemNo from(Select tblSOV.*, tblScheduleOfValues.SOV_Desc from tblScheduleOfValues Right JOIN(SELECT tblProjectSOV.* From tblProjects LEFT Join tblProjectSOV ON tblProjects.Project_ID = tblProjectSOV.Project_ID where tblProjects.Project_ID = " + ProjectID.ToString() + ") AS tblSOV ON tblSOV.SOV_Acronym = tblScheduleOfValues.SOV_Acronym Where tblScheduleOfValues.Active = 'true') AS tblSOV LEFT JOIN tblProjectChangeOrders ON tblProjectChangeOrders.CO_ID = tblSOV.CO_ID) AS tblSOV LEFT JOIN tblProjectMaterials ON tblSOV.ProjSOV_ID = tblProjectMaterials.ProjSOV_ID) AS tblMat LEFT JOIN tblMaterials ON tblMat.Material_ID = tblMaterials.Material_ID ORDER BY tblMaterials.Material_Desc;";
-            cmd = new SqlCommand(sqlquery, con);
+            cmd = new SqlCommand(sqlquery, dbConnection.Connection);
             sda = new SqlDataAdapter(cmd);
             ds = new DataSet();
             sda.Fill(ds);
@@ -130,6 +129,9 @@ namespace WpfApp.ViewModel
             }
 
             TrackShipRecvs = sb_TrackShipRecv;
+
+            cmd.Dispose();
+            dbConnection.Close();
         }
 
         private int _projectId;

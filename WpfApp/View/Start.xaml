@@ -62,13 +62,13 @@
                                 <Button Click="navigateProject">Projects</Button>
                                 <Button Click="navigateWorkOrder">Work Orders</Button>
                                 <Button Click="navigateTrackShip">Tracking/Shipping</Button>
-                                <Button>Contracts</Button>
-                                <Button>Close Outs</Button>
+                                <Button Click="navigateContract">Contracts</Button>
+                                <Button Click="navigateCloseOut">Close Outs</Button>
                             </StackPanel>
                             <StackPanel Grid.Column="2" HorizontalAlignment="Right">
-                                <Button Background="#555050">Reports</Button>
-                                <Button Background="#555050">Import</Button>
-                                <Button Background="#555050">Admin</Button>
+                                <Button Click="navigateReport" Background="#555050">Reports</Button>
+                                <Button Click="navigateImport" Background="#555050">Import</Button>
+                                <Button Click="navigateAdmin" Background="#555050">Admin</Button>
                                 <Button Background="#555050">Open Previous System</Button>
                                 <Button Width="64" Background="#B6302D" Click="close_win" HorizontalAlignment="Right">Exit</Button>
                             </StackPanel>

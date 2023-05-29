@@ -12,12 +12,510 @@ using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using WpfApp.Model;
+using WpfApp.Utils;
 
 namespace WpfApp.ViewModel
 {
     class ProjectViewModel : ViewModelBase
     {
-        private Project project;
+        private DatabaseConnection dbConnection;
+        public SqlCommand cmd;
+        public SqlDataAdapter sda;
+        public DataSet ds;
+        private string sqlquery;
+
+        public ProjectViewModel()
+        {
+            dbConnection = new DatabaseConnection();
+            dbConnection.Open();
+            LoadProjects();
+        }
+
+        private void LoadProjects()
+        {
+            sqlquery = "SELECT tblProjects.Project_ID, tblProjects.Project_Name, tblCustomers.Full_Name FROM tblProjects LEFT JOIN tblCustomers ON tblProjects.Customer_ID = tblCustomers.Customer_ID ORDER BY Project_Name ASC;";
+
+            cmd = new SqlCommand(sqlquery, dbConnection.Connection);
+            sda = new SqlDataAdapter(cmd);
+            ds = new DataSet();
+            sda.Fill(ds);
+
+            ObservableCollection<Project> st_mb = new ObservableCollection<Project>();
+            foreach (DataRow row in ds.Tables[0].Rows)
+            {
+                if (!string.IsNullOrEmpty(row["Project_Name"].ToString()))
+                {
+                    int projectID = int.Parse(row["Project_ID"].ToString());
+                    string projectName = row["Project_Name"].ToString();
+
+                    string fullName = row["Full_Name"].ToString();
+                    st_mb.Add(new Project { ID = projectID, ProjectName = projectName, CustomerName = fullName });
+                }
+
+            }
+            Projects = st_mb;
+            // Payment
+            ObservableCollection<Payment> _paymentItems = new ObservableCollection<Payment>();
+            Payments = new ObservableCollection<Payment>();
+            string[] paymentItems = { "Background Check", "Cert Pay Reqd", "CIP Project", "C3 Project", "P&P Bond", "GAP Bid Incl", "GAP Est Incl", "LCP Tracker", "Down Payment" };
+
+            foreach (string item in paymentItems)
+            {
+                _paymentItems.Add(new Payment { Name = item, IsChecked = false });
+            }
+            Payments = _paymentItems;
+
+            // Customer Address
+            sqlquery = "SELECT Customer_ID, Full_Name, Address FROM tblCustomers Order by Full_Name";
+            cmd = new SqlCommand(sqlquery, dbConnection.Connection);
+            sda = new SqlDataAdapter(cmd);
+            ds = new DataSet();
+            sda.Fill(ds);
+
+            ObservableCollection<Customer> st_customer = new ObservableCollection<Customer>();
+            foreach (DataRow row in ds.Tables[0].Rows)
+            {
+                var m_test = row["Customer_ID"];
+                int Num;
+
+                bool isNum = int.TryParse(row["Customer_ID"].ToString(), out Num); //c is your variable
+                if (isNum)
+                {
+                    int customerID = int.Parse(row["Customer_ID"].ToString());
+                    //int customerID = 0;
+                    string fullName = row["Full_Name"].ToString();
+                    string address = row["Address"].ToString();
+                    st_customer.Add(new Customer { ID = customerID, FullName = fullName, Address = address });
+                }
+                
+            }
+            Customers = st_customer;
+
+            // Architect
+            sqlquery = "SELECT Architect_ID, Arch_Company FROM tblArchitects;";
+            cmd = new SqlCommand(sqlquery, dbConnection.Connection);
+            sda = new SqlDataAdapter(cmd);
+            ds = new DataSet();
+            sda.Fill(ds);
+
+            ObservableCollection<Architect> st_architect = new ObservableCollection<Architect>();
+            foreach (DataRow row in ds.Tables[0].Rows)
+            {
+                int Num;
+
+                bool isNum = int.TryParse(row["Architect_ID"].ToString(), out Num); //c is your variable
+                if (isNum)
+                {
+                    int architectID = int.Parse(row["Architect_ID"].ToString());
+                    string archCompany = row["Arch_Company"].ToString();
+                    st_architect.Add(new Architect { ID = architectID, ArchCompany = archCompany });
+                }
+
+            }
+            Architects = st_architect;
+
+            //Crew
+            sqlquery = "SELECT Crew_ID, Crew_Name FROM tblInstallCrew;";
+            cmd = new SqlCommand(sqlquery, dbConnection.Connection);
+            sda = new SqlDataAdapter(cmd);
+            ds = new DataSet();
+            sda.Fill(ds);
+
+            ObservableCollection<Crew> st_crew = new ObservableCollection<Crew>();
+            foreach (DataRow row in ds.Tables[0].Rows)
+            {
+                int Num;
+
+                bool isNum = int.TryParse(row["Crew_ID"].ToString(), out Num); //c is your variable
+                if (isNum)
+                {
+                    int crewID = int.Parse(row["Crew_ID"].ToString());
+                    string crewName = row["Crew_Name"].ToString();
+                    st_crew.Add(new Crew { ID = crewID, CrewName = crewName });
+                }
+
+            }
+            Crews = st_crew;
+
+            // Salesman
+            sqlquery = "SELECT Salesman_ID, Salesman_Name FROM tblSalesmen;";
+            cmd = new SqlCommand(sqlquery, dbConnection.Connection);
+            sda = new SqlDataAdapter(cmd);
+            ds = new DataSet();
+            sda.Fill(ds);
+
+            ObservableCollection<Salesman> st_salesman = new ObservableCollection<Salesman>();
+            foreach (DataRow row in ds.Tables[0].Rows)
+            {
+                int Num;
+
+                bool isNum = int.TryParse(row["Salesman_ID"].ToString(), out Num); //c is your variable
+                if (isNum)
+                {
+                    int salesmanID = int.Parse(row["Salesman_ID"].ToString());
+                    string salesmanName = row["Salesman_Name"].ToString();
+                    st_salesman.Add(new Salesman { ID = salesmanID, SalesmanName = salesmanName });
+                }
+
+            }
+            Salesman = st_salesman;
+
+            // Estimator
+            sqlquery = "SELECT Estimator_ID, Estimator_Name FROM tblEstimators;";
+            cmd = new SqlCommand(sqlquery, dbConnection.Connection);
+            sda = new SqlDataAdapter(cmd);
+            ds = new DataSet();
+            sda.Fill(ds);
+
+            ObservableCollection<Estimator> st_estimator = new ObservableCollection<Estimator>();
+            foreach (DataRow row in ds.Tables[0].Rows)
+            {
+                int Num;
+
+                bool isNum = int.TryParse(row["Estimator_ID"].ToString(), out Num); //c is your variable
+                if (isNum)
+                {
+                    int estimatorID = int.Parse(row["Estimator_ID"].ToString());
+                    string estimatorName = row["Estimator_Name"].ToString();
+                    st_estimator.Add(new Estimator { ID = estimatorID, EstimatorName = estimatorName });
+                }
+
+            }
+            Estimators = st_estimator;
+
+            // ArchRep
+            sqlquery = "SELECT Arch_Rep_ID, Arch_Rep_Name FROM tblArchRep;";
+            cmd = new SqlCommand(sqlquery, dbConnection.Connection);
+            sda = new SqlDataAdapter(cmd);
+            ds = new DataSet();
+            sda.Fill(ds);
+
+            ObservableCollection<ArchRep> st_archRep = new ObservableCollection<ArchRep>();
+            foreach (DataRow row in ds.Tables[0].Rows)
+            {
+                int Num;
+
+                bool isNum = int.TryParse(row["Arch_Rep_ID"].ToString(), out Num); //c is your variable
+                if (isNum)
+                {
+                    int archRepID = int.Parse(row["Arch_Rep_ID"].ToString());
+                    string archRepName = row["Arch_Rep_Name"].ToString();
+                    st_archRep.Add(new ArchRep { ID = archRepID, ArchRepName = archRepName });
+                }
+
+            }
+            ArchReps = st_archRep;
+
+            // Customer Contacts
+            sqlquery = "SELECT CC_ID, Customer_ID, CC_Name FROM tblCustomerContacts;";
+            cmd = new SqlCommand(sqlquery, dbConnection.Connection);
+            sda = new SqlDataAdapter(cmd);
+            ds = new DataSet();
+            sda.Fill(ds);
+
+            ObservableCollection<CustomerContact> st_customerContact = new ObservableCollection<CustomerContact>();
+            foreach (DataRow row in ds.Tables[0].Rows)
+            {
+                int ccID = int.Parse(row["CC_ID"].ToString());
+                int customerID = int.Parse(row["Customer_ID"].ToString());
+                string ccName= row["CC_Name"].ToString();
+                st_customerContact.Add(new CustomerContact { ID = ccID, CustomerID = customerID, CCName = ccName});
+
+            }
+            CustomerContacts = st_customerContact;
+
+            // PC
+            sqlquery = "SELECT PC_ID, PC_Name FROM tblPCs;";
+            cmd = new SqlCommand(sqlquery, dbConnection.Connection);
+            sda = new SqlDataAdapter(cmd);
+            ds = new DataSet();
+            sda.Fill(ds);
+
+            ObservableCollection<PC> st_pc = new ObservableCollection<PC>();
+            foreach (DataRow row in ds.Tables[0].Rows)
+            {
+                int pcID = int.Parse(row["PC_ID"].ToString());
+                string pcName = row["PC_Name"].ToString();
+                st_pc.Add(new PC { ID = pcID, PCName = pcName });
+
+            }
+
+            PCs = st_pc;
+
+            // Superintendent
+            sqlquery = "SELECT * FROM tblSuperintendents";
+            cmd = new SqlCommand(sqlquery, dbConnection.Connection);
+            sda = new SqlDataAdapter(cmd);
+            ds = new DataSet();
+            sda.Fill(ds);
+
+            ObservableCollection<Superintendent> st_supt = new ObservableCollection<Superintendent>();
+            foreach (DataRow row in ds.Tables[0].Rows)
+            {
+                int suptID = int.Parse(row["Sup_ID"].ToString());
+                string suptName = row["Sup_Name"].ToString();
+                string suptCellPhone = row["Sup_CellPhone"].ToString();
+                string suptEmail = row["Sup_Email"].ToString();
+                st_supt.Add(new Superintendent { SupID = suptID, SupName = suptName, SupCellPhone = suptCellPhone, SupEmail = suptEmail});
+            }
+
+            Superintendents = st_supt;
+
+            // ReturnedViaNames
+            sqlquery = "SELECT * FROM tblReturnedVia";
+            cmd = new SqlCommand(sqlquery, dbConnection.Connection);
+            sda = new SqlDataAdapter(cmd);
+            ds = new DataSet();
+            sda.Fill(ds);
+
+            ObservableCollection<ReturnedVia> st_returnedVia = new ObservableCollection<ReturnedVia>();
+            foreach (DataRow row in ds.Tables[0].Rows)
+            {
+                int viaID = int.Parse(row["ID"].ToString());
+                string viaName = row["ReturnedVia"].ToString();
+                st_returnedVia.Add(new ReturnedVia { ID = viaID, ReturnedViaName = viaName });
+            }
+
+            ReturnedViaNames = st_returnedVia;
+
+            // ProjectManager
+            sqlquery = "select * from tblProjectManagers";
+            cmd = new SqlCommand(sqlquery, dbConnection.Connection);
+            sda = new SqlDataAdapter(cmd);
+            ds = new DataSet();
+            sda.Fill(ds);
+            ObservableCollection<ProjectManager> st_pm = new ObservableCollection<ProjectManager>();
+            foreach (DataRow row in ds.Tables[0].Rows)
+            {
+                int pmID = int.Parse(row["PM_ID"].ToString());
+                string pmName = row["PM_Name"].ToString();
+                string pmCellPhone = row["PM_CellPhone"].ToString();
+                string pmEmail = row["PM_Email"].ToString();
+                st_pm.Add(new ProjectManager
+                {
+                    ID = pmID,
+                    PMName = pmName,
+                    PMCellPhone = pmCellPhone,
+                    PMEmail = pmEmail
+                });
+            }
+
+            ProjectManagers = st_pm;
+
+            // Manufacturer
+            sqlquery = "SELECT Manuf_ID, Manuf_Name FROM tblManufacturers;";
+            cmd = new SqlCommand(sqlquery, dbConnection.Connection);
+            sda = new SqlDataAdapter(cmd);
+            ds = new DataSet();
+            sda.Fill(ds);
+            ObservableCollection<Manufacturer> st_manufacturers = new ObservableCollection<Manufacturer>();
+            foreach (DataRow row in ds.Tables[0].Rows)
+            {
+                int manufID = int.Parse(row["Manuf_ID"].ToString());
+                string manufName = row["Manuf_Name"].ToString();
+                st_manufacturers.Add(new Manufacturer
+                {
+                    ID = manufID,
+                    ManufacturerName = manufName,
+                });
+            }
+
+            Manufacturers = st_manufacturers;
+
+            // FreightCo_Name
+            ObservableCollection<FreightCo> sb_freightCo = new ObservableCollection<FreightCo>();
+
+            sqlquery = "SELECT FreightCo_ID, FreightCo_Name FROM tblFreightCo ORDER BY FreightCo_Name;";
+            cmd = new SqlCommand(sqlquery, dbConnection.Connection);
+            sda = new SqlDataAdapter(cmd);
+            ds = new DataSet();
+            sda.Fill(ds);
+
+            foreach (DataRow row in ds.Tables[0].Rows)
+            {
+                int freightID = int.Parse(row["FreightCo_ID"].ToString());
+                string freightName = row["FreightCo_Name"].ToString();
+                sb_freightCo.Add(new FreightCo
+                {
+                    ID = freightID,
+                    FreightName = freightName,
+                });
+            }
+
+            FreightCos = sb_freightCo;
+
+            // Materials
+            ObservableCollection<Material> st_material = new ObservableCollection<Material>();
+
+            sqlquery = "Select * from tblMaterials";
+            cmd = new SqlCommand(sqlquery, dbConnection.Connection);
+            sda = new SqlDataAdapter(cmd);
+            ds = new DataSet();
+            sda.Fill(ds);
+
+            foreach (DataRow row in ds.Tables[0].Rows)
+            {
+                int matID = int.Parse(row["Material_ID"].ToString());
+                string matDesc = row["Material_Desc"].ToString();
+                st_material.Add(new Material
+                {
+                    ID = matID,
+                    MatDesc = matDesc,
+                });
+            }
+
+            Materials = st_material;
+
+            // Acronym
+            ObservableCollection<Acronym> st_acronym = new ObservableCollection<Acronym>();
+
+            sqlquery = "SELECT * from tblScheduleOfValues";
+            cmd = new SqlCommand(sqlquery, dbConnection.Connection);
+            sda = new SqlDataAdapter(cmd);
+            ds = new DataSet();
+            sda.Fill(ds);
+
+            foreach (DataRow row in ds.Tables[0].Rows)
+            {
+                //int projectID = int.Parse(row["Project_ID"].ToString());
+                string acronymName = row["SOV_Acronym"].ToString();
+                st_acronym.Add(new Acronym
+                {
+                    //ProjectID = projectID,
+                    AcronymName = acronymName,
+                });
+            }
+
+            Acronyms = st_acronym;
+
+            cmd.Dispose();
+            dbConnection.Close();
+        }
+
+        private void ChangeProject()
+        {
+            string sqlquery = "SELECT tblProjects.*, tblCustomers.Full_Name, tblCustomers.Customer_ID FROM tblProjects LEFT JOIN tblCustomers ON tblProjects.Customer_ID = tblCustomers.Customer_ID WHERE tblProjects.Project_ID = " + SelectedProjectId.ToString() + ";";
+            SqlCommand cmd = new SqlCommand(sqlquery, dbConnection.Connection);
+            SqlDataAdapter sda = new SqlDataAdapter(cmd);
+            DataSet ds = new DataSet();
+            sda.Fill(ds);
+
+            var row = ds.Tables[0].Rows[0];
+            ProjectName = "";
+            TargetDate = new DateTime();
+            CompletedDate = new DateTime();
+            PaymentNote = "";
+            JobNo = "";
+            Address = "";
+            City = "";
+            State = "";
+            Zip = "";
+            OrigTaxAmt = "";
+            OrigProfit = "";
+            OrigTotalMatCost = "";
+            OnHold = false;
+            BillingDate = "";
+            SelectedEstimatorID = -1;
+            SelectedProjectCoordID = -1;
+            SelectedArchRepID = -1;
+            SelectedArchitectID = -1;
+            SelectedCCID = -1;
+            SelectedCrewID = -1;
+            SelectedMCID = -1;
+            if (!row.IsNull("Project_Name"))
+                ProjectName = row["Project_Name"].ToString();
+            if (!row.IsNull("Target_Date"))
+                TargetDate = row.Field<DateTime>("Target_Date");
+            if (!row.IsNull("Date_Completed"))
+                CompletedDate = row.Field<DateTime>("Date_Completed");
+            if (!row.IsNull("Pay_Reqd_Note"))
+                PaymentNote = row["Pay_Reqd_Note"].ToString();
+            if (!row.IsNull("Job_No"))
+                JobNo = row["Job_No"].ToString();
+            if (!row.IsNull("Address"))
+                Address = row["Address"].ToString();
+            if (!row.IsNull("City"))
+                City = row["City"].ToString();
+            if (!row.IsNull("State"))
+                State = row["State"].ToString();
+            if (!row.IsNull("Zip"))
+                Zip = row["Zip"].ToString();
+            if (!row.IsNull("OrigTaxAmt"))
+                OrigTaxAmt = row["OrigTaxAmt"].ToString();
+            if (!row.IsNull("OrigProfit"))
+                OrigProfit = row["OrigProfit"].ToString();
+            if (!row.IsNull("OrigTotalMatCost"))
+                OrigTotalMatCost = row["OrigTotalMatCost"].ToString();
+            if (!row.IsNull("On_Hold"))
+                OnHold = row.Field<Boolean>("On_Hold");
+            if (!row.IsNull("Billing_Date"))
+                BillingDate = row["Billing_Date"].ToString();
+            if (!row.IsNull("Estimator_ID"))
+                SelectedEstimatorID = row.Field<int>("Estimator_ID");
+            if (!row.IsNull("PC_ID"))
+                SelectedProjectCoordID = row.Field<int>("PC_ID");
+            if (!row.IsNull("Arch_Rep_ID"))
+                SelectedArchRepID = row.Field<int>("Arch_Rep_ID");
+            if (!row.IsNull("CC_ID"))
+                SelectedCCID = row.Field<int>("CC_ID");
+            if (!row.IsNull("Architect_ID"))
+                SelectedArchitectID = row.Field<int>("Architect_ID");
+            if (!row.IsNull("Crew_ID"))
+                SelectedCrewID = row.Field<int>("Crew_ID");
+            if (!row.IsNull("Master_Contract"))
+                if (row.Field<string>("Master_Contract") == "Yes")
+                    SelectedMCID = 0;
+                else SelectedMCID = 1;
+            if (!row.IsNull("Customer_ID"))
+                SelectedCustomerId = row.Field<int>("Customer_ID");
+
+            string[] paymentItems = { "Background Check", "Cert Pay Reqd", "CIP Project", "C3 Project", "P&P Bond", "GAP Bid Incl", "GAP Est Incl", "LCP Tracker", "Down Payment" };
+
+            //PaymentItem
+            DataTemplate myDataTemplate = new DataTemplate();
+            FrameworkElementFactory checkBoxFactory = new FrameworkElementFactory(typeof(CheckBox));
+            //checkBoxFactory.SetBinding(CheckBox.IsCheckedProperty, new Bind("));
+
+            ObservableCollection<Payment> _paymentItems = new ObservableCollection<Payment>();
+            foreach (string item in paymentItems)
+            {
+                switch(item)
+                {
+                    case "Background Check":
+                        _paymentItems.Add(new Payment { Name = item, IsChecked = bool.Parse(row["BackGroundCheck"].ToString()) });
+                        break;
+                    case "Cert Pay Reqd":
+                        _paymentItems.Add(new Payment { Name = item, IsChecked = bool.Parse(row["CertPay_Reqd"].ToString()) });
+                        break;
+                    case "CIP Project":
+                        _paymentItems.Add(new Payment { Name = item, IsChecked = bool.Parse(row["CIP_Project"].ToString()) });
+                        break;
+                    case "C3 Project":
+                        _paymentItems.Add(new Payment { Name = item, IsChecked = bool.Parse(row["C3"].ToString()) });
+                        break;
+                    case "P&P Bond":
+                        _paymentItems.Add(new Payment { Name = item, IsChecked = bool.Parse(row["PnP_Bond"].ToString()) });
+                        break;
+                    case "GAP Bid Incl":
+                        _paymentItems.Add(new Payment { Name = item, IsChecked = bool.Parse(row["GapBid_Incl"].ToString()) });
+                        break;
+                    case "GAP Est Incl":
+                        _paymentItems.Add(new Payment { Name = item, IsChecked = bool.Parse(row["GapEst_Incl"].ToString()) });
+                        break;
+                    case "LCP Tracker":
+                        _paymentItems.Add(new Payment { Name = item, IsChecked = bool.Parse(row["LCPTracker"].ToString()) });
+                        break;
+                    case "Down Payment":
+                        _paymentItems.Add(new Payment { Name = item, IsChecked = bool.Parse(row["Pay_Reqd"].ToString()) });
+                        break;
+                }
+            }
+            Payments = _paymentItems;
+
+            cmd.Dispose();
+            dbConnection.Close();
+        }
+
         private int _selectetProjectId;
         private int _selectetPMId;
         private ObservableCollection<Payment> _payments;
@@ -39,12 +537,6 @@ namespace WpfApp.ViewModel
                 _selectetPMId = value;
                 //ChangePM();
             }
-        }
-
-        public ProjectViewModel()
-        {
-            project = new Project();
-            LoadProjects();
         }
 
         public ObservableCollection<Project> Projects
@@ -399,499 +891,6 @@ namespace WpfApp.ViewModel
                 _selectedMCID = value;
                 OnPropertyChanged();
             }
-        }
-
-        public SqlConnection con;
-        public SqlCommand cmd;
-        public SqlDataAdapter sda;
-        public DataSet ds;
-
-        private void LoadProjects()
-        {
-            string connectionString = @"Data Source = DESKTOP-VDIB57T\INSTANCE2023; user id=sa; password=qwe234ASD@#$; Initial Catalog = griesenbeck;";
-            con = new SqlConnection(connectionString);
-            con.Open();
-
-            string sqlquery = "SELECT tblProjects.Project_ID, tblProjects.Project_Name, tblCustomers.Full_Name FROM tblProjects LEFT JOIN tblCustomers ON tblProjects.Customer_ID = tblCustomers.Customer_ID ORDER BY Project_Name ASC;";
-            cmd = new SqlCommand(sqlquery, con);
-            sda = new SqlDataAdapter(cmd);
-            ds = new DataSet();
-            sda.Fill(ds);
-
-            ObservableCollection<Project> st_mb = new ObservableCollection<Project>();
-            foreach (DataRow row in ds.Tables[0].Rows)
-            {
-                if (!string.IsNullOrEmpty(row["Project_Name"].ToString()))
-                {
-                    int projectID = int.Parse(row["Project_ID"].ToString());
-                    string projectName = row["Project_Name"].ToString();
-
-                    string fullName = row["Full_Name"].ToString();
-                    st_mb.Add(new Project { ID = projectID, ProjectName = projectName, CustomerName = fullName });
-                }
-
-            }
-            Projects = st_mb;
-            // Payment
-            ObservableCollection<Payment> _paymentItems = new ObservableCollection<Payment>();
-            Payments = new ObservableCollection<Payment>();
-            string[] paymentItems = { "Background Check", "Cert Pay Reqd", "CIP Project", "C3 Project", "P&P Bond", "GAP Bid Incl", "GAP Est Incl", "LCP Tracker", "Down Payment" };
-
-            foreach (string item in paymentItems)
-            {
-                _paymentItems.Add(new Payment { Name = item, IsChecked = false });
-            }
-            Payments = _paymentItems;
-
-            // Customer Address
-            sqlquery = "SELECT Customer_ID, Full_Name, Address FROM tblCustomers Order by Full_Name";
-            cmd = new SqlCommand(sqlquery, con);
-            sda = new SqlDataAdapter(cmd);
-            ds = new DataSet();
-            sda.Fill(ds);
-
-            ObservableCollection<Customer> st_customer = new ObservableCollection<Customer>();
-            foreach (DataRow row in ds.Tables[0].Rows)
-            {
-                var m_test = row["Customer_ID"];
-                int Num;
-
-                bool isNum = int.TryParse(row["Customer_ID"].ToString(), out Num); //c is your variable
-                if (isNum)
-                {
-                    int customerID = int.Parse(row["Customer_ID"].ToString());
-                    //int customerID = 0;
-                    string customerName = row["Full_Name"].ToString();
-                    string customeAddress = row["Address"].ToString();
-                    st_customer.Add(new Customer { ID = customerID, CustomerName = customerName, CustomerAddress = customeAddress });
-                }
-                
-            }
-            Customers = st_customer;
-
-            // Architect
-            sqlquery = "SELECT Architect_ID, Arch_Company FROM tblArchitects;";
-            cmd = new SqlCommand(sqlquery, con);
-            sda = new SqlDataAdapter(cmd);
-            ds = new DataSet();
-            sda.Fill(ds);
-
-            ObservableCollection<Architect> st_architect = new ObservableCollection<Architect>();
-            foreach (DataRow row in ds.Tables[0].Rows)
-            {
-                int Num;
-
-                bool isNum = int.TryParse(row["Architect_ID"].ToString(), out Num); //c is your variable
-                if (isNum)
-                {
-                    int architectID = int.Parse(row["Architect_ID"].ToString());
-                    string archCompany = row["Arch_Company"].ToString();
-                    st_architect.Add(new Architect { ID = architectID, ArchCompany = archCompany });
-                }
-
-            }
-            Architects = st_architect;
-
-            //Crew
-            sqlquery = "SELECT Crew_ID, Crew_Name FROM tblInstallCrew;";
-            cmd = new SqlCommand(sqlquery, con);
-            sda = new SqlDataAdapter(cmd);
-            ds = new DataSet();
-            sda.Fill(ds);
-
-            ObservableCollection<Crew> st_crew = new ObservableCollection<Crew>();
-            foreach (DataRow row in ds.Tables[0].Rows)
-            {
-                int Num;
-
-                bool isNum = int.TryParse(row["Crew_ID"].ToString(), out Num); //c is your variable
-                if (isNum)
-                {
-                    int crewID = int.Parse(row["Crew_ID"].ToString());
-                    string crewName = row["Crew_Name"].ToString();
-                    st_crew.Add(new Crew { ID = crewID, CrewName = crewName });
-                }
-
-            }
-            Crews = st_crew;
-
-            // Salesman
-            sqlquery = "SELECT Salesman_ID, Salesman_Name FROM tblSalesmen;";
-            cmd = new SqlCommand(sqlquery, con);
-            sda = new SqlDataAdapter(cmd);
-            ds = new DataSet();
-            sda.Fill(ds);
-
-            ObservableCollection<Salesman> st_salesman = new ObservableCollection<Salesman>();
-            foreach (DataRow row in ds.Tables[0].Rows)
-            {
-                int Num;
-
-                bool isNum = int.TryParse(row["Salesman_ID"].ToString(), out Num); //c is your variable
-                if (isNum)
-                {
-                    int salesmanID = int.Parse(row["Salesman_ID"].ToString());
-                    string salesmanName = row["Salesman_Name"].ToString();
-                    st_salesman.Add(new Salesman { ID = salesmanID, SalesmanName = salesmanName });
-                }
-
-            }
-            Salesman = st_salesman;
-
-            // Estimator
-            sqlquery = "SELECT Estimator_ID, Estimator_Name FROM tblEstimators;";
-            cmd = new SqlCommand(sqlquery, con);
-            sda = new SqlDataAdapter(cmd);
-            ds = new DataSet();
-            sda.Fill(ds);
-
-            ObservableCollection<Estimator> st_estimator = new ObservableCollection<Estimator>();
-            foreach (DataRow row in ds.Tables[0].Rows)
-            {
-                int Num;
-
-                bool isNum = int.TryParse(row["Estimator_ID"].ToString(), out Num); //c is your variable
-                if (isNum)
-                {
-                    int estimatorID = int.Parse(row["Estimator_ID"].ToString());
-                    string estimatorName = row["Estimator_Name"].ToString();
-                    st_estimator.Add(new Estimator { ID = estimatorID, EstimatorName = estimatorName });
-                }
-
-            }
-            Estimators = st_estimator;
-
-            // ArchRep
-            sqlquery = "SELECT Arch_Rep_ID, Arch_Rep_Name FROM tblArchRep;";
-            cmd = new SqlCommand(sqlquery, con);
-            sda = new SqlDataAdapter(cmd);
-            ds = new DataSet();
-            sda.Fill(ds);
-
-            ObservableCollection<ArchRep> st_archRep = new ObservableCollection<ArchRep>();
-            foreach (DataRow row in ds.Tables[0].Rows)
-            {
-                int Num;
-
-                bool isNum = int.TryParse(row["Arch_Rep_ID"].ToString(), out Num); //c is your variable
-                if (isNum)
-                {
-                    int archRepID = int.Parse(row["Arch_Rep_ID"].ToString());
-                    string archRepName = row["Arch_Rep_Name"].ToString();
-                    st_archRep.Add(new ArchRep { ID = archRepID, ArchRepName = archRepName });
-                }
-
-            }
-            ArchReps = st_archRep;
-
-            // Customer Contacts
-            sqlquery = "SELECT CC_ID, Customer_ID, CC_Name FROM tblCustomerContacts;";
-            cmd = new SqlCommand(sqlquery, con);
-            sda = new SqlDataAdapter(cmd);
-            ds = new DataSet();
-            sda.Fill(ds);
-
-            ObservableCollection<CustomerContact> st_customerContact = new ObservableCollection<CustomerContact>();
-            foreach (DataRow row in ds.Tables[0].Rows)
-            {
-                int ccID = int.Parse(row["CC_ID"].ToString());
-                int customerID = int.Parse(row["Customer_ID"].ToString());
-                string ccName= row["CC_Name"].ToString();
-                st_customerContact.Add(new CustomerContact { ID = ccID, CustomerID = customerID, CCName = ccName});
-
-            }
-            CustomerContacts = st_customerContact;
-
-            // PC
-            sqlquery = "SELECT PC_ID, PC_Name FROM tblPCs;";
-            cmd = new SqlCommand(sqlquery, con);
-            sda = new SqlDataAdapter(cmd);
-            ds = new DataSet();
-            sda.Fill(ds);
-
-            ObservableCollection<PC> st_pc = new ObservableCollection<PC>();
-            foreach (DataRow row in ds.Tables[0].Rows)
-            {
-                int pcID = int.Parse(row["PC_ID"].ToString());
-                string pcName = row["PC_Name"].ToString();
-                st_pc.Add(new PC { ID = pcID, PCName = pcName });
-
-            }
-
-            PCs = st_pc;
-
-            // Superintendent
-            sqlquery = "SELECT * FROM tblSuperintendents";
-            cmd = new SqlCommand(sqlquery, con);
-            sda = new SqlDataAdapter(cmd);
-            ds = new DataSet();
-            sda.Fill(ds);
-
-            ObservableCollection<Superintendent> st_supt = new ObservableCollection<Superintendent>();
-            foreach (DataRow row in ds.Tables[0].Rows)
-            {
-                int suptID = int.Parse(row["Sup_ID"].ToString());
-                string suptName = row["Sup_Name"].ToString();
-                string suptCellPhone = row["Sup_CellPhone"].ToString();
-                string suptEmail = row["Sup_Email"].ToString();
-                st_supt.Add(new Superintendent { SupID = suptID, SupName = suptName, SupCellPhone = suptCellPhone, SupEmail = suptEmail});
-            }
-
-            Superintendents = st_supt;
-
-            // ReturnedViaNames
-            sqlquery = "SELECT * FROM tblReturnedVia";
-            cmd = new SqlCommand(sqlquery, con);
-            sda = new SqlDataAdapter(cmd);
-            ds = new DataSet();
-            sda.Fill(ds);
-
-            ObservableCollection<ReturnedVia> st_returnedVia = new ObservableCollection<ReturnedVia>();
-            foreach (DataRow row in ds.Tables[0].Rows)
-            {
-                int viaID = int.Parse(row["ID"].ToString());
-                string viaName = row["ReturnedVia"].ToString();
-                st_returnedVia.Add(new ReturnedVia { ID = viaID, ReturnedViaName = viaName });
-            }
-
-            ReturnedViaNames = st_returnedVia;
-
-            // ProjectManager
-            sqlquery = "select * from tblProjectManagers";
-            cmd = new SqlCommand(sqlquery, con);
-            sda = new SqlDataAdapter(cmd);
-            ds = new DataSet();
-            sda.Fill(ds);
-            ObservableCollection<ProjectManager> st_pm = new ObservableCollection<ProjectManager>();
-            foreach (DataRow row in ds.Tables[0].Rows)
-            {
-                int pmID = int.Parse(row["PM_ID"].ToString());
-                string pmName = row["PM_Name"].ToString();
-                string pmCellPhone = row["PM_CellPhone"].ToString();
-                string pmEmail = row["PM_Email"].ToString();
-                st_pm.Add(new ProjectManager
-                {
-                    ID = pmID,
-                    PMName = pmName,
-                    PMCellPhone = pmCellPhone,
-                    PMEmail = pmEmail
-                });
-            }
-
-            ProjectManagers = st_pm;
-
-            // Manufacturer
-            sqlquery = "SELECT Manuf_ID, Manuf_Name FROM tblManufacturers;";
-            cmd = new SqlCommand(sqlquery, con);
-            sda = new SqlDataAdapter(cmd);
-            ds = new DataSet();
-            sda.Fill(ds);
-            ObservableCollection<Manufacturer> st_manufacturers = new ObservableCollection<Manufacturer>();
-            foreach (DataRow row in ds.Tables[0].Rows)
-            {
-                int manufID = int.Parse(row["Manuf_ID"].ToString());
-                string manufName = row["Manuf_Name"].ToString();
-                st_manufacturers.Add(new Manufacturer
-                {
-                    ID = manufID,
-                    ManufacturerName = manufName,
-                });
-            }
-
-            Manufacturers = st_manufacturers;
-
-            // FreightCo_Name
-            ObservableCollection<FreightCo> sb_freightCo = new ObservableCollection<FreightCo>();
-
-            sqlquery = "SELECT FreightCo_ID, FreightCo_Name FROM tblFreightCo ORDER BY FreightCo_Name;";
-            cmd = new SqlCommand(sqlquery, con);
-            sda = new SqlDataAdapter(cmd);
-            ds = new DataSet();
-            sda.Fill(ds);
-
-            foreach (DataRow row in ds.Tables[0].Rows)
-            {
-                int freightID = int.Parse(row["FreightCo_ID"].ToString());
-                string freightName = row["FreightCo_Name"].ToString();
-                sb_freightCo.Add(new FreightCo
-                {
-                    FreightCoID = freightID,
-                    FreightName = freightName,
-                });
-            }
-
-            FreightCos = sb_freightCo;
-
-            // Materials
-            ObservableCollection<Material> st_material = new ObservableCollection<Material>();
-
-            sqlquery = "Select * from tblMaterials";
-            cmd = new SqlCommand(sqlquery, con);
-            sda = new SqlDataAdapter(cmd);
-            ds = new DataSet();
-            sda.Fill(ds);
-
-            foreach (DataRow row in ds.Tables[0].Rows)
-            {
-                int matID = int.Parse(row["Material_ID"].ToString());
-                string matDesc = row["Material_Desc"].ToString();
-                st_material.Add(new Material
-                {
-                    ID = matID,
-                    MatDesc = matDesc,
-                });
-            }
-
-            Materials = st_material;
-
-            // Acronym
-            ObservableCollection<Acronym> st_acronym = new ObservableCollection<Acronym>();
-
-            sqlquery = "SELECT * from tblScheduleOfValues";
-            cmd = new SqlCommand(sqlquery, con);
-            sda = new SqlDataAdapter(cmd);
-            ds = new DataSet();
-            sda.Fill(ds);
-
-            foreach (DataRow row in ds.Tables[0].Rows)
-            {
-                //int projectID = int.Parse(row["Project_ID"].ToString());
-                string acronymName = row["SOV_Acronym"].ToString();
-                st_acronym.Add(new Acronym
-                {
-                    //ProjectID = projectID,
-                    AcronymName = acronymName,
-                });
-            }
-
-            Acronyms = st_acronym;
-
-            cmd.Dispose();
-            con.Close();
-        }
-
-        private void ChangeProject()
-        {
-            string sqlquery = "SELECT tblProjects.*, tblCustomers.Full_Name, tblCustomers.Customer_ID FROM tblProjects LEFT JOIN tblCustomers ON tblProjects.Customer_ID = tblCustomers.Customer_ID WHERE tblProjects.Project_ID = " + SelectedProjectId.ToString() + ";";
-            SqlCommand cmd = new SqlCommand(sqlquery, con);
-            SqlDataAdapter sda = new SqlDataAdapter(cmd);
-            DataSet ds = new DataSet();
-            sda.Fill(ds);
-
-            var row = ds.Tables[0].Rows[0];
-            ProjectName = "";
-            TargetDate = new DateTime();
-            CompletedDate = new DateTime();
-            PaymentNote = "";
-            JobNo = "";
-            Address = "";
-            City = "";
-            State = "";
-            Zip = "";
-            OrigTaxAmt = "";
-            OrigProfit = "";
-            OrigTotalMatCost = "";
-            OnHold = false;
-            BillingDate = "";
-            SelectedEstimatorID = -1;
-            SelectedProjectCoordID = -1;
-            SelectedArchRepID = -1;
-            SelectedArchitectID = -1;
-            SelectedCCID = -1;
-            SelectedCrewID = -1;
-            SelectedMCID = -1;
-            if (!row.IsNull("Project_Name"))
-                ProjectName = row["Project_Name"].ToString();
-            if (!row.IsNull("Target_Date"))
-                TargetDate = row.Field<DateTime>("Target_Date");
-            if (!row.IsNull("Date_Completed"))
-                CompletedDate = row.Field<DateTime>("Date_Completed");
-            if (!row.IsNull("Pay_Reqd_Note"))
-                PaymentNote = row["Pay_Reqd_Note"].ToString();
-            if (!row.IsNull("Job_No"))
-                JobNo = row["Job_No"].ToString();
-            if (!row.IsNull("Address"))
-                Address = row["Address"].ToString();
-            if (!row.IsNull("City"))
-                City = row["City"].ToString();
-            if (!row.IsNull("State"))
-                State = row["State"].ToString();
-            if (!row.IsNull("Zip"))
-                Zip = row["Zip"].ToString();
-            if (!row.IsNull("OrigTaxAmt"))
-                OrigTaxAmt = row["OrigTaxAmt"].ToString();
-            if (!row.IsNull("OrigProfit"))
-                OrigProfit = row["OrigProfit"].ToString();
-            if (!row.IsNull("OrigTotalMatCost"))
-                OrigTotalMatCost = row["OrigTotalMatCost"].ToString();
-            if (!row.IsNull("On_Hold"))
-                OnHold = row.Field<Boolean>("On_Hold");
-            if (!row.IsNull("Billing_Date"))
-                BillingDate = row["Billing_Date"].ToString();
-            if (!row.IsNull("Estimator_ID"))
-                SelectedEstimatorID = row.Field<int>("Estimator_ID");
-            if (!row.IsNull("PC_ID"))
-                SelectedProjectCoordID = row.Field<int>("PC_ID");
-            if (!row.IsNull("Arch_Rep_ID"))
-                SelectedArchRepID = row.Field<int>("Arch_Rep_ID");
-            if (!row.IsNull("CC_ID"))
-                SelectedCCID = row.Field<int>("CC_ID");
-            if (!row.IsNull("Architect_ID"))
-                SelectedArchitectID = row.Field<int>("Architect_ID");
-            if (!row.IsNull("Crew_ID"))
-                SelectedCrewID = row.Field<int>("Crew_ID");
-            if (!row.IsNull("Master_Contract"))
-                if (row.Field<string>("Master_Contract") == "Yes")
-                    SelectedMCID = 0;
-                else SelectedMCID = 1;
-            if (!row.IsNull("Customer_ID"))
-                SelectedCustomerId = row.Field<int>("Customer_ID");
-
-            string[] paymentItems = { "Background Check", "Cert Pay Reqd", "CIP Project", "C3 Project", "P&P Bond", "GAP Bid Incl", "GAP Est Incl", "LCP Tracker", "Down Payment" };
-
-            //PaymentItem
-            DataTemplate myDataTemplate = new DataTemplate();
-            FrameworkElementFactory checkBoxFactory = new FrameworkElementFactory(typeof(CheckBox));
-            //checkBoxFactory.SetBinding(CheckBox.IsCheckedProperty, new Bind("));
-
-            ObservableCollection<Payment> _paymentItems = new ObservableCollection<Payment>();
-            foreach (string item in paymentItems)
-            {
-                switch(item)
-                {
-                    case "Background Check":
-                        _paymentItems.Add(new Payment { Name = item, IsChecked = bool.Parse(row["BackGroundCheck"].ToString()) });
-                        break;
-                    case "Cert Pay Reqd":
-                        _paymentItems.Add(new Payment { Name = item, IsChecked = bool.Parse(row["CertPay_Reqd"].ToString()) });
-                        break;
-                    case "CIP Project":
-                        _paymentItems.Add(new Payment { Name = item, IsChecked = bool.Parse(row["CIP_Project"].ToString()) });
-                        break;
-                    case "C3 Project":
-                        _paymentItems.Add(new Payment { Name = item, IsChecked = bool.Parse(row["C3"].ToString()) });
-                        break;
-                    case "P&P Bond":
-                        _paymentItems.Add(new Payment { Name = item, IsChecked = bool.Parse(row["PnP_Bond"].ToString()) });
-                        break;
-                    case "GAP Bid Incl":
-                        _paymentItems.Add(new Payment { Name = item, IsChecked = bool.Parse(row["GapBid_Incl"].ToString()) });
-                        break;
-                    case "GAP Est Incl":
-                        _paymentItems.Add(new Payment { Name = item, IsChecked = bool.Parse(row["GapEst_Incl"].ToString()) });
-                        break;
-                    case "LCP Tracker":
-                        _paymentItems.Add(new Payment { Name = item, IsChecked = bool.Parse(row["LCPTracker"].ToString()) });
-                        break;
-                    case "Down Payment":
-                        _paymentItems.Add(new Payment { Name = item, IsChecked = bool.Parse(row["Pay_Reqd"].ToString()) });
-                        break;
-                }
-            }
-            Payments = _paymentItems;
-
-            cmd.Dispose();
-            con.Close();
         }
     }
 

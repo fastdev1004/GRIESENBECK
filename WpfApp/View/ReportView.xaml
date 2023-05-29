@@ -1,0 +1,201 @@
+﻿<Page x:Class="WpfApp.View.ReportView"
+      xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+      xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+      xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+      xmlns:local="clr-namespace:WpfApp.View"
+      mc:Ignorable="d" 
+      d:DesignHeight="900" d:DesignWidth="1400"
+      Title="ReportingView">
+    <Page.Resources>
+        <Style x:Name="operation" TargetType="Button">
+            <Setter Property="Width" Value="Auto" />
+            <Setter Property="Height" Value="20" />
+            <Setter Property="Foreground" Value="White" />
+            <Setter Property="Background" Value="#14305F" />
+            <Setter Property="FontWeight" Value="Bold" />
+            <Setter Property="Padding" Value="4,0" />
+            <Style.Resources>
+                <Style TargetType="Border">
+                    <Setter Property="CornerRadius" Value="3"></Setter>
+                </Style>
+            </Style.Resources>
+        </Style>
+    </Page.Resources>
+
+    <Grid>
+        <Grid.Resources>
+            <Style TargetType="Label">
+                <Setter Property="HorizontalAlignment" Value="Right" />
+            </Style>
+            
+        </Grid.Resources>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="*" />
+        </Grid.RowDefinitions>
+        <Grid>
+            <Border BorderThickness="0 0 0 4" BorderBrush="#B6302D">
+                <Grid Background="#14305F">
+                    <Button Click="goBack" Width="40" Height="20" HorizontalAlignment="Left" Margin="10,0,0,0">Back</Button>
+                    <TextBlock Margin="80, 0,0,0" Text="Reporting" FontSize="32" Foreground="White" VerticalAlignment="Center">
+                    </TextBlock>
+                </Grid>
+            </Border>
+        </Grid>
+        <Grid Grid.Row="1">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="1*" />
+                <ColumnDefinition Width="1*" />
+                <ColumnDefinition Width="1*" />
+            </Grid.ColumnDefinitions>
+            <Button Grid.Column="1" Width="40" HorizontalAlignment="Left" Height="20" Margin="0,0,0,0">View</Button>
+        </Grid>
+        <Grid Grid.Row="2" Margin="10, 24, 10, 10">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="1*" />
+                <ColumnDefinition Width="0.8*" />
+                <ColumnDefinition Width="1.2*" />
+            </Grid.ColumnDefinitions>
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto" />
+                </Grid.RowDefinitions>
+                <ListView ItemsSource="{Binding Reports}" Height="300">
+                    <ListView.View>
+                        <GridView>
+                            <GridViewColumn Header="Name" Width="250" DisplayMemberBinding="{Binding ReportName}" />
+                            <GridViewColumn Header="Select Date" Width="100" DisplayMemberBinding="{Binding ReportDateName}" />
+                        </GridView>
+                    </ListView.View>
+                </ListView>
+            </Grid>
+            <Grid Grid.Column="1">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                </Grid.RowDefinitions>
+                <Grid.Resources>
+                    <Style TargetType="Grid">
+                        <Setter Property="Margin" Value="0,0,0,10" />
+                    </Style>
+                </Grid.Resources>
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="1*" />
+                        <ColumnDefinition Width="4*" />
+                    </Grid.ColumnDefinitions>
+                    <Label>Project:</Label>
+                    <ComboBox ItemsSource="{Binding Projects}" DisplayMemberPath="ProjectName" Grid.Column="1" />
+                </Grid>
+                <Grid Grid.Row="1">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="1*" />
+                        <ColumnDefinition Width="1.5*" />
+                        <ColumnDefinition Width="2.5*" />
+                    </Grid.ColumnDefinitions>
+                    <Label>Job No:</Label>
+                    <ComboBox Grid.Column="1" />
+                </Grid>
+                <Grid Grid.Row="2">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="1*" />
+                        <ColumnDefinition Width="4*" />
+                    </Grid.ColumnDefinitions>
+                    <Label>SalesNo:</Label>
+                    <ComboBox ItemsSource="{Binding SalesMans}" DisplayMemberPath="SalesmanName" Grid.Column="1" />
+                </Grid>
+                <Grid Grid.Row="3">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="1*" />
+                        <ColumnDefinition Width="4*" />
+                    </Grid.ColumnDefinitions>
+                    <Label>Arch Rep:</Label>
+                    <ComboBox ItemsSource="{Binding ArchReps}" DisplayMemberPath="ArchRepName" Grid.Column="1" />
+                </Grid>
+                <Grid Grid.Row="4">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="1*" />
+                        <ColumnDefinition Width="4*" />
+                    </Grid.ColumnDefinitions>
+                    <Label>Customer:</Label>
+                    <ComboBox ItemsSource="{Binding Customers}" DisplayMemberPath="FullName" Grid.Column="1" />
+                </Grid>
+                <Grid Grid.Row="5">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="1*" />
+                        <ColumnDefinition Width="4*" />
+                    </Grid.ColumnDefinitions>
+                    <Label>Manufacturer:</Label>
+                    <ComboBox ItemsSource="{Binding Manufacturers}" DisplayMemberPath="ManufacturerName" Grid.Column="1" />
+                </Grid>
+                <Grid Grid.Row="6">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="1*" />
+                        <ColumnDefinition Width="4*" />
+                    </Grid.ColumnDefinitions>
+                    <Label>Architect:</Label>
+                    <ComboBox ItemsSource="{Binding Architects}" DisplayMemberPath="ArchCompany" Grid.Column="1" />
+                </Grid>
+                <Grid Grid.Row="7">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="1*" />
+                        <ColumnDefinition Width="4*" />
+                    </Grid.ColumnDefinitions>
+                    <Label>Materials:</Label>
+                    <ComboBox ItemsSource="{Binding Materials}" DisplayMemberPath="MatDesc" Grid.Column="1" />
+                </Grid>
+                <Grid Grid.Row="8">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="1*" />
+                        <ColumnDefinition Width="3*" />
+                        <ColumnDefinition Width="1*" />
+                    </Grid.ColumnDefinitions>
+                    <Label>Crew:</Label>
+                    <ComboBox ItemsSource="{Binding Crews}" DisplayMemberPath="CrewName" Grid.Column="1" />
+                </Grid>
+                <Grid Grid.Row="9">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="1*" />
+                        <ColumnDefinition Width="4*" />
+                    </Grid.ColumnDefinitions>
+                    <Label>Complete:</Label>
+                    <ComboBox Grid.Column="1" />
+                </Grid>
+                <Grid Grid.Row="10">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="1*" />
+                        <ColumnDefinition Width="1*" />
+                        <ColumnDefinition Width="1*" />
+                        <ColumnDefinition Width="1*" />
+                        <ColumnDefinition Width="1*" />
+                    </Grid.ColumnDefinitions>
+                    <Label>Date From:</Label>
+                    <DatePicker Grid.Column="1" />
+                    <Label Grid.Column="2">To:</Label>
+                    <DatePicker Grid.Column="3" />
+                </Grid>
+                <Grid Grid.Row="11">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="1*" />
+                        <ColumnDefinition Width="3*" />
+                        <ColumnDefinition Width="1*" />
+                    </Grid.ColumnDefinitions>
+                    <Label>Keyword:</Label>
+                    <ComboBox ItemsSource="{Binding Materials}" DisplayMemberPath="Material_Desc" Grid.Column="1" />
+                </Grid>
+            </Grid>
+        </Grid>
+    </Grid>
+</Page>

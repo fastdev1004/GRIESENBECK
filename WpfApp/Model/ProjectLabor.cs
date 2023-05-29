@@ -12,7 +12,7 @@ namespace WpfApp.Model
         private int _projectID;
         private string _sovAcronym;
         private string _labor;
-        private int _qtyReqd;
+        private double _qtyReqd;
         private double _unitPrice;
         private double _total;
         private int _changeOrder;
@@ -51,7 +51,7 @@ namespace WpfApp.Model
             }
         }
 
-        public int QtyReqd
+        public double QtyReqd
         {
             get => _qtyReqd;
             set
