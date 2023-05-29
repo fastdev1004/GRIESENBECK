@@ -388,6 +388,48 @@ namespace WpfApp.ViewModel
 
             Acronyms = st_acronym;
 
+            // CIP Type
+            ObservableCollection<string> st_cip = new ObservableCollection<string>();
+
+            sqlquery = "SELECT DISTINCT CIPType FROM tblCIPs";
+            cmd = new SqlCommand(sqlquery, dbConnection.Connection);
+            sda = new SqlDataAdapter(cmd);
+            ds = new DataSet();
+            sda.Fill(ds);
+
+            foreach (DataRow row in ds.Tables[0].Rows)
+            {
+                string cipType = "";
+                if(!row.IsNull("CIPType"))
+                {
+                    cipType = row["CIPType"].ToString();
+                    st_cip.Add(cipType);
+                }
+            }
+
+            CIPTypes = st_cip;
+
+            // CIP Enroll
+            ObservableCollection<string> st_crewEnroll = new ObservableCollection<string>();
+
+            sqlquery = "SELECT DISTINCT CrewEnrolled FROM tblCIPs ";
+            cmd = new SqlCommand(sqlquery, dbConnection.Connection);
+            sda = new SqlDataAdapter(cmd);
+            ds = new DataSet();
+            sda.Fill(ds);
+
+            foreach (DataRow row in ds.Tables[0].Rows)
+            {
+                string cipType = "";
+                if (!row.IsNull("CrewEnrolled"))
+                {
+                    cipType = row["CrewEnrolled"].ToString();
+                    st_crewEnroll.Add(cipType);
+                }
+            }
+
+            CrewEnrolls = st_crewEnroll;
+
             cmd.Dispose();
             dbConnection.Close();
         }
@@ -540,6 +582,18 @@ namespace WpfApp.ViewModel
         }
 
         public ObservableCollection<Project> Projects
+        {
+            get;
+            set;
+        }
+
+        public ObservableCollection<string> CIPTypes
+        {
+            get;
+            set;
+        }
+
+        public ObservableCollection<string> CrewEnrolls
         {
             get;
             set;

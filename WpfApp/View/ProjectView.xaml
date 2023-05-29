@@ -1613,7 +1613,7 @@
                                     <ColumnDefinition Width="2*" />
                                 </Grid.ColumnDefinitions>
                                 <Label Content="CIP Type" HorizontalAlignment="Left" />
-                                <ComboBox Grid.Column="1" />
+                                <ComboBox ItemsSource="{Binding CIPTypes}" SelectedValuePath="Type" Grid.Column="1" />
                             </Grid>
                             <Grid Grid.Row="2">
                                 <Grid.ColumnDefinitions>
@@ -1698,7 +1698,7 @@
                                     <ColumnDefinition Width="2*" />
                                 </Grid.ColumnDefinitions>
                                 <Label Content="Crew Enrolled" HorizontalAlignment="Left" />
-                                <ComboBox Grid.Column="1" />
+                                <ComboBox ItemsSource="{Binding CrewEnrolls}" Grid.Column="1" />
                             </Grid>
                         </Grid>
                         <Grid Grid.Column="2">
