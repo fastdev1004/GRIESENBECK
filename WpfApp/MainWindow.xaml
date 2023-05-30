@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:WpfApp"
         mc:Ignorable="d"
-        Title="Project Tracking"  Width="1700" Height="900">
+        Title="Project Tracking" Width="1700" Height="1000">
     <Grid>
         <DockPanel>
             <DockPanel>

@@ -96,9 +96,9 @@ namespace WpfApp.ViewModel
             dbConnection.Close();
         }
 
-        private ObservableCollection<WorkOrder> _workOrders;
-        private ObservableCollection<Superintendent> _superintendent;
-        private ObservableCollection<ProjectWorkOrder> _projectWorkOrder;
+        
+        
+        
         private int _projectId;
         private int _workOrderID;
         private int _crewID;
@@ -121,6 +121,8 @@ namespace WpfApp.ViewModel
             set;
         }
 
+        private ObservableCollection<WorkOrder> _workOrders;
+
         public ObservableCollection<WorkOrder> WorkOrders
         {
             get { return _workOrders; }
@@ -133,6 +135,8 @@ namespace WpfApp.ViewModel
                 }
             }
         }
+
+        private ObservableCollection<Superintendent> _superintendent;
 
         public ObservableCollection<Superintendent> Superintendents
         {
@@ -147,6 +151,8 @@ namespace WpfApp.ViewModel
             }
         }
 
+        private ObservableCollection<ProjectWorkOrder> _projectWorkOrder;
+
         public ObservableCollection<ProjectWorkOrder> ProjectWorkOrders
         {
             get { return _projectWorkOrder; }
@@ -155,6 +161,21 @@ namespace WpfApp.ViewModel
                 if (_projectWorkOrder != value)
                 {
                     _projectWorkOrder = value;
+                    OnPropertyChanged();
+                }
+            }
+        }
+
+        private ObservableCollection<ProjectLabor> _projectLabor;
+
+        public ObservableCollection<ProjectLabor> ProjectLabors
+        {
+            get { return _projectLabor; }
+            set
+            {
+                if (_projectLabor != value)
+                {
+                    _projectLabor = value;
                     OnPropertyChanged();
                 }
             }
@@ -277,6 +298,7 @@ namespace WpfApp.ViewModel
 
         private void ChangeProject()
         {
+            // work orders
             sqlquery = "SELECT tblWO.WO_ID, tblWO.Wo_Nbr, tblInstallCrew.Crew_ID, tblInstallCrew.Crew_Name, tblWO.SchedStartDate, tblWO.SchedComplDate, tblWO.Sup_ID, tblWO.Date_Started, tblWO.Date_Completed FROM tblInstallCrew RIGHT JOIN (SELECT * FROM tblWorkOrders WHERE Project_ID = " + ProjectID.ToString() + ") AS tblWO ON tblInstallCrew.Crew_ID = tblWO.Crew_ID; ";
 
             cmd = new SqlCommand(sqlquery, dbConnection.Connection);
@@ -390,7 +412,49 @@ namespace WpfApp.ViewModel
                 });
             }
             ProjectWorkOrders = sb_projectWorkOrder;
-            Console.WriteLine(ProjectWorkOrders.Count);
+
+            // Project Labor List
+            sqlquery = " SELECT CO_ItemNo, tblLab.* FROM tblProjectChangeOrders RIGHT JOIN (SELECT tblProjectSOV.SOV_Acronym, tblProjectSOV.CO_ID, tblLab.Labor_Desc, tblLab.Qty_Reqd, tblLab.UnitPrice, tblLab.Lab_Phase FROM tblProjectSOV RIGHT JOIN ( SELECT tblLabor.Labor_Desc, tblLab.*  FROM tblLabor RIGHT JOIN ( SELECT * FROM tblProjectLabor WHERE Project_ID = " + ProjectID.ToString() + ") AS tblLab ON tblLabor.Labor_ID = tblLab.Labor_ID) AS tblLab ON tblProjectSOV.ProjSOV_ID = tblLab.ProjSOV_ID) AS tblLab ON tblProjectChangeOrders.CO_ID = tblLab.CO_ID ORDER BY tblLab.SOV_Acronym";
+
+            cmd = new SqlCommand(sqlquery, dbConnection.Connection);
+            sda = new SqlDataAdapter(cmd);
+            ds = new DataSet();
+            sda.Fill(ds);
+
+            ObservableCollection<ProjectLabor> sb_projectLabor = new ObservableCollection<ProjectLabor>();
+            foreach (DataRow row in ds.Tables[0].Rows)
+            {
+                string _sovAcronym = "";
+                string _labor = "";
+                double _qtyReqd = 0;
+                double _unitPrice = 0;
+                //int    = 0;
+                int _changeOrder = 0;
+                string _phase = "";
+                if (!row.IsNull("SOV_Acronym"))
+                    _sovAcronym = row["SOV_Acronym"].ToString();
+                if (!row.IsNull("Labor_Desc"))
+                    _labor = row["Labor_Desc"].ToString();
+                if (!row.IsNull("Qty_Reqd"))
+                    _qtyReqd = double.Parse(row["Qty_Reqd"].ToString());
+                if (!row.IsNull("UnitPrice"))
+                    _unitPrice = row.Field<double>("UnitPrice");
+                if (!row.IsNull("CO_ItemNo"))
+                    _changeOrder = int.Parse(row["CO_ItemNo"].ToString());
+                if (!row.IsNull("Lab_Phase"))
+                    _phase = row["Lab_Phase"].ToString();
+                sb_projectLabor.Add(new ProjectLabor
+                {
+                    ProjectID = ProjectID,
+                    SovAcronym = _sovAcronym,
+                    Labor = _labor,
+                    QtyReqd = _qtyReqd,
+                    UnitPrice = _unitPrice,
+                    ChangeOrder = _changeOrder,
+                    Phase = _phase
+                });
+            }
+            ProjectLabors = sb_projectLabor;
         }
 
         private void ChangeWorkOrder()

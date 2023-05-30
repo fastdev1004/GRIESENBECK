@@ -542,48 +542,6 @@ namespace WpfApp
                     rowIndex += 1;
                 }
 
-                // TrackShipList
-                rowIndex = 0;
-                sqlquery = "Select tblMat.*, tblMaterials.Material_Desc from(Select tblSOV.SOV_Acronym, tblSOV.CO_ItemNo, tblSOV.Material_Only, tblSOV.SOV_Desc, tblProjectMaterials.ProjMat_ID, tblProjectMaterials.Mat_Phase, tblProjectMaterials.Mat_Type,tblProjectMaterials.Color_Selected, tblProjectMaterials.Qty_Reqd, tblProjectMaterials.TotalCost, Material_ID from(Select tblSOV.*, tblProjectChangeOrders.CO_ItemNo from(Select tblSOV.*, tblScheduleOfValues.SOV_Desc from tblScheduleOfValues Right JOIN(SELECT tblProjectSOV.* From tblProjects LEFT Join tblProjectSOV ON tblProjects.Project_ID = tblProjectSOV.Project_ID where tblProjects.Project_ID = " + selectedProjectID.ToString() + ") AS tblSOV ON tblSOV.SOV_Acronym = tblScheduleOfValues.SOV_Acronym Where tblScheduleOfValues.Active = 'true') AS tblSOV LEFT JOIN tblProjectChangeOrders ON tblProjectChangeOrders.CO_ID = tblSOV.CO_ID) AS tblSOV LEFT JOIN tblProjectMaterials ON tblSOV.ProjSOV_ID = tblProjectMaterials.ProjSOV_ID) AS tblMat LEFT JOIN tblMaterials ON tblMat.Material_ID = tblMaterials.Material_ID ORDER BY tblMaterials.Material_Desc;";
-                cmd = new SqlCommand(sqlquery, dbConnection.Connection);
-                sda = new SqlDataAdapter(cmd);
-                ds = new DataSet();
-                sda.Fill(ds);
-                rowCount = ds.Tables[0].Rows.Count; // number of rows
-
-                st_TrackShipRecv.Clear();
-                foreach (DataRow row in ds.Tables[0].Rows)
-                {
-                    string sovAcronym = row["SOV_Acronym"].ToString();
-                    string coItemNo = row["CO_ItemNo"].ToString();
-                    string materialDesc = row["Material_Desc"].ToString();
-                    string materialOnly = row["Material_Only"].ToString();
-                    string sovDesc = row["SOV_Desc"].ToString();
-                    string matPhase = row["Mat_Phase"].ToString();
-                    string matType = row["Mat_Type"].ToString();
-                    string colorSelected = row["Color_Selected"].ToString();
-                    string qtyReqd = "";
-                    if (!row.IsNull("Qty_Reqd"))
-                        qtyReqd = row["Qty_Reqd"].ToString();
-                    string totalCost = row["TotalCost"].ToString();
-                    string projmatID = row["ProjMat_ID"].ToString();
-
-                    st_TrackShipRecv.Add(new TrackShipRecv
-                    {
-                        MaterialName = materialDesc,
-                        SovName = sovAcronym,
-                        ChangeOrder = coItemNo,
-                        Phase = matPhase,
-                        Type = matType,
-                        Color = colorSelected,
-                        QtyReqd = qtyReqd,
-                        ProjMatID = projmatID
-                    });
-
-                    TrackShipList.ItemsSource = st_TrackShipRecv;
-                    TrackShipList.SelectedValuePath = "ProjMatID";
-                }
-
                 // Tracking Report Grid1
                 sqlquery = "Select MatReqdDate, tblManufacturers.Manuf_Name, Qty_Ord, tblProjMat.Mat_Phase, tblProjMat.Mat_Type, Manuf_LeadTime, PO_Number, ShopReqDate, ShopRecvdDate, SubmitIssue, Resubmit_Date, SubmitAppr,tblProjMat.Color_Selected, Guar_Dim, Field_Dim, ReleasedForFab, LaborComplete from tblManufacturers RIGHT JOIN(Select tblProjectMaterialsTrack.*, tblMat.Color_Selected, tblMat.Mat_Phase, tblMat.Mat_Type from tblProjectMaterialsTrack RIGHT JOIN(SELECT * FROM tblProjectMaterials WHERE tblProjectMaterials.Project_ID = " + selectedProjectID.ToString() + ") AS tblMat ON tblMat.ProjMat_ID = tblProjectMaterialsTrack.ProjMat_ID) AS tblProjMat ON tblManufacturers.Manuf_ID = tblProjMat.Manuf_ID ORDER BY MatReqdDate;";
                 rowIndex = 0;
@@ -900,62 +858,6 @@ namespace WpfApp
 
                     rowIndex += 1;
                 }
-
-                // WOListView
-                sqlquery = "SELECT tblWO.WO_ID, tblWO.Wo_Nbr, tblInstallCrew.Crew_ID, tblInstallCrew.Crew_Name, tblWO.SchedStartDate, tblWO.SchedComplDate, tblWO.Sup_ID, tblWO.Date_Started, tblWO.Date_Completed FROM tblInstallCrew RIGHT JOIN (SELECT * FROM tblWorkOrders WHERE Project_ID = " + selectedProjectID.ToString() + ") AS tblWO ON tblInstallCrew.Crew_ID = tblWO.Crew_ID; ";
-
-                cmd = new SqlCommand(sqlquery, dbConnection.Connection);
-                sda = new SqlDataAdapter(cmd);
-                ds = new DataSet();
-                sda.Fill(ds);
-                rowCount = ds.Tables[0].Rows.Count; // number of rows
-
-                sb_workOrders.Clear();
-
-                foreach (DataRow row in ds.Tables[0].Rows)
-                {
-                    int woID = 0;
-                    int woNbr = 0;
-                    int crewID = 0;
-                    int suptID = -1;
-                    string crewName = "";
-                    DateTime schedStartDate = new DateTime();
-                    DateTime schedCompDate = new DateTime();
-                    DateTime dateStarted = new DateTime();
-                    DateTime dateCompleted = new DateTime();
-
-                    woID = row.Field<int>("WO_ID");
-                    if (!row.IsNull("Wo_Nbr"))
-                        woNbr = int.Parse(row["Wo_Nbr"].ToString());
-                    if (!row.IsNull("Crew_ID"))
-                        crewID = row.Field<int>("Crew_ID");
-                    if (!row.IsNull("Crew_Name"))
-                        crewName = row["Crew_Name"].ToString();
-                    if (!row.IsNull("SchedStartDate"))
-                        schedStartDate = row.Field<DateTime>("SchedStartDate");
-                    if (!row.IsNull("SchedComplDate"))
-                        schedCompDate = row.Field<DateTime>("SchedComplDate");
-                    if (!row.IsNull("Sup_ID"))
-                        suptID = int.Parse(row["Sup_ID"].ToString());
-                    if (!row.IsNull("Date_Started"))
-                        dateStarted = row.Field<DateTime>("Date_Started");
-                    if (!row.IsNull("Date_Completed"))
-                        dateCompleted = row.Field<DateTime>("Date_Completed");
-                    sb_workOrders.Add(new WorkOrder
-                    {
-                        WoID = woID,
-                        WoNumber = woNbr,
-                        CrewID = crewID,
-                        CrewName = crewName,
-                        SchedStartDate = schedStartDate,
-                        SchedComplDate = schedCompDate,
-                        SuptID = suptID,
-                        DateStarted = dateStarted,
-                        DateCompleted = dateCompleted
-                    });
-                }
-                WOListView.ItemsSource = sb_workOrders;
-                WOListView.SelectedValuePath = "WoID";
 
                 // Installation Notes
                 sqlquery = "SELECT * FROM tblInstallNotes WHERE Project_ID = " + selectedProjectID.ToString();
@@ -1640,116 +1542,159 @@ namespace WpfApp
                     rowIndex += 1;
                 }
 
-                // ProjMatList
-                sqlquery = " SELECT tblWorkOrdersMat.Mat_Qty, tblMat.* FROM tblWorkOrdersMat RIGHT JOIN ( SELECT tblProjectSOV.SOV_Acronym, tblMat.* FROM tblProjectSOV RIGHT JOIN ( SELECT tblMat.*, tblProjectMaterialsShip.Qty_Recvd, tblProjectMaterialsShip.ProjMS_ID FROM tblProjectMaterialsShip RIGHT JOIN ( SELECT tblManufacturers.Manuf_Name, tblMat.* FROM tblManufacturers RIGHT JOIN (  SELECT tblMaterials.Material_Desc,tblMat.* FROM tblMaterials RIGHT JOIN (SELECT tblProjectMaterialsTrack.MatReqdDate, tblProjectMaterialsTrack.TakeFromStock, tblMat.*, tblProjectMaterialsTrack.ProjMT_ID, tblProjectMaterialsTrack.Manuf_ID, tblProjectMaterialsTrack.Qty_Ord  FROM tblProjectMaterialsTrack RIGHT JOIN (SELECT Project_ID, ProjMat_ID, ProjSOV_ID ,Material_ID, Qty_Reqd FROM tblProjectMaterials WHERE Project_ID = " + selectedProjectID.ToString() + ") AS tblMat ON tblProjectMaterialsTrack.ProjMat_ID = tblMat.ProjMat_ID) AS tblMat ON tblMaterials.Material_ID = tblMat.Material_ID) AS tblMat ON tblMat.Manuf_ID = tblManufacturers.Manuf_ID) AS tblMat ON tblMat.ProjMT_ID = tblProjectMaterialsShip.ProjMT_ID) AS tblMat ON tblMat.ProjSOV_ID = tblProjectSOV.ProjSOV_ID) AS tblMat ON tblWorkOrdersMat.ProjMS_ID = tblMat.ProjMS_ID ORDER BY Material_Desc";
+                //// ProjMatList
+                //sqlquery = " SELECT tblWorkOrdersMat.Mat_Qty, tblMat.* FROM tblWorkOrdersMat RIGHT JOIN ( SELECT tblProjectSOV.SOV_Acronym, tblMat.* FROM tblProjectSOV RIGHT JOIN ( SELECT tblMat.*, tblProjectMaterialsShip.Qty_Recvd, tblProjectMaterialsShip.ProjMS_ID FROM tblProjectMaterialsShip RIGHT JOIN ( SELECT tblManufacturers.Manuf_Name, tblMat.* FROM tblManufacturers RIGHT JOIN (  SELECT tblMaterials.Material_Desc,tblMat.* FROM tblMaterials RIGHT JOIN (SELECT tblProjectMaterialsTrack.MatReqdDate, tblProjectMaterialsTrack.TakeFromStock, tblMat.*, tblProjectMaterialsTrack.ProjMT_ID, tblProjectMaterialsTrack.Manuf_ID, tblProjectMaterialsTrack.Qty_Ord  FROM tblProjectMaterialsTrack RIGHT JOIN (SELECT Project_ID, ProjMat_ID, ProjSOV_ID ,Material_ID, Qty_Reqd FROM tblProjectMaterials WHERE Project_ID = " + selectedProjectID.ToString() + ") AS tblMat ON tblProjectMaterialsTrack.ProjMat_ID = tblMat.ProjMat_ID) AS tblMat ON tblMaterials.Material_ID = tblMat.Material_ID) AS tblMat ON tblMat.Manuf_ID = tblManufacturers.Manuf_ID) AS tblMat ON tblMat.ProjMT_ID = tblProjectMaterialsShip.ProjMT_ID) AS tblMat ON tblMat.ProjSOV_ID = tblProjectSOV.ProjSOV_ID) AS tblMat ON tblWorkOrdersMat.ProjMS_ID = tblMat.ProjMS_ID ORDER BY Material_Desc";
 
-                cmd = new SqlCommand(sqlquery, dbConnection.Connection);
-                sda = new SqlDataAdapter(cmd);
-                ds = new DataSet();
-                sda.Fill(ds);
-                rowCount = ds.Tables[0].Rows.Count; // number of rows
-                rowIndex = 0;
+                //cmd = new SqlCommand(sqlquery, dbConnection.Connection);
+                //sda = new SqlDataAdapter(cmd);
+                //ds = new DataSet();
+                //sda.Fill(ds);
+                //rowCount = ds.Tables[0].Rows.Count; // number of rows
+                //rowIndex = 0;
 
-                sb_projectWorkOrder.Clear();
-                foreach (DataRow row in ds.Tables[0].Rows)
-                {
-                    int _projectID = 0;
-                    string _sovAcronym = "";
-                    string _matName = "";
-                    string _manufName = "";
-                    bool _stock = false;
-                    DateTime _matlReqd = new DateTime();
-                    int _qtyReqd = 0;
-                    int _qtyOrd = 0;
-                    int _qtyRecvd = 0;
-                    int _matQty = 0;
+                //sb_projectWorkOrder.Clear();
+                //foreach (DataRow row in ds.Tables[0].Rows)
+                //{
+                //    int _projectID = 0;
+                //    string _sovAcronym = "";
+                //    string _matName = "";
+                //    string _manufName = "";
+                //    bool _stock = false;
+                //    DateTime _matlReqd = new DateTime();
+                //    int _qtyReqd = 0;
+                //    int _qtyOrd = 0;
+                //    int _qtyRecvd = 0;
+                //    int _matQty = 0;
 
-                    if (!row.IsNull("Project_ID"))
-                        _projectID = row.Field<int>("Project_ID");
-                    if (!row.IsNull("SOV_Acronym"))
-                        _sovAcronym = row["SOV_Acronym"].ToString();
-                    if (!row.IsNull("Material_Desc"))
-                        _matName = row["Material_Desc"].ToString(); ;
-                    if (!row.IsNull("Manuf_Name"))
-                        _manufName = row["Manuf_Name"].ToString();
-                    if (!row.IsNull("TakeFromStock"))
-                        _stock = row.Field<Boolean>("TakeFromStock");
-                    if (!row.IsNull("MatReqdDate"))
-                        _matlReqd = row.Field<DateTime>("MatReqdDate");
-                    if (!row.IsNull("Qty_Reqd"))
-                        _qtyReqd = int.Parse(row["Qty_Reqd"].ToString());
-                    if (!row.IsNull("Qty_Ord"))
-                        _qtyOrd = int.Parse(row["Qty_Ord"].ToString());
-                    if (!row.IsNull("Qty_Recvd"))
-                        _qtyRecvd = int.Parse(row["Qty_Recvd"].ToString());
-                    if (!row.IsNull("Mat_Qty"))
-                        _matQty = int.Parse(row["Mat_Qty"].ToString());
+                //    if (!row.IsNull("Project_ID"))
+                //        _projectID = row.Field<int>("Project_ID");
+                //    if (!row.IsNull("SOV_Acronym"))
+                //        _sovAcronym = row["SOV_Acronym"].ToString();
+                //    if (!row.IsNull("Material_Desc"))
+                //        _matName = row["Material_Desc"].ToString(); ;
+                //    if (!row.IsNull("Manuf_Name"))
+                //        _manufName = row["Manuf_Name"].ToString();
+                //    if (!row.IsNull("TakeFromStock"))
+                //        _stock = row.Field<Boolean>("TakeFromStock");
+                //    if (!row.IsNull("MatReqdDate"))
+                //        _matlReqd = row.Field<DateTime>("MatReqdDate");
+                //    if (!row.IsNull("Qty_Reqd"))
+                //        _qtyReqd = int.Parse(row["Qty_Reqd"].ToString());
+                //    if (!row.IsNull("Qty_Ord"))
+                //        _qtyOrd = int.Parse(row["Qty_Ord"].ToString());
+                //    if (!row.IsNull("Qty_Recvd"))
+                //        _qtyRecvd = int.Parse(row["Qty_Recvd"].ToString());
+                //    if (!row.IsNull("Mat_Qty"))
+                //        _matQty = int.Parse(row["Mat_Qty"].ToString());
 
-                    sb_projectWorkOrder.Add(new ProjectWorkOrder
-                    {
-                        ProjectID = _projectID,
-                        SovAcronym = _sovAcronym,
-                        MatName = _matName,
-                        ManufName = _manufName,
-                        Stock = _stock,
-                        MatlReqd = _matlReqd,
-                        QtyReqd = _qtyReqd,
-                        QtyOrd = _qtyOrd,
-                        QtyRecvd = _qtyRecvd,
-                        MatQty = _matQty
-                    });
-                }
+                //    sb_projectWorkOrder.Add(new ProjectWorkOrder
+                //    {
+                //        ProjectID = _projectID,
+                //        SovAcronym = _sovAcronym,
+                //        MatName = _matName,
+                //        ManufName = _manufName,
+                //        Stock = _stock,
+                //        MatlReqd = _matlReqd,
+                //        QtyReqd = _qtyReqd,
+                //        QtyOrd = _qtyOrd,
+                //        QtyRecvd = _qtyRecvd,
+                //        MatQty = _matQty
+                //    });
+                //}
 
-                ProjectWorkOrderList.ItemsSource = sb_projectWorkOrder;
-                ProjectWorkOrderList.SelectedValuePath = "ProjectID";
+                //ProjectWorkOrderList.ItemsSource = sb_projectWorkOrder;
+                //ProjectWorkOrderList.SelectedValuePath = "ProjectID";
 
-                // Project Labor List
-                sqlquery = " SELECT CO_ItemNo, tblLab.* FROM tblProjectChangeOrders RIGHT JOIN (SELECT tblProjectSOV.SOV_Acronym, tblProjectSOV.CO_ID, tblLab.Labor_Desc, tblLab.Qty_Reqd, tblLab.UnitPrice, tblLab.Lab_Phase FROM tblProjectSOV RIGHT JOIN ( SELECT tblLabor.Labor_Desc, tblLab.*  FROM tblLabor RIGHT JOIN ( SELECT * FROM tblProjectLabor WHERE Project_ID = " + selectedProjectID.ToString() + ") AS tblLab ON tblLabor.Labor_ID = tblLab.Labor_ID) AS tblLab ON tblProjectSOV.ProjSOV_ID = tblLab.ProjSOV_ID) AS tblLab ON tblProjectChangeOrders.CO_ID = tblLab.CO_ID ORDER BY tblLab.SOV_Acronym";
+                //// Project Labor List
+                //sqlquery = " SELECT CO_ItemNo, tblLab.* FROM tblProjectChangeOrders RIGHT JOIN (SELECT tblProjectSOV.SOV_Acronym, tblProjectSOV.CO_ID, tblLab.Labor_Desc, tblLab.Qty_Reqd, tblLab.UnitPrice, tblLab.Lab_Phase FROM tblProjectSOV RIGHT JOIN ( SELECT tblLabor.Labor_Desc, tblLab.*  FROM tblLabor RIGHT JOIN ( SELECT * FROM tblProjectLabor WHERE Project_ID = " + selectedProjectID.ToString() + ") AS tblLab ON tblLabor.Labor_ID = tblLab.Labor_ID) AS tblLab ON tblProjectSOV.ProjSOV_ID = tblLab.ProjSOV_ID) AS tblLab ON tblProjectChangeOrders.CO_ID = tblLab.CO_ID ORDER BY tblLab.SOV_Acronym";
 
-                cmd = new SqlCommand(sqlquery, dbConnection.Connection);
-                sda = new SqlDataAdapter(cmd);
-                ds = new DataSet();
-                sda.Fill(ds);
-                rowCount = ds.Tables[0].Rows.Count; // number of rows
-                rowIndex = 0;
+                //cmd = new SqlCommand(sqlquery, dbConnection.Connection);
+                //sda = new SqlDataAdapter(cmd);
+                //ds = new DataSet();
+                //sda.Fill(ds);
+                //rowCount = ds.Tables[0].Rows.Count; // number of rows
+                //rowIndex = 0;
 
-                foreach (DataRow row in ds.Tables[0].Rows)
-                {
-                    string _sovAcronym = "";
-                    string _labor = "";
-                    double _qtyReqd = 0;
-                    double _unitPrice = 0;
-                    //int _total = 0;
-                    int _changeOrder = 0;
-                    string _phase = "";
-                    if (!row.IsNull("SOV_Acronym"))
-                        _sovAcronym = row["SOV_Acronym"].ToString();
-                    if (!row.IsNull("Labor_Desc"))
-                        _labor = row["Labor_Desc"].ToString();
-                    if (!row.IsNull("Qty_Reqd"))
-                        _qtyReqd = double.Parse(row["Qty_Reqd"].ToString());
-                    if (!row.IsNull("UnitPrice"))
-                        Console.WriteLine(row["UnitPrice"].GetType());
-                    //_unitPrice = double.Parse(row["UnitPrice"].ToString());
-                    if (!row.IsNull("CO_ItemNo"))
-                        _changeOrder = int.Parse(row["CO_ItemNo"].ToString());
-                    if (!row.IsNull("Lab_Phase"))
-                        _phase = row["Lab_Phase"].ToString();
-                    sb_projectLabor.Add(new ProjectLabor
-                    {
-                        ProjectID = selectedProjectID,
-                        SovAcronym = _sovAcronym,
-                        Labor = _labor,
-                        QtyReqd = _qtyReqd,
-                        UnitPrice = _unitPrice,
-                        ChangeOrder = _changeOrder,
-                        Phase = _phase
-                    });
-                }
-                ProjectLaborList.ItemsSource = sb_projectLabor;
-                ProjectLaborList.SelectedValuePath = "ProjectID";
+                //foreach (DataRow row in ds.Tables[0].Rows)
+                //{
+                //    string _sovAcronym = "";
+                //    string _labor = "";
+                //    double _qtyReqd = 0;
+                //    double _unitPrice = 0;
+                //    //int    = 0;
+                //    int _changeOrder = 0;
+                //    string _phase = "";
+                //    if (!row.IsNull("SOV_Acronym"))
+                //        _sovAcronym = row["SOV_Acronym"].ToString();
+                //    if (!row.IsNull("Labor_Desc"))
+                //        _labor = row["Labor_Desc"].ToString();
+                //    if (!row.IsNull("Qty_Reqd"))
+                //        _qtyReqd = double.Parse(row["Qty_Reqd"].ToString());
+                //    if (!row.IsNull("UnitPrice"))
+                //        _unitPrice = row.Field<double>("UnitPrice");
+                //    if (!row.IsNull("CO_ItemNo"))
+                //        _changeOrder = int.Parse(row["CO_ItemNo"].ToString());
+                //    if (!row.IsNull("Lab_Phase"))
+                //        _phase = row["Lab_Phase"].ToString();
+                //    sb_projectLabor.Add(new ProjectLabor
+                //    {
+                //        ProjectID = selectedProjectID,
+                //        SovAcronym = _sovAcronym,
+                //        Labor = _labor,
+                //        QtyReqd = _qtyReqd,
+                //        UnitPrice = _unitPrice,
+                //        ChangeOrder = _changeOrder,
+                //        Phase = _phase
+                //    });
+                //}
+                //ProjectLaborList.ItemsSource = sb_projectLabor;
+                //ProjectLaborList.SelectedValuePath = "ProjectID";
             }
+            else
+            {
+                PMGrid.Children.Clear();
+                SuptGrid.Children.Clear();
+                ProjectNoteGrid.Children.Clear();
+                SOVGrid1.Children.Clear();
+                SOVGrid2.Children.Clear();
+                TrackingReportGrid1.Children.Clear();
+                TrackingReportGrid2.Children.Clear();
+                PreInstallGrid.Children.Clear();
+                ContractGrid.Children.Clear();
+                CIPGrid.Children.Clear();
+                ProjectWorkOrderList.SelectedIndex = -1;
+                //TrackShipList.SelectedValue = -1;
+                //TrackShipList.ItemsSource = "";
+                WorkOrderNoteGrid.Children.Clear();
 
+                ProjectName_TB.Clear();
+                CustomerName_CB.SelectedIndex = -1;
+                TargetDate_DP.SelectedDate = new DateTime();
+                Complete_CH.IsChecked = false;
+                Complete_DP.SelectedDate = new DateTime();
+                Payment_CB.SelectedIndex = -1;
+                Payment_CB.Text = "select";
+                PaymentNote_TB.Clear();
+                JobNo_TB.Clear();
+                Hold_CH.IsChecked = false;
+
+                MasterContract_CB.SelectedIndex = -1;
+                Address_TB.Clear();
+                City_TB.Clear();
+                State_TB.Clear();
+                Zip_TB.Clear();
+
+
+                Estimator_CB.SelectedIndex = -1;
+                ProjectCoord_CB.SelectedIndex = -1;
+                ArchRep_CB.SelectedIndex = -1;
+                SubContact_CB.SelectedIndex = -1;
+                Architect_CB.SelectedIndex = -1;
+
+                OrigAmt_LB.Content = "";
+                OrigProfit_LB.Content = "";
+                OrigTotalAmt_LB.Content = "";
+            }
 
         }
 
@@ -1874,7 +1819,7 @@ namespace WpfApp
                         Grid secondGrid = new Grid();
 
                         //TrackingGrid
-                        for(int i=0; i<21; i++)
+                        for (int i = 0; i < 21; i++)
                         {
                             secondGrid.ColumnDefinitions.Add(new ColumnDefinition());
                         }
@@ -2210,23 +2155,7 @@ namespace WpfApp
             if (WOListView.SelectedItem != null)
             {
                 WorkOrder selectedItem = (WorkOrder)WOListView.SelectedItem;
-                //string selectedId = TrackShipList.SelectedValue.ToString();
-                int woNumber = selectedItem.WoNumber;
                 int woID = selectedItem.WoID;
-                int crewID = selectedItem.CrewID;
-                DateTime schedStartDate = selectedItem.SchedStartDate;
-                DateTime schedComplDate = selectedItem.SchedComplDate;
-                int suptID = selectedItem.SuptID;
-                DateTime startDate = selectedItem.DateStarted;
-                DateTime complDate = selectedItem.DateCompleted;
-
-                WoNbr_TextBox.Text = woNumber.ToString();
-                Crew_ComBo.SelectedValue = crewID;
-                SchedStartDate_Datepicker.Text = schedStartDate.ToString();
-                SchedComplDate_Datepicker.Text = schedComplDate.ToString();
-                Supt_ComBo.SelectedValue = suptID;
-                WoStartDate_Datepicker.Text = startDate.ToString();
-                WoComplDate_Datepicker.Text = complDate.ToString();
 
                 int rowCount = 0;
                 int rowIndex = 0;
@@ -2306,9 +2235,10 @@ namespace WpfApp
 
                     Label DateAdded_Label = new Label();
                     Label User_Label = new Label();
+                    User_Label.HorizontalAlignment = HorizontalAlignment.Right;
                     TextBox Note_TextBox = new TextBox();
 
-                    DateAdded_Label.Content= note.NotesDateAdded.ToString();
+                    DateAdded_Label.Content = note.NotesDateAdded.ToString();
                     DateAdded_Label.HorizontalAlignment = HorizontalAlignment.Left;
                     User_Label.Content = note.NoteUser.ToString();
 
@@ -2325,7 +2255,7 @@ namespace WpfApp
 
                     Grid.SetRow(firstGrid, 0);
                     Grid.SetRow(Note_TextBox, 1);
-                    
+
                     secondGrid.Children.Add(firstGrid);
                     secondGrid.Children.Add(Note_TextBox);
 

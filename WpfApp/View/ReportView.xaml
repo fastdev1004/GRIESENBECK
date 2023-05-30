@@ -62,14 +62,29 @@
                 <Grid.RowDefinitions>
                     <RowDefinition Height="Auto" />
                 </Grid.RowDefinitions>
-                <ListView ItemsSource="{Binding Reports}" Height="300">
-                    <ListView.View>
-                        <GridView>
-                            <GridViewColumn Header="Name" Width="250" DisplayMemberBinding="{Binding ReportName}" />
-                            <GridViewColumn Header="Select Date" Width="100" DisplayMemberBinding="{Binding ReportDateName}" />
-                        </GridView>
-                    </ListView.View>
-                </ListView>
+                <DataGrid GridLinesVisibility="None" ItemsSource="{Binding Reports}" SelectedValue="{Binding ID, Mode=TwoWay}" SelectedValuePath="ID" AutoGenerateColumns="False" CanUserResizeColumns="False" Background="White" HeadersVisibility="Column">
+                    <DataGrid.Resources>
+                        <Style TargetType="DataGridRow">
+                            <Setter Property="Height" Value="15" />
+                            <Setter Property="Background" Value="White" />
+                            <Setter Property="BorderThickness" Value="0" />
+                        </Style>
+                        <Style TargetType="{x:Type DataGridCell}">
+                            <Setter Property="VerticalAlignment" Value="Center" />
+                            <Setter Property="BorderThickness" Value="0" />
+                            <Style.Triggers>
+                                <Trigger Property="IsSelected" Value="True">
+                                    <Setter Property="Background" Value="Black" />
+                                    <Setter Property="Foreground" Value="White" />
+                                </Trigger>
+                            </Style.Triggers>
+                        </Style>
+                    </DataGrid.Resources>
+                    <DataGrid.Columns>
+                        <DataGridTextColumn Width="4*" Binding="{Binding Path=ReportName}" IsReadOnly="True" Header="Name" />
+                        <DataGridTextColumn Width="2*" Binding="{Binding Path=ReportDateName}" IsReadOnly="True" Header="Select Date" />
+                    </DataGrid.Columns>
+                </DataGrid>
             </Grid>
             <Grid Grid.Column="1">
                 <Grid.RowDefinitions>

@@ -46,7 +46,7 @@
                 </Grid.ColumnDefinitions>
                 <WrapPanel>
                     <Label>Select Project:</Label>
-                    <ComboBox IsEditable="True" Width="400" Name="projectContacts" ItemsSource="{Binding Projects}" DisplayMemberPath="Product_Customer_Name" SelectedValuePath="ID" SelectedValue="{Binding SelectedProjectId, Mode=TwoWay}" SelectionChanged="SelectProjectItem"></ComboBox>
+                    <ComboBox IsEditable="True" Width="400" Name="projectContacts" ItemsSource="{Binding Projects}" DisplayMemberPath="Product_Customer_Name" SelectedValuePath="ID" SelectedValue="{Binding ProjectID, Mode=TwoWay}" SelectionChanged="SelectProjectItem"  ></ComboBox>
                 </WrapPanel>
                 <WrapPanel Name="Operation" Grid.Column="1" HorizontalAlignment="Left">
                     <Button Content="New" />
@@ -118,9 +118,9 @@
                                         <RowDefinition Height="*" />
                                     </Grid.RowDefinitions>
                                     <Label Margin="0,4,0,4">Project Name:</Label>
-                                    <TextBox Text="{Binding ProjectName, Mode=TwoWay}" Grid.Column="1" Margin="1,4,63,4" />
+                                    <TextBox x:Name="ProjectName_TB" Text="{Binding ProjectName, Mode=TwoWay}" Grid.Column="1" Margin="1,4,63,4" />
                                     <Label Grid.Row="1" Margin="0,4,0,4">Customer:</Label>
-                                    <ComboBox ItemsSource="{Binding Customers}" Grid.Row="1" Grid.Column="1" Margin="0,4,64,4" DisplayMemberPath="Customer_Name_Address" SelectedValuePath="ID" SelectedValue="{Binding SelectedCustomerId}"></ComboBox>
+                                    <ComboBox x:Name="CustomerName_CB" ItemsSource="{Binding Customers}" Grid.Row="1" Grid.Column="1" Margin="0,4,64,4" DisplayMemberPath="Customer_Name_Address" SelectedValuePath="ID" SelectedValue="{Binding SelectedCustomerId}"></ComboBox>
 
                                     <Label Grid.Row="3" Margin="0,4,0,4">Target Date:</Label>
                                     <Grid Grid.Row="3" Grid.Column="1" Margin="0,4,0,4">
@@ -128,25 +128,25 @@
                                             <ColumnDefinition Width="1*" />
                                             <ColumnDefinition Width="2*" />
                                         </Grid.ColumnDefinitions>
-                                        <DatePicker SelectedDate="{Binding TargetDate}"  HorizontalAlignment="Left"></DatePicker>
+                                        <DatePicker x:Name="TargetDate_DP" SelectedDate="{Binding TargetDate}"  HorizontalAlignment="Left"></DatePicker>
                                         <Grid Grid.Column="1">
                                             <Grid.ColumnDefinitions>
                                                 <ColumnDefinition Width="1*" />
                                                 <ColumnDefinition Width="2*" />
                                             </Grid.ColumnDefinitions>
                                             <Label>Completed:</Label>
-                                            <CheckBox Grid.Column="1" VerticalAlignment="Center"></CheckBox>
+                                            <CheckBox x:Name="Complete_CH" Grid.Column="1" VerticalAlignment="Center"></CheckBox>
                                         </Grid>
                                     </Grid>
                                     <Label Grid.Row="4" Margin="0,4,0,4" >Date Completed:</Label>
-                                    <DatePicker SelectedDate="{Binding CompletedDate}" Grid.Row="4" Grid.Column="1" Margin="0,4,0,4" HorizontalAlignment="Left"></DatePicker>
+                                    <DatePicker x:Name="Complete_DP" SelectedDate="{Binding CompletedDate}" Grid.Row="4" Grid.Column="1" Margin="0,4,0,4" HorizontalAlignment="Left"></DatePicker>
                                     <Label Grid.Row="5" Margin="0,4,0,4">Payment:</Label>
                                     <Grid Grid.Row="5" Grid.Column="1"  Margin="0,4,0,4">
                                         <Grid.ColumnDefinitions>
                                             <ColumnDefinition Width="4*" />
                                             <ColumnDefinition Width="3*" />
                                         </Grid.ColumnDefinitions>
-                                        <ComboBox ItemsSource="{Binding Payments, Mode=TwoWay}" x:Name="PaymentComboBox" >
+                                        <ComboBox x:Name="Payment_CB" ItemsSource="{Binding Payments, Mode=TwoWay}">
                                             <ComboBox.ItemContainerStyle>
                                                 <Style TargetType="{x:Type ComboBoxItem}">
                                                     <EventSetter Event="PreviewMouseLeftButtonUp" Handler="SelectPaymentComboBoxItem" />
@@ -167,7 +167,7 @@
                                                 <ColumnDefinition Width="1*" />
                                             </Grid.ColumnDefinitions>
                                             <Label>Billing Date:</Label>
-                                            <TextBox Text="{Binding BillingDate}" Grid.Column="1" Width="20" HorizontalAlignment="Left" ></TextBox>
+                                            <TextBox x:Name="Billing_TB" Text="{Binding BillingDate}" Grid.Column="1" Width="20" HorizontalAlignment="Left" ></TextBox>
                                         </Grid>
                                     </Grid>
                                     <Label Grid.Row="6" Margin="0,4,0,4" >Payment Note:</Label>
@@ -176,7 +176,7 @@
                                             <ColumnDefinition Width="4*" />
                                             <ColumnDefinition Width="3*" />
                                         </Grid.ColumnDefinitions>
-                                        <TextBox Text="{Binding PaymentNote, Mode=TwoWay}" AcceptsReturn="True" ScrollViewer.VerticalScrollBarVisibility="Auto" />
+                                        <TextBox x:Name="PaymentNote_TB" Text="{Binding PaymentNote, Mode=TwoWay}" AcceptsReturn="True" ScrollViewer.VerticalScrollBarVisibility="Auto" />
                                         <Grid Grid.Column="1">
                                             <Grid.RowDefinitions>
                                                 <RowDefinition Height="Auto" />
@@ -188,12 +188,12 @@
                                                 <ColumnDefinition Width="1*" />
                                             </Grid.ColumnDefinitions>
                                             <Label Margin="0,4,0,4" >Master Contract:</Label>
-                                            <ComboBox SelectedIndex="{Binding SelectedMCID}" Grid.Column="1" Margin="0,4,4,4">
+                                            <ComboBox x:Name="MasterContract_CB" SelectedIndex="{Binding SelectedMCID}" Grid.Column="1" Margin="0,4,4,4">
                                                 <ComboBoxItem>Yes</ComboBoxItem>
                                                 <ComboBoxItem>No</ComboBoxItem>
                                             </ComboBox>
                                             <Label Margin="0,4,0,4" Grid.Row="1" >Crew:</Label>
-                                            <ComboBox ItemsSource="{Binding Crews}" DisplayMemberPath="CrewName" SelectedValuePath="ID" SelectedValue="{Binding SelectedCrewID}" Grid.Column="1"  Grid.Row="1" Margin="0,4,4,4" />
+                                            <ComboBox x:Name="Crew_CB" ItemsSource="{Binding Crews}" DisplayMemberPath="CrewName" SelectedValuePath="ID" SelectedValue="{Binding SelectedCrewID}" Grid.Column="1"  Grid.Row="1" Margin="0,4,4,4" IsEditable="True" />
                                         </Grid>
                                     </Grid>
                                 </Grid>
@@ -216,7 +216,7 @@
                                                     <ColumnDefinition Width="*"/>
                                                 </Grid.ColumnDefinitions>
                                                 <Label>Job No:</Label>
-                                                <TextBox Text="{Binding JobNo, Mode=TwoWay}" Grid.Column="1"/>
+                                                <TextBox x:Name="JobNo_TB" Text="{Binding JobNo, Mode=TwoWay}" Grid.Column="1"/>
                                             </Grid>
                                             <Grid Grid.Column="1" Margin="0,4,0,4">
                                                 <Grid.ColumnDefinitions>
@@ -224,7 +224,7 @@
                                                     <ColumnDefinition Width="*"/>
                                                 </Grid.ColumnDefinitions>
                                                 <Label>On Hold?</Label>
-                                                <CheckBox IsChecked="{Binding OnHold}" Grid.Column="1" VerticalAlignment="Center"></CheckBox>
+                                                <CheckBox x:Name="Hold_CH" IsChecked="{Binding OnHold}" Grid.Column="1" VerticalAlignment="Center"></CheckBox>
                                             </Grid>
                                         </Grid>
                                         <GroupBox Grid.Row="1" Header="Job Site:" Padding="40, 10, 40, 10">
@@ -243,9 +243,9 @@
                                                         <ColumnDefinition Width="*" />
                                                     </Grid.ColumnDefinitions>
                                                     <Label Margin="0,4,0,4">Address:</Label>
-                                                    <TextBox Text="{Binding Address}" Grid.Column="1" Margin="0,4,0,4" />
+                                                    <TextBox x:Name="Address_TB" Text="{Binding Address}" Grid.Column="1" Margin="0,4,0,4" />
                                                     <Label Grid.Row="1" Margin="0,4,0,4">City:</Label>
-                                                    <TextBox Text="{Binding City}" Grid.Row="1" Grid.Column="1" Margin="0,4,0,4" />
+                                                    <TextBox x:Name="City_TB" Text="{Binding City}" Grid.Row="1" Grid.Column="1" Margin="0,4,0,4" />
                                                 </Grid>
                                                 <Grid Grid.Row="1">
                                                     <Grid.ColumnDefinitions>
@@ -258,7 +258,7 @@
                                                             <ColumnDefinition Width="*" />
                                                         </Grid.ColumnDefinitions>
                                                         <Label>State:</Label>
-                                                        <TextBox Text="{Binding State}" Grid.Column="1" />
+                                                        <TextBox x:Name="State_TB" Text="{Binding State}" Grid.Column="1" />
                                                     </Grid>
                                                     <Grid Grid.Column="1" Margin="0,4,0,4">
                                                         <Grid.ColumnDefinitions>
@@ -266,7 +266,7 @@
                                                             <ColumnDefinition Width="*" />
                                                         </Grid.ColumnDefinitions>
                                                         <Label>Zip:</Label>
-                                                        <TextBox Text="{Binding Zip}" Grid.Column="1" />
+                                                        <TextBox x:Name="Zip_TB" Text="{Binding Zip}" Grid.Column="1" />
                                                     </Grid>
                                                 </Grid>
                                             </Grid>
@@ -283,13 +283,13 @@
                                                     <ColumnDefinition Width="2*" />
                                                 </Grid.ColumnDefinitions>
                                                 <Label Margin="0,4,0,4">Original Contract Amt:</Label>
-                                                <Label Content="{Binding OrigTaxAmt}" Grid.Column="1" Margin="0,4,0,4"></Label>
+                                                <Label x:Name="OrigAmt_LB" Content="{Binding OrigTaxAmt}" Grid.Column="1" Margin="0,4,0,4"></Label>
                                                 <Label Grid.Row="1" Margin="0,4,0,4">Total Change Orders:</Label>
                                                 <Border Grid.Row="1" Grid.Column="1" BorderThickness="0,0,0,1" BorderBrush="Black">
-                                                    <Label Content="{Binding OrigProfit}" Margin="0,4,0,4"></Label>
+                                                    <Label x:Name="OrigProfit_LB" Content="{Binding OrigProfit}" Margin="0,4,0,4"></Label>
                                                 </Border>
                                                 <Label Grid.Row="2" Margin="0,4,0,4">Total Contract Amt:</Label>
-                                                <Label Content="{Binding OrigTotalMatCost}" Grid.Row="2" Grid.Column="1" Margin="0,4,0,4"></Label>
+                                                <Label x:Name="OrigTotalAmt_LB" Content="{Binding OrigTotalMatCost}" Grid.Row="2" Grid.Column="1" Margin="0,4,0,4"></Label>
                                             </Grid>
                                         </GroupBox>
                                     </Grid>
@@ -372,7 +372,7 @@
                                                     <ColumnDefinition Width="3*" />
                                                 </Grid.ColumnDefinitions>
                                                 <Label Margin="0,4,0,4">Estimator:</Label>
-                                                <ComboBox ItemsSource="{Binding Estimators}" Grid.Row="1" Grid.Column="1" Margin="0,4,16,4" DisplayMemberPath="EstimatorName" SelectedValuePath="ID" SelectedValue="{Binding SelectedEstimatorID}" />
+                                                <ComboBox x:Name="Estimator_CB" ItemsSource="{Binding Estimators}" Grid.Row="1" Grid.Column="1" Margin="0,4,16,4" DisplayMemberPath="EstimatorName" SelectedValuePath="ID" SelectedValue="{Binding SelectedEstimatorID}" IsEditable="True" />
                                             </Grid>
                                             <Grid Grid.Row="1">
                                                 <Grid.ColumnDefinitions>
@@ -380,7 +380,7 @@
                                                     <ColumnDefinition Width="3*" />
                                                 </Grid.ColumnDefinitions>
                                                 <Label Margin="0,4,0,4">Project Coord:</Label>
-                                                <ComboBox ItemsSource="{Binding PCs}" Grid.Row="1" Grid.Column="1" Margin="0,4,16,4" DisplayMemberPath="PCName" SelectedValuePath="ID" SelectedValue="{Binding SelectedProjectCoordID}" />
+                                                <ComboBox x:Name="ProjectCoord_CB" ItemsSource="{Binding PCs}" Grid.Row="1" Grid.Column="1" Margin="0,4,16,4" DisplayMemberPath="PCName" SelectedValuePath="ID" SelectedValue="{Binding SelectedProjectCoordID}" IsEditable="True" />
                                             </Grid>
                                             <Grid Grid.Row="2">
                                                 <Grid.ColumnDefinitions>
@@ -388,7 +388,7 @@
                                                     <ColumnDefinition Width="3*" />
                                                 </Grid.ColumnDefinitions>
                                                 <Label Margin="0,4,0,4">Arch Rep:</Label>
-                                                <ComboBox ItemsSource="{Binding ArchReps}" Grid.Row="1" Grid.Column="1" Margin="0,4,16,4" DisplayMemberPath="ArchRepName" SelectedValuePath="ID" SelectedValue="{Binding SelectedArchRepID}" />
+                                                <ComboBox x:Name="ArchRep_CB" ItemsSource="{Binding ArchReps}" Grid.Row="1" Grid.Column="1" Margin="0,4,16,4" DisplayMemberPath="ArchRepName" SelectedValuePath="ID" SelectedValue="{Binding SelectedArchRepID}" IsEditable="True" />
                                             </Grid>
                                             <Grid Grid.Row="3">
                                                 <Grid.ColumnDefinitions>
@@ -396,7 +396,7 @@
                                                     <ColumnDefinition Width="3*" />
                                                 </Grid.ColumnDefinitions>
                                                 <Label Margin="0,4,0,4">Submittal Contact:</Label>
-                                                <ComboBox ItemsSource="{Binding CustomerContacts}" Grid.Row="1" Grid.Column="1" Margin="0,4,16,4" DisplayMemberPath="CCName" SelectedValuePath="ID" SelectedValue="{Binding SelectedCCID}" />
+                                                <ComboBox x:Name="SubContact_CB" ItemsSource="{Binding CustomerContacts}" Grid.Row="1" Grid.Column="1" Margin="0,4,16,4" DisplayMemberPath="CCName" SelectedValuePath="ID" SelectedValue="{Binding SelectedCCID}" IsEditable="True" />
                                             </Grid>
                                             <Grid Grid.Row="4">
                                                 <Grid.ColumnDefinitions>
@@ -404,7 +404,7 @@
                                                     <ColumnDefinition Width="3*" />
                                                 </Grid.ColumnDefinitions>
                                                 <Label Margin="0,4,0,4">Architect:</Label>
-                                                <ComboBox ItemsSource="{Binding Architects}" Grid.Row="1" Grid.Column="1" Margin="0,4,16,4" DisplayMemberPath="ArchCompany" SelectedValuePath="ID" SelectedValue="{Binding SelectedArchitectID}" />
+                                                <ComboBox x:Name="Architect_CB" ItemsSource="{Binding Architects}" Grid.Row="1" Grid.Column="1" Margin="0,4,16,4" DisplayMemberPath="ArchCompany" SelectedValuePath="ID" SelectedValue="{Binding SelectedArchitectID}" IsEditable="True" />
                                             </Grid>
                                         </Grid>
                                     </Grid>
@@ -611,7 +611,40 @@
                             <RowDefinition Height="1*" />
                         </Grid.RowDefinitions>
                         <Grid>
-                            <ListView Margin="10" x:Name="TrackShipList" SelectionChanged="SelectTrackShipList">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="1*" />
+                                <ColumnDefinition Width="1*" />
+                            </Grid.ColumnDefinitions>
+                            <DataGrid x:Name="TrackShipList" Grid.Column="0" Margin="10" GridLinesVisibility="None" ItemsSource="{Binding TrackShipRecvs, Mode=TwoWay}" SelectedValuePath="ProjMatID" SelectionChanged="SelectTrackShipList" AutoGenerateColumns="False" CanUserResizeColumns="False" Background="LightGray" HeadersVisibility="Column">
+                                <DataGrid.Resources>
+                                    <Style TargetType="DataGridRow">
+                                        <Setter Property="Height" Value="15" />
+                                        <Setter Property="BorderThickness" Value="0" />
+                                    </Style>
+                                    <Style TargetType="{x:Type DataGridCell}">
+                                        <Setter Property="VerticalAlignment" Value="Center" />
+                                        <Setter Property="BorderThickness" Value="0" />
+                                        <Setter Property="Background" Value="LightGray" />
+                                        <Setter Property="Foreground" Value="Black" />
+                                        <Style.Triggers>
+                                            <Trigger Property="IsSelected" Value="True">
+                                                <Setter Property="Background" Value="Black" />
+                                                <Setter Property="Foreground" Value="White" />
+                                            </Trigger>
+                                        </Style.Triggers>
+                                    </Style>
+                                </DataGrid.Resources>
+                                <DataGrid.Columns>
+                                    <DataGridTextColumn Width="4*" Binding="{Binding Path=MaterialName}" IsReadOnly="True" Header="Material" />
+                                    <DataGridTextColumn Width="2*" Binding="{Binding Path=SovName}" IsReadOnly="True" Header="SOV" />
+                                    <DataGridTextColumn Width="2*" Binding="{Binding Path=ChangeOrder}" IsReadOnly="True" Header="Change Order#" />
+                                    <DataGridTextColumn Width="2*" Binding="{Binding Path=Phase}" IsReadOnly="True" Header="Phase" />
+                                    <DataGridTextColumn Width="3*" Binding="{Binding Path=Type}" IsReadOnly="True" Header="Type" />
+                                    <DataGridTextColumn Width="2*" Binding="{Binding Path=Color}" IsReadOnly="True" Header="Color" />
+                                    <DataGridTextColumn Width="2*" Binding="{Binding Path=QtyReqd}" IsReadOnly="True" Header="Qty Reqd" />
+                                </DataGrid.Columns>
+                            </DataGrid>
+                            <!--<ListView Margin="10" x:Name="TrackShipList" >
                                 <ListView.View>
                                     <GridView>
                                         <GridViewColumn Header="Material" Width="200" DisplayMemberBinding="{Binding MaterialName}" />
@@ -624,12 +657,7 @@
                                         <GridViewColumn Header="Qty Reqd" Width="100" DisplayMemberBinding="{Binding QtyReqd}" />
                                     </GridView>
                                 </ListView.View>
-                                <!--<ListView.ItemContainerStyle>
-                                    <Style TargetType="ListViewItem">
-                                        <EventSetter Event="PreviewMouseLeftButtonDown" Handler="MaterialListSelect" />
-                                    </Style>
-                                </ListView.ItemContainerStyle>-->
-                            </ListView>
+                            </ListView>-->
                         </Grid>
                         <Grid Grid.Row="1">
                             <Grid.RowDefinitions>
@@ -1034,18 +1062,32 @@
                                     <Label Grid.Column="1" FontStyle="Italic">(click to select WO)</Label>
                                 </Grid>
                                 <Grid Grid.Row="1">
-                                    <ListView x:Name="WOListView" SelectionChanged="SelectWorkOrdersList">
-                                        <ListView.View>
-                                            <GridView>
-                                                <GridViewColumn Header="WO" Width="50" DisplayMemberBinding="{Binding WoID}" />
-                                                <GridViewColumn Header="WO #" Width="60" DisplayMemberBinding="{Binding WoNumber}" />
-                                                <GridViewColumn Header="Crew" Width="100" DisplayMemberBinding="{Binding CrewName}">
-                                                </GridViewColumn>
-                                                <GridViewColumn Header="Started" Width="100" DisplayMemberBinding="{Binding DateStarted}"/>
-                                                <GridViewColumn Header="Completed" Width="100" DisplayMemberBinding="{Binding DateCompleted}" />
-                                            </GridView>
-                                        </ListView.View>
-                                    </ListView>
+                                    <DataGrid x:Name="WOListView" GridLinesVisibility="None" ItemsSource="{Binding WorkOrders, Mode=TwoWay}" SelectedValue="{Binding WorkOrderID, Mode=TwoWay}" SelectedValuePath="WoID" SelectionChanged="SelectWorkOrdersList" AutoGenerateColumns="False" CanUserResizeColumns="False" Background="White" HeadersVisibility="Column">
+                                            <DataGrid.Resources>
+                                            <Style TargetType="DataGridRow">
+                                                <Setter Property="Height" Value="15" />
+                                                <Setter Property="Background" Value="White" />
+                                                <Setter Property="BorderThickness" Value="0" />
+                                            </Style>
+                                            <Style TargetType="{x:Type DataGridCell}">
+                                                <Setter Property="VerticalAlignment" Value="Center" />
+                                                <Setter Property="BorderThickness" Value="0" />
+                                                <Style.Triggers>
+                                                    <Trigger Property="IsSelected" Value="True">
+                                                        <Setter Property="Background" Value="Black" />
+                                                        <Setter Property="Foreground" Value="White" />
+                                                    </Trigger>
+                                                </Style.Triggers>
+                                            </Style>
+                                        </DataGrid.Resources>
+                                        <DataGrid.Columns>
+                                            <DataGridTextColumn Width="4*" Binding="{Binding Path=WoID}" IsReadOnly="True" Header="WO" />
+                                            <DataGridTextColumn Width="2*" Binding="{Binding Path=WoNumber}" IsReadOnly="True" Header="WO #" />
+                                            <DataGridTextColumn Width="2*" Binding="{Binding Path=CrewName}" IsReadOnly="True" Header="Crew" />
+                                            <DataGridTextColumn Width="2*" Binding="{Binding Path=DateStarted}" IsReadOnly="True" Header="Started" />
+                                            <DataGridTextColumn Width="2*" Binding="{Binding Path=DateCompleted}" IsReadOnly="True" Header="Completed" />
+                                        </DataGrid.Columns>
+                                    </DataGrid>
                                 </Grid>
                             </Grid>
                             <Grid Grid.Row="1" Margin="0,10">
@@ -1067,17 +1109,17 @@
                                         <Label Content="WO Number:" Margin="0,4,0,4" />
                                         <TextBox x:Name="WoNbr_TextBox" Grid.Column="1" Width="100" Margin="0,4,0,4" HorizontalAlignment="Left" />
                                         <Label Grid.Row="1" Content="Crew:" Margin="0,4,0,4" />
-                                        <ComboBox x:Name="Crew_ComBo" ItemsSource="{Binding Crews}" SelectedValuePath="ID" DisplayMemberPath="CrewName" Grid.Row="1" Grid.Column="1" Width="200" HorizontalAlignment="Left" Margin="0,4,0,4" />
+                                        <ComboBox x:Name="Crew_ComBo" ItemsSource="{Binding Crews}" SelectedValuePath="ID" SelectedValue="{Binding CrewID}" DisplayMemberPath="CrewName" Grid.Row="1" Grid.Column="1" Width="200" HorizontalAlignment="Left" Margin="0,4,0,4" IsEditable="True" />
                                         <Label Grid.Row="2" Content="Sched Start Date:" Margin="0,4,0,4" />
-                                        <DatePicker x:Name="SchedStartDate_Datepicker" Grid.Row="2" Grid.Column="1" Width="100" Margin="0,4,0,4" HorizontalAlignment="Left" />
+                                        <DatePicker SelectedDate="{Binding SchedStartDate}" x:Name="SchedStartDate_Datepicker" Grid.Row="2" Grid.Column="1" Width="100" Margin="0,4,0,4" HorizontalAlignment="Left" />
                                         <Label Grid.Row="3" Content="Sched Compl Date:" Margin="0,4,0,4" />
-                                        <DatePicker x:Name="SchedComplDate_Datepicker" Grid.Row="3" Grid.Column="1" Width="100" Margin="0,4,0,4" HorizontalAlignment="Left" />
+                                        <DatePicker SelectedDate="{Binding SchedComplDate}" x:Name="SchedComplDate_Datepicker" Grid.Row="3" Grid.Column="1" Width="100" Margin="0,4,0,4" HorizontalAlignment="Left" />
                                         <Label Grid.Row="4" Content="Supt:" Margin="0,4,0,4" />
-                                        <ComboBox x:Name="Supt_ComBo" ItemsSource="{Binding Superintendents}" SelectedValuePath="SupID" DisplayMemberPath="SupName" Grid.Row="4" Grid.Column="1" Width="200" HorizontalAlignment="Left" Margin="0,4,0,4" />
+                                        <ComboBox SelectedValue="{Binding SuptID}" x:Name="Supt_ComBo" ItemsSource="{Binding Superintendents}" SelectedValuePath="SupID" DisplayMemberPath="SupName" Grid.Row="4" Grid.Column="1" Width="200" HorizontalAlignment="Left" Margin="0,4,0,4" IsEditable="True" />
                                         <Label Grid.Row="5" Content="Start Date:" Margin="0,4,0,4" />
-                                        <DatePicker x:Name="WoStartDate_Datepicker" Grid.Row="5" Grid.Column="1" Width="100" Margin="0,4,0,4" HorizontalAlignment="Left" />
+                                        <DatePicker SelectedDate="{Binding StartDate}" x:Name="WoStartDate_Datepicker" Grid.Row="5" Grid.Column="1" Width="100" Margin="0,4,0,4" HorizontalAlignment="Left" />
                                         <Label Grid.Row="6" Content="Compl Date:" Margin="0,4,0,4" />
-                                        <DatePicker x:Name="WoComplDate_Datepicker" Grid.Row="6" Grid.Column="1" Width="100" Margin="0,4,0,4" HorizontalAlignment="Left" />
+                                        <DatePicker SelectedDate="{Binding ComplDate}" x:Name="WoComplDate_Datepicker" Grid.Row="6" Grid.Column="1" Width="100" Margin="0,4,0,4" HorizontalAlignment="Left" />
                                     </Grid>
                                 </Border>
                             </Grid>
@@ -1190,7 +1232,38 @@
                                                 <RowDefinition Height="1*" />
                                             </Grid.RowDefinitions>
                                             <Grid>
-                                                <ListView x:Name="ProjectWorkOrderList" Background="#E8E8E8">
+                                                <DataGrid x:Name="ProjectWorkOrderList" GridLinesVisibility="None" ItemsSource="{Binding ProjectWorkOrders, Mode=TwoWay}" SelectedValuePath="ProjMatID" AutoGenerateColumns="False" CanUserResizeColumns="False" Background="LightGray" HeadersVisibility="Column">
+                                                    <DataGrid.Resources>
+                                                        <Style TargetType="DataGridRow">
+                                                            <Setter Property="Height" Value="15" />
+                                                            <Setter Property="BorderThickness" Value="0" />
+                                                        </Style>
+                                                        <Style TargetType="{x:Type DataGridCell}">
+                                                            <Setter Property="VerticalAlignment" Value="Center" />
+                                                            <Setter Property="BorderThickness" Value="0" />
+                                                            <Setter Property="Background" Value="LightGray" />
+                                                            <Setter Property="Foreground" Value="Black" />
+                                                            <Style.Triggers>
+                                                                <Trigger Property="IsSelected" Value="True">
+                                                                    <Setter Property="Background" Value="Black" />
+                                                                    <Setter Property="Foreground" Value="White" />
+                                                                </Trigger>
+                                                            </Style.Triggers>
+                                                        </Style>
+                                                    </DataGrid.Resources>
+                                                    <DataGrid.Columns>
+                                                        <DataGridTextColumn Width="4*" Binding="{Binding Path=SovAcronym}" IsReadOnly="True" Header="SOV" />
+                                                        <DataGridTextColumn Width="2*" Binding="{Binding Path=MatName}" IsReadOnly="True" Header="Material" />
+                                                        <DataGridTextColumn Width="2*" Binding="{Binding Path=ManufName}" IsReadOnly="True" Header="Manufacturer" />
+                                                        <DataGridTextColumn Width="2*" Binding="{Binding Path=Stock}" IsReadOnly="True" Header="Stock?" />
+                                                        <DataGridTextColumn Width="3*" Binding="{Binding Path=MatlReqd}" IsReadOnly="True" Header="Matl Reqd" />
+                                                        <DataGridTextColumn Width="2*" Binding="{Binding Path=QtyReqd}" IsReadOnly="True" Header="Qty Reqd" />
+                                                        <DataGridTextColumn Width="2*" Binding="{Binding Path=QtyOrd}" IsReadOnly="True" Header="Qty Ord" />
+                                                        <DataGridTextColumn Width="2*" Binding="{Binding Path=QtyRecvd}" IsReadOnly="True" Header="Qty Recvd" />
+                                                        <DataGridTextColumn Width="2*" Binding="{Binding Path=MatQty}" IsReadOnly="True" Header="Mat_Qty" />
+                                                    </DataGrid.Columns>
+                                                </DataGrid>
+                                                <!--<ListView x:Name="ProjectWorkOrderList" Background="#E8E8E8">
                                                     <ListView.View>
                                                         <GridView>
                                                             <GridView.ColumnHeaderContainerStyle>
@@ -1246,7 +1319,7 @@
                                                             </GridViewColumn>
                                                         </GridView>
                                                     </ListView.View>
-                                                </ListView>
+                                                </ListView>-->
                                             </Grid>
                                             <Grid Grid.Row="1" Margin="0,10,0,0">
                                                 <Grid.RowDefinitions>
@@ -1281,53 +1354,35 @@
                                                 <RowDefinition Height="1*" />
                                             </Grid.RowDefinitions>
                                             <Grid>
-                                                <ListView x:Name="ProjectLaborList" Background="#E8E8E8">
-                                                    <ListView.View>
-                                                        <GridView>
-                                                            <GridView.ColumnHeaderContainerStyle>
-                                                                <Style TargetType="{x:Type GridViewColumnHeader}">
-                                                                    <Setter Property="Background" Value="#E8E8E8"/>
-                                                                    <Setter Property="HorizontalAlignment" Value="Left" />
-                                                                </Style>
-                                                            </GridView.ColumnHeaderContainerStyle>
-                                                            <GridViewColumn Width="120" DisplayMemberBinding="{Binding SovAcronym}">
-                                                                <GridViewColumn.Header>
-                                                                    <GridViewColumnHeader Tag="Name">SOV</GridViewColumnHeader>
-                                                                </GridViewColumn.Header>
-                                                            </GridViewColumn>
-                                                            <GridViewColumn Width="120" DisplayMemberBinding="{Binding Labor}">
-                                                                <GridViewColumn.Header>
-                                                                    <GridViewColumnHeader Tag="Age">Labor</GridViewColumnHeader>
-                                                                </GridViewColumn.Header>
-                                                            </GridViewColumn>
-                                                            <GridViewColumn Width="120" DisplayMemberBinding="{Binding QtyReqd}">
-                                                                <GridViewColumn.Header>
-                                                                    <GridViewColumnHeader Tag="Gender">Qty Reqd</GridViewColumnHeader>
-                                                                </GridViewColumn.Header>
-                                                            </GridViewColumn>
-                                                            <GridViewColumn Width="80" DisplayMemberBinding="{Binding UnitPrice}">
-                                                                <GridViewColumn.Header>
-                                                                    <GridViewColumnHeader Tag="Gender">Unit Price</GridViewColumnHeader>
-                                                                </GridViewColumn.Header>
-                                                            </GridViewColumn>
-                                                            <GridViewColumn Width="100" DisplayMemberBinding="{Binding Total}">
-                                                                <GridViewColumn.Header>
-                                                                    <GridViewColumnHeader Tag="Gender">Total</GridViewColumnHeader>
-                                                                </GridViewColumn.Header>
-                                                            </GridViewColumn>
-                                                            <GridViewColumn Width="100" DisplayMemberBinding="{Binding ChangeOrder}">
-                                                                <GridViewColumn.Header>
-                                                                    <GridViewColumnHeader Tag="Gender">CO</GridViewColumnHeader>
-                                                                </GridViewColumn.Header>
-                                                            </GridViewColumn>
-                                                            <GridViewColumn Width="80" DisplayMemberBinding="{Binding Phase}">
-                                                                <GridViewColumn.Header>
-                                                                    <GridViewColumnHeader Tag="Gender">Phase</GridViewColumnHeader>
-                                                                </GridViewColumn.Header>
-                                                            </GridViewColumn>
-                                                        </GridView>
-                                                    </ListView.View>
-                                                </ListView>
+                                                <DataGrid x:Name="ProjectLaborList" GridLinesVisibility="None" ItemsSource="{Binding ProjectLabors, Mode=TwoWay}" SelectedValuePath="ProjMatID" AutoGenerateColumns="False" CanUserResizeColumns="False" Background="LightGray" HeadersVisibility="Column">
+                                                    <DataGrid.Resources>
+                                                        <Style TargetType="DataGridRow">
+                                                            <Setter Property="Height" Value="15" />
+                                                            <Setter Property="BorderThickness" Value="0" />
+                                                        </Style>
+                                                        <Style TargetType="{x:Type DataGridCell}">
+                                                            <Setter Property="VerticalAlignment" Value="Center" />
+                                                            <Setter Property="BorderThickness" Value="0" />
+                                                            <Setter Property="Background" Value="LightGray" />
+                                                            <Setter Property="Foreground" Value="Black" />
+                                                            <Style.Triggers>
+                                                                <Trigger Property="IsSelected" Value="True">
+                                                                    <Setter Property="Background" Value="Black" />
+                                                                    <Setter Property="Foreground" Value="White" />
+                                                                </Trigger>
+                                                            </Style.Triggers>
+                                                        </Style>
+                                                    </DataGrid.Resources>
+                                                    <DataGrid.Columns>
+                                                        <DataGridTextColumn Width="2*" Binding="{Binding Path=SovAcronym}" IsReadOnly="True" Header="SOV" />
+                                                        <DataGridTextColumn Width="4*" Binding="{Binding Path=Labor}" IsReadOnly="True" Header="Labor" />
+                                                        <DataGridTextColumn Width="2*" Binding="{Binding Path=QtyReqd}" IsReadOnly="True" Header="Qty Reqd" />
+                                                        <DataGridTextColumn Width="2*" Binding="{Binding Path=UnitPrice}" IsReadOnly="True" Header="Unit Price" />
+                                                        <DataGridTextColumn Width="2*" Binding="{Binding Path=Total}" IsReadOnly="True" Header="Total" />
+                                                        <DataGridTextColumn Width="1*" Binding="{Binding Path=ChangeOrder}" IsReadOnly="True" Header="CO" />
+                                                        <DataGridTextColumn Width="2*" Binding="{Binding Path=Phase}" IsReadOnly="True" Header="Phase" />
+                                                    </DataGrid.Columns>
+                                                </DataGrid>
                                             </Grid>
                                             <Grid Grid.Row="1" Margin="0,10,0,0">
                                                 <Grid.RowDefinitions>
@@ -1534,7 +1589,7 @@
                                     <ColumnDefinition Width="2*" />
                                 </Grid.ColumnDefinitions>
                                 <Label Content="Returned Via" HorizontalAlignment="Left" />
-                                <ComboBox Grid.Column="1" />
+                                <ComboBox Grid.Column="1" IsEditable="True" />
                             </Grid>
                             <Grid Grid.Row="2">
                                 <Grid.ColumnDefinitions>
@@ -1613,7 +1668,7 @@
                                     <ColumnDefinition Width="2*" />
                                 </Grid.ColumnDefinitions>
                                 <Label Content="CIP Type" HorizontalAlignment="Left" />
-                                <ComboBox ItemsSource="{Binding CIPTypes}" SelectedValuePath="Type" Grid.Column="1" />
+                                <ComboBox ItemsSource="{Binding CIPTypes}" SelectedValuePath="Type" Grid.Column="1" IsEditable="True" />
                             </Grid>
                             <Grid Grid.Row="2">
                                 <Grid.ColumnDefinitions>
@@ -1698,7 +1753,7 @@
                                     <ColumnDefinition Width="2*" />
                                 </Grid.ColumnDefinitions>
                                 <Label Content="Crew Enrolled" HorizontalAlignment="Left" />
-                                <ComboBox ItemsSource="{Binding CrewEnrolls}" Grid.Column="1" />
+                                <ComboBox ItemsSource="{Binding CrewEnrolls}" Grid.Column="1" IsEditable="True" />
                             </Grid>
                         </Grid>
                         <Grid Grid.Column="2">

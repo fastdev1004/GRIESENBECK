@@ -406,7 +406,7 @@
                     </Grid>
                 </TabItem>
                 <TabItem Header="Manufacturers">
-                    <Grid>
+                    <Grid Margin="10">
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition Width="2*" />
                             <ColumnDefinition Width="1*" />
@@ -591,7 +591,7 @@
                     </Grid>
                 </TabItem>
                 <TabItem Header="SOV Items">
-                    <Grid>
+                    <Grid Margin="20">
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition Width="1*" />
                             <ColumnDefinition Width="1*" />
@@ -612,7 +612,7 @@
                     </Grid>
                 </TabItem>
                 <TabItem Header="Materials">
-                    <Grid>
+                    <Grid Margin="20">
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition Width="1*" />
                             <ColumnDefinition Width="1*" />
@@ -632,7 +632,7 @@
                     </Grid>
                 </TabItem>
                 <TabItem Header="Labor">
-                    <Grid>
+                    <Grid Margin="20">
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition Width="1*" />
                             <ColumnDefinition Width="1*" />
@@ -653,7 +653,7 @@
                     </Grid>
                 </TabItem>
                 <TabItem Header="Salesmen">
-                    <Grid>
+                    <Grid Margin="20">
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition Width="1*" />
                             <ColumnDefinition Width="1*" />
@@ -676,7 +676,7 @@
                     </Grid>
                 </TabItem>
                 <TabItem Header="Crew">
-                    <Grid>
+                    <Grid Margin="20">
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition Width="1*" />
                             <ColumnDefinition Width="1*" />
@@ -699,7 +699,7 @@
                     </Grid>
                 </TabItem>
                 <TabItem Header="In House Installers">
-                    <Grid>
+                    <Grid Margin="20">
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition Width="4*" />
                             <ColumnDefinition Width="1*" />
@@ -733,7 +733,7 @@
                     </Grid>
                 </TabItem>
                 <TabItem Header="Architects">
-                    <Grid>
+                    <Grid Margin="20">
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition Width="3*" />
                             <ColumnDefinition Width="1*" />
@@ -762,7 +762,7 @@
                     </Grid>
                 </TabItem>
                 <TabItem Header="Users">
-                    <Grid>
+                    <Grid Margin="20">
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition Width="4*" />
                             <ColumnDefinition Width="1*" />
@@ -786,7 +786,7 @@
                     </Grid>
                 </TabItem>
                 <TabItem Header="Freight Co">
-                    <Grid>
+                    <Grid Margin="20">
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition Width="1*" />
                             <ColumnDefinition Width="1*" />
@@ -810,7 +810,7 @@
                     </Grid>
                 </TabItem>
                 <TabItem Header="Path Names">
-                    <Grid Margin="10">
+                    <Grid Margin="20">
                         <Grid.RowDefinitions>
                             <RowDefinition Height="1*" />
                             <RowDefinition Height="1*" />

@@ -17,7 +17,6 @@ namespace WpfApp.View
     public partial class AdminView : Page
     {
         private AdminViewModel AdminVM;
-        private SqlConnection dbConnection;
 
         public AdminView()
         {

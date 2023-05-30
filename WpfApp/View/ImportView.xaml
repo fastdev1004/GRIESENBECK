@@ -5,7 +5,7 @@
       xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
       xmlns:local="clr-namespace:WpfApp.View"
       mc:Ignorable="d" 
-      d:DesignHeight="900" d:DesignWidth="1700"
+      d:DesignHeight="960" d:DesignWidth="1700"
       Title="ImportView">
     <Page.Resources>
         <Style TargetType="Button">
@@ -113,7 +113,9 @@
                     </Style>
                 </TabControl.Resources>
                 <TabItem Header="Project (JSS)" HorizontalAlignment="Left" Width="Auto">
-                    <Grid Margin="10">
+                    <!--<ScrollViewer Margin="10" Grid.Column="1" VerticalScrollBarVisibility="Auto">-->
+                    <Border Padding="10">
+                    <Grid>
                         <Grid.Resources>
                             <Style TargetType="{x:Type Button}">
                                 <Setter Property="Background" Value="#903C39" />
@@ -133,715 +135,748 @@
                         <Grid.RowDefinitions>
                             <RowDefinition Height="Auto" />
                             <RowDefinition Height="Auto" />
-                            <RowDefinition Height="*" />
+                            <RowDefinition Height="Auto" />
                             <RowDefinition Height="Auto" />
                             <RowDefinition Height="Auto" />
                         </Grid.RowDefinitions>
-                        <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="1*" />
-                            <ColumnDefinition Width="1*" />
-                            <ColumnDefinition Width="1*" />
-                        </Grid.ColumnDefinitions>
                         <Grid>
-                            <Grid.RowDefinitions>
-                                <RowDefinition Height="Auto" />
-                            </Grid.RowDefinitions>
-                            <Label Content="Imported" BorderBrush="Gray" Width="100" HorizontalContentAlignment="Center" BorderThickness="0,0,0,1" HorizontalAlignment="Center" />
-                        </Grid>
-                        <Grid Grid.Column="1">
-                            <Grid.RowDefinitions>
-                                <RowDefinition Height="Auto" />
-                            </Grid.RowDefinitions>
-                            <Label Content="To be Added" BorderBrush="Gray" Width="100" HorizontalContentAlignment="Center" BorderThickness="0,0,0,1" HorizontalAlignment="Center" />
-                        </Grid>
-                        <Border Grid.Row="1" Background="#F5FFAF" BorderBrush="Gray" BorderThickness="1" Padding="5">
-                            <Grid  >
-                            <Grid.Resources>
-                                <Style TargetType="{x:Type Label}">
-                                    <Setter Property="HorizontalAlignment" Value="Right" />
-                                    <Setter Property="Margin" Value="0,0,4,0" />
-                                </Style>
-                            </Grid.Resources>
-                            <Grid.RowDefinitions>
-                                <RowDefinition Height="Auto" />
-                                <RowDefinition Height="Auto" />
-                                <RowDefinition Height="Auto" />
-                                <RowDefinition Height="Auto" />
-                                <RowDefinition Height="Auto" />
-                                <RowDefinition Height="Auto" />
-                            </Grid.RowDefinitions>
-                            <Grid Style="{StaticResource ParentGridStyle}">
-                                <Grid.ColumnDefinitions>
-                                    <ColumnDefinition Width="1*" />
-                                    <ColumnDefinition Width="5*" />
-                                </Grid.ColumnDefinitions>
-                                <Label Content="Address:" />
-                                <TextBox Grid.Column="1" />
-                            </Grid>
-                            <Grid Grid.Row="1" Style="{StaticResource ParentGridStyle}">
-                                <Grid.ColumnDefinitions>
-                                    <ColumnDefinition Width="1*" />
-                                    <ColumnDefinition Width="3*" />
-                                    <ColumnDefinition Width="2*" />
-                                </Grid.ColumnDefinitions>
-                                <Label Content="City:" />
-                                <TextBox Grid.Column="1" />
-                            </Grid>
-                            <Grid Grid.Row="2" Style="{StaticResource ParentGridStyle}">
-                                <Grid.ColumnDefinitions>
-                                    <ColumnDefinition Width="1*" />
-                                    <ColumnDefinition Width="5*" />
-                                </Grid.ColumnDefinitions>
-                                <Label Content="State:" />
-                                <Grid Grid.Column="1">
-                                    <Grid.ColumnDefinitions>
-                                        <ColumnDefinition Width="1*" />
-                                        <ColumnDefinition Width="2*" />
-                                        <ColumnDefinition Width="2*" />
-                                    </Grid.ColumnDefinitions>
-                                    <TextBox />
-                                    <Grid Grid.Column="1">
-                                        <Grid.ColumnDefinitions>
-                                            <ColumnDefinition Width="1*" />
-                                            <ColumnDefinition Width="2*" />
-                                        </Grid.ColumnDefinitions>
-                                        <Label Content="Zip:" />
-                                        <TextBox Grid.Column="1" />
-                                    </Grid>
-                                </Grid>
-                            </Grid>
-                            <Grid Grid.Row="3" Style="{StaticResource ParentGridStyle}">
-                                <Grid.ColumnDefinitions>
-                                    <ColumnDefinition Width="1*" />
-                                    <ColumnDefinition Width="3*" />
-                                    <ColumnDefinition Width="2*" />
-                                    </Grid.ColumnDefinitions>
-                                <Label Content="Salesman:" />
-                                <TextBox Grid.Column="1" />
-                            </Grid>
-                            <Grid Grid.Row="4" Style="{StaticResource ParentGridStyle}">
-                                <Grid.ColumnDefinitions>
-                                    <ColumnDefinition Width="1*" />
-                                        <ColumnDefinition Width="3*" />
-                                        <ColumnDefinition Width="2*" />
-                                    </Grid.ColumnDefinitions>
-                                <Label Content="Architect:" />
-                                <TextBox Grid.Column="1" />
-                            </Grid>
-                            <Grid Grid.Row="5" Style="{StaticResource ParentGridStyle}" Margin="0">
-                                <Grid.ColumnDefinitions>
-                                    <ColumnDefinition Width="1*" />
-                                    <ColumnDefinition Width="5*" />
-                                </Grid.ColumnDefinitions>
-                                <TextBox Margin="0,0,4,0" />
-                                <TextBox Height="24" Grid.Column="1" />
-                            </Grid>
-                        </Grid>
-                        </Border>
-                        <Border Grid.Row="1" Grid.Column="1" BorderBrush="Gray" BorderThickness="1" Padding="5">
-                            <Grid  >
-                                <Grid.Resources>
-                                    <Style TargetType="{x:Type Label}">
-                                        <Setter Property="HorizontalAlignment" Value="Right" />
-                                        <Setter Property="Margin" Value="0,0,4,0" />
-                                    </Style>
-                                </Grid.Resources>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="1*" />
+                                <ColumnDefinition Width="1*" />
+                                <ColumnDefinition Width="1*" />
+                            </Grid.ColumnDefinitions>
+                            <Grid>
                                 <Grid.RowDefinitions>
                                     <RowDefinition Height="Auto" />
-                                    <RowDefinition Height="Auto" />
-                                    <RowDefinition Height="Auto" />
-                                    <RowDefinition Height="Auto" />
-                                    <RowDefinition Height="Auto" />
+                                </Grid.RowDefinitions>
+                                <Label Content="Imported" BorderBrush="Gray" Width="100" HorizontalContentAlignment="Center" BorderThickness="0,0,0,1" HorizontalAlignment="Center" />
+                            </Grid>
+                            <Grid Grid.Column="1">
+                                <Grid.RowDefinitions>
                                     <RowDefinition Height="Auto" />
                                 </Grid.RowDefinitions>
-                                <Grid Style="{StaticResource ParentGridStyle}">
-                                    <Grid.ColumnDefinitions>
-                                        <ColumnDefinition Width="1*" />
-                                        <ColumnDefinition Width="5*" />
-                                    </Grid.ColumnDefinitions>
-                                    <Label Content="Address:" />
-                                    <TextBox Grid.Column="1" />
-                                </Grid>
-                                <Grid Grid.Row="1" Style="{StaticResource ParentGridStyle}">
-                                    <Grid.ColumnDefinitions>
-                                        <ColumnDefinition Width="1*" />
-                                        <ColumnDefinition Width="3*" />
-                                        <ColumnDefinition Width="2*" />
-                                    </Grid.ColumnDefinitions>
-                                    <Label Content="City:" />
-                                    <TextBox Grid.Column="1" />
-                                </Grid>
-                                <Grid Grid.Row="2" Style="{StaticResource ParentGridStyle}">
-                                    <Grid.ColumnDefinitions>
-                                        <ColumnDefinition Width="1*" />
-                                        <ColumnDefinition Width="5*" />
-                                    </Grid.ColumnDefinitions>
-                                    <Label Content="State:" />
-                                    <Grid Grid.Column="1">
+                                <Label Content="To be Added" BorderBrush="Gray" Width="100" HorizontalContentAlignment="Center" BorderThickness="0,0,0,1" HorizontalAlignment="Center" />
+                            </Grid>
+                        </Grid>
+                        <Grid Grid.Row="1" Margin="0,16,0,0">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="1*" />
+                                <ColumnDefinition Width="1*" />
+                                <ColumnDefinition Width="1*" />
+                            </Grid.ColumnDefinitions>
+                            <Border Background="#F5FFAF" BorderBrush="Gray" BorderThickness="1" Padding="5">
+                                <Grid  >
+                                    <Grid.Resources>
+                                        <Style TargetType="{x:Type Label}">
+                                            <Setter Property="HorizontalAlignment" Value="Right" />
+                                            <Setter Property="Margin" Value="0,0,4,0" />
+                                        </Style>
+                                    </Grid.Resources>
+                                    <Grid.RowDefinitions>
+                                        <RowDefinition Height="Auto" />
+                                        <RowDefinition Height="Auto" />
+                                        <RowDefinition Height="Auto" />
+                                        <RowDefinition Height="Auto" />
+                                        <RowDefinition Height="Auto" />
+                                        <RowDefinition Height="Auto" />
+                                    </Grid.RowDefinitions>
+                                    <Grid Style="{StaticResource ParentGridStyle}">
                                         <Grid.ColumnDefinitions>
                                             <ColumnDefinition Width="1*" />
-                                            <ColumnDefinition Width="2*" />
+                                            <ColumnDefinition Width="5*" />
+                                        </Grid.ColumnDefinitions>
+                                        <Label Content="Address:" />
+                                        <TextBox Grid.Column="1" />
+                                    </Grid>
+                                    <Grid Grid.Row="1" Style="{StaticResource ParentGridStyle}">
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="1*" />
+                                            <ColumnDefinition Width="3*" />
                                             <ColumnDefinition Width="2*" />
                                         </Grid.ColumnDefinitions>
-                                        <TextBox />
+                                        <Label Content="City:" />
+                                        <TextBox Grid.Column="1" />
+                                    </Grid>
+                                    <Grid Grid.Row="2" Style="{StaticResource ParentGridStyle}">
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="1*" />
+                                            <ColumnDefinition Width="5*" />
+                                        </Grid.ColumnDefinitions>
+                                        <Label Content="State:" />
                                         <Grid Grid.Column="1">
                                             <Grid.ColumnDefinitions>
                                                 <ColumnDefinition Width="1*" />
                                                 <ColumnDefinition Width="2*" />
+                                                <ColumnDefinition Width="2*" />
                                             </Grid.ColumnDefinitions>
-                                            <Label Content="Zip:" />
-                                            <TextBox Grid.Column="1" />
+                                            <TextBox />
+                                            <Grid Grid.Column="1">
+                                                <Grid.ColumnDefinitions>
+                                                    <ColumnDefinition Width="1*" />
+                                                    <ColumnDefinition Width="2*" />
+                                                </Grid.ColumnDefinitions>
+                                                <Label Content="Zip:" />
+                                                <TextBox Grid.Column="1" />
+                                            </Grid>
+                                        </Grid>
+                                    </Grid>
+                                    <Grid Grid.Row="3" Style="{StaticResource ParentGridStyle}">
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="1*" />
+                                            <ColumnDefinition Width="3*" />
+                                            <ColumnDefinition Width="2*" />
+                                        </Grid.ColumnDefinitions>
+                                        <Label Content="Salesman:" />
+                                        <TextBox Grid.Column="1" />
+                                    </Grid>
+                                    <Grid Grid.Row="4" Style="{StaticResource ParentGridStyle}">
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="1*" />
+                                            <ColumnDefinition Width="3*" />
+                                            <ColumnDefinition Width="2*" />
+                                        </Grid.ColumnDefinitions>
+                                        <Label Content="Architect:" />
+                                        <TextBox Grid.Column="1" />
+                                    </Grid>
+                                    <Grid Grid.Row="5" Style="{StaticResource ParentGridStyle}" Margin="0">
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="1*" />
+                                            <ColumnDefinition Width="5*" />
+                                        </Grid.ColumnDefinitions>
+                                        <TextBox Margin="0,0,4,0" />
+                                        <TextBox Height="24" Grid.Column="1" />
+                                    </Grid>
+                                </Grid>
+                            </Border>
+                            <Border Grid.Column="1" BorderBrush="Gray" BorderThickness="1" Padding="5">
+                                <Grid  >
+                                    <Grid.Resources>
+                                        <Style TargetType="{x:Type Label}">
+                                            <Setter Property="HorizontalAlignment" Value="Right" />
+                                            <Setter Property="Margin" Value="0,0,4,0" />
+                                        </Style>
+                                    </Grid.Resources>
+                                    <Grid.RowDefinitions>
+                                        <RowDefinition Height="Auto" />
+                                        <RowDefinition Height="Auto" />
+                                        <RowDefinition Height="Auto" />
+                                        <RowDefinition Height="Auto" />
+                                        <RowDefinition Height="Auto" />
+                                        <RowDefinition Height="Auto" />
+                                    </Grid.RowDefinitions>
+                                    <Grid Style="{StaticResource ParentGridStyle}">
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="1*" />
+                                            <ColumnDefinition Width="5*" />
+                                        </Grid.ColumnDefinitions>
+                                        <Label Content="Address:" />
+                                        <TextBox Grid.Column="1" />
+                                    </Grid>
+                                    <Grid Grid.Row="1" Style="{StaticResource ParentGridStyle}">
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="1*" />
+                                            <ColumnDefinition Width="3*" />
+                                            <ColumnDefinition Width="2*" />
+                                        </Grid.ColumnDefinitions>
+                                        <Label Content="City:" />
+                                        <TextBox Grid.Column="1" />
+                                    </Grid>
+                                    <Grid Grid.Row="2" Style="{StaticResource ParentGridStyle}">
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="1*" />
+                                            <ColumnDefinition Width="5*" />
+                                        </Grid.ColumnDefinitions>
+                                        <Label Content="State:" />
+                                        <Grid Grid.Column="1">
+                                            <Grid.ColumnDefinitions>
+                                                <ColumnDefinition Width="1*" />
+                                                <ColumnDefinition Width="2*" />
+                                                <ColumnDefinition Width="2*" />
+                                            </Grid.ColumnDefinitions>
+                                            <TextBox />
+                                            <Grid Grid.Column="1">
+                                                <Grid.ColumnDefinitions>
+                                                    <ColumnDefinition Width="1*" />
+                                                    <ColumnDefinition Width="2*" />
+                                                </Grid.ColumnDefinitions>
+                                                <Label Content="Zip:" />
+                                                <TextBox Grid.Column="1" />
+                                            </Grid>
+                                        </Grid>
+                                    </Grid>
+                                    <Grid Grid.Row="3" Style="{StaticResource ParentGridStyle}">
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="1*" />
+                                            <ColumnDefinition Width="3*" />
+                                            <ColumnDefinition Width="2*" />
+                                        </Grid.ColumnDefinitions>
+                                        <Label Content="Salesman:" />
+                                        <ComboBox Grid.Column="1" />
+                                    </Grid>
+                                    <Grid Grid.Row="4" Style="{StaticResource ParentGridStyle}">
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="1*" />
+                                            <ColumnDefinition Width="3*" />
+                                            <ColumnDefinition Width="2*" />
+                                        </Grid.ColumnDefinitions>
+                                        <Label Content="Architect:" />
+                                        <ComboBox Grid.Column="1" />
+                                    </Grid>
+                                    <Grid Grid.Row="5" Style="{StaticResource ParentGridStyle}" Margin="0">
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="1*" />
+                                            <ColumnDefinition Width="2*" />
+                                            <ColumnDefinition Width="3*" />
+                                        </Grid.ColumnDefinitions>
+                                        <Grid>
+                                            <Grid.ColumnDefinitions>
+                                                <ColumnDefinition Width="30" />
+                                                <ColumnDefinition Width="*" />
+                                            </Grid.ColumnDefinitions>
+                                            <Label Content="P:" />
+                                            <TextBox Margin="0,0,4,0" Grid.Column="1" />
+                                        </Grid>
+                                        <Grid Grid.Column="1">
+                                            <Grid.ColumnDefinitions>
+                                                <ColumnDefinition Width="30" />
+                                                <ColumnDefinition Width="*" />
+                                            </Grid.ColumnDefinitions>
+                                            <Label Content="P:" />
+                                            <TextBox Margin="0,0,4,0" Grid.Column="1" />
+                                        </Grid>
+                                        <Grid Grid.Column="2">
+                                            <TextBox Margin="0,0,4,0" Grid.Column="1" />
                                         </Grid>
                                     </Grid>
                                 </Grid>
-                                <Grid Grid.Row="3" Style="{StaticResource ParentGridStyle}">
-                                    <Grid.ColumnDefinitions>
-                                        <ColumnDefinition Width="1*" />
-                                        <ColumnDefinition Width="3*" />
-                                        <ColumnDefinition Width="2*" />
-                                    </Grid.ColumnDefinitions>
-                                    <Label Content="Salesman:" />
-                                    <ComboBox Grid.Column="1" />
-                                </Grid>
-                                <Grid Grid.Row="4" Style="{StaticResource ParentGridStyle}">
-                                    <Grid.ColumnDefinitions>
-                                        <ColumnDefinition Width="1*" />
-                                        <ColumnDefinition Width="3*" />
-                                        <ColumnDefinition Width="2*" />
-                                    </Grid.ColumnDefinitions>
-                                    <Label Content="Architect:" />
-                                    <ComboBox Grid.Column="1" />
-                                </Grid>
-                                <Grid Grid.Row="5" Style="{StaticResource ParentGridStyle}" Margin="0">
-                                    <Grid.ColumnDefinitions>
-                                        <ColumnDefinition Width="1*" />
-                                        <ColumnDefinition Width="2*" />
-                                        <ColumnDefinition Width="3*" />
-                                    </Grid.ColumnDefinitions>
-                                    <Grid>
-                                        <Grid.ColumnDefinitions>
-                                            <ColumnDefinition Width="30" />
-                                            <ColumnDefinition Width="*" />
-                                        </Grid.ColumnDefinitions>
-                                        <Label Content="P:" />
-                                        <TextBox Margin="0,0,4,0" Grid.Column="1" />
-                                    </Grid>
-                                    <Grid Grid.Column="1">
-                                        <Grid.ColumnDefinitions>
-                                            <ColumnDefinition Width="30" />
-                                            <ColumnDefinition Width="*" />
-                                        </Grid.ColumnDefinitions>
-                                        <Label Content="P:" />
-                                        <TextBox Margin="0,0,4,0" Grid.Column="1" />
-                                    </Grid>
-                                    <Grid Grid.Column="2">
-                                        <TextBox Margin="0,0,4,0" Grid.Column="1" />
-                                    </Grid>
-                                </Grid>
+                            </Border>
+                            <Grid Grid.Column="2">
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="*" />
+                                    <RowDefinition Height="Auto" />
+                                </Grid.RowDefinitions>
+                                <Button Width="120" Grid.Row="1" Margin="40,0,0,0" HorizontalAlignment="Left">
+                                    <TextBlock TextWrapping="Wrap" TextAlignment="Center">Update Architect Info</TextBlock>
+                                </Button>
                             </Grid>
-                        </Border>
-                        <Grid Grid.Row="1" Grid.Column="2">
-                            <Grid.RowDefinitions>
-                                <RowDefinition Height="*" />
-                                <RowDefinition Height="Auto" />
-                            </Grid.RowDefinitions>
-                            <Button Width="120" Grid.Row="1" Margin="40,0,0,0" HorizontalAlignment="Left">
-                                <TextBlock TextWrapping="Wrap" TextAlignment="Center">Update Architect Info</TextBlock>
-                            </Button>
                         </Grid>
-                        <Border Grid.Row="2" Background="#F5FFAF" BorderBrush="Gray" BorderThickness="1" Padding="5">
-                            <Grid  >
-                                <Grid.Resources>
-                                    <Style TargetType="{x:Type Label}">
-                                        <Setter Property="HorizontalAlignment" Value="Right" />
-                                        <Setter Property="Margin" Value="0,0,4,0" />
-                                    </Style>
-                                </Grid.Resources>
-                                <Grid.RowDefinitions>
-                                    <RowDefinition Height="Auto" />
-                                    <RowDefinition Height="Auto" />
-                                    <RowDefinition Height="Auto" />
-                                    <RowDefinition Height="Auto" />
-                                    <RowDefinition Height="Auto" />
-                                    <RowDefinition Height="Auto" />
-                                    <RowDefinition Height="Auto" />
-                                </Grid.RowDefinitions>
-                                <Grid Style="{StaticResource ParentGridStyle}">
-                                    <Grid.ColumnDefinitions>
-                                        <ColumnDefinition Width="1*" />
-                                        <ColumnDefinition Width="3*" />
-                                        <ColumnDefinition Width="2*" />
-                                    </Grid.ColumnDefinitions>
-                                    <Label Content="Customer:" />
-                                    <TextBox Grid.Column="1" />
-                                </Grid>
-                                <Grid Grid.Row="1" Style="{StaticResource ParentGridStyle}">
-                                    <Grid.ColumnDefinitions>
-                                        <ColumnDefinition Width="1*" />
-                                        <ColumnDefinition Width="3*" />
-                                        <ColumnDefinition Width="2*" />
-                                    </Grid.ColumnDefinitions>
-                                    <Label Content="Proj Mgr:" />
-                                    <TextBox Grid.Column="1" />
-                                </Grid>
-                                <Grid Grid.Row="2" Style="{StaticResource ParentGridStyle}">
-                                    <Grid.ColumnDefinitions>
-                                        <ColumnDefinition Width="1*" />
-                                        <ColumnDefinition Width="5*" />
-                                    </Grid.ColumnDefinitions>
-                                    <TextBox Margin="0,0,4,0" />
-                                    <TextBox Height="24" Grid.Column="1" />
-                                </Grid>
-                                <Grid Grid.Row="3" Style="{StaticResource ParentGridStyle}">
-                                    <Grid.ColumnDefinitions>
-                                        <ColumnDefinition Width="1*" />
-                                        <ColumnDefinition Width="3*" />
-                                        <ColumnDefinition Width="2*" />
-                                    </Grid.ColumnDefinitions>
-                                    <Label Content="Supt:" />
-                                    <TextBox Grid.Column="1" />
-                                </Grid>
-                                <Grid Grid.Row="4" Style="{StaticResource ParentGridStyle}">
-                                    <Grid.ColumnDefinitions>
-                                        <ColumnDefinition Width="1*" />
-                                        <ColumnDefinition Width="5*" />
-                                    </Grid.ColumnDefinitions>
-                                    <TextBox Margin="0,0,4,0" />
-                                    <TextBox Height="24" Grid.Column="1" />
-                                </Grid>
-                                <Grid Grid.Row="5" Style="{StaticResource ParentGridStyle}">
-                                    <Grid.ColumnDefinitions>
-                                        <ColumnDefinition Width="1*" />
-                                        <ColumnDefinition Width="3*" />
-                                        <ColumnDefinition Width="2*" />
-                                    </Grid.ColumnDefinitions>
-                                    <Label Content="Subm Contact:" />
-                                    <TextBox Grid.Column="1" />
-                                </Grid>
-                                <Grid Grid.Row="6" Style="{StaticResource ParentGridStyle}">
-                                    <Grid.ColumnDefinitions>
-                                        <ColumnDefinition Width="1*" />
-                                        <ColumnDefinition Width="5*" />
-                                    </Grid.ColumnDefinitions>
-                                    <TextBox Margin="0,0,4,0" />
-                                    <TextBox Height="24" Grid.Column="1" />
-                                </Grid>
-                            </Grid>
-                        </Border>
-                        <Border Grid.Row="2" Grid.Column="1" BorderBrush="Gray" BorderThickness="1" Padding="5">
-                            <Grid  >
-                                <Grid.Resources>
-                                    <Style TargetType="{x:Type Label}">
-                                        <Setter Property="HorizontalAlignment" Value="Right" />
-                                        <Setter Property="Margin" Value="0,0,4,0" />
-                                    </Style>
-                                </Grid.Resources>
-                                <Grid.RowDefinitions>
-                                    <RowDefinition Height="Auto" />
-                                    <RowDefinition Height="Auto" />
-                                    <RowDefinition Height="Auto" />
-                                    <RowDefinition Height="Auto" />
-                                    <RowDefinition Height="Auto" />
-                                    <RowDefinition Height="Auto" />
-                                    <RowDefinition Height="Auto" />
-                                </Grid.RowDefinitions>
-                                <Grid Style="{StaticResource ParentGridStyle}">
-                                    <Grid.ColumnDefinitions>
-                                        <ColumnDefinition Width="1*" />
-                                        <ColumnDefinition Width="3*" />
-                                        <ColumnDefinition Width="2*" />
-                                    </Grid.ColumnDefinitions>
-                                    <Label Content="Customer:" />
-                                    <TextBox Grid.Column="1" />
-                                </Grid>
-                                <Grid Grid.Row="1" Style="{StaticResource ParentGridStyle}">
-                                    <Grid.ColumnDefinitions>
-                                        <ColumnDefinition Width="1*" />
-                                        <ColumnDefinition Width="3*" />
-                                        <ColumnDefinition Width="2*" />
-                                    </Grid.ColumnDefinitions>
-                                    <Label Content="Proj Mgr:" />
-                                    <TextBox Grid.Column="1" />
-                                </Grid>
-                                <Grid Grid.Row="2" Style="{StaticResource ParentGridStyle}">
-                                    <Grid.ColumnDefinitions>
-                                        <ColumnDefinition Width="1*" />
-                                        <ColumnDefinition Width="2*" />
-                                        <ColumnDefinition Width="3*" />
-                                    </Grid.ColumnDefinitions>
-                                    <Grid>
+                        <Grid Grid.Row="2" Margin="0,16,0,0">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="1*" SharedSizeGroup="A"/>
+                                <ColumnDefinition Width="1*" SharedSizeGroup="A"/>
+                                <ColumnDefinition Width="1*" />
+                            </Grid.ColumnDefinitions>
+                            <Border Grid.Row="2" Background="#F5FFAF" BorderBrush="Gray" BorderThickness="1" Padding="5">
+                                <Grid  >
+                                    <Grid.Resources>
+                                        <Style TargetType="{x:Type Label}">
+                                            <Setter Property="HorizontalAlignment" Value="Right" />
+                                            <Setter Property="Margin" Value="0,0,4,0" />
+                                        </Style>
+                                    </Grid.Resources>
+                                    <Grid.RowDefinitions>
+                                        <RowDefinition Height="Auto" />
+                                        <RowDefinition Height="Auto" />
+                                        <RowDefinition Height="Auto" />
+                                        <RowDefinition Height="Auto" />
+                                        <RowDefinition Height="Auto" />
+                                        <RowDefinition Height="Auto" />
+                                        <RowDefinition Height="Auto" />
+                                    </Grid.RowDefinitions>
+                                    <Grid Style="{StaticResource ParentGridStyle}">
                                         <Grid.ColumnDefinitions>
-                                            <ColumnDefinition Width="30" />
-                                            <ColumnDefinition Width="*" />
+                                            <ColumnDefinition Width="1*" />
+                                            <ColumnDefinition Width="3*" />
+                                            <ColumnDefinition Width="2*" />
                                         </Grid.ColumnDefinitions>
-                                        <Label Content="P:" />
-                                        <TextBox Margin="0,0,4,0" Grid.Column="1" />
+                                        <Label Content="Customer:" />
+                                        <TextBox Grid.Column="1" />
                                     </Grid>
-                                    <Grid Grid.Column="1">
+                                    <Grid Grid.Row="1" Style="{StaticResource ParentGridStyle}">
                                         <Grid.ColumnDefinitions>
-                                            <ColumnDefinition Width="30" />
-                                            <ColumnDefinition Width="*" />
+                                            <ColumnDefinition Width="1*" />
+                                            <ColumnDefinition Width="3*" />
+                                            <ColumnDefinition Width="2*" />
                                         </Grid.ColumnDefinitions>
-                                        <Label Content="C:" />
-                                        <TextBox Margin="0,0,4,0" Grid.Column="1" />
+                                        <Label Content="Proj Mgr:" />
+                                        <TextBox Grid.Column="1" />
                                     </Grid>
-                                    <Grid Grid.Column="2">
-                                        <TextBox Margin="0,0,4,0" Grid.Column="1" />
+                                    <Grid Grid.Row="2" Style="{StaticResource ParentGridStyle}">
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="1*" />
+                                            <ColumnDefinition Width="5*" />
+                                        </Grid.ColumnDefinitions>
+                                        <TextBox Margin="0,0,4,0" />
+                                        <TextBox Height="24" Grid.Column="1" />
+                                    </Grid>
+                                    <Grid Grid.Row="3" Style="{StaticResource ParentGridStyle}">
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="1*" />
+                                            <ColumnDefinition Width="3*" />
+                                            <ColumnDefinition Width="2*" />
+                                        </Grid.ColumnDefinitions>
+                                        <Label Content="Supt:" />
+                                        <TextBox Grid.Column="1" />
+                                    </Grid>
+                                    <Grid Grid.Row="4" Style="{StaticResource ParentGridStyle}">
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="1*" />
+                                            <ColumnDefinition Width="5*" />
+                                        </Grid.ColumnDefinitions>
+                                        <TextBox Margin="0,0,4,0" />
+                                        <TextBox Height="24" Grid.Column="1" />
+                                    </Grid>
+                                    <Grid Grid.Row="5" Style="{StaticResource ParentGridStyle}">
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="1*" />
+                                            <ColumnDefinition Width="3*" />
+                                            <ColumnDefinition Width="2*" />
+                                        </Grid.ColumnDefinitions>
+                                        <Label Content="Subm Contact:" />
+                                        <TextBox Grid.Column="1" />
+                                    </Grid>
+                                    <Grid Grid.Row="6" Style="{StaticResource ParentGridStyle}">
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="1*" />
+                                            <ColumnDefinition Width="5*" />
+                                        </Grid.ColumnDefinitions>
+                                        <TextBox Margin="0,0,4,0" />
+                                        <TextBox Height="24" Grid.Column="1" />
                                     </Grid>
                                 </Grid>
-                                <Grid Grid.Row="3" Style="{StaticResource ParentGridStyle}">
-                                    <Grid.ColumnDefinitions>
-                                        <ColumnDefinition Width="1*" />
-                                        <ColumnDefinition Width="3*" />
-                                        <ColumnDefinition Width="2*" />
-                                    </Grid.ColumnDefinitions>
-                                    <Label Content="Supt:" />
-                                    <TextBox Grid.Column="1" />
-                                </Grid>
-                                <Grid Grid.Row="4" Style="{StaticResource ParentGridStyle}">
-                                    <Grid.ColumnDefinitions>
-                                        <ColumnDefinition Width="1*" />
-                                        <ColumnDefinition Width="2*" />
-                                        <ColumnDefinition Width="3*" />
-                                    </Grid.ColumnDefinitions>
-                                    <Grid>
+                            </Border>
+                            <Border Grid.Row="2" Grid.Column="1" BorderBrush="Gray" BorderThickness="1" Padding="5">
+                                <Grid  >
+                                    <Grid.Resources>
+                                        <Style TargetType="{x:Type Label}">
+                                            <Setter Property="HorizontalAlignment" Value="Right" />
+                                            <Setter Property="Margin" Value="0,0,4,0" />
+                                        </Style>
+                                    </Grid.Resources>
+                                    <Grid.RowDefinitions>
+                                        <RowDefinition Height="Auto" />
+                                        <RowDefinition Height="Auto" />
+                                        <RowDefinition Height="Auto" />
+                                        <RowDefinition Height="Auto" />
+                                        <RowDefinition Height="Auto" />
+                                        <RowDefinition Height="Auto" />
+                                        <RowDefinition Height="Auto" />
+                                    </Grid.RowDefinitions>
+                                    <Grid Style="{StaticResource ParentGridStyle}">
                                         <Grid.ColumnDefinitions>
-                                            <ColumnDefinition Width="30" />
-                                            <ColumnDefinition Width="*" />
+                                            <ColumnDefinition Width="1*" />
+                                            <ColumnDefinition Width="3*" />
+                                            <ColumnDefinition Width="2*" />
                                         </Grid.ColumnDefinitions>
-                                        <Label Content="P:" />
-                                        <TextBox Margin="0,0,4,0" Grid.Column="1" />
+                                        <Label Content="Customer:" />
+                                        <TextBox Grid.Column="1" />
                                     </Grid>
-                                    <Grid Grid.Column="1">
+                                    <Grid Grid.Row="1" Style="{StaticResource ParentGridStyle}">
                                         <Grid.ColumnDefinitions>
-                                            <ColumnDefinition Width="30" />
-                                            <ColumnDefinition Width="*" />
+                                            <ColumnDefinition Width="1*" />
+                                            <ColumnDefinition Width="3*" />
+                                            <ColumnDefinition Width="2*" />
                                         </Grid.ColumnDefinitions>
-                                        <Label Content="C:" />
-                                        <TextBox Margin="0,0,4,0" Grid.Column="1" />
+                                        <Label Content="Proj Mgr:" />
+                                        <TextBox Grid.Column="1" />
                                     </Grid>
-                                    <Grid Grid.Column="2">
-                                        <TextBox Margin="0,0,4,0" Grid.Column="1" />
+                                    <Grid Grid.Row="2" Style="{StaticResource ParentGridStyle}">
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="1*" />
+                                            <ColumnDefinition Width="2*" />
+                                            <ColumnDefinition Width="3*" />
+                                        </Grid.ColumnDefinitions>
+                                        <Grid>
+                                            <Grid.ColumnDefinitions>
+                                                <ColumnDefinition Width="30" />
+                                                <ColumnDefinition Width="*" />
+                                            </Grid.ColumnDefinitions>
+                                            <Label Content="P:" />
+                                            <TextBox Margin="0,0,4,0" Grid.Column="1" />
+                                        </Grid>
+                                        <Grid Grid.Column="1">
+                                            <Grid.ColumnDefinitions>
+                                                <ColumnDefinition Width="30" />
+                                                <ColumnDefinition Width="*" />
+                                            </Grid.ColumnDefinitions>
+                                            <Label Content="C:" />
+                                            <TextBox Margin="0,0,4,0" Grid.Column="1" />
+                                        </Grid>
+                                        <Grid Grid.Column="2">
+                                            <TextBox Margin="0,0,4,0" Grid.Column="1" />
+                                        </Grid>
+                                    </Grid>
+                                    <Grid Grid.Row="3" Style="{StaticResource ParentGridStyle}">
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="1*" />
+                                            <ColumnDefinition Width="3*" />
+                                            <ColumnDefinition Width="2*" />
+                                        </Grid.ColumnDefinitions>
+                                        <Label Content="Supt:" />
+                                        <TextBox Grid.Column="1" />
+                                    </Grid>
+                                    <Grid Grid.Row="4" Style="{StaticResource ParentGridStyle}">
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="1*" />
+                                            <ColumnDefinition Width="2*" />
+                                            <ColumnDefinition Width="3*" />
+                                        </Grid.ColumnDefinitions>
+                                        <Grid>
+                                            <Grid.ColumnDefinitions>
+                                                <ColumnDefinition Width="30" />
+                                                <ColumnDefinition Width="*" />
+                                            </Grid.ColumnDefinitions>
+                                            <Label Content="P:" />
+                                            <TextBox Margin="0,0,4,0" Grid.Column="1" />
+                                        </Grid>
+                                        <Grid Grid.Column="1">
+                                            <Grid.ColumnDefinitions>
+                                                <ColumnDefinition Width="30" />
+                                                <ColumnDefinition Width="*" />
+                                            </Grid.ColumnDefinitions>
+                                            <Label Content="C:" />
+                                            <TextBox Margin="0,0,4,0" Grid.Column="1" />
+                                        </Grid>
+                                        <Grid Grid.Column="2">
+                                            <TextBox Margin="0,0,4,0" Grid.Column="1" />
+                                        </Grid>
+                                    </Grid>
+                                    <Grid Grid.Row="5" Style="{StaticResource ParentGridStyle}">
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="1*" />
+                                            <ColumnDefinition Width="3*" />
+                                            <ColumnDefinition Width="2*" />
+                                        </Grid.ColumnDefinitions>
+                                        <Label Content="Subm Contact:" />
+                                        <TextBox Grid.Column="1" />
+                                    </Grid>
+                                    <Grid Grid.Row="6" Style="{StaticResource ParentGridStyle}">
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="1*" />
+                                            <ColumnDefinition Width="2*" />
+                                            <ColumnDefinition Width="3*" />
+                                        </Grid.ColumnDefinitions>
+                                        <Grid>
+                                            <Grid.ColumnDefinitions>
+                                                <ColumnDefinition Width="30" />
+                                                <ColumnDefinition Width="*" />
+                                            </Grid.ColumnDefinitions>
+                                            <Label Content="P:" />
+                                            <TextBox Margin="0,0,4,0" Grid.Column="1" />
+                                        </Grid>
+                                        <Grid Grid.Column="1">
+                                            <Grid.ColumnDefinitions>
+                                                <ColumnDefinition Width="30" />
+                                                <ColumnDefinition Width="*" />
+                                            </Grid.ColumnDefinitions>
+                                            <Label Content="C:" />
+                                            <TextBox Margin="0,0,4,0" Grid.Column="1" />
+                                        </Grid>
+                                        <Grid Grid.Column="2">
+                                            <TextBox Margin="0,0,4,0" Grid.Column="1" />
+                                        </Grid>
                                     </Grid>
                                 </Grid>
-                                <Grid Grid.Row="5" Style="{StaticResource ParentGridStyle}">
-                                    <Grid.ColumnDefinitions>
-                                        <ColumnDefinition Width="1*" />
-                                        <ColumnDefinition Width="3*" />
-                                        <ColumnDefinition Width="2*" />
-                                    </Grid.ColumnDefinitions>
-                                    <Label Content="Subm Contact:" />
-                                    <TextBox Grid.Column="1" />
-                                </Grid>
-                                <Grid Grid.Row="6" Style="{StaticResource ParentGridStyle}">
-                                    <Grid.ColumnDefinitions>
-                                        <ColumnDefinition Width="1*" />
-                                        <ColumnDefinition Width="2*" />
-                                        <ColumnDefinition Width="3*" />
-                                    </Grid.ColumnDefinitions>
-                                    <Grid>
-                                        <Grid.ColumnDefinitions>
-                                            <ColumnDefinition Width="30" />
-                                            <ColumnDefinition Width="*" />
-                                        </Grid.ColumnDefinitions>
-                                        <Label Content="P:" />
-                                        <TextBox Margin="0,0,4,0" Grid.Column="1" />
-                                    </Grid>
-                                    <Grid Grid.Column="1">
-                                        <Grid.ColumnDefinitions>
-                                            <ColumnDefinition Width="30" />
-                                            <ColumnDefinition Width="*" />
-                                        </Grid.ColumnDefinitions>
-                                        <Label Content="C:" />
-                                        <TextBox Margin="0,0,4,0" Grid.Column="1" />
-                                    </Grid>
-                                    <Grid Grid.Column="2">
-                                        <TextBox Margin="0,0,4,0" Grid.Column="1" />
-                                    </Grid>
-                                </Grid>
-                            </Grid>
-                        </Border>
-                        <Border BorderBrush="Gray" BorderThickness="1" Grid.Row="2" Grid.Column="2" Padding="40,4">
-                            <Grid>
-                                <Grid.Resources>
-                                    <Style TargetType="{x:Type Label}">
-                                        <Setter Property="HorizontalAlignment" Value="Right" />
-                                        <Setter Property="Margin" Value="0,0,4,0" />
-                                    </Style>
-                                </Grid.Resources>
-                                <Grid.RowDefinitions>
-                                    <RowDefinition Height="Auto" />
-                                    <RowDefinition Height="4*" />
-                                    <RowDefinition Height="1*" />
-                                </Grid.RowDefinitions>
+                            </Border>
+                            <Border BorderBrush="Gray" BorderThickness="1" Grid.Row="2" Grid.Column="2" Padding="40,4">
                                 <Grid>
+                                    <Grid.Resources>
+                                        <Style TargetType="{x:Type Label}">
+                                            <Setter Property="HorizontalAlignment" Value="Right" />
+                                            <Setter Property="Margin" Value="0,0,4,0" />
+                                        </Style>
+                                    </Grid.Resources>
+                                    <Grid.RowDefinitions>
+                                        <RowDefinition Height="Auto" />
+                                        <RowDefinition Height="4*" />
+                                        <RowDefinition Height="1*" />
+                                    </Grid.RowDefinitions>
+                                    <Grid>
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="1*" />
+                                            <ColumnDefinition Width="1*" />
+                                        </Grid.ColumnDefinitions>
+                                        <Label HorizontalAlignment="Left">Available Customers</Label>
+                                        <Label Grid.Column="1">(double-click to select Customer)</Label>
+                                    </Grid>
+                                    <Grid Grid.Row="1" Margin="0,0,0,10">
+                                        <DataGrid GridLinesVisibility="None" ItemsSource="{Binding Customers}" AutoGenerateColumns="False" CanUserResizeColumns="False" AlternatingRowBackground="LightGray" HeadersVisibility="None" Height="140">
+                                            <DataGrid.Columns>
+                                                <DataGridTextColumn IsReadOnly="False" Binding="{Binding Path=FullName}" Width="1*" Header="Name" />
+                                                <DataGridTextColumn IsReadOnly="False" Binding="{Binding Path=Address}" Width="1*" Header="Phone" />
+                                            </DataGrid.Columns>
+                                        </DataGrid>
+                                    </Grid>
+                                    <Grid Grid.Row="2">
+                                        <WrapPanel>
+                                            <Button Width="120" Grid.Row="1" Margin="0,0,0,0" HorizontalAlignment="Left">
+                                                <TextBlock TextWrapping="Wrap" TextAlignment="Center">Update Customer Contact Info</TextBlock>
+                                            </Button>
+                                            <Label>(click to update phone and email)</Label>
+                                        </WrapPanel>
+                                    </Grid>
+                                </Grid>
+                            </Border>
+                        </Grid>
+                        <Grid Grid.Row="3" Margin="0,16,0,0">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="1*" />
+                                <ColumnDefinition Width="1*" />
+                                <ColumnDefinition Width="1*" />
+                            </Grid.ColumnDefinitions>
+                            <Border Background="#F5FFAF" BorderBrush="Gray" BorderThickness="1" Padding="5">
+                                <Grid>
+                                    <Grid.Resources>
+                                        <Style TargetType="{x:Type Label}">
+                                            <Setter Property="HorizontalAlignment" Value="Right" />
+                                            <Setter Property="Margin" Value="0,0,4,0" />
+                                        </Style>
+                                    </Grid.Resources>
+                                    <Grid.RowDefinitions>
+                                        <RowDefinition Height="Auto" />
+                                        <RowDefinition Height="Auto" />
+                                        <RowDefinition Height="Auto" />
+                                        <RowDefinition Height="Auto" />
+                                    </Grid.RowDefinitions>
+                                    <Grid Style="{StaticResource ParentGridStyle}">
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="1*" />
+                                            <ColumnDefinition Width="1*" />
+                                            <ColumnDefinition Width="4*" />
+                                        </Grid.ColumnDefinitions>
+                                        <Label Content="Subm Reqd Date:" />
+                                        <TextBox Grid.Column="1" />
+                                    </Grid>
+                                    <Grid Grid.Row="1" Style="{StaticResource ParentGridStyle}">
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="1*" />
+                                            <ColumnDefinition Width="1*" />
+                                            <ColumnDefinition Width="4*" />
+                                        </Grid.ColumnDefinitions>
+                                        <Label Content="Matl Reqd Date:" />
+                                        <TextBox Grid.Column="1" />
+                                    </Grid>
+                                    <Grid Grid.Row="2" Style="{StaticResource ParentGridStyle}">
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="1*" />
+                                            <ColumnDefinition Width="5*" />
+                                        </Grid.ColumnDefinitions>
+                                        <Label Content="Spec Instr:" />
+                                        <TextBox AcceptsReturn="True" VerticalScrollBarVisibility="Auto" Height="40" Grid.Column="1" />
+                                    </Grid>
+                                    <Grid Grid.Row="3" Style="{StaticResource ParentGridStyle}">
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="1*" />
+                                            <ColumnDefinition Width="5*" />
+                                        </Grid.ColumnDefinitions>
+                                        <Label Content="Job Desc:" />
+                                        <TextBox AcceptsReturn="True" VerticalScrollBarVisibility="Auto" Height="40" Grid.Column="1" />
+                                    </Grid>
+                                </Grid>
+                            </Border>
+                            <Border Grid.Column="1" BorderBrush="Gray" BorderThickness="1" Padding="5">
+                                <Grid  >
+                                    <Grid.Resources>
+                                        <Style TargetType="{x:Type Label}">
+                                            <Setter Property="HorizontalAlignment" Value="Right" />
+                                            <Setter Property="Margin" Value="0,0,4,0" />
+                                        </Style>
+                                    </Grid.Resources>
+                                    <Grid.RowDefinitions>
+                                        <RowDefinition Height="Auto" />
+                                        <RowDefinition Height="Auto" />
+                                        <RowDefinition Height="Auto" />
+                                        <RowDefinition Height="Auto" />
+                                    </Grid.RowDefinitions>
+                                    <Grid Style="{StaticResource ParentGridStyle}">
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="1*" />
+                                            <ColumnDefinition Width="1*" />
+                                            <ColumnDefinition Width="4*" />
+                                        </Grid.ColumnDefinitions>
+                                        <Label Content="Subm Reqd Date:" />
+                                        <TextBox Grid.Column="1" />
+                                    </Grid>
+                                    <Grid Grid.Row="1" Style="{StaticResource ParentGridStyle}">
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="1*" />
+                                            <ColumnDefinition Width="1*" />
+                                            <ColumnDefinition Width="4*" />
+                                        </Grid.ColumnDefinitions>
+                                        <Label Content="Matl Reqd Date:" />
+                                        <TextBox Grid.Column="1" />
+                                    </Grid>
+                                    <Grid Grid.Row="2" Style="{StaticResource ParentGridStyle}">
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="1*" />
+                                            <ColumnDefinition Width="5*" />
+                                        </Grid.ColumnDefinitions>
+                                        <Label Content="Spec Instr:" />
+                                        <TextBox AcceptsReturn="True" VerticalScrollBarVisibility="Auto" Height="40" Grid.Column="1" />
+                                    </Grid>
+                                    <Grid Grid.Row="3" Style="{StaticResource ParentGridStyle}">
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="1*" />
+                                            <ColumnDefinition Width="5*" />
+                                        </Grid.ColumnDefinitions>
+                                        <Label Content="Job Desc:" />
+                                        <TextBox AcceptsReturn="True" VerticalScrollBarVisibility="Auto" Height="40" Grid.Column="1" />
+                                    </Grid>
+                                </Grid>
+                            </Border>
+                        </Grid>
+                        <Grid Grid.Row="4" Margin="0,16,0,0">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="1*" />
+                                <ColumnDefinition Width="1*" />
+                                <ColumnDefinition Width="1*" />
+                            </Grid.ColumnDefinitions>
+                            <Border Background="#F5FFAF" BorderBrush="Gray" BorderThickness="1" Padding="5">
+                                <Grid  >
+                                    <Grid.Resources>
+                                        <Style TargetType="{x:Type Label}">
+                                            <Setter Property="HorizontalAlignment" Value="Right" />
+                                            <Setter Property="Margin" Value="0,0,4,0" />
+                                        </Style>
+                                    </Grid.Resources>
+                                    <Grid.RowDefinitions>
+                                        <RowDefinition Height="Auto" />
+                                        <RowDefinition Height="Auto" />
+                                        <RowDefinition Height="Auto" />
+                                    </Grid.RowDefinitions>
                                     <Grid.ColumnDefinitions>
                                         <ColumnDefinition Width="1*" />
                                         <ColumnDefinition Width="1*" />
+                                        <ColumnDefinition Width="1*" />
                                     </Grid.ColumnDefinitions>
-                                    <Label HorizontalAlignment="Left">Available Customers</Label>
-                                    <Label Grid.Column="1">(double-click to select Customer)</Label>
-                                </Grid>
-                                <Grid Grid.Row="1" Margin="0,0,0,10">
-                                    <DataGrid GridLinesVisibility="None" ItemsSource="{Binding Customers}" AutoGenerateColumns="False" CanUserResizeColumns="False" AlternatingRowBackground="LightGray" HeadersVisibility="None">
-                                        <DataGrid.Columns>
-                                            <DataGridTextColumn IsReadOnly="False" Binding="{Binding Path=FullName}" Width="1*" Header="Name" />
-                                            <DataGridTextColumn IsReadOnly="False" Binding="{Binding Path=Address}" Width="1*" Header="Phone" />
-                                        </DataGrid.Columns>
-                                    </DataGrid>
-                                </Grid>
-                                <Grid Grid.Row="2">
-                                    <WrapPanel>
-                                        <Button Width="120" Grid.Row="1" Margin="0,0,0,0" HorizontalAlignment="Left">
-                                            <TextBlock TextWrapping="Wrap" TextAlignment="Center">Update Customer Contact Info</TextBlock>
-                                        </Button>
-                                        <Label>(click to update phone and email)</Label>
-                                    </WrapPanel>
-                                </Grid>
-                            </Grid>
-                        </Border>
-                        <Border Grid.Row="3" Background="#F5FFAF" BorderBrush="Gray" BorderThickness="1" Padding="5">
-                            <Grid  >
-                                <Grid.Resources>
-                                    <Style TargetType="{x:Type Label}">
-                                        <Setter Property="HorizontalAlignment" Value="Right" />
-                                        <Setter Property="Margin" Value="0,0,4,0" />
-                                    </Style>
-                                </Grid.Resources>
-                                <Grid.RowDefinitions>
-                                    <RowDefinition Height="Auto" />
-                                    <RowDefinition Height="Auto" />
-                                    <RowDefinition Height="Auto" />
-                                    <RowDefinition Height="Auto" />
-                                </Grid.RowDefinitions>
-                                <Grid Style="{StaticResource ParentGridStyle}">
-                                    <Grid.ColumnDefinitions>
-                                        <ColumnDefinition Width="1*" />
-                                        <ColumnDefinition Width="1*" />
-                                        <ColumnDefinition Width="4*" />
-                                    </Grid.ColumnDefinitions>
-                                    <Label Content="Subm Reqd Date:" />
-                                    <TextBox Grid.Column="1" />
-                                </Grid>
-                                <Grid Grid.Row="1" Style="{StaticResource ParentGridStyle}">
-                                    <Grid.ColumnDefinitions>
-                                        <ColumnDefinition Width="1*" />
-                                        <ColumnDefinition Width="1*" />
-                                        <ColumnDefinition Width="4*" />
-                                    </Grid.ColumnDefinitions>
-                                    <Label Content="Matl Reqd Date:" />
-                                    <TextBox Grid.Column="1" />
-                                </Grid>
-                                <Grid Grid.Row="2" Style="{StaticResource ParentGridStyle}">
-                                    <Grid.ColumnDefinitions>
-                                        <ColumnDefinition Width="1*" />
-                                        <ColumnDefinition Width="5*" />
-                                    </Grid.ColumnDefinitions>
-                                    <Label Content="Spec Instr:" />
-                                    <TextBox AcceptsReturn="True" VerticalScrollBarVisibility="Auto" Height="40" Grid.Column="1" />
-                                </Grid>
-                                <Grid Grid.Row="3" Style="{StaticResource ParentGridStyle}">
-                                    <Grid.ColumnDefinitions>
-                                        <ColumnDefinition Width="1*" />
-                                        <ColumnDefinition Width="5*" />
-                                    </Grid.ColumnDefinitions>
-                                    <Label Content="Job Desc:" />
-                                    <TextBox AcceptsReturn="True" VerticalScrollBarVisibility="Auto" Height="40" Grid.Column="1" />
-                                </Grid>
-                            </Grid>
-                        </Border>
-                        <Border Grid.Row="3" Grid.Column="1" BorderBrush="Gray" BorderThickness="1" Padding="5">
-                            <Grid  >
-                                <Grid.Resources>
-                                    <Style TargetType="{x:Type Label}">
-                                        <Setter Property="HorizontalAlignment" Value="Right" />
-                                        <Setter Property="Margin" Value="0,0,4,0" />
-                                    </Style>
-                                </Grid.Resources>
-                                <Grid.RowDefinitions>
-                                    <RowDefinition Height="Auto" />
-                                    <RowDefinition Height="Auto" />
-                                    <RowDefinition Height="Auto" />
-                                    <RowDefinition Height="Auto" />
-                                </Grid.RowDefinitions>
-                                <Grid Style="{StaticResource ParentGridStyle}">
-                                    <Grid.ColumnDefinitions>
-                                        <ColumnDefinition Width="1*" />
-                                        <ColumnDefinition Width="1*" />
-                                        <ColumnDefinition Width="4*" />
-                                    </Grid.ColumnDefinitions>
-                                    <Label Content="Subm Reqd Date:" />
-                                    <TextBox Grid.Column="1" />
-                                </Grid>
-                                <Grid Grid.Row="1" Style="{StaticResource ParentGridStyle}">
-                                    <Grid.ColumnDefinitions>
-                                        <ColumnDefinition Width="1*" />
-                                        <ColumnDefinition Width="1*" />
-                                        <ColumnDefinition Width="4*" />
-                                    </Grid.ColumnDefinitions>
-                                    <Label Content="Matl Reqd Date:" />
-                                    <TextBox Grid.Column="1" />
-                                </Grid>
-                                <Grid Grid.Row="2" Style="{StaticResource ParentGridStyle}">
-                                    <Grid.ColumnDefinitions>
-                                        <ColumnDefinition Width="1*" />
-                                        <ColumnDefinition Width="5*" />
-                                    </Grid.ColumnDefinitions>
-                                    <Label Content="Spec Instr:" />
-                                    <TextBox AcceptsReturn="True" VerticalScrollBarVisibility="Auto" Height="40" Grid.Column="1" />
-                                </Grid>
-                                <Grid Grid.Row="3" Style="{StaticResource ParentGridStyle}">
-                                    <Grid.ColumnDefinitions>
-                                        <ColumnDefinition Width="1*" />
-                                        <ColumnDefinition Width="5*" />
-                                    </Grid.ColumnDefinitions>
-                                    <Label Content="Job Desc:" />
-                                    <TextBox AcceptsReturn="True" VerticalScrollBarVisibility="Auto" Height="40" Grid.Column="1" />
-                                </Grid>
-                            </Grid>
-                        </Border>
-                        <Border Grid.Row="4" Background="#F5FFAF" BorderBrush="Gray" BorderThickness="1" Padding="5">
-                            <Grid  >
-                                <Grid.Resources>
-                                    <Style TargetType="{x:Type Label}">
-                                        <Setter Property="HorizontalAlignment" Value="Right" />
-                                        <Setter Property="Margin" Value="0,0,4,0" />
-                                    </Style>
-                                </Grid.Resources>
-                                <Grid.RowDefinitions>
-                                    <RowDefinition Height="Auto" />
-                                    <RowDefinition Height="Auto" />
-                                    <RowDefinition Height="Auto" />
-                                </Grid.RowDefinitions>
-                                <Grid.ColumnDefinitions>
-                                    <ColumnDefinition Width="1*" />
-                                    <ColumnDefinition Width="1*" />
-                                    <ColumnDefinition Width="1*" />
-                                </Grid.ColumnDefinitions>
 
-                                <Grid Style="{StaticResource ParentGridStyle}">
+                                    <Grid Style="{StaticResource ParentGridStyle}">
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="2*" />
+                                            <ColumnDefinition Width="1*" />
+                                        </Grid.ColumnDefinitions>
+                                        <Label Content="Subm Reqd Date:" />
+                                        <CheckBox Grid.Column="1" />
+                                    </Grid>
+                                    <Grid Grid.Column="1" Style="{StaticResource ParentGridStyle}">
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="2*" />
+                                            <ColumnDefinition Width="1*" />
+                                        </Grid.ColumnDefinitions>
+                                        <Label Content="Signed Proposal:" />
+                                        <CheckBox Grid.Column="1" />
+                                    </Grid>
+                                    <Grid Grid.Column="2" Style="{StaticResource ParentGridStyle}">
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="2*" />
+                                            <ColumnDefinition Width="1*" />
+                                        </Grid.ColumnDefinitions>
+                                        <Label Content="GAP Bid Incl:" />
+                                        <CheckBox Grid.Column="1" />
+                                    </Grid>
+                                    <Grid Grid.Row="1" Style="{StaticResource ParentGridStyle}">
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="2*" />
+                                            <ColumnDefinition Width="1*" />
+                                        </Grid.ColumnDefinitions>
+                                        <Label Content="Contract Rcvd:" />
+                                        <CheckBox Grid.Column="1" />
+                                    </Grid>
+                                    <Grid Grid.Row="1" Grid.Column="2" Style="{StaticResource ParentGridStyle}">
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="2*" />
+                                            <ColumnDefinition Width="1*" />
+                                        </Grid.ColumnDefinitions>
+                                        <Label Content="GAP Est Incl:" />
+                                        <CheckBox Grid.Column="1" />
+                                    </Grid>
+                                    <Grid Grid.Row="2" Style="{StaticResource ParentGridStyle}">
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="2*" />
+                                            <ColumnDefinition Width="1*" />
+                                        </Grid.ColumnDefinitions>
+                                        <Label Content="CIP Job:" />
+                                        <CheckBox Grid.Column="1" />
+                                    </Grid>
+                                </Grid>
+                            </Border>
+                            <Border Grid.Column="1" BorderBrush="Gray" BorderThickness="1" Padding="5">
+                                <Grid  >
+                                    <Grid.Resources>
+                                        <Style TargetType="{x:Type Label}">
+                                            <Setter Property="HorizontalAlignment" Value="Right" />
+                                            <Setter Property="Margin" Value="0,0,4,0" />
+                                        </Style>
+                                    </Grid.Resources>
+                                    <Grid.RowDefinitions>
+                                        <RowDefinition Height="Auto" />
+                                        <RowDefinition Height="Auto" />
+                                        <RowDefinition Height="Auto" />
+                                    </Grid.RowDefinitions>
                                     <Grid.ColumnDefinitions>
-                                        <ColumnDefinition Width="2*" />
+                                        <ColumnDefinition Width="1*" />
+                                        <ColumnDefinition Width="1*" />
                                         <ColumnDefinition Width="1*" />
                                     </Grid.ColumnDefinitions>
-                                    <Label Content="Subm Reqd Date:" />
-                                    <CheckBox Grid.Column="1" />
-                                </Grid>
-                                <Grid Grid.Column="1" Style="{StaticResource ParentGridStyle}">
-                                    <Grid.ColumnDefinitions>
-                                        <ColumnDefinition Width="2*" />
-                                        <ColumnDefinition Width="1*" />
-                                    </Grid.ColumnDefinitions>
-                                    <Label Content="Signed Proposal:" />
-                                    <CheckBox Grid.Column="1" />
-                                </Grid>
-                                <Grid Grid.Column="2" Style="{StaticResource ParentGridStyle}">
-                                    <Grid.ColumnDefinitions>
-                                        <ColumnDefinition Width="2*" />
-                                        <ColumnDefinition Width="1*" />
-                                    </Grid.ColumnDefinitions>
-                                    <Label Content="GAP Bid Incl:" />
-                                    <CheckBox Grid.Column="1" />
-                                </Grid>
-                                <Grid Grid.Row="1" Style="{StaticResource ParentGridStyle}">
-                                    <Grid.ColumnDefinitions>
-                                        <ColumnDefinition Width="2*" />
-                                        <ColumnDefinition Width="1*" />
-                                    </Grid.ColumnDefinitions>
-                                    <Label Content="Contract Rcvd:" />
-                                    <CheckBox Grid.Column="1" />
-                                </Grid>
-                                <Grid Grid.Row="1" Grid.Column="2" Style="{StaticResource ParentGridStyle}">
-                                    <Grid.ColumnDefinitions>
-                                        <ColumnDefinition Width="2*" />
-                                        <ColumnDefinition Width="1*" />
-                                    </Grid.ColumnDefinitions>
-                                    <Label Content="GAP Est Incl:" />
-                                    <CheckBox Grid.Column="1" />
-                                </Grid>
-                                <Grid Grid.Row="2" Style="{StaticResource ParentGridStyle}">
-                                    <Grid.ColumnDefinitions>
-                                        <ColumnDefinition Width="2*" />
-                                        <ColumnDefinition Width="1*" />
-                                    </Grid.ColumnDefinitions>
-                                    <Label Content="CIP Job:" />
-                                    <CheckBox Grid.Column="1" />
-                                </Grid>
-                            </Grid>
-                        </Border>
-                        <Border Grid.Row="4" Grid.Column="1" BorderBrush="Gray" BorderThickness="1" Padding="5">
-                            <Grid  >
-                                <Grid.Resources>
-                                    <Style TargetType="{x:Type Label}">
-                                        <Setter Property="HorizontalAlignment" Value="Right" />
-                                        <Setter Property="Margin" Value="0,0,4,0" />
-                                    </Style>
-                                </Grid.Resources>
-                                <Grid.RowDefinitions>
-                                    <RowDefinition Height="Auto" />
-                                    <RowDefinition Height="Auto" />
-                                    <RowDefinition Height="Auto" />
-                                </Grid.RowDefinitions>
-                                <Grid.ColumnDefinitions>
-                                    <ColumnDefinition Width="1*" />
-                                    <ColumnDefinition Width="1*" />
-                                    <ColumnDefinition Width="1*" />
-                                </Grid.ColumnDefinitions>
 
-                                <Grid Style="{StaticResource ParentGridStyle}">
-                                    <Grid.ColumnDefinitions>
-                                        <ColumnDefinition Width="2*" />
-                                        <ColumnDefinition Width="1*" />
-                                    </Grid.ColumnDefinitions>
-                                    <Label Content="Subm Reqd Date:" />
-                                    <CheckBox Grid.Column="1" />
+                                    <Grid Style="{StaticResource ParentGridStyle}">
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="2*" />
+                                            <ColumnDefinition Width="1*" />
+                                        </Grid.ColumnDefinitions>
+                                        <Label Content="Subm Reqd Date:" />
+                                        <CheckBox Grid.Column="1" />
+                                    </Grid>
+                                    <Grid Grid.Column="1" Style="{StaticResource ParentGridStyle}">
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="2*" />
+                                            <ColumnDefinition Width="1*" />
+                                        </Grid.ColumnDefinitions>
+                                        <Label Content="Signed Proposal:" />
+                                        <CheckBox Grid.Column="1" />
+                                    </Grid>
+                                    <Grid Grid.Column="2" Style="{StaticResource ParentGridStyle}">
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="2*" />
+                                            <ColumnDefinition Width="1*" />
+                                        </Grid.ColumnDefinitions>
+                                        <Label Content="GAP Bid Incl:" />
+                                        <CheckBox Grid.Column="1" />
+                                    </Grid>
+                                    <Grid Grid.Row="1" Style="{StaticResource ParentGridStyle}">
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="2*" />
+                                            <ColumnDefinition Width="1*" />
+                                        </Grid.ColumnDefinitions>
+                                        <Label Content="Contract Rcvd:" />
+                                        <CheckBox Grid.Column="1" />
+                                    </Grid>
+                                    <Grid Grid.Row="1" Grid.Column="2" Style="{StaticResource ParentGridStyle}">
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="2*" />
+                                            <ColumnDefinition Width="1*" />
+                                        </Grid.ColumnDefinitions>
+                                        <Label Content="GAP Est Incl:" />
+                                        <CheckBox Grid.Column="1" />
+                                    </Grid>
+                                    <Grid Grid.Row="2" Style="{StaticResource ParentGridStyle}">
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="2*" />
+                                            <ColumnDefinition Width="1*" />
+                                        </Grid.ColumnDefinitions>
+                                        <Label Content="CIP Job:" />
+                                        <CheckBox Grid.Column="1" />
+                                    </Grid>
                                 </Grid>
-                                <Grid Grid.Column="1" Style="{StaticResource ParentGridStyle}">
-                                    <Grid.ColumnDefinitions>
-                                        <ColumnDefinition Width="2*" />
-                                        <ColumnDefinition Width="1*" />
-                                    </Grid.ColumnDefinitions>
-                                    <Label Content="Signed Proposal:" />
-                                    <CheckBox Grid.Column="1" />
-                                </Grid>
-                                <Grid Grid.Column="2" Style="{StaticResource ParentGridStyle}">
-                                    <Grid.ColumnDefinitions>
-                                        <ColumnDefinition Width="2*" />
-                                        <ColumnDefinition Width="1*" />
-                                    </Grid.ColumnDefinitions>
-                                    <Label Content="GAP Bid Incl:" />
-                                    <CheckBox Grid.Column="1" />
-                                </Grid>
-                                <Grid Grid.Row="1" Style="{StaticResource ParentGridStyle}">
-                                    <Grid.ColumnDefinitions>
-                                        <ColumnDefinition Width="2*" />
-                                        <ColumnDefinition Width="1*" />
-                                    </Grid.ColumnDefinitions>
-                                    <Label Content="Contract Rcvd:" />
-                                    <CheckBox Grid.Column="1" />
-                                </Grid>
-                                <Grid Grid.Row="1" Grid.Column="2" Style="{StaticResource ParentGridStyle}">
-                                    <Grid.ColumnDefinitions>
-                                        <ColumnDefinition Width="2*" />
-                                        <ColumnDefinition Width="1*" />
-                                    </Grid.ColumnDefinitions>
-                                    <Label Content="GAP Est Incl:" />
-                                    <CheckBox Grid.Column="1" />
-                                </Grid>
-                                <Grid Grid.Row="2" Style="{StaticResource ParentGridStyle}">
-                                    <Grid.ColumnDefinitions>
-                                        <ColumnDefinition Width="2*" />
-                                        <ColumnDefinition Width="1*" />
-                                    </Grid.ColumnDefinitions>
-                                    <Label Content="CIP Job:" />
-                                    <CheckBox Grid.Column="1" />
-                                </Grid>
-                            </Grid>
-                        </Border>
+                            </Border>
+                        </Grid>
                     </Grid>
+                    </Border>
+                    <!--</ScrollViewer>-->
                 </TabItem>
                 <TabItem Header="Schedule Of Values" Width="Auto">
-                    <Grid Width="1200" HorizontalAlignment="Left">
+                    <Border Padding="10">
+                        <Grid Width="1200" HorizontalAlignment="Left">
                         <Grid.RowDefinitions>
                             <RowDefinition Height="1*" />
                             <RowDefinition Height="3*" />
@@ -871,13 +906,13 @@
                                             <DataGridTextColumn Width="4*" Binding="{Binding Path=UnitPrice}" Header="Valid?" />
                                         </DataGrid.Columns>
                                     </DataGrid>
-                                    <Grid Grid.Row="1">
+                                        <Grid Grid.Row="1"  Margin="0,10,0,0">
                                         <Grid.ColumnDefinitions>
                                             <ColumnDefinition Width="1*" />
                                             <ColumnDefinition Width="2*" />
                                         </Grid.ColumnDefinitions>
                                         <Label HorizontalAlignment="Right">Select Manufacturer:</Label>
-                                        <ComboBox Grid.Column="1" />
+                                            <ComboBox Grid.Column="1" ItemsSource="{Binding Manufacturers}" DisplayMemberPath="ManufacturerName" IsEditable="True" />
                                     </Grid>
                                 </Grid>
                             </Border>
@@ -896,14 +931,26 @@
                                         <Label Grid.Column="1" HorizontalAlignment="Right">(double-click to select Manufacturer)</Label>
                                     </Grid>
                                     <DataGrid Grid.Row="1" GridLinesVisibility="None" ItemsSource="{Binding Manufacturers}" AutoGenerateColumns="False" CanUserResizeColumns="False" Background="LightGray" HeadersVisibility="None">
-                                        <DataGrid.ColumnHeaderStyle>
-                                            <Style TargetType="DataGridColumnHeader">
-                                                <Setter Property="Background" Value="#F5FFAF"/>
-                                                <Setter Property="BorderBrush" Value="Gray" />
-                                                <Setter Property="BorderThickness" Value="1" />
-                                            </Style>
-                                        </DataGrid.ColumnHeaderStyle>
-                                        <DataGrid.Columns>
+                                            <DataGrid.Resources>
+                                                <Style TargetType="DataGridRow">
+                                                    <Setter Property="Height" Value="15" />
+                                                    <Setter Property="BorderThickness" Value="0" />
+                                                </Style>
+                                                <Style TargetType="{x:Type DataGridCell}">
+                                                    <Setter Property="VerticalAlignment" Value="Center" />
+                                                    <Setter Property="BorderThickness" Value="0" />
+                                                    <Setter Property="Foreground" Value="Black" />
+                                                    <!--<Setter Property="Margin" Value="10,0,0,0" />-->
+                                                    <Style.Triggers>
+                                                    <Trigger Property="IsSelected" Value="True">
+                                                        <Setter Property="Background" Value="Black" />
+                                                        <Setter Property="Foreground" Value="White" />
+                                                            <!--<Setter Property="BorderBrush" Value="{x:Null}" />-->
+                                                    </Trigger>
+                                                </Style.Triggers>
+                                                </Style>
+                                            </DataGrid.Resources>
+                                            <DataGrid.Columns>
                                             <DataGridTextColumn Width="2*" Binding="{Binding Path=ManufacturerName}" Header="SOV" />
                                         </DataGrid.Columns>
                                     </DataGrid>
@@ -912,7 +959,7 @@
                             
                         </Grid>
                         <Grid Grid.Row="1">
-                            <TabControl Margin="10" BorderBrush="Gainsboro">
+                            <TabControl BorderBrush="Gainsboro">
                                 <TabControl.Resources>
                                     <Style TargetType="TabItem">
                                         <Setter Property="Template">
@@ -935,12 +982,14 @@
                                     </Style>
                                 </TabControl.Resources>
                                 <TabItem Header="Materials" HorizontalAlignment="Left" Width="Auto">
-                                        <DataGrid GridLinesVisibility="None" AutoGenerateColumns="False" CanUserResizeColumns="False" AlternatingRowBackground="LightGray" HeadersVisibility="Column">
+                                        <DataGrid GridLinesVisibility="None" AutoGenerateColumns="False" CanUserResizeColumns="False" AlternatingRowBackground="LightGray" HeadersVisibility="Column" Margin="10">
                                         <DataGrid.Resources>
                                             <Style TargetType="DataGridColumnHeader">
-                                                <Setter Property="Background" Value="#648278" />
-                                                <Setter Property="Foreground" Value="White" />
-                                                <Setter Property="Height" Value="60" />
+                                                <Setter Property="Background" Value="#B7DEE8" />
+                                                <Setter Property="Foreground" Value="Black" />
+                                                <Setter Property="FontWeight" Value="Medium" />
+                                                <Setter Property="FontSize" Value="14" />
+                                                <Setter Property="Height" Value="50" />
                                                 <Setter Property="Padding" Value="10,0,0,0" />
                                             </Style>
                                         </DataGrid.Resources>
@@ -953,17 +1002,17 @@
                                                             <RowDefinition/>
                                                         </Grid.RowDefinitions>
                                                         <Border BorderBrush="Gray" Width="500" BorderThickness="0,0,0,2">
-                                                            <TextBlock FontSize="20" Text="Imported" HorizontalAlignment="Center"/>
+                                                            <TextBlock Text="Imported" HorizontalAlignment="Center"/>
                                                         </Border>
-                                                        <Grid Grid.Row="1">
+                                                        <Grid Grid.Row="1" Margin="20,0">
                                                             <Grid.ColumnDefinitions>
                                                                 <ColumnDefinition Width="1*" />
                                                                 <ColumnDefinition Width="1*" />
                                                                 <ColumnDefinition Width="1*" />
                                                             </Grid.ColumnDefinitions>
-                                                            <TextBlock Grid.Row="1" Grid.Column="0" FontSize="20" Text="SOV"/>
-                                                            <TextBlock Grid.Row="1" Grid.Column="1" FontSize="20" Text="Material"/>
-                                                            <TextBlock Grid.Row="1" Grid.Column="2" FontSize="20" Text="Qty"/>
+                                                            <TextBlock Grid.Row="1" Grid.Column="0" Text="SOV"/>
+                                                            <TextBlock Grid.Row="1" Grid.Column="1" Text="Material"/>
+                                                            <TextBlock Grid.Row="1" Grid.Column="2" Text="Qty" HorizontalAlignment="Right"/>
                                                         </Grid>
                                                     </Grid>
                                                 </DataGridTemplateColumn.Header>
@@ -994,19 +1043,19 @@
                                                             <RowDefinition/>
                                                         </Grid.RowDefinitions>
                                                         <Border BorderBrush="Gray" Width="500" BorderThickness="0,0,0,2">
-                                                            <TextBlock Text="To be Added" FontSize="20" HorizontalAlignment="Center"/>
+                                                            <TextBlock Text="To be Added" HorizontalAlignment="Center"/>
                                                         </Border>
-                                                        <Grid Grid.Row="1">
+                                                            <Grid Grid.Row="1" Margin="20,0">
                                                             <Grid.ColumnDefinitions>
                                                                 <ColumnDefinition Width="1*" />
                                                                 <ColumnDefinition Width="1*" />
                                                                 <ColumnDefinition Width="1*" />
                                                                 <ColumnDefinition Width="1*" />
                                                             </Grid.ColumnDefinitions>
-                                                            <TextBlock Grid.Row="1" FontSize="20" Grid.Column="0" Text="Material"/>
-                                                            <TextBlock Grid.Row="1" FontSize="20" Grid.Column="1" Text="Lot"/>
-                                                            <TextBlock Grid.Row="1" FontSize="20" Grid.Column="2" Text="Qty"/>
-                                                            <TextBlock Grid.Row="1" FontSize="20" Grid.Column="3" Text="Total Cost"/>
+                                                            <TextBlock Grid.Row="1" Grid.Column="0" Text="Material"/>
+                                                            <TextBlock Grid.Row="1" Grid.Column="1" Text="Lot"/>
+                                                            <TextBlock Grid.Row="1" Grid.Column="2" Text="Qty"/>
+                                                            <TextBlock Grid.Row="1" Grid.Column="3" Text="Total Cost"/>
                                                         </Grid>
                                                     </Grid>
                                                 </DataGridTemplateColumn.Header>
@@ -1033,106 +1082,110 @@
                                     </DataGrid>
                                 </TabItem>
                                 <TabItem Header="Labor" Width="Auto">
-                                    <DataGrid GridLinesVisibility="None" AutoGenerateColumns="False" CanUserResizeColumns="False" AlternatingRowBackground="LightGray" HeadersVisibility="Column">
-                                        <DataGrid.Resources>
-                                            <Style TargetType="DataGridColumnHeader">
-                                                <Setter Property="Background" Value="#9BBB59" />
-                                                <Setter Property="Foreground" Value="White" />
-                                                <Setter Property="Height" Value="60" />
-                                                <Setter Property="Padding" Value="10,0,0,0" />
-                                            </Style>
-                                        </DataGrid.Resources>
-                                        <DataGrid.Columns>
-                                            <DataGridTemplateColumn>
-                                                <DataGridTemplateColumn.Header>
-                                                    <Grid Width="580">
-                                                        <Grid.RowDefinitions>
-                                                            <RowDefinition/>
-                                                            <RowDefinition/>
-                                                        </Grid.RowDefinitions>
-                                                        <Border BorderBrush="Gray" Width="500" BorderThickness="0,0,0,2">
-                                                            <TextBlock FontSize="20" Text="Imported" HorizontalAlignment="Center"/>
-                                                        </Border>
-                                                        <Grid Grid.Row="1">
-                                                            <Grid.ColumnDefinitions>
-                                                                <ColumnDefinition Width="1*" />
-                                                                <ColumnDefinition Width="2*" />
-                                                                <ColumnDefinition Width="1*" />
-                                                                <ColumnDefinition Width="1*" />
-                                                            </Grid.ColumnDefinitions>
-                                                            <TextBlock Grid.Row="1" Grid.Column="0" FontSize="20" Text="SOV"/>
-                                                            <TextBlock Grid.Row="1" Grid.Column="1" FontSize="20" Text="Labor"/>
-                                                            <TextBlock Grid.Row="1" Grid.Column="2" FontSize="20" Text="Qty"/>
-                                                            <TextBlock Grid.Row="1" Grid.Column="3" FontSize="20" Text="Rate"/>
-                                                        </Grid>
-                                                    </Grid>
-                                                </DataGridTemplateColumn.Header>
-                                                <DataGridTemplateColumn.CellTemplate>
-                                                    <DataTemplate>
-                                                        <Grid>
+                                        <DataGrid GridLinesVisibility="None" AutoGenerateColumns="False" CanUserResizeColumns="False" AlternatingRowBackground="LightGray" HeadersVisibility="Column" Margin="10">
+                                            <DataGrid.Resources>
+                                                <Style TargetType="DataGridColumnHeader">
+                                                    <Setter Property="Background" Value="#C3D69B" />
+                                                    <Setter Property="Foreground" Value="Black" />
+                                                    <Setter Property="FontWeight" Value="Medium" />
+                                                    <Setter Property="FontSize" Value="14" />
+                                                    <Setter Property="Height" Value="50" />
+                                                    <Setter Property="Padding" Value="10,0,0,0" />
+                                                </Style>
+                                            </DataGrid.Resources>
+                                            <DataGrid.Columns>
+                                                <DataGridTemplateColumn>
+                                                    <DataGridTemplateColumn.Header>
+                                                        <Grid Width="580">
                                                             <Grid.RowDefinitions>
                                                                 <RowDefinition/>
                                                                 <RowDefinition/>
                                                             </Grid.RowDefinitions>
-                                                            <Grid.ColumnDefinitions>
-                                                                <ColumnDefinition/>
-                                                                <ColumnDefinition/>
-                                                                <ColumnDefinition/>
-                                                            </Grid.ColumnDefinitions>
-                                                            <TextBlock Grid.Row="1" Grid.Column="0" Text="{Binding Column3Data}"/>
-                                                            <TextBlock Grid.Row="1" Grid.Column="1" Text="{Binding Column4Data}"/>
-                                                            <TextBlock Grid.Row="1" Grid.Column="2" Text="{Binding Column5Data}"/>
+                                                            <Border BorderBrush="Gray" Width="500" BorderThickness="0,0,0,2">
+                                                                <TextBlock Text="Imported" HorizontalAlignment="Center"/>
+                                                            </Border>
+                                                            <Grid Grid.Row="1" Margin="20,0">
+                                                                <Grid.ColumnDefinitions>
+                                                                    <ColumnDefinition Width="1*" />
+                                                                    <ColumnDefinition Width="4*" />
+                                                                    <ColumnDefinition Width="1*" />
+                                                                    <ColumnDefinition Width="1*" />
+                                                                </Grid.ColumnDefinitions>
+                                                                <TextBlock Grid.Row="1" Grid.Column="0" Text="SOV"/>
+                                                                <TextBlock Grid.Row="1" Grid.Column="1" Text="Labor"/>
+                                                                <TextBlock Grid.Row="1" Grid.Column="2" Text="Qty"/>
+                                                                <TextBlock Grid.Row="1" Grid.Column="3" Text="Rate"/>
+                                                            </Grid>
                                                         </Grid>
-                                                    </DataTemplate>
-                                                </DataGridTemplateColumn.CellTemplate>
-                                            </DataGridTemplateColumn>
-                                            <DataGridTemplateColumn>
-                                                <DataGridTemplateColumn.Header>
-                                                    <Grid Width="580">
-                                                        <Grid.RowDefinitions>
-                                                            <RowDefinition/>
-                                                            <RowDefinition/>
-                                                        </Grid.RowDefinitions>
-                                                        <Border BorderBrush="Gray" Width="500" BorderThickness="0,0,0,2">
-                                                            <TextBlock Text="To be Added" FontSize="20" HorizontalAlignment="Center"/>
-                                                        </Border>
-                                                        <Grid Grid.Row="1">
-                                                            <Grid.ColumnDefinitions>
-                                                                <ColumnDefinition Width="1*" />
-                                                                <ColumnDefinition Width="1*" />
-                                                                <ColumnDefinition Width="1*" />
-                                                            </Grid.ColumnDefinitions>
-                                                            <TextBlock Grid.Row="1" FontSize="20" Grid.Column="0" Text="Material"/>
-                                                            <TextBlock Grid.Row="1" FontSize="20" Grid.Column="1" Text="Lot"/>
-                                                            <TextBlock Grid.Row="1" FontSize="20" Grid.Column="2" Text="Qty"/>
-                                                        </Grid>
-                                                    </Grid>
-                                                </DataGridTemplateColumn.Header>
-                                                <DataGridTemplateColumn.CellTemplate>
-                                                    <DataTemplate>
-                                                        <Grid>
+                                                    </DataGridTemplateColumn.Header>
+                                                    <DataGridTemplateColumn.CellTemplate>
+                                                        <DataTemplate>
+                                                            <Grid>
+                                                                <Grid.RowDefinitions>
+                                                                    <RowDefinition/>
+                                                                    <RowDefinition/>
+                                                                </Grid.RowDefinitions>
+                                                                <Grid.ColumnDefinitions>
+                                                                    <ColumnDefinition/>
+                                                                    <ColumnDefinition/>
+                                                                    <ColumnDefinition/>
+                                                                </Grid.ColumnDefinitions>
+                                                                <TextBlock Grid.Row="1" Grid.Column="0" Text="{Binding Column3Data}"/>
+                                                                <TextBlock Grid.Row="1" Grid.Column="1" Text="{Binding Column4Data}"/>
+                                                                <TextBlock Grid.Row="1" Grid.Column="2" Text="{Binding Column5Data}"/>
+                                                            </Grid>
+                                                        </DataTemplate>
+                                                    </DataGridTemplateColumn.CellTemplate>
+                                                </DataGridTemplateColumn>
+                                                <DataGridTemplateColumn>
+                                                    <DataGridTemplateColumn.Header>
+                                                        <Grid Width="580">
                                                             <Grid.RowDefinitions>
                                                                 <RowDefinition/>
                                                                 <RowDefinition/>
                                                             </Grid.RowDefinitions>
-                                                            <Grid.ColumnDefinitions>
-                                                                <ColumnDefinition/>
-                                                                <ColumnDefinition/>
-                                                                <ColumnDefinition/>
-                                                            </Grid.ColumnDefinitions>
-                                                            <TextBlock Grid.Row="1" Grid.Column="0" Text="{Binding Column3Data}"/>
-                                                            <TextBlock Grid.Row="1" Grid.Column="1" Text="{Binding Column4Data}"/>
-                                                            <TextBlock Grid.Row="1" Grid.Column="2" Text="{Binding Column5Data}"/>
+                                                            <Border BorderBrush="Gray" Width="500" BorderThickness="0,0,0,2">
+                                                                <TextBlock Text="To be Added" HorizontalAlignment="Center"/>
+                                                            </Border>
+                                                            <Grid Grid.Row="1" Margin="20,0">
+                                                                <Grid.ColumnDefinitions>
+                                                                    <ColumnDefinition Width="5*" />
+                                                                    <ColumnDefinition Width="1*" />
+                                                                    <ColumnDefinition Width="1*" />
+                                                                </Grid.ColumnDefinitions>
+                                                                <TextBlock Grid.Row="1" Grid.Column="0" Text="Labor"/>
+                                                                <TextBlock Grid.Row="1" Grid.Column="1" Text="Qty"/>
+                                                                <TextBlock Grid.Row="1" Grid.Column="2" Text="Rate" />
+                                                            </Grid>
                                                         </Grid>
-                                                    </DataTemplate>
-                                                </DataGridTemplateColumn.CellTemplate>
-                                            </DataGridTemplateColumn>
-                                        </DataGrid.Columns>
-                                    </DataGrid>
-                                </TabItem>
+                                                    </DataGridTemplateColumn.Header>
+                                                    <DataGridTemplateColumn.CellTemplate>
+                                                        <DataTemplate>
+                                                            <Grid>
+                                                                <Grid.RowDefinitions>
+                                                                    <RowDefinition/>
+                                                                    <RowDefinition/>
+                                                                </Grid.RowDefinitions>
+                                                                <Grid.ColumnDefinitions>
+                                                                    <ColumnDefinition/>
+                                                                    <ColumnDefinition/>
+                                                                    <ColumnDefinition/>
+                                                                </Grid.ColumnDefinitions>
+                                                                <TextBlock Grid.Row="1" Grid.Column="0" Text="{Binding Column3Data}"/>
+                                                                <TextBlock Grid.Row="1" Grid.Column="1" Text="{Binding Column4Data}"/>
+                                                                <TextBlock Grid.Row="1" Grid.Column="2" Text="{Binding Column5Data}"/>
+                                                            </Grid>
+                                                        </DataTemplate>
+                                                    </DataGridTemplateColumn.CellTemplate>
+                                                </DataGridTemplateColumn>
+                                            </DataGrid.Columns>
+                                        </DataGrid>
+                                    </TabItem>
                             </TabControl>
                         </Grid>
                     </Grid>
+                        
+                    </Border>
                 </TabItem>
             </TabControl>
         </Grid>

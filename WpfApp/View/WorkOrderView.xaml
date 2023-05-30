@@ -68,18 +68,32 @@
                         <Label Grid.Column="1" FontStyle="Italic">(click to select WO)</Label>
                     </Grid>
                     <Grid Grid.Row="1">
-                        <ListView x:Name="WOListView" ItemsSource="{Binding WorkOrders, Mode=TwoWay}" SelectedValuePath="WoID" SelectedValue="{Binding WorkOrderID, Mode=TwoWay}" SelectionChanged="SelectWorkOrdersList">
-                            <ListView.View>
-                                <GridView>
-                                    <GridViewColumn Header="WO" Width="50" DisplayMemberBinding="{Binding WoID}" />
-                                    <GridViewColumn Header="WO #" Width="60" DisplayMemberBinding="{Binding WoNumber}" />
-                                    <GridViewColumn Header="Crew" Width="100" DisplayMemberBinding="{Binding CrewName}">
-                                    </GridViewColumn>
-                                    <GridViewColumn Header="Started" Width="100" DisplayMemberBinding="{Binding DateStarted}"/>
-                                    <GridViewColumn Header="Completed" Width="100" DisplayMemberBinding="{Binding DateCompleted}" />
-                                </GridView>
-                            </ListView.View>
-                        </ListView>
+                        <DataGrid x:Name="WOListView" GridLinesVisibility="None" ItemsSource="{Binding WorkOrders, Mode=TwoWay}" SelectedValue="{Binding WorkOrderID, Mode=TwoWay}" SelectedValuePath="WoID" SelectionChanged="SelectWorkOrdersList" AutoGenerateColumns="False" CanUserResizeColumns="False" Background="White" HeadersVisibility="Column">
+                            <DataGrid.Resources>
+                                <Style TargetType="DataGridRow">
+                                    <Setter Property="Height" Value="15" />
+                                    <Setter Property="Background" Value="White" />
+                                    <Setter Property="BorderThickness" Value="0" />
+                                </Style>
+                                <Style TargetType="{x:Type DataGridCell}">
+                                    <Setter Property="VerticalAlignment" Value="Center" />
+                                    <Setter Property="BorderThickness" Value="0" />
+                                    <Style.Triggers>
+                                        <Trigger Property="IsSelected" Value="True">
+                                            <Setter Property="Background" Value="Black" />
+                                            <Setter Property="Foreground" Value="White" />
+                                        </Trigger>
+                                    </Style.Triggers>
+                                </Style>
+                            </DataGrid.Resources>
+                            <DataGrid.Columns>
+                                <DataGridTextColumn Width="4*" Binding="{Binding Path=WoID}" IsReadOnly="True" Header="WO" />
+                                <DataGridTextColumn Width="2*" Binding="{Binding Path=WoNumber}" IsReadOnly="True" Header="WO #" />
+                                <DataGridTextColumn Width="2*" Binding="{Binding Path=CrewName}" IsReadOnly="True" Header="Crew" />
+                                <DataGridTextColumn Width="2*" Binding="{Binding Path=DateStarted}" IsReadOnly="True" Header="Started" />
+                                <DataGridTextColumn Width="2*" Binding="{Binding Path=DateCompleted}" IsReadOnly="True" Header="Completed" />
+                            </DataGrid.Columns>
+                        </DataGrid>
                     </Grid>
                 </Grid>
                 <Grid Grid.Row="1" Margin="0,10">
@@ -224,63 +238,37 @@
                                     <RowDefinition Height="1*" />
                                 </Grid.RowDefinitions>
                                 <Grid>
-                                    <ListView x:Name="ProjectWorkOrderList" ItemsSource="{Binding ProjectWorkOrders, Mode=TwoWay}" Background="#E8E8E8">
-                                        <ListView.View>
-                                            <GridView>
-                                                <GridView.ColumnHeaderContainerStyle>
-                                                    <Style TargetType="{x:Type GridViewColumnHeader}">
-                                                        <Setter Property="Background" Value="#E8E8E8"/>
-                                                        <Setter Property="HorizontalAlignment" Value="Left" />
-                                                    </Style>
-                                                </GridView.ColumnHeaderContainerStyle>
-                                                <GridViewColumn Width="120" DisplayMemberBinding="{Binding SovAcronym}">
-                                                    <GridViewColumn.Header>
-                                                        <GridViewColumnHeader Tag="Name">SOV</GridViewColumnHeader>
-                                                    </GridViewColumn.Header>
-                                                </GridViewColumn>
-                                                <GridViewColumn Width="120" DisplayMemberBinding="{Binding MatName}">
-                                                    <GridViewColumn.Header>
-                                                        <GridViewColumnHeader Tag="Age">Material</GridViewColumnHeader>
-                                                    </GridViewColumn.Header>
-                                                </GridViewColumn>
-                                                <GridViewColumn Width="120" DisplayMemberBinding="{Binding ManufName}">
-                                                    <GridViewColumn.Header>
-                                                        <GridViewColumnHeader Tag="Gender">Manufacturer</GridViewColumnHeader>
-                                                    </GridViewColumn.Header>
-                                                </GridViewColumn>
-                                                <GridViewColumn Width="80" DisplayMemberBinding="{Binding Stock}">
-                                                    <GridViewColumn.Header>
-                                                        <GridViewColumnHeader Tag="Gender">Stock?</GridViewColumnHeader>
-                                                    </GridViewColumn.Header>
-                                                </GridViewColumn>
-                                                <GridViewColumn Width="100" DisplayMemberBinding="{Binding MatlReqd}">
-                                                    <GridViewColumn.Header>
-                                                        <GridViewColumnHeader Tag="Gender">Matl Reqd</GridViewColumnHeader>
-                                                    </GridViewColumn.Header>
-                                                </GridViewColumn>
-                                                <GridViewColumn Width="100" DisplayMemberBinding="{Binding QtyReqd}">
-                                                    <GridViewColumn.Header>
-                                                        <GridViewColumnHeader Tag="Gender">Qty Reqd</GridViewColumnHeader>
-                                                    </GridViewColumn.Header>
-                                                </GridViewColumn>
-                                                <GridViewColumn Width="100" DisplayMemberBinding="{Binding QtyOrd}">
-                                                    <GridViewColumn.Header>
-                                                        <GridViewColumnHeader Tag="Gender">Qty Ord</GridViewColumnHeader>
-                                                    </GridViewColumn.Header>
-                                                </GridViewColumn>
-                                                <GridViewColumn Width="80" DisplayMemberBinding="{Binding QtyRecvd}">
-                                                    <GridViewColumn.Header>
-                                                        <GridViewColumnHeader Tag="Gender">Qty Recvd</GridViewColumnHeader>
-                                                    </GridViewColumn.Header>
-                                                </GridViewColumn>
-                                                <GridViewColumn Width="100" DisplayMemberBinding="{Binding MatQty}">
-                                                    <GridViewColumn.Header>
-                                                        <GridViewColumnHeader Tag="Gender">Mat_Qty</GridViewColumnHeader>
-                                                    </GridViewColumn.Header>
-                                                </GridViewColumn>
-                                            </GridView>
-                                        </ListView.View>
-                                    </ListView>
+                                    <DataGrid x:Name="ProjectWorkOrderList" GridLinesVisibility="None" ItemsSource="{Binding ProjectWorkOrders, Mode=TwoWay}" SelectedValuePath="ProjMatID" AutoGenerateColumns="False" CanUserResizeColumns="False" Background="LightGray" HeadersVisibility="Column">
+                                        <DataGrid.Resources>
+                                            <Style TargetType="DataGridRow">
+                                                <Setter Property="Height" Value="15" />
+                                                <Setter Property="BorderThickness" Value="0" />
+                                            </Style>
+                                            <Style TargetType="{x:Type DataGridCell}">
+                                                <Setter Property="VerticalAlignment" Value="Center" />
+                                                <Setter Property="BorderThickness" Value="0" />
+                                                <Setter Property="Background" Value="LightGray" />
+                                                <Setter Property="Foreground" Value="Black" />
+                                                <Style.Triggers>
+                                                    <Trigger Property="IsSelected" Value="True">
+                                                        <Setter Property="Background" Value="Black" />
+                                                        <Setter Property="Foreground" Value="White" />
+                                                    </Trigger>
+                                                </Style.Triggers>
+                                            </Style>
+                                        </DataGrid.Resources>
+                                        <DataGrid.Columns>
+                                            <DataGridTextColumn Width="4*" Binding="{Binding Path=SovAcronym}" IsReadOnly="True" Header="SOV" />
+                                            <DataGridTextColumn Width="2*" Binding="{Binding Path=MatName}" IsReadOnly="True" Header="Material" />
+                                            <DataGridTextColumn Width="2*" Binding="{Binding Path=ManufName}" IsReadOnly="True" Header="Manufacturer" />
+                                            <DataGridTextColumn Width="2*" Binding="{Binding Path=Stock}" IsReadOnly="True" Header="Stock?" />
+                                            <DataGridTextColumn Width="3*" Binding="{Binding Path=MatlReqd}" IsReadOnly="True" Header="Matl Reqd" />
+                                            <DataGridTextColumn Width="2*" Binding="{Binding Path=QtyReqd}" IsReadOnly="True" Header="Qty Reqd" />
+                                            <DataGridTextColumn Width="2*" Binding="{Binding Path=QtyOrd}" IsReadOnly="True" Header="Qty Ord" />
+                                    <DataGridTextColumn Width="2*" Binding="{Binding Path=QtyRecvd}" IsReadOnly="True" Header="Qty Recvd" />
+                                    <DataGridTextColumn Width="2*" Binding="{Binding Path=MatQty}" IsReadOnly="True" Header="Mat_Qty" />
+                                        </DataGrid.Columns>
+                                    </DataGrid>
                                 </Grid>
                                 <Grid Grid.Row="1" Margin="0,10,0,0">
                                     <Grid.RowDefinitions>
@@ -315,53 +303,35 @@
                                     <RowDefinition Height="1*" />
                                 </Grid.RowDefinitions>
                                 <Grid>
-                                    <ListView x:Name="ProjectLaborList" Background="#E8E8E8">
-                                        <ListView.View>
-                                            <GridView>
-                                                <GridView.ColumnHeaderContainerStyle>
-                                                    <Style TargetType="{x:Type GridViewColumnHeader}">
-                                                        <Setter Property="Background" Value="#E8E8E8"/>
-                                                        <Setter Property="HorizontalAlignment" Value="Left" />
-                                                    </Style>
-                                                </GridView.ColumnHeaderContainerStyle>
-                                                <GridViewColumn Width="120" DisplayMemberBinding="{Binding SovAcronym}">
-                                                    <GridViewColumn.Header>
-                                                        <GridViewColumnHeader Tag="Name">SOV</GridViewColumnHeader>
-                                                    </GridViewColumn.Header>
-                                                </GridViewColumn>
-                                                <GridViewColumn Width="120" DisplayMemberBinding="{Binding Labor}">
-                                                    <GridViewColumn.Header>
-                                                        <GridViewColumnHeader Tag="Age">Labor</GridViewColumnHeader>
-                                                    </GridViewColumn.Header>
-                                                </GridViewColumn>
-                                                <GridViewColumn Width="120" DisplayMemberBinding="{Binding QtyReqd}">
-                                                    <GridViewColumn.Header>
-                                                        <GridViewColumnHeader Tag="Gender">Qty Reqd</GridViewColumnHeader>
-                                                    </GridViewColumn.Header>
-                                                </GridViewColumn>
-                                                <GridViewColumn Width="80" DisplayMemberBinding="{Binding UnitPrice}">
-                                                    <GridViewColumn.Header>
-                                                        <GridViewColumnHeader Tag="Gender">Unit Price</GridViewColumnHeader>
-                                                    </GridViewColumn.Header>
-                                                </GridViewColumn>
-                                                <GridViewColumn Width="100" DisplayMemberBinding="{Binding Total}">
-                                                    <GridViewColumn.Header>
-                                                        <GridViewColumnHeader Tag="Gender">Total</GridViewColumnHeader>
-                                                    </GridViewColumn.Header>
-                                                </GridViewColumn>
-                                                <GridViewColumn Width="100" DisplayMemberBinding="{Binding ChangeOrder}">
-                                                    <GridViewColumn.Header>
-                                                        <GridViewColumnHeader Tag="Gender">CO</GridViewColumnHeader>
-                                                    </GridViewColumn.Header>
-                                                </GridViewColumn>
-                                                <GridViewColumn Width="80" DisplayMemberBinding="{Binding Phase}">
-                                                    <GridViewColumn.Header>
-                                                        <GridViewColumnHeader Tag="Gender">Phase</GridViewColumnHeader>
-                                                    </GridViewColumn.Header>
-                                                </GridViewColumn>
-                                            </GridView>
-                                        </ListView.View>
-                                    </ListView>
+                                    <DataGrid x:Name="ProjectLaborList" GridLinesVisibility="None" ItemsSource="{Binding ProjectLabors, Mode=TwoWay}" SelectedValuePath="ProjMatID" AutoGenerateColumns="False" CanUserResizeColumns="False" Background="LightGray" HeadersVisibility="Column">
+                                        <DataGrid.Resources>
+                                            <Style TargetType="DataGridRow">
+                                                <Setter Property="Height" Value="15" />
+                                                <Setter Property="BorderThickness" Value="0" />
+                                            </Style>
+                                            <Style TargetType="{x:Type DataGridCell}">
+                                                <Setter Property="VerticalAlignment" Value="Center" />
+                                                <Setter Property="BorderThickness" Value="0" />
+                                                <Setter Property="Background" Value="LightGray" />
+                                                <Setter Property="Foreground" Value="Black" />
+                                                <Style.Triggers>
+                                                    <Trigger Property="IsSelected" Value="True">
+                                                        <Setter Property="Background" Value="Black" />
+                                                        <Setter Property="Foreground" Value="White" />
+                                                    </Trigger>
+                                                </Style.Triggers>
+                                            </Style>
+                                        </DataGrid.Resources>
+                                        <DataGrid.Columns>
+                                            <DataGridTextColumn Width="2*" Binding="{Binding Path=SovAcronym}" IsReadOnly="True" Header="SOV" />
+                                            <DataGridTextColumn Width="4*" Binding="{Binding Path=Labor}" IsReadOnly="True" Header="Labor" />
+                                            <DataGridTextColumn Width="2*" Binding="{Binding Path=QtyReqd}" IsReadOnly="True" Header="Qty Reqd" />
+                                            <DataGridTextColumn Width="2*" Binding="{Binding Path=UnitPrice}" IsReadOnly="True" Header="Unit Price" />
+                                            <DataGridTextColumn Width="2*" Binding="{Binding Path=Total}" IsReadOnly="True" Header="Total" />
+                                            <DataGridTextColumn Width="1*" Binding="{Binding Path=ChangeOrder}" IsReadOnly="True" Header="CO" />
+                                            <DataGridTextColumn Width="2*" Binding="{Binding Path=Phase}" IsReadOnly="True" Header="Phase" />
+                                        </DataGrid.Columns>
+                                    </DataGrid>
                                 </Grid>
                                 <Grid Grid.Row="1" Margin="0,10,0,0">
                                     <Grid.RowDefinitions>
