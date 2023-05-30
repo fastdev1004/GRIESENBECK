@@ -51,7 +51,36 @@
                 <RowDefinition Height="1*" />
             </Grid.RowDefinitions>
             <Grid>
-                <ListView Margin="10" x:Name="TrackShipList" ItemsSource="{Binding TrackShipRecvs, Mode=TwoWay}" SelectedValuePath="ProjMatID" SelectionChanged="SelectTrackShipList">
+                <DataGrid x:Name="TrackShipList" Grid.Column="0" Margin="10" GridLinesVisibility="None" ItemsSource="{Binding TrackShipRecvs, Mode=TwoWay}" SelectedValuePath="ProjMatID" SelectionChanged="SelectTrackShipList" AutoGenerateColumns="False" CanUserResizeColumns="False" Background="LightGray" HeadersVisibility="Column">
+                    <DataGrid.Resources>
+                        <Style TargetType="DataGridRow">
+                            <Setter Property="Height" Value="15" />
+                            <Setter Property="BorderThickness" Value="0" />
+                        </Style>
+                        <Style TargetType="{x:Type DataGridCell}">
+                            <Setter Property="VerticalAlignment" Value="Center" />
+                            <Setter Property="BorderThickness" Value="0" />
+                            <Setter Property="Background" Value="LightGray" />
+                            <Setter Property="Foreground" Value="Black" />
+                            <Style.Triggers>
+                                <Trigger Property="IsSelected" Value="True">
+                                    <Setter Property="Background" Value="Black" />
+                                    <Setter Property="Foreground" Value="White" />
+                                </Trigger>
+                            </Style.Triggers>
+                        </Style>
+                    </DataGrid.Resources>
+                    <DataGrid.Columns>
+                        <DataGridTextColumn Width="4*" Binding="{Binding Path=MaterialName}" IsReadOnly="True" Header="Material" />
+                        <DataGridTextColumn Width="2*" Binding="{Binding Path=SovName}" IsReadOnly="True" Header="SOV" />
+                        <DataGridTextColumn Width="2*" Binding="{Binding Path=ChangeOrder}" IsReadOnly="True" Header="Change Order#" />
+                        <DataGridTextColumn Width="2*" Binding="{Binding Path=Phase}" IsReadOnly="True" Header="Phase" />
+                        <DataGridTextColumn Width="3*" Binding="{Binding Path=Type}" IsReadOnly="True" Header="Type" />
+                        <DataGridTextColumn Width="2*" Binding="{Binding Path=Color}" IsReadOnly="True" Header="Color" />
+                        <DataGridTextColumn Width="2*" Binding="{Binding Path=QtyReqd}" IsReadOnly="True" Header="Qty Reqd" />
+                    </DataGrid.Columns>
+                </DataGrid>
+                <!--<ListView Margin="10" x:Name="TrackShipList" ItemsSource="{Binding TrackShipRecvs, Mode=TwoWay}" SelectedValuePath="ProjMatID" SelectionChanged="SelectTrackShipList">
                     <ListView.View>
                         <GridView>
                             <GridViewColumn Header="Material" Width="200" DisplayMemberBinding="{Binding MaterialName}" />
@@ -64,12 +93,12 @@
                             <GridViewColumn Header="Qty Reqd" Width="100" DisplayMemberBinding="{Binding QtyReqd}" />
                         </GridView>
                     </ListView.View>
-                    <!--<ListView.ItemContainerStyle>
+                    --><!--<ListView.ItemContainerStyle>
                         <Style TargetType="ListViewItem">
                             <EventSetter Event="PreviewMouseLeftButtonDown" Handler="MaterialListSelect" />
                         </Style>
-                    </ListView.ItemContainerStyle>-->
-                </ListView>
+                    </ListView.ItemContainerStyle>--><!--
+                </ListView>-->
             </Grid>
             <Grid Grid.Row="1">
                 <Grid.RowDefinitions>
