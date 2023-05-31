@@ -22,11 +22,17 @@
                 </Style>
             </Style.Resources>
         </Style>
-        <Style TargetType="DataGridColumnHeader">
+       
+        <Style x:Key="GridColumnHeaderBase" TargetType="DataGridColumnHeader">
             <Setter Property="Background" Value="#648278" />
             <Setter Property="Foreground" Value="White" />
-            <Setter Property="Height" Value="30" />
+            <Setter Property="Height" Value="40" />
             <Setter Property="Padding" Value="10,0,0,0" />
+            <Style.Resources>
+                <Style TargetType="TextBlock">
+                    <Setter Property="TextAlignment" Value="Center" />
+                </Style>
+            </Style.Resources>
         </Style>
         <Style TargetType="DataGridRow">
             <Setter Property="Height" Value="25" />
@@ -382,6 +388,18 @@
                         </Grid>
                         <Grid Grid.Row="1">
                             <DataGrid  GridLinesVisibility="None" ItemsSource="{Binding Customers}" AutoGenerateColumns="False" CanUserResizeColumns="False" AlternatingRowBackground="LightGray" HeadersVisibility="Column">
+                                <DataGrid.Resources>
+                                    <Style TargetType="DataGridColumnHeader" BasedOn="{StaticResource GridColumnHeaderBase}">
+                                        <Setter Property="Background" Value="#648278" />
+                                    </Style>
+                                    <Style TargetType="TextBox">
+                                        <Setter Property="BorderThickness" Value="0,0,0,1" />
+                                    </Style>
+                                    <Style TargetType="ComboBox">
+                                        <Setter Property="BorderThickness" Value="0,0,0,1" />
+                                        <Setter Property="IsEditable" Value="True" />
+                                    </Style>
+                                </DataGrid.Resources>
                                 <DataGrid.Columns>
                                     <DataGridTextColumn IsReadOnly="False" Width="3*" Binding="{Binding Path=ShortName}" Header="Short Name" />
                                     <DataGridTextColumn IsReadOnly="False" Width="3*" Binding="{Binding Path=FullName}" Header="Full Name" />
@@ -392,7 +410,6 @@
                                     <DataGridTextColumn IsReadOnly="False" Width="1*" Binding="{Binding Path=Zip}" Header="Zip" />
                                     <DataGridTextColumn IsReadOnly="False" Width="2*" Binding="{Binding Path=Phone}" Header="Phone" />
                                     <DataGridTextColumn IsReadOnly="False" Width="2*" Binding="{Binding Path=Fax}" Header="Fax" />
-                                    <!--<DataGridTextColumn IsReadOnly="False" Width="2*" Binding="{Binding Path=Email}" Header="Email" />-->
                                     <DataGridTemplateColumn Header="Active?" Width="1*">
                                         <DataGridTemplateColumn.CellTemplate>
                                             <DataTemplate>
@@ -572,6 +589,18 @@
                             </Grid>
                         </Grid>
                         <DataGrid Grid.Row="1" GridLinesVisibility="None" ItemsSource="{Binding Manufacturers}" AutoGenerateColumns="False" CanUserResizeColumns="False" AlternatingRowBackground="LightGray" HeadersVisibility="Column">
+                            <DataGrid.Resources>
+                                <Style TargetType="DataGridColumnHeader" BasedOn="{StaticResource GridColumnHeaderBase}">
+                                    <Setter Property="Background" Value="#5C83B4" />
+                                </Style>
+                                <Style TargetType="TextBox">
+                                    <Setter Property="BorderThickness" Value="0,0,0,1" />
+                                </Style>
+                                <Style TargetType="ComboBox">
+                                    <Setter Property="BorderThickness" Value="0,0,0,1" />
+                                    <Setter Property="IsEditable" Value="True" />
+                                </Style>
+                            </DataGrid.Resources>
                             <DataGrid.Columns>
                                 <DataGridTextColumn IsReadOnly="False" Width="4*" Binding="{Binding Path=ManufacturerName}" Header="Name" />
                                 <DataGridTextColumn IsReadOnly="False" Width="4*" Binding="{Binding Path=Address}" Header="Address" />
@@ -597,6 +626,18 @@
                             <ColumnDefinition Width="1*" />
                         </Grid.ColumnDefinitions>
                         <DataGrid  GridLinesVisibility="None" ItemsSource="{Binding Acronyms}" AutoGenerateColumns="False" CanUserResizeColumns="False" AlternatingRowBackground="LightGray" HeadersVisibility="Column">
+                            <DataGrid.Resources>
+                                <Style TargetType="DataGridColumnHeader" BasedOn="{StaticResource GridColumnHeaderBase}">
+                                    <Setter Property="Background" Value="#648278" />
+                                </Style>
+                                <Style TargetType="TextBox">
+                                    <Setter Property="BorderThickness" Value="0,0,0,1" />
+                                </Style>
+                                <Style TargetType="ComboBox">
+                                    <Setter Property="BorderThickness" Value="0,0,0,1" />
+                                    <Setter Property="IsEditable" Value="True" />
+                                </Style>
+                            </DataGrid.Resources>
                             <DataGrid.Columns>
                                 <DataGridTextColumn IsReadOnly="False" Width="5*" Binding="{Binding Path=AcronymDesc}" Header="Description" />
                                 <DataGridTextColumn IsReadOnly="False" Width="2*" Binding="{Binding Path=AcronymName}" Header="Acronym" />
@@ -618,6 +659,18 @@
                             <ColumnDefinition Width="1*" />
                         </Grid.ColumnDefinitions>
                         <DataGrid  GridLinesVisibility="None" ItemsSource="{Binding Materials}" AutoGenerateColumns="False" CanUserResizeColumns="False" AlternatingRowBackground="LightGray" HeadersVisibility="Column">
+                            <DataGrid.Resources>
+                                <Style TargetType="DataGridColumnHeader" BasedOn="{StaticResource GridColumnHeaderBase}">
+                                    <Setter Property="Background" Value="#BD623D" />
+                                </Style>
+                                <Style TargetType="TextBox">
+                                    <Setter Property="BorderThickness" Value="0,0,0,1" />
+                                </Style>
+                                <Style TargetType="ComboBox">
+                                    <Setter Property="BorderThickness" Value="0,0,0,1" />
+                                    <Setter Property="IsEditable" Value="True" />
+                                </Style>
+                            </DataGrid.Resources>
                             <DataGrid.Columns>
                                 <DataGridTextColumn IsReadOnly="False" Width="5*" Binding="{Binding Path=MatDesc}" Header="Material" />
                                 <DataGridTemplateColumn Header="Active?" Width="1*">
@@ -638,6 +691,18 @@
                             <ColumnDefinition Width="1*" />
                         </Grid.ColumnDefinitions>
                         <DataGrid  GridLinesVisibility="None" ItemsSource="{Binding Labors}" AutoGenerateColumns="False" CanUserResizeColumns="False" AlternatingRowBackground="LightGray" HeadersVisibility="Column">
+                            <DataGrid.Resources>
+                                <Style TargetType="DataGridColumnHeader" BasedOn="{StaticResource GridColumnHeaderBase}">
+                                    <Setter Property="Background" Value="#7A9F35" />
+                                </Style>
+                                <Style TargetType="TextBox">
+                                    <Setter Property="BorderThickness" Value="0,0,0,1" />
+                                </Style>
+                                <Style TargetType="ComboBox">
+                                    <Setter Property="BorderThickness" Value="0,0,0,1" />
+                                    <Setter Property="IsEditable" Value="True" />
+                                </Style>
+                            </DataGrid.Resources>
                             <DataGrid.Columns>
                                 <DataGridTextColumn IsReadOnly="False" Width="5*" Binding="{Binding Path=LaborDesc}" Header="Description" />
                                 <DataGridTextColumn IsReadOnly="False" Width="2*" Binding="{Binding Path=UnitPrice}" Header="Unit Price" />
@@ -659,6 +724,18 @@
                             <ColumnDefinition Width="1*" />
                         </Grid.ColumnDefinitions>
                         <DataGrid  GridLinesVisibility="None" ItemsSource="{Binding Salesmans}" AutoGenerateColumns="False" CanUserResizeColumns="False" AlternatingRowBackground="LightGray" HeadersVisibility="Column">
+                            <DataGrid.Resources>
+                                <Style TargetType="DataGridColumnHeader" BasedOn="{StaticResource GridColumnHeaderBase}">
+                                    <Setter Property="Background" Value="#648278" />
+                                </Style>
+                                <Style TargetType="TextBox">
+                                    <Setter Property="BorderThickness" Value="0,0,0,1" />
+                                </Style>
+                                <Style TargetType="ComboBox">
+                                    <Setter Property="BorderThickness" Value="0,0,0,1" />
+                                    <Setter Property="IsEditable" Value="True" />
+                                </Style>
+                            </DataGrid.Resources>
                             <DataGrid.Columns>
                                 <DataGridTextColumn IsReadOnly="False" Width="5*" Binding="{Binding Path=SalesmanName}" Header="Name" />
                                 <DataGridTextColumn IsReadOnly="False" Width="2*" Binding="{Binding Path=Phone}" Header="Phone" />
@@ -682,6 +759,18 @@
                             <ColumnDefinition Width="1*" />
                         </Grid.ColumnDefinitions>
                         <DataGrid  GridLinesVisibility="None" ItemsSource="{Binding Crews}" AutoGenerateColumns="False" CanUserResizeColumns="False" AlternatingRowBackground="LightGray" HeadersVisibility="Column">
+                            <DataGrid.Resources>
+                                <Style TargetType="DataGridColumnHeader" BasedOn="{StaticResource GridColumnHeaderBase}">
+                                    <Setter Property="Background" Value="#648278" />
+                                </Style>
+                                <Style TargetType="TextBox">
+                                    <Setter Property="BorderThickness" Value="0,0,0,1" />
+                                </Style>
+                                <Style TargetType="ComboBox">
+                                    <Setter Property="BorderThickness" Value="0,0,0,1" />
+                                    <Setter Property="IsEditable" Value="True" />
+                                </Style>
+                            </DataGrid.Resources>
                             <DataGrid.Columns>
                                 <DataGridTextColumn IsReadOnly="False" Width="5*" Binding="{Binding Path=CrewName}" Header="Name" />
                                 <DataGridTextColumn IsReadOnly="False" Width="2*" Binding="{Binding Path=Phone}" Header="Phone" />
@@ -705,6 +794,18 @@
                             <ColumnDefinition Width="1*" />
                         </Grid.ColumnDefinitions>
                         <DataGrid  GridLinesVisibility="None" ItemsSource="{Binding Installers}" AutoGenerateColumns="False" CanUserResizeColumns="False" AlternatingRowBackground="LightGray" HeadersVisibility="Column">
+                            <DataGrid.Resources>
+                                <Style TargetType="DataGridColumnHeader" BasedOn="{StaticResource GridColumnHeaderBase}">
+                                    <Setter Property="Background" Value="#5C83B4" />
+                                </Style>
+                                <Style TargetType="TextBox">
+                                    <Setter Property="BorderThickness" Value="0,0,0,1" />
+                                </Style>
+                                <Style TargetType="ComboBox">
+                                    <Setter Property="BorderThickness" Value="0,0,0,1" />
+                                    <Setter Property="IsEditable" Value="True" />
+                                </Style>
+                            </DataGrid.Resources>
                             <DataGrid.Columns>
                                 <DataGridTextColumn IsReadOnly="False" Width="2*" Binding="{Binding Path=InstallerName}" Header="Name" />
                                 <DataGridTextColumn IsReadOnly="False" Width="2*" Binding="{Binding Path=InstallerCell}" Header="Cell" />
@@ -712,7 +813,7 @@
                                 <DataGridTemplateColumn Header="Crew Assignment" Width="2*">
                                     <DataGridTemplateColumn.CellTemplate>
                                         <DataTemplate>
-                                            <ComboBox ItemsSource="{Binding Crews, Mode=TwoWay}" DisplayMemberPath="CrewName" SelectedValuePath="ID" SelectedValue="{Binding CrewID}" />
+                                            <ComboBox ItemsSource="{Binding DataContext.Crews, RelativeSource={RelativeSource AncestorType=local:AdminView}}" SelectedValuePath="ID" SelectedValue="{Binding CrewID, Mode=TwoWay}" DisplayMemberPath="CrewName" IsEditable="True" />
                                         </DataTemplate>
                                     </DataGridTemplateColumn.CellTemplate>
                                 </DataGridTemplateColumn>
@@ -739,6 +840,18 @@
                             <ColumnDefinition Width="1*" />
                         </Grid.ColumnDefinitions>
                         <DataGrid  GridLinesVisibility="None" ItemsSource="{Binding Architects}" AutoGenerateColumns="False" CanUserResizeColumns="False" AlternatingRowBackground="LightGray" HeadersVisibility="Column">
+                            <DataGrid.Resources>
+                                <Style TargetType="DataGridColumnHeader" BasedOn="{StaticResource GridColumnHeaderBase}">
+                                    <Setter Property="Background" Value="#648278" />
+                                </Style>
+                                <Style TargetType="TextBox">
+                                    <Setter Property="BorderThickness" Value="0,0,0,1" />
+                                </Style>
+                                <Style TargetType="ComboBox">
+                                    <Setter Property="BorderThickness" Value="0,0,0,1" />
+                                    <Setter Property="IsEditable" Value="True" />
+                                </Style>
+                            </DataGrid.Resources>
                             <DataGrid.Columns>
                                 <DataGridTextColumn IsReadOnly="False" Width="5*" Binding="{Binding Path=ArchCompany}" Header="Company" />
                                 <DataGridTextColumn IsReadOnly="False" Width="2*" Binding="{Binding Path=Contact}" Header="Contact" />
@@ -768,6 +881,18 @@
                             <ColumnDefinition Width="1*" />
                         </Grid.ColumnDefinitions>
                         <DataGrid  GridLinesVisibility="None" ItemsSource="{Binding Users}" AutoGenerateColumns="False" CanUserResizeColumns="False" AlternatingRowBackground="LightGray" HeadersVisibility="Column">
+                            <DataGrid.Resources>
+                                <Style TargetType="DataGridColumnHeader" BasedOn="{StaticResource GridColumnHeaderBase}">
+                                    <Setter Property="Background" Value="#648278" />
+                                </Style>
+                                <Style TargetType="TextBox">
+                                    <Setter Property="BorderThickness" Value="0,0,0,1" />
+                                </Style>
+                                <Style TargetType="ComboBox">
+                                    <Setter Property="BorderThickness" Value="0,0,0,1" />
+                                    <Setter Property="IsEditable" Value="True" />
+                                </Style>
+                            </DataGrid.Resources>
                             <DataGrid.Columns>
                                 <DataGridTextColumn IsReadOnly="False" Width="5*" Binding="{Binding Path=UserName}" Header="Computer Login" />
                                 <DataGridTextColumn IsReadOnly="False" Width="2*" Binding="{Binding Path=PersonName}" Header="User Name" />
@@ -792,6 +917,18 @@
                             <ColumnDefinition Width="1*" />
                         </Grid.ColumnDefinitions>
                         <DataGrid  GridLinesVisibility="None" ItemsSource="{Binding FreightCos}" AutoGenerateColumns="False" CanUserResizeColumns="False" AlternatingRowBackground="LightGray" HeadersVisibility="Column">
+                            <DataGrid.Resources>
+                                <Style TargetType="DataGridColumnHeader" BasedOn="{StaticResource GridColumnHeaderBase}">
+                                    <Setter Property="Background" Value="#648278" />
+                                </Style>
+                                <Style TargetType="TextBox">
+                                    <Setter Property="BorderThickness" Value="0,0,0,1" />
+                                </Style>
+                                <Style TargetType="ComboBox">
+                                    <Setter Property="BorderThickness" Value="0,0,0,1" />
+                                    <Setter Property="IsEditable" Value="True" />
+                                </Style>
+                            </DataGrid.Resources>
                             <DataGrid.Columns>
                                 <DataGridTextColumn IsReadOnly="False" Width="5*" Binding="{Binding Path=FreightName}" Header="Name" />
                                 <DataGridTextColumn IsReadOnly="False" Width="2*" Binding="{Binding Path=Contact}" Header="Phone" />

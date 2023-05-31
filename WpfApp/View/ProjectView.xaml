@@ -9,6 +9,7 @@
       d:DesignHeight="900" d:DesignWidth="1700"
       Title="ViewProject">
     <Page.Resources>
+        <!--<converter:SelectedValueToIntConverter x:Key="SelectedValueToIntConverter" />-->
         <Style x:Name="operation" TargetType="Button">
             <Setter Property="Width" Value="Auto" />
             <Setter Property="Height" Value="20" />
@@ -21,6 +22,39 @@
                     <Setter Property="CornerRadius" Value="3"></Setter>
                 </Style>
             </Style.Resources>
+        </Style>
+        <Style x:Key="GridColumnHeaderBase" TargetType="DataGridColumnHeader">
+            <Setter Property="Background" Value="#648278" />
+            <Setter Property="Foreground" Value="White" />
+            <Setter Property="Height" Value="40" />
+            <Setter Property="Padding" Value="10,0,0,0" />
+            <Style.Resources>
+                <Style TargetType="TextBlock">
+                    <Setter Property="TextAlignment" Value="Center" />
+                </Style>
+            </Style.Resources>
+        </Style>
+        <Style TargetType="DataGridRow">
+            <Setter Property="Height" Value="25" />
+            <Setter Property="BorderThickness" Value="0" />
+        </Style>
+        <Style TargetType="{x:Type DataGridCell}">
+            <Setter Property="VerticalAlignment" Value="Center" />
+            <Setter Property="BorderThickness" Value="0" />
+            <Setter Property="Foreground" Value="Black" />
+            <Setter Property="Margin" Value="4,0,4,0" />
+            <Style.Resources>
+                <Style TargetType="CheckBox">
+                    <Setter Property="VerticalAlignment" Value="Center" />
+                    <Setter Property="HorizontalAlignment" Value="Center" />
+                </Style>
+            </Style.Resources>
+            <Style.Triggers>
+                <Trigger Property="IsSelected" Value="True">
+                    <Setter Property="Background" Value="{x:Null}" />
+                    <Setter Property="BorderBrush" Value="{x:Null}" />
+                </Trigger>
+            </Style.Triggers>
         </Style>
     </Page.Resources>
     <Grid>
@@ -424,64 +458,89 @@
                 </TabItem>
                 <TabItem Header="SOV">
                     <Grid Margin="10">
-                        <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="25*"/>
-                            <ColumnDefinition Width="1629*"/>
-                        </Grid.ColumnDefinitions>
                         <Grid.RowDefinitions>
                             <RowDefinition Height="1*" />
                             <RowDefinition Height="1*" />
                         </Grid.RowDefinitions>
-                        <Grid Grid.ColumnSpan="2">
+                        <Grid>
                             <Grid.ColumnDefinitions>
-                                <ColumnDefinition Width="19*" />
-                                <ColumnDefinition Width="973*"/>
-                                <ColumnDefinition Width="662*" />
+                                <ColumnDefinition Width="1*" />
+                                <ColumnDefinition Width="1*" />
                             </Grid.ColumnDefinitions>
-                            <StackPanel Grid.ColumnSpan="2">
-                                <Grid Background="#648278" Height="30" Margin="2, 1, 2, 1">
-                                    <Grid.ColumnDefinitions>
-                                        <ColumnDefinition Width="3*"/>
-                                        <ColumnDefinition Width="1*"/>
-                                        <ColumnDefinition Width="4*"/>
-                                        <ColumnDefinition Width="2*"/>
-                                    </Grid.ColumnDefinitions>
-                                    <Label Content="Project Contacts" Foreground="white" HorizontalAlignment="Center" />
-                                    <Label Grid.Column="1" Content="Change Order" Foreground="white" HorizontalAlignment="Center" />
-                                    <Label Grid.Column="2" Content="Item" Foreground="white" HorizontalAlignment="Center" />
-                                    <Label Grid.Column="3" Content="Material Only" Foreground="white" HorizontalAlignment="Center" />
-                                </Grid>
-                                <Grid x:Name="SOVGrid1">
-                                    <Grid>
-                                        <Grid.ColumnDefinitions>
-                                            <ColumnDefinition Width="3*"/>
-                                            <ColumnDefinition Width="1*"/>
-                                            <ColumnDefinition Width="4*"/>
-                                            <ColumnDefinition Width="2*"/>
-                                        </Grid.ColumnDefinitions>
-                                        <ComboBox Margin="4,1,4,1" IsEditable="True" />
-                                        <ComboBox Grid.Column="1" Margin="4,1,4,1" IsEditable="True" />
-                                        <Border Grid.Column="2" Margin="4,1,4,1" BorderBrush="black" BorderThickness="0,0,0,1">
-                                            <TextBox />
-                                        </Border>
-                                        <CheckBox Grid.Column="3" HorizontalAlignment="Center" />
-                                    </Grid>
-                                </Grid>
-                            </StackPanel>
+                            <DataGrid ItemsSource="{Binding SovCOs}" GridLinesVisibility="None" AutoGenerateColumns="False" HeadersVisibility="Column" BorderThickness="0" Background="White">
+                                <DataGrid.Resources>
+                                    <Style TargetType="DataGridColumnHeader" BasedOn="{StaticResource GridColumnHeaderBase}">
+                                        <Setter Property="Background" Value="#5C83B4" />
+                                    </Style>
+                                    <Style TargetType="TextBox">
+                                        <Setter Property="BorderThickness" Value="0,0,0,1" />
+                                    </Style>
+                                    <Style TargetType="ComboBox">
+                                        <Setter Property="BorderThickness" Value="0,0,0,1" />
+                                        <Setter Property="IsEditable" Value="True" />
+                                    </Style>
+                                </DataGrid.Resources>
+                                <DataGrid.Columns>
+                                    <DataGridTemplateColumn Header="Acronym" Width="2*">
+                                        <DataGridTemplateColumn.CellTemplate>
+                                            <DataTemplate>
+                                                <ComboBox ItemsSource="{Binding DataContext.Acronyms, RelativeSource={RelativeSource AncestorType=local:ProjectView}}"
+                SelectedValuePath="AcronymName" SelectedValue="{Binding SovAcronym, Mode=TwoWay}" DisplayMemberPath="AcronymName">
+                                                    <!--<ComboBox.ItemTemplate>
+                                                        <DataTemplate>
+                                                            <TextBox Text="{Binding AcronymName}" />
+                                                        </DataTemplate>
+                                                    </ComboBox.ItemTemplate>-->
+                                                </ComboBox>
+                                            </DataTemplate>
+                                        </DataGridTemplateColumn.CellTemplate>
+                                    </DataGridTemplateColumn>
+                                    <DataGridTemplateColumn IsReadOnly="False" Width="2*">
+                                        <DataGridTemplateColumn.Header>
+                                            <TextBlock Text="Change Order #" TextWrapping="Wrap" />
+                                        </DataGridTemplateColumn.Header>
+                                        <DataGridTemplateColumn.CellTemplate>
+                                            <DataTemplate>
+                                                <ComboBox ItemsSource="{Binding DataContext.ChangeOrders, RelativeSource={RelativeSource AncestorType=local:ProjectView}}" DisplayMemberPath="CoItemNo" SelectedValuePath="CoItemNo" SelectedValue="{Binding CoItemNo, Mode=TwoWay}"></ComboBox>
+                                            </DataTemplate>
+                                        </DataGridTemplateColumn.CellTemplate>
+                                    </DataGridTemplateColumn>
+                                    <DataGridTemplateColumn IsReadOnly="False" Width="4*">
+                                        <DataGridTemplateColumn.Header>
+                                            <TextBlock Text="Item" TextWrapping="Wrap" />
+                                        </DataGridTemplateColumn.Header>
+                                        <DataGridTemplateColumn.CellTemplate>
+                                            <DataTemplate>
+                                                <TextBox Text="{Binding SovDesc}" />
+                                            </DataTemplate>
+                                        </DataGridTemplateColumn.CellTemplate>
+                                    </DataGridTemplateColumn>
+                                    <DataGridTemplateColumn IsReadOnly="False" Width="2*">
+                                        <DataGridTemplateColumn.Header>
+                                            <TextBlock Text="Material Only" TextWrapping="Wrap" />
+                                        </DataGridTemplateColumn.Header>
+                                        <DataGridTemplateColumn.CellTemplate>
+                                            <DataTemplate>
+                                                <CheckBox IsChecked="{Binding MatOnly}" />
+                                            </DataTemplate>
+                                        </DataGridTemplateColumn.CellTemplate>
+                                    </DataGridTemplateColumn>
+                                </DataGrid.Columns>
+                            </DataGrid>
                         </Grid>
-                        <Grid Grid.Row="1" Grid.ColumnSpan="2">
-                            <TabControl BorderBrush="Gainsboro">
+                        <Grid Grid.Row="1">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="5*" />
+                                <ColumnDefinition Width="1*" />
+                            </Grid.ColumnDefinitions>
+                            <TabControl Margin="10" BorderBrush="Gainsboro">
                                 <TabControl.Resources>
                                     <Style TargetType="TabItem">
                                         <Setter Property="Template">
                                             <Setter.Value>
                                                 <ControlTemplate TargetType="TabItem">
                                                     <Border Name="Border" BorderThickness="1,1,1,0" BorderBrush="Gainsboro" CornerRadius="4,4,0,0" Margin="2,0">
-                                                        <ContentPresenter x:Name="ContentSite"
-                                        VerticalAlignment="Center"
-                                        HorizontalAlignment="Center"
-                                        ContentSource="Header"
-                                        Margin="10,2"/>
+                                                        <ContentPresenter x:Name="ContentSite" VerticalAlignment="Center" HorizontalAlignment="Center" ContentSource="Header" Margin="10,2"/>
                                                     </Border>
                                                     <ControlTemplate.Triggers>
                                                         <Trigger Property="IsSelected" Value="True">
@@ -496,108 +555,207 @@
                                         </Setter>
                                     </Style>
                                 </TabControl.Resources>
-                                <TabItem Header="Materials">
-                                    <Grid>
-                                        <Grid.RowDefinitions>
-                                            <RowDefinition Height="Auto" />
-                                            <RowDefinition Height="*" />
-                                        </Grid.RowDefinitions>
-                                        <Grid Background="#BD623D" Height="30" Margin="2, 1, 2, 1">
-                                            <Grid.ColumnDefinitions>
-                                                <ColumnDefinition Width="2*"/>
-                                                <ColumnDefinition Width="1*"/>
-                                                <ColumnDefinition Width="1*"/>
-                                                <ColumnDefinition Width="4*"/>
-                                                <ColumnDefinition Width="3*"/>
-                                                <ColumnDefinition Width="3*"/>
-                                                <ColumnDefinition Width="2*"/>
-                                                <ColumnDefinition Width="1*"/>
-                                                <ColumnDefinition Width="2*"/>
-                                            </Grid.ColumnDefinitions>
-                                            <Label Content="SOV" Foreground="white" HorizontalAlignment="Center" />
-                                            <Label Grid.Column="1" Content="CO #" Foreground="white" HorizontalAlignment="Center" />
-                                            <Label Grid.Column="2" Content="Mat Only" Foreground="white" HorizontalAlignment="Center" />
-                                            <Label Grid.Column="3" Content="Material" Foreground="white" HorizontalAlignment="Center" />
-                                            <Label Grid.Column="4" Content="Phase" Foreground="white" HorizontalAlignment="Center" />
-                                            <Label Grid.Column="5" Content="Type" Foreground="white" HorizontalAlignment="Center" />
-                                            <Label Grid.Column="6" Content="Color" Foreground="white" HorizontalAlignment="Center" />
-                                            <Label Grid.Column="7" Content="Qty Reqd" Foreground="white" HorizontalAlignment="Center" />
-                                            <Label Grid.Column="9" Content="Total Cost" Foreground="white" HorizontalAlignment="Center" />
-                                        </Grid>
-                                        <ScrollViewer Grid.Row="1" VerticalScrollBarVisibility="Auto">
-                                            <Grid x:Name="SOVGrid2">
-                                                <Grid>
-                                                    <Grid.RowDefinitions>
-                                                        <RowDefinition Height="Auto" />
-                                                    </Grid.RowDefinitions>
-                                                    <Grid.ColumnDefinitions>
-                                                        <ColumnDefinition Width="2*"/>
-                                                        <ColumnDefinition Width="1*"/>
-                                                        <ColumnDefinition Width="1*"/>
-                                                        <ColumnDefinition Width="4*"/>
-                                                        <ColumnDefinition Width="3*"/>
-                                                        <ColumnDefinition Width="3*"/>
-                                                        <ColumnDefinition Width="2*"/>
-                                                        <ColumnDefinition Width="1*"/>
-                                                        <ColumnDefinition Width="3*"/>
-                                                    </Grid.ColumnDefinitions>
-                                                    <ComboBox Margin="4,1,4,1" IsEditable="True" />
-                                                    <Label Grid.Column="1" Content="1" />
-                                                    <CheckBox Grid.Column="2" HorizontalAlignment="Center" VerticalAlignment="Center" />
-                                                    <ComboBox Grid.Column="3" Margin="4,1,4,1" IsEditable="True" />
-                                                    <TextBox Grid.Column="4" Margin="4,1,4,1" />
-                                                    <TextBox Grid.Column="5" Margin="4,1,4,1" />
-                                                    <TextBox Grid.Column="6" Margin="4,1,4,1" />
-                                                    <TextBox Grid.Column="7" Margin="4,1,4,1" />
-                                                    <TextBox Grid.Column="8" Margin="4,1,4,1" />
-                                                </Grid>
-                                            </Grid>
-                                        </ScrollViewer>
-                                    </Grid>
+                                <TabItem Header="Materials" HorizontalAlignment="Left" Width="114">
+                                    <DataGrid Margin="10" ItemsSource="{Binding SovMaterials}" GridLinesVisibility="None" AutoGenerateColumns="False" HeadersVisibility="Column" BorderThickness="0" Background="White">
+                                        <DataGrid.Resources>
+                                            <Style TargetType="DataGridColumnHeader" BasedOn="{StaticResource GridColumnHeaderBase}">
+                                                <Setter Property="Background" Value="#BD623D" />
+                                            </Style>
+                                            <Style TargetType="TextBox">
+                                                <Setter Property="BorderThickness" Value="0,0,0,1" />
+                                            </Style>
+                                            <Style TargetType="ComboBox">
+                                                <Setter Property="BorderThickness" Value="0,0,0,1" />
+                                                <Setter Property="IsEditable" Value="True" />
+                                            </Style>
+                                        </DataGrid.Resources>
+                                        <DataGrid.Columns>
+                                            <DataGridTemplateColumn Header="Acronym" Width="2*">
+                                                <DataGridTemplateColumn.CellTemplate>
+                                                    <DataTemplate>
+                                                        <ComboBox ItemsSource="{Binding DataContext.Acronyms, RelativeSource={RelativeSource AncestorType=local:ProjectView}}"
+                SelectedValuePath="AcronymName" SelectedValue="{Binding AcronymName, Mode=TwoWay}" DisplayMemberPath="AcronymName">
+                                                        </ComboBox>
+                                                    </DataTemplate>
+                                                </DataGridTemplateColumn.CellTemplate>
+                                            </DataGridTemplateColumn>
+                                            <DataGridTemplateColumn IsReadOnly="False" Width="1*">
+                                                <DataGridTemplateColumn.Header>
+                                                    <TextBlock Text="CO #" TextWrapping="Wrap" />
+                                                </DataGridTemplateColumn.Header>
+                                                <DataGridTemplateColumn.CellTemplate>
+                                                    <DataTemplate>
+                                                        <TextBlock Text="{Binding CoItemNo}" HorizontalAlignment="Center" />
+                                                    </DataTemplate>
+                                                </DataGridTemplateColumn.CellTemplate>
+                                            </DataGridTemplateColumn>
+                                            <DataGridTemplateColumn IsReadOnly="False" Width="1*">
+                                                <DataGridTemplateColumn.Header>
+                                                    <TextBlock Text="Mat Only" TextWrapping="Wrap" />
+                                                </DataGridTemplateColumn.Header>
+                                                <DataGridTemplateColumn.CellTemplate>
+                                                    <DataTemplate>
+                                                        <CheckBox IsChecked="{Binding MatOnly, Mode=TwoWay}" />
+                                                    </DataTemplate>
+                                                </DataGridTemplateColumn.CellTemplate>
+                                            </DataGridTemplateColumn>
+                                            <DataGridTemplateColumn Header="Material" Width="4*">
+                                                <DataGridTemplateColumn.CellTemplate>
+                                                    <DataTemplate>
+                                                        <ComboBox ItemsSource="{Binding DataContext.Materials, RelativeSource={RelativeSource AncestorType=local:ProjectView}}"
+                SelectedValuePath="MatDesc" SelectedValue="{Binding AcronymDesc, Mode=TwoWay}" DisplayMemberPath="MatDesc">
+                                                        </ComboBox>
+                                                    </DataTemplate>
+                                                </DataGridTemplateColumn.CellTemplate>
+                                            </DataGridTemplateColumn>
+                                            <DataGridTemplateColumn IsReadOnly="False" Width="3*">
+                                                <DataGridTemplateColumn.Header>
+                                                    <TextBlock Text="Phase" TextWrapping="Wrap" />
+                                                </DataGridTemplateColumn.Header>
+                                                <DataGridTemplateColumn.CellTemplate>
+                                                    <DataTemplate>
+                                                        <TextBox Text="{Binding MatPhase, Mode=TwoWay}" />
+                                                    </DataTemplate>
+                                                </DataGridTemplateColumn.CellTemplate>
+                                            </DataGridTemplateColumn>
+                                            <DataGridTemplateColumn IsReadOnly="False" Width="3*">
+                                                <DataGridTemplateColumn.Header>
+                                                    <TextBlock Text="Type" TextWrapping="Wrap" />
+                                                </DataGridTemplateColumn.Header>
+                                                <DataGridTemplateColumn.CellTemplate>
+                                                    <DataTemplate>
+                                                        <TextBox Text="{Binding MatType, Mode=TwoWay}" />
+                                                    </DataTemplate>
+                                                </DataGridTemplateColumn.CellTemplate>
+                                            </DataGridTemplateColumn>
+                                            <DataGridTemplateColumn IsReadOnly="False" Width="2*">
+                                                <DataGridTemplateColumn.Header>
+                                                    <TextBlock Text="Color" TextWrapping="Wrap" />
+                                                </DataGridTemplateColumn.Header>
+                                                <DataGridTemplateColumn.CellTemplate>
+                                                    <DataTemplate>
+                                                        <TextBox Text="{Binding Color, Mode=TwoWay}" />
+                                                    </DataTemplate>
+                                                </DataGridTemplateColumn.CellTemplate>
+                                            </DataGridTemplateColumn>
+                                            <DataGridTemplateColumn IsReadOnly="False" Width="1*">
+                                                <DataGridTemplateColumn.Header>
+                                                    <TextBlock Text="Qty Reqd" TextWrapping="Wrap" />
+                                                </DataGridTemplateColumn.Header>
+                                                <DataGridTemplateColumn.CellTemplate>
+                                                    <DataTemplate>
+                                                        <TextBox Text="{Binding QtyReqd, Mode=TwoWay}" />
+                                                    </DataTemplate>
+                                                </DataGridTemplateColumn.CellTemplate>
+                                            </DataGridTemplateColumn>
+                                            <DataGridTemplateColumn IsReadOnly="False" Width="2*">
+                                                <DataGridTemplateColumn.Header>
+                                                    <TextBlock Text="Total Cost" TextWrapping="Wrap" />
+                                                </DataGridTemplateColumn.Header>
+                                                <DataGridTemplateColumn.CellTemplate>
+                                                    <DataTemplate>
+                                                        <TextBox Text="{Binding TotalCost, Mode=TwoWay}" />
+                                                    </DataTemplate>
+                                                </DataGridTemplateColumn.CellTemplate>
+                                            </DataGridTemplateColumn>
+                                        </DataGrid.Columns>
+                                    </DataGrid>
                                 </TabItem>
                                 <TabItem Header="Labor">
-                                    <StackPanel>
-                                        <Grid Background="#7A9F35" Height="30" Margin="2, 1, 2, 1">
-                                            <Grid.ColumnDefinitions>
-                                                <ColumnDefinition Width="3*"/>
-                                                <ColumnDefinition Width="3*"/>
-                                                <ColumnDefinition Width="5*"/>
-                                                <ColumnDefinition Width="4*"/>
-                                                <ColumnDefinition Width="3*"/>
-                                                <ColumnDefinition Width="3*"/>
-                                                <ColumnDefinition Width="3*"/>
-                                                <ColumnDefinition Width="1*"/>
-                                            </Grid.ColumnDefinitions>
-                                            <Label Content="SOV" Foreground="white" HorizontalAlignment="Center" />
-                                            <Label Grid.Column="1" Content="Change Order #" Foreground="white" HorizontalAlignment="Center" />
-                                            <Label Grid.Column="2" Content="Labor" Foreground="white" HorizontalAlignment="Center" />
-                                            <Label Grid.Column="3" Content="Phase" Foreground="white" HorizontalAlignment="Center" />
-                                            <Label Grid.Column="4" Content="Qty Reqd" Foreground="white" HorizontalAlignment="Center" />
-                                            <Label Grid.Column="5" Content="Unit Price" Foreground="white" HorizontalAlignment="Center" />
-                                            <Label Grid.Column="6" Content="Total" Foreground="white" HorizontalAlignment="Center" />
-                                            <Label Grid.Column="7" Content="Complete" Foreground="white" HorizontalAlignment="Center" />
-                                        </Grid>
-                                        <Grid>
-                                            <Grid.ColumnDefinitions>
-                                                <ColumnDefinition Width="3*"/>
-                                                <ColumnDefinition Width="3*"/>
-                                                <ColumnDefinition Width="5*"/>
-                                                <ColumnDefinition Width="4*"/>
-                                                <ColumnDefinition Width="3*"/>
-                                                <ColumnDefinition Width="3*"/>
-                                                <ColumnDefinition Width="3*"/>
-                                                <ColumnDefinition Width="1*"/>
-                                            </Grid.ColumnDefinitions>
-                                            <ComboBox Margin="4,1,4,1" IsEditable="True" />
-                                            <Label Grid.Column="1" Content="1" />
-                                            <CheckBox Grid.Column="2" HorizontalAlignment="Center" VerticalAlignment="Center" />
-                                            <TextBox Grid.Column="4" Margin="4,1,4,1" />
-                                            <TextBox Grid.Column="5" Margin="4,1,4,1" />
-                                            <TextBox Grid.Column="6" Margin="4,1,4,1" />
-                                            <Label Grid.Column="7" Margin="4,1,4,1" />
-                                            <CheckBox Grid.Column="8" Margin="4,1,4,1" HorizontalAlignment="Center" VerticalAlignment="Center" />
-                                        </Grid>
-                                    </StackPanel>
+                                    <DataGrid Margin="10" ItemsSource="{Binding ProjectLabors}" GridLinesVisibility="None" AutoGenerateColumns="False" HeadersVisibility="Column" BorderThickness="0" Background="White">
+                                        <DataGrid.Resources>
+                                            <Style TargetType="DataGridColumnHeader" BasedOn="{StaticResource GridColumnHeaderBase}">
+                                                <Setter Property="Background" Value="#7A9F35" />
+                                            </Style>
+                                            <Style TargetType="TextBox">
+                                                <Setter Property="BorderThickness" Value="0,0,0,1" />
+                                            </Style>
+                                            <Style TargetType="ComboBox">
+                                                <Setter Property="BorderThickness" Value="0,0,0,1" />
+                                                <Setter Property="IsEditable" Value="True" />
+                                            </Style>
+                                        </DataGrid.Resources>
+                                        <DataGrid.Columns>
+                                            <DataGridTemplateColumn Header="Acronym" Width="2*">
+                                                <DataGridTemplateColumn.CellTemplate>
+                                                    <DataTemplate>
+                                                        <ComboBox ItemsSource="{Binding DataContext.Acronyms, RelativeSource={RelativeSource AncestorType=local:ProjectView}}"
+                SelectedValuePath="AcronymName" SelectedValue="{Binding SovAcronym, Mode=TwoWay}" DisplayMemberPath="AcronymName">
+                                                        </ComboBox>
+                                                    </DataTemplate>
+                                                </DataGridTemplateColumn.CellTemplate>
+                                            </DataGridTemplateColumn>
+                                            <DataGridTemplateColumn IsReadOnly="False" Width="1*">
+                                                <DataGridTemplateColumn.Header>
+                                                    <TextBlock Text="CO #" TextWrapping="Wrap" />
+                                                </DataGridTemplateColumn.Header>
+                                                <DataGridTemplateColumn.CellTemplate>
+                                                    <DataTemplate>
+                                                        <TextBlock Text="{Binding ChangeOrder}" HorizontalAlignment="Center" />
+                                                    </DataTemplate>
+                                                </DataGridTemplateColumn.CellTemplate>
+                                            </DataGridTemplateColumn>
+                                            <DataGridTemplateColumn Header="Labor" Width="4*">
+                                                <DataGridTemplateColumn.CellTemplate>
+                                                    <DataTemplate>
+                                                        <ComboBox ItemsSource="{Binding DataContext.Labors, RelativeSource={RelativeSource AncestorType=local:ProjectView}}"
+                SelectedValuePath="LaborDesc" SelectedValue="{Binding Labor, Mode=TwoWay}" DisplayMemberPath="LaborDesc">
+                                                        </ComboBox>
+                                                    </DataTemplate>
+                                                </DataGridTemplateColumn.CellTemplate>
+                                            </DataGridTemplateColumn>
+                                            <DataGridTemplateColumn IsReadOnly="False" Width="3*">
+                                                <DataGridTemplateColumn.Header>
+                                                    <TextBlock Text="Phase" TextWrapping="Wrap" />
+                                                </DataGridTemplateColumn.Header>
+                                                <DataGridTemplateColumn.CellTemplate>
+                                                    <DataTemplate>
+                                                        <TextBox Text="{Binding Phase, Mode=TwoWay}" />
+                                                    </DataTemplate>
+                                                </DataGridTemplateColumn.CellTemplate>
+                                            </DataGridTemplateColumn>
+                                            <DataGridTemplateColumn IsReadOnly="False" Width="2*">
+                                                <DataGridTemplateColumn.Header>
+                                                    <TextBlock Text="Qty Reqd" TextWrapping="Wrap" />
+                                                </DataGridTemplateColumn.Header>
+                                                <DataGridTemplateColumn.CellTemplate>
+                                                    <DataTemplate>
+                                                        <TextBox Text="{Binding QtyReqd, Mode=TwoWay}" />
+                                                    </DataTemplate>
+                                                </DataGridTemplateColumn.CellTemplate>
+                                            </DataGridTemplateColumn>
+                                            <DataGridTemplateColumn IsReadOnly="False" Width="2*">
+                                                <DataGridTemplateColumn.Header>
+                                                    <TextBlock Text="Unit Price" TextWrapping="Wrap" />
+                                                </DataGridTemplateColumn.Header>
+                                                <DataGridTemplateColumn.CellTemplate>
+                                                    <DataTemplate>
+                                                        <TextBox Text="{Binding UnitPrice, Mode=TwoWay}" />
+                                                    </DataTemplate>
+                                                </DataGridTemplateColumn.CellTemplate>
+                                            </DataGridTemplateColumn>
+                                            <DataGridTemplateColumn IsReadOnly="False" Width="2*">
+                                                <DataGridTemplateColumn.Header>
+                                                    <TextBlock Text="Total" TextWrapping="Wrap" />
+                                                </DataGridTemplateColumn.Header>
+                                                <DataGridTemplateColumn.CellTemplate>
+                                                    <DataTemplate>
+                                                        <TextBlock Text="{Binding Total, Mode=TwoWay}" />
+                                                    </DataTemplate>
+                                                </DataGridTemplateColumn.CellTemplate>
+                                            </DataGridTemplateColumn>
+                                            <DataGridTemplateColumn IsReadOnly="False" Width="2*">
+                                                <DataGridTemplateColumn.Header>
+                                                    <TextBlock Text="Complete" TextWrapping="Wrap" />
+                                                </DataGridTemplateColumn.Header>
+                                                <DataGridTemplateColumn.CellTemplate>
+                                                    <DataTemplate>
+                                                        <CheckBox IsChecked="{Binding Complete, Mode=TwoWay}" />
+                                                    </DataTemplate>
+                                                </DataGridTemplateColumn.CellTemplate>
+                                            </DataGridTemplateColumn>
+                                        </DataGrid.Columns>
+                                    </DataGrid>
                                 </TabItem>
                             </TabControl>
                         </Grid>
@@ -615,7 +773,7 @@
                                 <ColumnDefinition Width="1*" />
                                 <ColumnDefinition Width="1*" />
                             </Grid.ColumnDefinitions>
-                            <DataGrid x:Name="TrackShipList" Grid.Column="0" Margin="10" GridLinesVisibility="None" ItemsSource="{Binding TrackShipRecvs, Mode=TwoWay}" SelectedValuePath="ProjMatID" SelectionChanged="SelectTrackShipList" AutoGenerateColumns="False" CanUserResizeColumns="False" Background="LightGray" HeadersVisibility="Column">
+                            <DataGrid x:Name="TrackShipList" Grid.Column="0" GridLinesVisibility="None" ItemsSource="{Binding TrackShipRecvs, Mode=TwoWay}" CanUserAddRows="False" SelectedValuePath="ProjMatID" SelectedValue="{Binding ProjMatID, Mode=TwoWay}" AutoGenerateColumns="False" CanUserResizeColumns="False" Background="LightGray" HeadersVisibility="Column">
                                 <DataGrid.Resources>
                                     <Style TargetType="DataGridRow">
                                         <Setter Property="Height" Value="15" />
@@ -652,135 +810,207 @@
                                 <RowDefinition Height="*" />
                             </Grid.RowDefinitions>
                             <Label Content="Tracking:" HorizontalAlignment="Left" />
-                            <Grid Grid.Row="1" Background="#BD623D" Height="36" Margin="2, 1, 2, 1">
-                                <Grid.Resources>
-                                    <Style TargetType="{x:Type Label}">
-                                        <Setter Property="VerticalAlignment" Value="Center"/>
-                                        <Setter Property="HorizontalAlignment" Value="Center"/>
-                                        <Setter Property="Foreground" Value="White" />
+                            <DataGrid Grid.Row="1" ItemsSource="{Binding ProjectMatTrackings}" GridLinesVisibility="None" AutoGenerateColumns="False" CanUserResizeColumns="False" HeadersVisibility="Column" BorderThickness="0" Background="White">
+                                <DataGrid.Resources>
+                                    <Style TargetType="DataGridColumnHeader" BasedOn="{StaticResource GridColumnHeaderBase}">
+                                        <Setter Property="Background" Value="#BD623D" />
                                     </Style>
-                                    <Style TargetType="{x:Type TextBlock}">
-                                        <Setter Property="VerticalAlignment" Value="Center"/>
-                                        <Setter Property="TextAlignment" Value="Center"/>
-                                        <Setter Property="TextWrapping" Value="Wrap" />
-                                        <Setter Property="Foreground" Value="White" />
+                                    <Style TargetType="TextBox">
+                                        <Setter Property="BorderThickness" Value="0,0,0,1" />
                                     </Style>
-                                </Grid.Resources>
-                                <Grid.ColumnDefinitions>
-                                    <ColumnDefinition Width="2.5*"/>
-                                    <ColumnDefinition Width="1.5*"/>
-                                    <ColumnDefinition Width="4*"/>
-                                    <ColumnDefinition Width="1*"/>
-                                    <ColumnDefinition Width="2*"/>
-                                    <ColumnDefinition Width="2*"/>
-                                    <ColumnDefinition Width="2*"/>
-                                    <ColumnDefinition Width="2.5*"/>
-                                    <ColumnDefinition Width="2.5*"/>
-                                    <ColumnDefinition Width="2.5*"/>
-                                    <ColumnDefinition Width="2.5*"/>
-                                    <ColumnDefinition Width="2.5*"/>
-                                    <ColumnDefinition Width="1*"/>
-                                    <ColumnDefinition Width="1*"/>
-                                    <ColumnDefinition Width="1*"/>
-                                    <ColumnDefinition Width="1*"/>
-                                    <ColumnDefinition Width="2.5*"/>
-                                    <ColumnDefinition Width="1*"/>
-                                    <ColumnDefinition Width="2.5*"/>
-                                    <ColumnDefinition Width="1.5*"/>
-                                    <ColumnDefinition Width="1.5*"/>
-                                </Grid.ColumnDefinitions>
-                                <Label Content="Matl Reqd"/>
-                                <Label Grid.Column="1" Content="Qty Ord" />
-                                <Label Grid.Column="2" Content="Manufacturer" />
-                                <Label Grid.Column="3" Content="Stock" />
-                                <Label Grid.Column="4" Content="Lead Time" />
-                                <Label Grid.Column="5" Content="Manuf Ord #" />
-                                <Label Grid.Column="6" Content="GAP PO #" />
-                                <Label Grid.Column="7" Content="Shop Reqst" />
-                                <Label Grid.Column="8" Content="Shop Recvd" />
-                                <Label Grid.Column="9" Content="Subm Issue" />
-                                <Label Grid.Column="10" Content="Resubmit" />
-                                <Label Grid.Column="11" Content="Subm Appr" />
-                                <TextBlock Grid.Column="12" Text="No Subm"  />
-                                <TextBlock Grid.Column="13" Text="Ship to Job?" />
-                                <TextBlock Grid.Column="14" Text="Need FM?" />
-                                <TextBlock Grid.Column="15" Text="Guar Dim" />
-                                <Label Grid.Column="16" Content="Field Dim" />
-                                <TextBlock Grid.Column="17" Text="Finals Rev" />
-                                <Label Grid.Column="18" Content="R.F.F." />
-                                <TextBlock Grid.Column="19" Text="Order Complete" />
-                                <TextBlock Grid.Column="20" Text="Labor Complete" />
-                            </Grid>
-                            <ScrollViewer Grid.Row="2" VerticalScrollBarVisibility="Auto">
-                                <Grid x:Name="TrackingGrid">
-                                    <Grid.Resources>
-                                        <Style TargetType="{x:Type CheckBox}">
-                                            <Setter Property="VerticalAlignment" Value="Center"/>
-                                            <Setter Property="HorizontalAlignment" Value="Center"/>
-                                        </Style>
-                                        <Style TargetType="{x:Type TextBox}">
-                                            <Setter Property="Margin" Value="4,1,4,1" />
-                                            <Setter Property="BorderThickness" Value="0,0,0,1" />
-                                            <Setter Property="VerticalContentAlignment" Value="Center"/>
-                                        </Style>
-                                        <Style TargetType="{x:Type DatePicker}">
-                                            <Setter Property="Margin" Value="4,1,4,1" />
-                                        </Style>
-                                        <Style TargetType="{x:Type ComboBox}">
-                                            <Setter Property="Margin" Value="4,1,4,1" />
-                                        </Style>
-                                    </Grid.Resources>
-                                    <Grid>
-                                        <Grid.RowDefinitions>
-                                            <RowDefinition Height="Auto" />
-                                        </Grid.RowDefinitions>
-                                        <Grid.ColumnDefinitions>
-                                            <ColumnDefinition Width="2.5*"/>
-                                            <ColumnDefinition Width="1.5*"/>
-                                            <ColumnDefinition Width="4*"/>
-                                            <ColumnDefinition Width="1*"/>
-                                            <ColumnDefinition Width="2*"/>
-                                            <ColumnDefinition Width="2*"/>
-                                            <ColumnDefinition Width="2*"/>
-                                            <ColumnDefinition Width="2.5*"/>
-                                            <ColumnDefinition Width="2.5*"/>
-                                            <ColumnDefinition Width="2.5*"/>
-                                            <ColumnDefinition Width="2.5*"/>
-                                            <ColumnDefinition Width="2.5*"/>
-                                            <ColumnDefinition Width="1*"/>
-                                            <ColumnDefinition Width="1*"/>
-                                            <ColumnDefinition Width="1*"/>
-                                            <ColumnDefinition Width="1*"/>
-                                            <ColumnDefinition Width="2.5*"/>
-                                            <ColumnDefinition Width="1*"/>
-                                            <ColumnDefinition Width="2.5*"/>
-                                            <ColumnDefinition Width="1.5*"/>
-                                            <ColumnDefinition Width="1.5*"/>
-                                        </Grid.ColumnDefinitions>
-                                        <TextBox />
-                                        <TextBox Grid.Column="1" />
-                                        <ComboBox Grid.Column="2" />
-                                        <CheckBox Grid.Column="3" />
-                                        <TextBox Grid.Column="4" />
-                                        <TextBox Grid.Column="5" />
-                                        <TextBox Grid.Column="6" />
-                                        <DatePicker Grid.Column="7" />
-                                        <DatePicker Grid.Column="8" />
-                                        <DatePicker Grid.Column="9" />
-                                        <DatePicker Grid.Column="10" />
-                                        <DatePicker Grid.Column="11" />
-                                        <CheckBox Grid.Column="12" />
-                                        <CheckBox Grid.Column="13" />
-                                        <CheckBox Grid.Column="14" />
-                                        <CheckBox Grid.Column="15" />
-                                        <TextBox Grid.Column="16" />
-                                        <CheckBox Grid.Column="17" />
-                                        <TextBox Grid.Column="18" />
-                                        <CheckBox Grid.Column="19" />
-                                        <CheckBox Grid.Column="20" />
-                                    </Grid>
-                                </Grid>
-                            </ScrollViewer>
+                                    <Style TargetType="ComboBox">
+                                        <Setter Property="BorderThickness" Value="0,0,0,1" />
+                                    </Style>
+                                </DataGrid.Resources>
+                                <DataGrid.Columns>
+                                    <DataGridTemplateColumn IsReadOnly="False" Width="2*">
+                                        <DataGridTemplateColumn.Header>
+                                            <TextBlock Text="Matl Reqd" TextWrapping="Wrap" />
+                                        </DataGridTemplateColumn.Header>
+                                        <DataGridTemplateColumn.CellTemplate>
+                                            <DataTemplate>
+                                                <DatePicker SelectedDate="{Binding MatReqDate}"/>
+                                            </DataTemplate>
+                                        </DataGridTemplateColumn.CellTemplate>
+                                    </DataGridTemplateColumn>
+                                    <DataGridTemplateColumn IsReadOnly="False" Width="2*">
+                                        <DataGridTemplateColumn.Header>
+                                            <TextBlock Text="Qty Ord" TextWrapping="Wrap" />
+                                        </DataGridTemplateColumn.Header>
+                                        <DataGridTemplateColumn.CellTemplate>
+                                            <DataTemplate>
+                                                <TextBox Text="{Binding QtyOrd}" />
+                                            </DataTemplate>
+                                        </DataGridTemplateColumn.CellTemplate>
+                                    </DataGridTemplateColumn>
+                                    <DataGridTemplateColumn Header="Manafacturer" Width="3*">
+                                        <DataGridTemplateColumn.CellTemplate>
+                                            <DataTemplate>
+                                                <ComboBox ItemsSource="{Binding DataContext.Manufacturers, RelativeSource={RelativeSource AncestorType=local:ProjectView}}"
+                SelectedValuePath="ID" SelectedValue="{Binding ManufacturerID, Mode=TwoWay}" DisplayMemberPath="ManufacturerName">
+                                                </ComboBox>
+                                            </DataTemplate>
+                                        </DataGridTemplateColumn.CellTemplate>
+                                    </DataGridTemplateColumn>
+                                    <DataGridTemplateColumn IsReadOnly="False" Width="1*">
+                                        <DataGridTemplateColumn.Header>
+                                            <TextBlock Text="Stock?" TextWrapping="Wrap" />
+                                        </DataGridTemplateColumn.Header>
+                                        <DataGridTemplateColumn.CellTemplate>
+                                            <DataTemplate>
+                                                <CheckBox IsChecked="{Binding TakeFromStock}" />
+                                            </DataTemplate>
+                                        </DataGridTemplateColumn.CellTemplate>
+                                    </DataGridTemplateColumn>
+                                    <DataGridTemplateColumn IsReadOnly="False" Width="2*">
+                                        <DataGridTemplateColumn.Header>
+                                            <TextBlock Text="Lead Time" TextWrapping="Wrap" />
+                                        </DataGridTemplateColumn.Header>
+                                        <DataGridTemplateColumn.CellTemplate>
+                                            <DataTemplate>
+                                                <TextBox Text="{Binding LeadTime}" />
+                                            </DataTemplate>
+                                        </DataGridTemplateColumn.CellTemplate>
+                                    </DataGridTemplateColumn>
+                                    <DataGridTemplateColumn IsReadOnly="False" Width="2*">
+                                        <DataGridTemplateColumn.Header>
+                                            <TextBlock Text="Manuf Ord #" TextWrapping="Wrap" />
+                                        </DataGridTemplateColumn.Header>
+                                        <DataGridTemplateColumn.CellTemplate>
+                                            <DataTemplate>
+                                                <TextBox Text="{Binding ManuOrderNo}" />
+                                            </DataTemplate>
+                                        </DataGridTemplateColumn.CellTemplate>
+                                    </DataGridTemplateColumn>
+                                    <DataGridTemplateColumn IsReadOnly="False" Width="2*">
+                                        <DataGridTemplateColumn.Header>
+                                            <TextBlock Text="GAP PO#" TextWrapping="Wrap" />
+                                        </DataGridTemplateColumn.Header>
+                                        <DataGridTemplateColumn.CellTemplate>
+                                            <DataTemplate>
+                                                <TextBox Text="{Binding PoNumber}"/>
+                                            </DataTemplate>
+                                        </DataGridTemplateColumn.CellTemplate>
+                                    </DataGridTemplateColumn>
+                                    <DataGridTemplateColumn IsReadOnly="False" Width="2*">
+                                        <DataGridTemplateColumn.Header>
+                                            <TextBlock Text="Shop Reqst" TextWrapping="Wrap" />
+                                        </DataGridTemplateColumn.Header>
+                                        <DataGridTemplateColumn.CellTemplate>
+                                            <DataTemplate>
+                                                <DatePicker SelectedDate="{Binding ShopReqDate}" />
+                                            </DataTemplate>
+                                        </DataGridTemplateColumn.CellTemplate>
+                                    </DataGridTemplateColumn>
+                                    <DataGridTemplateColumn IsReadOnly="False" Width="2*">
+                                        <DataGridTemplateColumn.Header>
+                                            <TextBlock Text="Shop Recvd" TextWrapping="Wrap" />
+                                        </DataGridTemplateColumn.Header>
+                                        <DataGridTemplateColumn.CellTemplate>
+                                            <DataTemplate>
+                                                <DatePicker SelectedDate="{Binding ShopRecvDate}" />
+                                            </DataTemplate>
+                                        </DataGridTemplateColumn.CellTemplate>
+                                    </DataGridTemplateColumn>
+                                    <DataGridTemplateColumn IsReadOnly="False" Width="2*">
+                                        <DataGridTemplateColumn.Header>
+                                            <TextBlock Text="Subm Issue" TextWrapping="Wrap" />
+                                        </DataGridTemplateColumn.Header>
+                                        <DataGridTemplateColumn.CellTemplate>
+                                            <DataTemplate>
+                                                <DatePicker SelectedDate="{Binding SubmIssue}" />
+                                            </DataTemplate >
+                                        </DataGridTemplateColumn.CellTemplate>
+                                    </DataGridTemplateColumn>
+                                    <DataGridTemplateColumn IsReadOnly="False" Width="2*">
+                                        <DataGridTemplateColumn.Header>
+                                            <TextBlock Text="Resubmit" TextWrapping="Wrap" />
+                                        </DataGridTemplateColumn.Header>
+                                        <DataGridTemplateColumn.CellTemplate>
+                                            <DataTemplate>
+                                                <DatePicker SelectedDate="{Binding Resubmit}" />
+                                            </DataTemplate>
+                                        </DataGridTemplateColumn.CellTemplate>
+                                    </DataGridTemplateColumn>
+                                    <DataGridTemplateColumn IsReadOnly="False" Width="2*">
+                                        <DataGridTemplateColumn.Header>
+                                            <TextBlock Text="Subm Appr" TextWrapping="Wrap" />
+                                        </DataGridTemplateColumn.Header>
+                                        <DataGridTemplateColumn.CellTemplate>
+                                            <DataTemplate>
+                                                <DatePicker SelectedDate="{Binding SubmAppr}" />
+                                            </DataTemplate>
+                                        </DataGridTemplateColumn.CellTemplate>
+                                    </DataGridTemplateColumn>
+                                    <DataGridTemplateColumn IsReadOnly="False" Width="1*">
+                                        <DataGridTemplateColumn.Header>
+                                            <TextBlock Text="No Subm" TextWrapping="Wrap" />
+                                        </DataGridTemplateColumn.Header>
+                                        <DataGridTemplateColumn.CellTemplate>
+                                            <DataTemplate>
+                                                <CheckBox IsChecked="{Binding NoSubm}" />
+                                            </DataTemplate>
+                                        </DataGridTemplateColumn.CellTemplate>
+                                    </DataGridTemplateColumn>
+                                    <DataGridTemplateColumn IsReadOnly="False" Width="1*">
+                                        <DataGridTemplateColumn.Header>
+                                            <TextBlock Text="Ship to Job?" TextWrapping="Wrap" />
+                                        </DataGridTemplateColumn.Header>
+                                        <DataGridTemplateColumn.CellTemplate>
+                                            <DataTemplate>
+                                                <CheckBox IsChecked="{Binding ShipToJob}" />
+                                            </DataTemplate>
+                                        </DataGridTemplateColumn.CellTemplate>
+                                    </DataGridTemplateColumn>
+                                    <DataGridTemplateColumn IsReadOnly="False" Width="1*">
+                                        <DataGridTemplateColumn.Header>
+                                            <TextBlock Text="Need FM?" TextWrapping="Wrap" />
+                                        </DataGridTemplateColumn.Header>
+                                        <DataGridTemplateColumn.CellTemplate>
+                                            <DataTemplate>
+                                                <CheckBox IsChecked="{Binding NeedFM}" />
+                                            </DataTemplate>
+                                        </DataGridTemplateColumn.CellTemplate>
+                                    </DataGridTemplateColumn>
+                                    <DataGridTemplateColumn IsReadOnly="False" Width="1*">
+                                        <DataGridTemplateColumn.Header>
+                                            <TextBlock Text="Guar Dim" TextWrapping="Wrap" />
+                                        </DataGridTemplateColumn.Header>
+                                        <DataGridTemplateColumn.CellTemplate>
+                                            <DataTemplate>
+                                                <CheckBox IsChecked="{Binding GuarDim}" />
+                                            </DataTemplate>
+                                        </DataGridTemplateColumn.CellTemplate>
+                                    </DataGridTemplateColumn>
+                                    <DataGridTemplateColumn IsReadOnly="False" Width="2*">
+                                        <DataGridTemplateColumn.Header>
+                                            <TextBlock Text="Field Dim" TextWrapping="Wrap" />
+                                        </DataGridTemplateColumn.Header>
+                                        <DataGridTemplateColumn.CellTemplate>
+                                            <DataTemplate>
+                                                <DatePicker SelectedDate="{Binding FieldDim}" BorderThickness="0" />
+                                            </DataTemplate>
+                                        </DataGridTemplateColumn.CellTemplate>
+                                    </DataGridTemplateColumn>
+                                    <DataGridTemplateColumn IsReadOnly="False" Width="1*">
+                                        <DataGridTemplateColumn.Header>
+                                            <TextBlock Text="Finals Rev" TextWrapping="Wrap" />
+                                        </DataGridTemplateColumn.Header>
+                                        <DataGridTemplateColumn.CellTemplate>
+                                            <DataTemplate>
+                                                <CheckBox IsChecked="{Binding FinalsRev}" />
+                                            </DataTemplate>
+                                        </DataGridTemplateColumn.CellTemplate>
+                                    </DataGridTemplateColumn>
+                                    <DataGridTemplateColumn IsReadOnly="False" Header="R.F.F" Width="2*">
+                                        <DataGridTemplateColumn.CellTemplate>
+                                            <DataTemplate>
+                                                <DatePicker SelectedDate="{Binding RFF}" />
+                                            </DataTemplate>
+                                        </DataGridTemplateColumn.CellTemplate>
+                                    </DataGridTemplateColumn>
+                                </DataGrid.Columns>
+                            </DataGrid>
                         </Grid>
                         <Grid Grid.Row="2">
                             <Grid.RowDefinitions>
@@ -789,102 +1019,178 @@
                                 <RowDefinition Height="*" />
                             </Grid.RowDefinitions>
                             <Label Content="Shipping:" HorizontalAlignment="Left" />
-                            <Grid Grid.Row="1" Background="#A0783C" Height="30" Margin="2, 1, 2, 1">
-                                <Grid.ColumnDefinitions>
-                                    <ColumnDefinition Width="2.5*"/>
-                                    <ColumnDefinition Width="2.5*"/>
-                                    <ColumnDefinition Width="2.5*"/>
-                                    <ColumnDefinition Width="2.5*"/>
-                                    <ColumnDefinition Width="2.5*"/>
-                                    <ColumnDefinition Width="4*"/>
-                                    <ColumnDefinition Width="3*"/>
-                                    <ColumnDefinition Width="2.5*"/>
-                                    <ColumnDefinition Width="2.5*"/>
-                                    <ColumnDefinition Width="2*"/>
-                                    <ColumnDefinition Width="2.5*"/>
-                                    <ColumnDefinition Width="2*"/>
-                                    <ColumnDefinition Width="2*"/>
-                                    <ColumnDefinition Width="2*"/>
-                                    <ColumnDefinition Width="3*"/>
-                                    <ColumnDefinition Width="3*"/>
-                                </Grid.ColumnDefinitions>
-                                <Label Content="Sched Ship" Foreground="white" HorizontalAlignment="Center" />
-                                <Label Grid.Column="1" Content="Est Deliv Date" Foreground="white" HorizontalAlignment="Center" />
-                                <Label Grid.Column="2" Content="Est Install Date" Foreground="white" HorizontalAlignment="Center" />
-                                <Label Grid.Column="3" Content="Est Weight" Foreground="white" HorizontalAlignment="Center" />
-                                <Label Grid.Column="4" Content="Est Pallets #" Foreground="white" HorizontalAlignment="Center" />
-                                <Label Grid.Column="5" Content="Freight Co" Foreground="white" HorizontalAlignment="Center" />
-                                <Label Grid.Column="6" Content="Tracking #" Foreground="white" HorizontalAlignment="Center" />
-                                <Label Grid.Column="7" Content="Date Shipped" Foreground="white" HorizontalAlignment="Center" />
-                                <Label Grid.Column="8" Content="Qty Shipped" Foreground="white" HorizontalAlignment="Center" />
-                                <Label Grid.Column="9" Content="# Pallets" Foreground="white" HorizontalAlignment="Center" />
-                                <Label Grid.Column="10" Content= "Date Recvd" Foreground="white" HorizontalAlignment="Center" />
-                                <Label Grid.Column="11" Content="Qty Recvd" Foreground="white" HorizontalAlignment="Center" />
-                                <Label Grid.Column="12" Content="Freight Damage?" Foreground="white" HorizontalAlignment="Center" />
-                                <Label Grid.Column="13" Content="Deliver to Jobsite" Foreground="white" HorizontalAlignment="Center" />
-                                <Label Grid.Column="14" Content="Stored on Site" Foreground="white" HorizontalAlignment="Center" />
-                                <Label Grid.Column="15" Content="Storage Detail" Foreground="white" HorizontalAlignment="Center" />
-                            </Grid>
-                            <Grid Grid.Row="2" >
-                                <Grid.Resources>
-                                    <Style TargetType="{x:Type CheckBox}">
-                                        <Setter Property="VerticalAlignment" Value="Center"/>
-                                        <Setter Property="HorizontalAlignment" Value="Center"/>
+                            <DataGrid Grid.Row="1" ItemsSource="{Binding ProjectMtShips}" GridLinesVisibility="None" AutoGenerateColumns="False" CanUserResizeColumns="False" HeadersVisibility="Column" BorderThickness="0" Background="White">
+                                <DataGrid.Resources>
+                                    <Style TargetType="DataGridColumnHeader" BasedOn="{StaticResource GridColumnHeaderBase}">
+                                        <Setter Property="Background" Value="#5C83B4" />
                                     </Style>
-                                    <Style TargetType="{x:Type TextBox}">
-                                        <Setter Property="Margin" Value="4,1,4,1" />
+                                    <Style TargetType="TextBox">
                                         <Setter Property="BorderThickness" Value="0,0,0,1" />
-                                        <Setter Property="VerticalContentAlignment" Value="Center"/>
                                     </Style>
-                                    <Style TargetType="{x:Type DatePicker}">
-                                        <Setter Property="Margin" Value="4,1,4,1" />
+                                    <Style TargetType="ComboBox">
+                                        <Setter Property="BorderThickness" Value="0,0,0,1" />
                                     </Style>
-                                    <Style TargetType="{x:Type ComboBox}">
-                                        <Setter Property="Margin" Value="4,1,4,1" />
+                                    <Style TargetType="CheckBox">
+                                        <Setter Property="HorizontalAlignment" Value="Center" />
+                                        <Setter Property="VerticalAlignment" Value="Center" />
                                     </Style>
-                                </Grid.Resources>
-                                <Grid.RowDefinitions>
-                                    <RowDefinition Height="Auto" />
-                                </Grid.RowDefinitions>
-                                <Grid x:Name="ShippingGrid">
-                                    <Grid >
-                                        <Grid.ColumnDefinitions>
-                                            <ColumnDefinition Width="2.5*"/>
-                                            <ColumnDefinition Width="2.5*"/>
-                                            <ColumnDefinition Width="2.5*"/>
-                                            <ColumnDefinition Width="2.5*"/>
-                                            <ColumnDefinition Width="2.5*"/>
-                                            <ColumnDefinition Width="4*"/>
-                                            <ColumnDefinition Width="3*"/>
-                                            <ColumnDefinition Width="2.5*"/>
-                                            <ColumnDefinition Width="2.5*"/>
-                                            <ColumnDefinition Width="2*"/>
-                                            <ColumnDefinition Width="2.5*"/>
-                                            <ColumnDefinition Width="2*"/>
-                                            <ColumnDefinition Width="2*"/>
-                                            <ColumnDefinition Width="2*"/>
-                                            <ColumnDefinition Width="3*"/>
-                                            <ColumnDefinition Width="3*"/>
-                                        </Grid.ColumnDefinitions>
-                                        <DatePicker />
-                                        <DatePicker Grid.Column="1" />
-                                        <DatePicker Grid.Column="2" />
-                                        <TextBox Grid.Column="3" />
-                                        <TextBox Grid.Column="4" />
-                                        <ComboBox Grid.Column="5" />
-                                        <TextBox Grid.Column="6" />
-                                        <DatePicker Grid.Column="7" />
-                                        <TextBox Grid.Column="8" />
-                                        <TextBox Grid.Column="9" />
-                                        <DatePicker Grid.Column="10" />
-                                        <TextBox Grid.Column="11" />
-                                        <CheckBox Grid.Column="12" />
-                                        <TextBox Grid.Column="13" />
-                                        <ComboBox Grid.Column="14" />
-                                        <CheckBox Grid.Column="15" />
-                                    </Grid>
-                                </Grid>
-                            </Grid>
+                                </DataGrid.Resources>
+                                <DataGrid.Columns>
+                                    <DataGridTemplateColumn IsReadOnly="False" Width="2*" Header="Sched Ship">
+                                        <DataGridTemplateColumn.CellTemplate>
+                                            <DataTemplate>
+                                                <DatePicker SelectedDate="{Binding SchedShipDate}"/>
+                                            </DataTemplate>
+                                        </DataGridTemplateColumn.CellTemplate>
+                                    </DataGridTemplateColumn>
+                                    <DataGridTemplateColumn IsReadOnly="False" Width="2*">
+                                        <DataGridTemplateColumn.Header>
+                                            <TextBlock Text="Est Deliv Date" TextWrapping="Wrap" />
+                                        </DataGridTemplateColumn.Header>
+                                        <DataGridTemplateColumn.CellTemplate>
+                                            <DataTemplate>
+                                                <DatePicker SelectedDate="{Binding EstDelivDate}" />
+                                            </DataTemplate>
+                                        </DataGridTemplateColumn.CellTemplate>
+                                    </DataGridTemplateColumn>
+                                    <DataGridTemplateColumn IsReadOnly="False" Width="3*">
+                                        <DataGridTemplateColumn.Header>
+                                            <TextBlock Text="Est Install Date" TextWrapping="Wrap" />
+                                        </DataGridTemplateColumn.Header>
+                                        <DataGridTemplateColumn.CellTemplate>
+                                            <DataTemplate>
+                                                <DatePicker SelectedDate="{Binding EstInstallDate}" />
+                                            </DataTemplate>
+                                        </DataGridTemplateColumn.CellTemplate>
+                                    </DataGridTemplateColumn>
+                                    <DataGridTemplateColumn IsReadOnly="False" Width="1*">
+                                        <DataGridTemplateColumn.Header>
+                                            <TextBlock Text="Est Weight" TextWrapping="Wrap" />
+                                        </DataGridTemplateColumn.Header>
+                                        <DataGridTemplateColumn.CellTemplate>
+                                            <DataTemplate>
+                                                <TextBox Text="{Binding EstWeight}" />
+                                            </DataTemplate>
+                                        </DataGridTemplateColumn.CellTemplate>
+                                    </DataGridTemplateColumn>
+                                    <DataGridTemplateColumn IsReadOnly="False" Width="2*">
+                                        <DataGridTemplateColumn.Header>
+                                            <TextBlock Text="Est Pallets #" TextWrapping="Wrap" />
+                                        </DataGridTemplateColumn.Header>
+                                        <DataGridTemplateColumn.CellTemplate>
+                                            <DataTemplate>
+                                                <TextBox Text="{Binding EstPallet}" />
+                                            </DataTemplate>
+                                        </DataGridTemplateColumn.CellTemplate>
+                                    </DataGridTemplateColumn>
+                                    <DataGridTemplateColumn Header="Freight CO" Width="3*">
+                                        <DataGridTemplateColumn.CellTemplate>
+                                            <DataTemplate>
+                                                <ComboBox ItemsSource="{Binding DataContext.FreightCos, RelativeSource={RelativeSource AncestorType=local:ProjectView}}"
+                SelectedValuePath="ID" SelectedValue="{Binding FreightCoID, Mode=TwoWay}" DisplayMemberPath="FreightName">
+                                                </ComboBox>
+                                            </DataTemplate>
+                                        </DataGridTemplateColumn.CellTemplate>
+                                    </DataGridTemplateColumn>
+                                    <DataGridTemplateColumn IsReadOnly="False" Width="2*">
+                                        <DataGridTemplateColumn.Header>
+                                            <TextBlock Text="Tracking #" TextWrapping="Wrap" />
+                                        </DataGridTemplateColumn.Header>
+                                        <DataGridTemplateColumn.CellTemplate>
+                                            <DataTemplate>
+                                                <TextBox Text="{Binding TrackingNo}"/>
+                                            </DataTemplate>
+                                        </DataGridTemplateColumn.CellTemplate>
+                                    </DataGridTemplateColumn>
+                                    <DataGridTemplateColumn IsReadOnly="False" Width="2*">
+                                        <DataGridTemplateColumn.Header>
+                                            <TextBlock Text="Date Shipped" TextWrapping="Wrap" />
+                                        </DataGridTemplateColumn.Header>
+                                        <DataGridTemplateColumn.CellTemplate>
+                                            <DataTemplate>
+                                                <DatePicker SelectedDate="{Binding DateShipped}" />
+                                            </DataTemplate>
+                                        </DataGridTemplateColumn.CellTemplate>
+                                    </DataGridTemplateColumn>
+                                    <DataGridTemplateColumn IsReadOnly="False" Width="2*">
+                                        <DataGridTemplateColumn.Header>
+                                            <TextBlock Text="Qty Shipped" TextWrapping="Wrap" />
+                                        </DataGridTemplateColumn.Header>
+                                        <DataGridTemplateColumn.CellTemplate>
+                                            <DataTemplate>
+                                                <TextBox Text="{Binding QtyShipped}" />
+                                            </DataTemplate>
+                                        </DataGridTemplateColumn.CellTemplate>
+                                    </DataGridTemplateColumn>
+                                    <DataGridTemplateColumn IsReadOnly="False" Width="2*">
+                                        <DataGridTemplateColumn.Header>
+                                            <TextBlock Text="Pallets #" TextWrapping="Wrap" />
+                                        </DataGridTemplateColumn.Header>
+                                        <DataGridTemplateColumn.CellTemplate>
+                                            <DataTemplate>
+                                                <TextBox Text="{Binding NoOfPallet}" />
+                                            </DataTemplate >
+                                        </DataGridTemplateColumn.CellTemplate>
+                                    </DataGridTemplateColumn>
+                                    <DataGridTemplateColumn IsReadOnly="False" Width="2*">
+                                        <DataGridTemplateColumn.Header>
+                                            <TextBlock Text="Date Recvd" TextWrapping="Wrap" />
+                                        </DataGridTemplateColumn.Header>
+                                        <DataGridTemplateColumn.CellTemplate>
+                                            <DataTemplate>
+                                                <DatePicker SelectedDate="{Binding DateRecvd}" />
+                                            </DataTemplate>
+                                        </DataGridTemplateColumn.CellTemplate>
+                                    </DataGridTemplateColumn>
+                                    <DataGridTemplateColumn IsReadOnly="False" Width="2*">
+                                        <DataGridTemplateColumn.Header>
+                                            <TextBlock Text="Qty Recvd" TextWrapping="Wrap" />
+                                        </DataGridTemplateColumn.Header>
+                                        <DataGridTemplateColumn.CellTemplate>
+                                            <DataTemplate>
+                                                <TextBox Text="{Binding QtyRecvd}" />
+                                            </DataTemplate>
+                                        </DataGridTemplateColumn.CellTemplate>
+                                    </DataGridTemplateColumn>
+                                    <DataGridTemplateColumn IsReadOnly="False" Width="2*">
+                                        <DataGridTemplateColumn.Header>
+                                            <TextBlock Text="Freight Damage?" TextWrapping="Wrap" />
+                                        </DataGridTemplateColumn.Header>
+                                        <DataGridTemplateColumn.CellTemplate>
+                                            <DataTemplate>
+                                                <CheckBox IsChecked="{Binding FreightDamage}" />
+                                            </DataTemplate>
+                                        </DataGridTemplateColumn.CellTemplate>
+                                    </DataGridTemplateColumn>
+                                    <DataGridTemplateColumn IsReadOnly="False" Width="2*">
+                                        <DataGridTemplateColumn.Header>
+                                            <TextBlock Text="Deliver To JobSite" TextWrapping="Wrap" />
+                                        </DataGridTemplateColumn.Header>
+                                        <DataGridTemplateColumn.CellTemplate>
+                                            <DataTemplate>
+                                                <DatePicker SelectedDate="{Binding DeliverToJob}" />
+                                            </DataTemplate>
+                                        </DataGridTemplateColumn.CellTemplate>
+                                    </DataGridTemplateColumn>
+                                    <DataGridTemplateColumn IsReadOnly="False" Width="2*">
+                                        <DataGridTemplateColumn.Header>
+                                            <TextBlock Text="Stored on Site" TextWrapping="Wrap" />
+                                        </DataGridTemplateColumn.Header>
+                                        <DataGridTemplateColumn.CellTemplate>
+                                            <DataTemplate>
+                                                <ComboBox ItemsSource="{Binding SiteStorages}" SelectedValue="{Binding SiteStroage}" />
+                                            </DataTemplate>
+                                        </DataGridTemplateColumn.CellTemplate>
+                                    </DataGridTemplateColumn>
+                                    <DataGridTemplateColumn IsReadOnly="False" Header="Storage  Detail" Width="1*">
+                                        <DataGridTemplateColumn.CellTemplate>
+                                            <DataTemplate>
+                                                <TextBox Text="{Binding StroageDetail}" />
+                                            </DataTemplate>
+                                        </DataGridTemplateColumn.CellTemplate>
+                                    </DataGridTemplateColumn>
+                                </DataGrid.Columns>
+                            </DataGrid>
                         </Grid>
                     </Grid>
                 </TabItem>
@@ -895,130 +1201,256 @@
                             <RowDefinition Height="1*" />
                         </Grid.RowDefinitions>
                         <Grid>
-                            <Grid.ColumnDefinitions>
-                                <ColumnDefinition Width="225*"/>
-                                <ColumnDefinition Width="602*"/>
-                            </Grid.ColumnDefinitions>
-                            <Grid.RowDefinitions>
-                                <RowDefinition Height="Auto" />
-                                <RowDefinition Height="*" />
-                            </Grid.RowDefinitions>
-                            <Grid Background="#5C83B4" Height="30" Margin="2, 1, 2, 1" Grid.ColumnSpan="2">
-                                <Grid.Resources>
-                                    <Style TargetType="{x:Type Label}">
-                                        <Setter Property="HorizontalAlignment" Value="Left"/>
-                                        <Setter Property="Foreground" Value="White" />
+                            <DataGrid Grid.Row="1" ItemsSource="{Binding TrackReports}" GridLinesVisibility="None" AutoGenerateColumns="False" CanUserAddRows="False" HeadersVisibility="Column" BorderThickness="0" Background="White">
+                                <DataGrid.Resources>
+                                    <Style TargetType="DataGridColumnHeader" BasedOn="{StaticResource GridColumnHeaderBase}">
+                                        <Setter Property="Background" Value="#5C83B4" />
                                     </Style>
-                                </Grid.Resources>
-                                <Grid.ColumnDefinitions>
-                                    <ColumnDefinition Width="2.5*"/>
-                                    <ColumnDefinition Width="4*"/>
-                                    <ColumnDefinition Width="1.5*"/>
-                                    <ColumnDefinition Width="3*"/>
-                                    <ColumnDefinition Width="3*"/>
-                                    <ColumnDefinition Width="2*"/>
-                                    <ColumnDefinition Width="2*"/>
-                                    <ColumnDefinition Width="2.5*"/>
-                                    <ColumnDefinition Width="2.5*"/>
-                                    <ColumnDefinition Width="2.5*"/>
-                                    <ColumnDefinition Width="2.5*"/>
-                                    <ColumnDefinition Width="2.5*"/>
-                                    <ColumnDefinition Width="2*"/>
-                                    <ColumnDefinition Width="1.5*"/>
-                                    <ColumnDefinition Width="2.5*"/>
-                                    <ColumnDefinition Width="2.5*"/>
-                                    <ColumnDefinition Width="2*"/>
-                                </Grid.ColumnDefinitions>
-                                <Label Content="Matl Reqd" />
-                                <Label Grid.Column="1" Content="Manufacturer" />
-                                <Label Grid.Column="2" Content="Qty Ord" />
-                                <Label Grid.Column="3" Content="Phase" />
-                                <Label Grid.Column="4" Content="Type" />
-                                <Label Grid.Column="5" Content="Lead Time" />
-                                <Label Grid.Column="6" Content="PO Number" />
-                                <Label Grid.Column="7" Content="Shop Reqst" />
-                                <Label Grid.Column="8" Content="Shop Recvd" />
-                                <Label Grid.Column="9" Content="Submit Issue" />
-                                <Label Grid.Column="10" Content="Resubmit" />
-                                <Label Grid.Column="11" Content="Subm Appr" />
-                                <Label Grid.Column="12" Content="Color" />
-                                <Label Grid.Column="13" Content="Guar Dim" />
-                                <Label Grid.Column="14" Content="Field Dim" />
-                                <Label Grid.Column="15" Content="R.F.F." />
-                                <Label Grid.Column="16" Content="Complete" />
-                            </Grid>
-                            <ScrollViewer Grid.Row="1" VerticalScrollBarVisibility="Auto" Grid.ColumnSpan="2">
-                                <Grid x:Name="TrackingReportGrid1">
-                                    <Grid.Resources>
-                                        <Style TargetType="{x:Type CheckBox}">
-                                            <Setter Property="VerticalAlignment" Value="Center"/>
-                                            <Setter Property="HorizontalAlignment" Value="Center"/>
-                                        </Style>
-                                        <Style TargetType="{x:Type TextBox}">
-                                            <Setter Property="Margin" Value="4,1,4,1" />
-                                            <Setter Property="BorderThickness" Value="0,0,0,1" />
-                                            <Setter Property="VerticalContentAlignment" Value="Center"/>
-                                        </Style>
-                                        <Style TargetType="{x:Type DatePicker}">
-                                            <Setter Property="Margin" Value="4,1,4,1" />
-                                        </Style>
-                                        <Style TargetType="{x:Type ComboBox}">
-                                            <Setter Property="Margin" Value="4,1,4,1" />
-                                        </Style>
-                                        <Style TargetType="{x:Type Label}">
-                                            <Setter Property="HorizontalAlignment" Value="Left"/>
-                                        </Style>
-                                    </Grid.Resources>
-                                </Grid>
-                            </ScrollViewer>
+                                    <Style TargetType="TextBox">
+                                        <Setter Property="BorderThickness" Value="0,0,0,1" />
+                                    </Style>
+                                    <Style TargetType="ComboBox">
+                                        <Setter Property="BorderThickness" Value="0,0,0,1" />
+                                    </Style>
+                                </DataGrid.Resources>
+                                <DataGrid.Columns>
+                                    <DataGridTemplateColumn IsReadOnly="False" Width="2*">
+                                        <DataGridTemplateColumn.Header>
+                                            <TextBlock Text="Matl Reqd" TextWrapping="Wrap" />
+                                        </DataGridTemplateColumn.Header>
+                                        <DataGridTemplateColumn.CellTemplate>
+                                            <DataTemplate>
+                                                <DatePicker SelectedDate="{Binding MatReqdDate}"/>
+                                            </DataTemplate>
+                                        </DataGridTemplateColumn.CellTemplate>
+                                    </DataGridTemplateColumn>
+                                    <DataGridTemplateColumn IsReadOnly="False" Width="2*">
+                                        <DataGridTemplateColumn.Header>
+                                            <TextBlock Text="Qty Ord" TextWrapping="Wrap" />
+                                        </DataGridTemplateColumn.Header>
+                                        <DataGridTemplateColumn.CellTemplate>
+                                            <DataTemplate>
+                                                <TextBox Text="{Binding ManufacturerName}" />
+                                            </DataTemplate>
+                                        </DataGridTemplateColumn.CellTemplate>
+                                    </DataGridTemplateColumn>
+                                    <DataGridTemplateColumn IsReadOnly="False" Width="1*">
+                                        <DataGridTemplateColumn.Header>
+                                            <TextBlock Text="Stock?" TextWrapping="Wrap" />
+                                        </DataGridTemplateColumn.Header>
+                                        <DataGridTemplateColumn.CellTemplate>
+                                            <DataTemplate>
+                                                <TextBlock Text="{Binding QtyOrd}" />
+                                            </DataTemplate>
+                                        </DataGridTemplateColumn.CellTemplate>
+                                    </DataGridTemplateColumn>
+                                    <DataGridTemplateColumn IsReadOnly="False" Width="2*">
+                                        <DataGridTemplateColumn.Header>
+                                            <TextBlock Text="Lead Time" TextWrapping="Wrap" />
+                                        </DataGridTemplateColumn.Header>
+                                        <DataGridTemplateColumn.CellTemplate>
+                                            <DataTemplate>
+                                                <TextBox Text="{Binding Phase}" />
+                                            </DataTemplate>
+                                        </DataGridTemplateColumn.CellTemplate>
+                                    </DataGridTemplateColumn>
+                                    <DataGridTemplateColumn IsReadOnly="False" Width="2*">
+                                        <DataGridTemplateColumn.Header>
+                                            <TextBlock Text="Manuf Ord #" TextWrapping="Wrap" />
+                                        </DataGridTemplateColumn.Header>
+                                        <DataGridTemplateColumn.CellTemplate>
+                                            <DataTemplate>
+                                                <TextBox Text="{Binding Type}" />
+                                            </DataTemplate>
+                                        </DataGridTemplateColumn.CellTemplate>
+                                    </DataGridTemplateColumn>
+                                    <DataGridTemplateColumn IsReadOnly="False" Width="2*">
+                                        <DataGridTemplateColumn.Header>
+                                            <TextBlock Text="GAP PO#" TextWrapping="Wrap" />
+                                        </DataGridTemplateColumn.Header>
+                                        <DataGridTemplateColumn.CellTemplate>
+                                            <DataTemplate>
+                                                <TextBox Text="{Binding ManufLeadTime}"/>
+                                            </DataTemplate>
+                                        </DataGridTemplateColumn.CellTemplate>
+                                    </DataGridTemplateColumn>
+                                    <DataGridTemplateColumn IsReadOnly="False" Width="2*">
+                                        <DataGridTemplateColumn.Header>
+                                            <TextBlock Text="Shop Reqst" TextWrapping="Wrap" />
+                                        </DataGridTemplateColumn.Header>
+                                        <DataGridTemplateColumn.CellTemplate>
+                                            <DataTemplate>
+                                                <TextBox Text="{Binding PoNumber}" />
+                                            </DataTemplate>
+                                        </DataGridTemplateColumn.CellTemplate>
+                                    </DataGridTemplateColumn>
+                                    <DataGridTemplateColumn IsReadOnly="False" Width="2*">
+                                        <DataGridTemplateColumn.Header>
+                                            <TextBlock Text="Shop Recvd" TextWrapping="Wrap" />
+                                        </DataGridTemplateColumn.Header>
+                                        <DataGridTemplateColumn.CellTemplate>
+                                            <DataTemplate>
+                                                <DatePicker SelectedDate="{Binding ShopReqDate}" />
+                                            </DataTemplate>
+                                        </DataGridTemplateColumn.CellTemplate>
+                                    </DataGridTemplateColumn>
+                                    <DataGridTemplateColumn IsReadOnly="False" Width="2*">
+                                        <DataGridTemplateColumn.Header>
+                                            <TextBlock Text="Subm Issue" TextWrapping="Wrap" />
+                                        </DataGridTemplateColumn.Header>
+                                        <DataGridTemplateColumn.CellTemplate>
+                                            <DataTemplate>
+                                                <DatePicker SelectedDate="{Binding ShopRecvdDate}" />
+                                            </DataTemplate >
+                                        </DataGridTemplateColumn.CellTemplate>
+                                    </DataGridTemplateColumn>
+                                    <DataGridTemplateColumn IsReadOnly="False" Width="2*">
+                                        <DataGridTemplateColumn.Header>
+                                            <TextBlock Text="Resubmit" TextWrapping="Wrap" />
+                                        </DataGridTemplateColumn.Header>
+                                        <DataGridTemplateColumn.CellTemplate>
+                                            <DataTemplate>
+                                                <DatePicker SelectedDate="{Binding SubmIssue}" />
+                                            </DataTemplate>
+                                        </DataGridTemplateColumn.CellTemplate>
+                                    </DataGridTemplateColumn>
+                                    <DataGridTemplateColumn IsReadOnly="False" Width="2*">
+                                        <DataGridTemplateColumn.Header>
+                                            <TextBlock Text="Subm Appr" TextWrapping="Wrap" />
+                                        </DataGridTemplateColumn.Header>
+                                        <DataGridTemplateColumn.CellTemplate>
+                                            <DataTemplate>
+                                                <DatePicker SelectedDate="{Binding ReSubmit}" />
+                                            </DataTemplate>
+                                        </DataGridTemplateColumn.CellTemplate>
+                                    </DataGridTemplateColumn>
+                                    <DataGridTemplateColumn IsReadOnly="False" Width="1*">
+                                        <DataGridTemplateColumn.Header>
+                                            <TextBlock Text="No Subm" TextWrapping="Wrap" />
+                                        </DataGridTemplateColumn.Header>
+                                        <DataGridTemplateColumn.CellTemplate>
+                                            <DataTemplate>
+                                                <DatePicker SelectedDate="{Binding SubmAppr}" />
+                                            </DataTemplate>
+                                        </DataGridTemplateColumn.CellTemplate>
+                                    </DataGridTemplateColumn>
+                                    <DataGridTemplateColumn IsReadOnly="False" Width="1*">
+                                        <DataGridTemplateColumn.Header>
+                                            <TextBlock Text="Ship to Job?" TextWrapping="Wrap" />
+                                        </DataGridTemplateColumn.Header>
+                                        <DataGridTemplateColumn.CellTemplate>
+                                            <DataTemplate>
+                                                <TextBox Text="{Binding Color}" />
+                                            </DataTemplate>
+                                        </DataGridTemplateColumn.CellTemplate>
+                                    </DataGridTemplateColumn>
+                                    <DataGridTemplateColumn IsReadOnly="False" Width="1*">
+                                        <DataGridTemplateColumn.Header>
+                                            <TextBlock Text="Guar Dim" TextWrapping="Wrap" />
+                                        </DataGridTemplateColumn.Header>
+                                        <DataGridTemplateColumn.CellTemplate>
+                                            <DataTemplate>
+                                                <CheckBox IsChecked="{Binding GuarDim}" />
+                                            </DataTemplate>
+                                        </DataGridTemplateColumn.CellTemplate>
+                                    </DataGridTemplateColumn>
+                                    <DataGridTemplateColumn IsReadOnly="False" Width="2*">
+                                        <DataGridTemplateColumn.Header>
+                                            <TextBlock Text="Field Dim" TextWrapping="Wrap" />
+                                        </DataGridTemplateColumn.Header>
+                                        <DataGridTemplateColumn.CellTemplate>
+                                            <DataTemplate>
+                                                <DatePicker Text="{Binding FieldDim}" />
+                                            </DataTemplate>
+                                        </DataGridTemplateColumn.CellTemplate>
+                                    </DataGridTemplateColumn>
+                                    <DataGridTemplateColumn IsReadOnly="False" Header="R.F.F" Width="2*">
+                                        <DataGridTemplateColumn.CellTemplate>
+                                            <DataTemplate>
+                                                <DatePicker SelectedDate="{Binding RFF}" />
+                                            </DataTemplate>
+                                        </DataGridTemplateColumn.CellTemplate>
+                                    </DataGridTemplateColumn>
+                                    <DataGridTemplateColumn IsReadOnly="False" Header="R.F.F" Width="2*">
+                                        <DataGridTemplateColumn.CellTemplate>
+                                            <DataTemplate>
+                                                <CheckBox IsChecked="{Binding LaborComplete}" />
+                                            </DataTemplate>
+                                        </DataGridTemplateColumn.CellTemplate>
+                                    </DataGridTemplateColumn>
+                                </DataGrid.Columns>
+                            </DataGrid>
                         </Grid>
                         <Grid Grid.Row="1">
                             <Grid.ColumnDefinitions>
-                                <ColumnDefinition Width="4*" />
-                                <ColumnDefinition Width="6*" />
+                                <ColumnDefinition Width="1*" />
+                                <ColumnDefinition Width="1*" />
                             </Grid.ColumnDefinitions>
-                            <Grid.RowDefinitions>
-                                <RowDefinition Height="Auto" />
-                                <RowDefinition Height="*" />
-                            </Grid.RowDefinitions>
-                            <Grid Background="#5C83B4" Height="30" Margin="2, 1, 2, 1">
-                                <Grid.Resources>
-                                    <Style TargetType="{x:Type Label}">
-                                        <Setter Property="HorizontalAlignment" Value="Left"/>
-                                        <Setter Property="Foreground" Value="White" />
+                            <DataGrid Grid.Row="1" ItemsSource="{Binding TrackLaborReports}" GridLinesVisibility="None" AutoGenerateColumns="False" CanUserAddRows="False" HeadersVisibility="Column" BorderThickness="0" Background="White">
+                                <DataGrid.Resources>
+                                    <Style TargetType="DataGridColumnHeader" BasedOn="{StaticResource GridColumnHeaderBase}">
+                                        <Setter Property="Background" Value="#5C83B4" />
                                     </Style>
-                                </Grid.Resources>
-                                <Grid.ColumnDefinitions>
-                                    <ColumnDefinition Width="1*"/>
-                                    <ColumnDefinition Width="2*"/>
-                                    <ColumnDefinition Width="1*"/>
-                                    <ColumnDefinition Width="1*"/>
-                                    <ColumnDefinition Width="1*"/>
-                                </Grid.ColumnDefinitions>
-                                <Label Content="Scope Type" />
-                                <Label Grid.Column="1" Content="Labor" />
-                                <Label Grid.Column="2" Content="CO #" />
-                                <Label Grid.Column="3" Content="Phase/Type" />
-                                <Label Grid.Column="4" Content="Complete" />
-                            </Grid>
-                            <ScrollViewer Grid.Row="1" VerticalScrollBarVisibility="Auto">
-                                <Grid x:Name="TrackingReportGrid2">
-                                    <Grid.Resources>
-                                        <Style TargetType="{x:Type CheckBox}">
-                                            <Setter Property="VerticalAlignment" Value="Center"/>
-                                            <Setter Property="HorizontalAlignment" Value="Center"/>
-                                        </Style>
-                                        <Style TargetType="{x:Type TextBox}">
-                                            <Setter Property="Margin" Value="4,1,4,1" />
-                                            <Setter Property="BorderThickness" Value="0,0,0,1" />
-                                            <Setter Property="VerticalContentAlignment" Value="Center"/>
-                                        </Style>
-                                        <Style TargetType="{x:Type Label}">
-                                            <Setter Property="HorizontalAlignment" Value="Left"/>
-                                        </Style>
-                                    </Grid.Resources>
-                                </Grid>
-                            </ScrollViewer>
+                                    <Style TargetType="TextBox">
+                                        <Setter Property="BorderThickness" Value="0,0,0,1" />
+                                    </Style>
+                                    <Style TargetType="ComboBox">
+                                        <Setter Property="BorderThickness" Value="0,0,0,1" />
+                                    </Style>
+                                </DataGrid.Resources>
+                                <DataGrid.Columns>
+                                    <DataGridTemplateColumn IsReadOnly="False" Width="2*">
+                                        <DataGridTemplateColumn.Header>
+                                            <TextBlock Text="Scope Type" TextWrapping="Wrap" />
+                                        </DataGridTemplateColumn.Header>
+                                        <DataGridTemplateColumn.CellTemplate>
+                                            <DataTemplate>
+                                                <TextBox Text="{Binding SovAcronym}"/>
+                                            </DataTemplate>
+                                        </DataGridTemplateColumn.CellTemplate>
+                                    </DataGridTemplateColumn>
+                                    <DataGridTemplateColumn IsReadOnly="False" Width="4*">
+                                        <DataGridTemplateColumn.Header>
+                                            <TextBlock Text="Labor" TextWrapping="Wrap" />
+                                        </DataGridTemplateColumn.Header>
+                                        <DataGridTemplateColumn.CellTemplate>
+                                            <DataTemplate>
+                                                <TextBox Text="{Binding LaborDesc}" />
+                                            </DataTemplate>
+                                        </DataGridTemplateColumn.CellTemplate>
+                                    </DataGridTemplateColumn>
+                                    <DataGridTemplateColumn IsReadOnly="False" Width="1*">
+                                        <DataGridTemplateColumn.Header>
+                                            <TextBlock Text="CO #" TextWrapping="Wrap" />
+                                        </DataGridTemplateColumn.Header>
+                                        <DataGridTemplateColumn.CellTemplate>
+                                            <DataTemplate>
+                                                <TextBox Text="{Binding CoItemNo}" />
+                                            </DataTemplate>
+                                        </DataGridTemplateColumn.CellTemplate>
+                                    </DataGridTemplateColumn>
+                                    <DataGridTemplateColumn IsReadOnly="False" Width="4*">
+                                        <DataGridTemplateColumn.Header>
+                                            <TextBlock Text="Phase/Type" TextWrapping="Wrap" />
+                                        </DataGridTemplateColumn.Header>
+                                        <DataGridTemplateColumn.CellTemplate>
+                                            <DataTemplate>
+                                                <TextBox Text="{Binding LabPhase}" />
+                                            </DataTemplate>
+                                        </DataGridTemplateColumn.CellTemplate>
+                                    </DataGridTemplateColumn>
+                                    <DataGridTemplateColumn IsReadOnly="False" Width="2*">
+                                        <DataGridTemplateColumn.Header>
+                                            <TextBlock Text="Complete" TextWrapping="Wrap" />
+                                        </DataGridTemplateColumn.Header>
+                                        <DataGridTemplateColumn.CellTemplate>
+                                            <DataTemplate>
+                                                <CheckBox IsChecked="{Binding Complete}" />
+                                            </DataTemplate>
+                                        </DataGridTemplateColumn.CellTemplate>
+                                    </DataGridTemplateColumn>
+                                </DataGrid.Columns>
+                            </DataGrid>
                         </Grid>
                     </Grid>
                 </TabItem>
@@ -1048,7 +1480,7 @@
                                     <Label Grid.Column="1" FontStyle="Italic">(click to select WO)</Label>
                                 </Grid>
                                 <Grid Grid.Row="1">
-                                    <DataGrid x:Name="WOListView" GridLinesVisibility="None" ItemsSource="{Binding WorkOrders, Mode=TwoWay}" SelectedValue="{Binding WorkOrderID, Mode=TwoWay}" SelectedValuePath="WoID" SelectionChanged="SelectWorkOrdersList" AutoGenerateColumns="False" CanUserResizeColumns="False" Background="White" HeadersVisibility="Column">
+                                    <DataGrid x:Name="WOListView" GridLinesVisibility="None" ItemsSource="{Binding WorkOrders, Mode=TwoWay}" SelectedValue="{Binding WorkOrderID, Mode=TwoWay}" SelectedValuePath="WoID" SelectionChanged="SelectWorkOrdersList" AutoGenerateColumns="False" CanUserAddRows="False" Background="White" HeadersVisibility="Column">
                                             <DataGrid.Resources>
                                             <Style TargetType="DataGridRow">
                                                 <Setter Property="Height" Value="15" />
@@ -1067,9 +1499,9 @@
                                             </Style>
                                         </DataGrid.Resources>
                                         <DataGrid.Columns>
-                                            <DataGridTextColumn Width="4*" Binding="{Binding Path=WoID}" IsReadOnly="True" Header="WO" />
-                                            <DataGridTextColumn Width="2*" Binding="{Binding Path=WoNumber}" IsReadOnly="True" Header="WO #" />
-                                            <DataGridTextColumn Width="2*" Binding="{Binding Path=CrewName}" IsReadOnly="True" Header="Crew" />
+                                            <DataGridTextColumn Width="2*" Binding="{Binding Path=WoID}" IsReadOnly="True" Header="WO" />
+                                            <DataGridTextColumn Width="1*" Binding="{Binding Path=WoNumber}" IsReadOnly="True" Header="WO #" />
+                                            <DataGridTextColumn Width="4*" Binding="{Binding Path=CrewName}" IsReadOnly="True" Header="Crew" />
                                             <DataGridTextColumn Width="2*" Binding="{Binding Path=DateStarted}" IsReadOnly="True" Header="Started" />
                                             <DataGridTextColumn Width="2*" Binding="{Binding Path=DateCompleted}" IsReadOnly="True" Header="Completed" />
                                         </DataGrid.Columns>
@@ -1218,7 +1650,7 @@
                                                 <RowDefinition Height="1*" />
                                             </Grid.RowDefinitions>
                                             <Grid>
-                                                <DataGrid x:Name="ProjectWorkOrderList" GridLinesVisibility="None" ItemsSource="{Binding ProjectWorkOrders, Mode=TwoWay}" SelectedValuePath="ProjMatID" AutoGenerateColumns="False" CanUserResizeColumns="False" Background="LightGray" HeadersVisibility="Column">
+                                                <DataGrid x:Name="ProjectWorkOrderList" GridLinesVisibility="None" ItemsSource="{Binding ProjectWorkOrders, Mode=TwoWay}" SelectedValuePath="ProjMatID" AutoGenerateColumns="False" CanUserAddRows="False" Background="LightGray" HeadersVisibility="Column">
                                                     <DataGrid.Resources>
                                                         <Style TargetType="DataGridRow">
                                                             <Setter Property="Height" Value="15" />
@@ -1340,7 +1772,7 @@
                                                 <RowDefinition Height="1*" />
                                             </Grid.RowDefinitions>
                                             <Grid>
-                                                <DataGrid x:Name="ProjectLaborList" GridLinesVisibility="None" ItemsSource="{Binding ProjectLabors, Mode=TwoWay}" SelectedValuePath="ProjMatID" AutoGenerateColumns="False" CanUserResizeColumns="False" Background="LightGray" HeadersVisibility="Column">
+                                                <DataGrid x:Name="ProjectLaborList" GridLinesVisibility="None" ItemsSource="{Binding ProjectLabors, Mode=TwoWay}" SelectedValuePath="ProjMatID" AutoGenerateColumns="False" CanUserAddRows="False" Background="LightGray" HeadersVisibility="Column">
                                                     <DataGrid.Resources>
                                                         <Style TargetType="DataGridRow">
                                                             <Setter Property="Height" Value="15" />

@@ -58,9 +58,11 @@
       <SubType>Designer</SubType>
     </ApplicationDefinition>
     <Compile Include="Controls\CustomDatePicker.cs" />
+    <Compile Include="Converter\SelectedValueToIntConverter.cs" />
     <Compile Include="Model\Acronym.cs" />
     <Compile Include="Model\Architect.cs" />
     <Compile Include="Model\ArchRep.cs" />
+    <Compile Include="Model\ChangeOrder.cs" />
     <Compile Include="Model\CIP.cs" />
     <Compile Include="Model\Contract.cs" />
     <Compile Include="Model\Crew.cs" />
@@ -86,6 +88,8 @@
     <Compile Include="Model\ReturnedVia.cs" />
     <Compile Include="Model\Salesman.cs" />
     <Compile Include="Model\SovCO.cs" />
+    <Compile Include="Model\SovCOItem.cs" />
+    <Compile Include="Model\SovMaterial.cs" />
     <Compile Include="Model\Superintendent.cs" />
     <Compile Include="Model\TrackLaborReport.cs" />
     <Compile Include="Model\TrackReport.cs" />

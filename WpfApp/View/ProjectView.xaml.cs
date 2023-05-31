@@ -27,19 +27,11 @@ namespace WpfApp
         private SqlDataAdapter sda;
         private DataSet ds;
         private ObservableCollection<int> st_projectOrder;
-        private ObservableCollection<SovCO> st_SovCO;
-        private ObservableCollection<TrackShipRecv> st_TrackShipRecv;
-        private ObservableCollection<ProjectMatTracking> sb_projectMatTrackings;
-        private ObservableCollection<ProjectMatShip> sb_projectMtShip;
-        private ObservableCollection<TrackReport> sb_trackReports;
-        private ObservableCollection<TrackLaborReport> sb_trackLaborReports;
-        private ObservableCollection<WorkOrder> sb_workOrders;
+        private ObservableCollection<SovCOItem> st_SovCOItem;
         private ObservableCollection<Note> sb_notes;
         private ObservableCollection<InstallationNote> sb_installationNote;
         private ObservableCollection<Contract> sb_contract;
         private ObservableCollection<CIP> sb_cip;
-        private ObservableCollection<ProjectWorkOrder> sb_projectWorkOrder;
-        private ObservableCollection<ProjectLabor> sb_projectLabor;
 
         private ProjectViewModel ProjectVM;
         public ProjectView()
@@ -47,22 +39,14 @@ namespace WpfApp
             InitializeComponent();
             dbConnection = new DatabaseConnection();
             dbConnection.Open();
-            ProjectVM = new ProjectViewModel();
-            this.DataContext = ProjectVM;
             st_projectOrder = new ObservableCollection<int>();
-            st_SovCO = new ObservableCollection<SovCO>();
-            st_TrackShipRecv = new ObservableCollection<TrackShipRecv>();
-            sb_projectMatTrackings = new ObservableCollection<ProjectMatTracking>();
-            sb_projectMtShip = new ObservableCollection<ProjectMatShip>();
-            sb_trackReports = new ObservableCollection<TrackReport>();
-            sb_trackLaborReports = new ObservableCollection<TrackLaborReport>();
-            sb_workOrders = new ObservableCollection<WorkOrder>();
+            st_SovCOItem = new ObservableCollection<SovCOItem>();
             sb_notes = new ObservableCollection<Note>();
             sb_installationNote = new ObservableCollection<InstallationNote>();
             sb_contract = new ObservableCollection<Contract>();
             sb_cip = new ObservableCollection<CIP>();
-            sb_projectWorkOrder = new ObservableCollection<ProjectWorkOrder>();
-            sb_projectLabor = new ObservableCollection<ProjectLabor>();
+            ProjectVM = new ProjectViewModel();
+            this.DataContext = ProjectVM;
         }
 
         private void goBack(object sender, RoutedEventArgs e)
@@ -99,12 +83,12 @@ namespace WpfApp
                 ds = new DataSet();
                 sda.Fill(ds);
 
-                st_SovCO.Clear();
+                st_SovCOItem.Clear();
                 foreach (DataRow row in ds.Tables[0].Rows)
                 {
                     string sovAcronym = row["SOV_Acronym"].ToString();
                     string coItem = row["CO_ItemNo"].ToString();
-                    st_SovCO.Add(new SovCO
+                    st_SovCOItem.Add(new SovCOItem
                     {
                         SovAcronym = sovAcronym,
                         CoItem = coItem,
@@ -276,6 +260,8 @@ namespace WpfApp
                 sda.Fill(ds);
                 rowCount = ds.Tables[0].Rows.Count; // number of rows
                 ProjectNoteGrid.Children.Clear();
+                rowIndex = 0;
+
                 for (int i = 0; i < rowCount; i++)
                 {
                     RowDefinition rowDef = new RowDefinition();
@@ -312,81 +298,6 @@ namespace WpfApp
                     rowIndex += 1;
                 }
 
-                // SOV Grid 1
-                rowIndex = 0;
-                sqlquery = "Select tblSOV.*, tblProjectChangeOrders.CO_ItemNo from (Select tblSOV.*, tblScheduleOfValues.SOV_Desc from tblScheduleOfValues Right JOIN (SELECT tblProjectSOV.* From tblProjects LEFT Join tblProjectSOV ON tblProjects.Project_ID = tblProjectSOV.Project_ID where tblProjects.Project_ID = " + selectedProjectID.ToString() + ") AS tblSOV ON tblSOV.SOV_Acronym = tblScheduleOfValues.SOV_Acronym Where tblScheduleOfValues.Active = 'true') AS tblSOV LEFT JOIN tblProjectChangeOrders ON tblProjectChangeOrders.CO_ID = tblSOV.CO_ID ORDER BY tblSOV.SOV_Acronym;";
-                cmd = new SqlCommand(sqlquery, dbConnection.Connection);
-                sda = new SqlDataAdapter(cmd);
-                ds = new DataSet();
-                sda.Fill(ds);
-                rowCount = ds.Tables[0].Rows.Count; // number of rows
-
-                SOVGrid1.Children.Clear();
-                for (int i = 0; i < rowCount; i++)
-                {
-                    RowDefinition rowDef = new RowDefinition();
-                    rowDef.Height = GridLength.Auto;
-                    SOVGrid1.RowDefinitions.Add(rowDef);
-                }
-                foreach (DataRow row in ds.Tables[0].Rows)
-                {
-                    ComboBox Acronym_ComboBox = new ComboBox();
-                    ComboBox ChangeOrder_ComboBox = new ComboBox();
-                    Label SOVItem_Label = new Label();
-                    CheckBox Material_CheckBox = new CheckBox();
-
-                    Acronym_ComboBox.ItemsSource = ProjectVM.Acronyms;
-                    Acronym_ComboBox.SelectedValuePath = "AcronymName";
-                    Acronym_ComboBox.DisplayMemberPath = "AcronymName";
-                    Acronym_ComboBox.SelectedValue = row["SOV_Acronym"].ToString();
-                    Acronym_ComboBox.IsEditable = true;
-                    Acronym_ComboBox.Margin = new Thickness(4, 1, 4, 1);
-
-                    ChangeOrder_ComboBox.ItemsSource = st_projectOrder;
-                    if (!row.IsNull("CO_ItemNo"))
-                        ChangeOrder_ComboBox.SelectedValue = int.Parse(row["CO_ItemNo"].ToString());
-                    ChangeOrder_ComboBox.Margin = new Thickness(4, 1, 4, 1);
-
-                    SOVItem_Label.Content = row["SOV_Desc"].ToString();
-                    SOVItem_Label.HorizontalAlignment = HorizontalAlignment.Left;
-                    SOVItem_Label.Margin = new Thickness(4, 1, 4, 1);
-                    Material_CheckBox.IsChecked = row.Field<Boolean>("Material_Only");
-                    Material_CheckBox.HorizontalAlignment = HorizontalAlignment.Center;
-                    Material_CheckBox.VerticalAlignment = VerticalAlignment.Center;
-                    Material_CheckBox.Margin = new Thickness(4, 1, 4, 1);
-
-                    Grid secondGrid = new Grid();
-                    ColumnDefinition colDef1 = new ColumnDefinition();
-                    ColumnDefinition colDef2 = new ColumnDefinition();
-                    ColumnDefinition colDef3 = new ColumnDefinition();
-                    ColumnDefinition colDef4 = new ColumnDefinition();
-                    secondGrid.ColumnDefinitions.Add(colDef1);
-                    secondGrid.ColumnDefinitions.Add(colDef2);
-                    secondGrid.ColumnDefinitions.Add(colDef3);
-                    secondGrid.ColumnDefinitions.Add(colDef4);
-
-                    secondGrid.ColumnDefinitions[0].Width = new GridLength(3, GridUnitType.Star);
-                    secondGrid.ColumnDefinitions[1].Width = new GridLength(1, GridUnitType.Star);
-                    secondGrid.ColumnDefinitions[2].Width = new GridLength(4, GridUnitType.Star);
-                    secondGrid.ColumnDefinitions[3].Width = new GridLength(2, GridUnitType.Star);
-
-                    Grid.SetColumn(Acronym_ComboBox, 0);
-                    Grid.SetColumn(ChangeOrder_ComboBox, 1);
-                    Grid.SetColumn(SOVItem_Label, 2);
-                    Grid.SetColumn(Material_CheckBox, 3);
-
-                    secondGrid.Children.Add(Acronym_ComboBox);
-                    secondGrid.Children.Add(ChangeOrder_ComboBox);
-                    secondGrid.Children.Add(SOVItem_Label);
-                    secondGrid.Children.Add(Material_CheckBox);
-
-                    Grid.SetRow(secondGrid, rowIndex);
-
-                    SOVGrid1.Children.Add(secondGrid);
-
-                    rowIndex += 1;
-                }
-
                 // SOVGrid2
                 rowIndex = 0;
                 sqlquery = "Select tblSOV.SOV_Acronym, tblSOV.CO_ItemNo, tblSOV.Material_Only, tblSOV.SOV_Desc, tblProjectMaterials.Mat_Phase, tblProjectMaterials.Mat_Type, tblProjectMaterials.Color_Selected, tblProjectMaterials.Qty_Reqd, tblProjectMaterials.TotalCost from(Select tblSOV.*, tblProjectChangeOrders.CO_ItemNo from(Select tblSOV.*, tblScheduleOfValues.SOV_Desc from tblScheduleOfValues Right JOIN(SELECT tblProjectSOV.* From tblProjects LEFT Join tblProjectSOV ON tblProjects.Project_ID = tblProjectSOV.Project_ID where tblProjects.Project_ID = " + selectedProjectID.ToString() + " ) AS tblSOV ON tblSOV.SOV_Acronym = tblScheduleOfValues.SOV_Acronym Where tblScheduleOfValues.Active = 'true') AS tblSOV LEFT JOIN tblProjectChangeOrders ON tblProjectChangeOrders.CO_ID = tblSOV.CO_ID) AS tblSOV LEFT JOIN tblProjectMaterials ON tblSOV.ProjSOV_ID = tblProjectMaterials.ProjSOV_ID ORDER BY tblSOV.SOV_Acronym DESC";
@@ -395,12 +306,10 @@ namespace WpfApp
                 ds = new DataSet();
                 sda.Fill(ds);
                 rowCount = ds.Tables[0].Rows.Count; // number of rows
-                SOVGrid2.Children.Clear();
                 for (int i = 0; i < rowCount; i++)
                 {
                     RowDefinition rowDef = new RowDefinition();
                     rowDef.Height = GridLength.Auto;
-                    SOVGrid2.RowDefinitions.Add(rowDef);
                 }
                 foreach (DataRow row in ds.Tables[0].Rows)
                 {
@@ -455,7 +364,7 @@ namespace WpfApp
                     //ContentPresenter contentPresenter = new ContentPresenter();
                     //contentPresenter.ContentTemplate = sovItemTemplate;
 
-                    SOV_ComboBox.ItemsSource = st_SovCO;
+                    SOV_ComboBox.ItemsSource = st_SovCOItem;
                     //SOV_ComboBox.ItemTemplate = sovItemTemplate;
                     SOV_ComboBox.DisplayMemberPath = "SovAcronym";
                     SOV_ComboBox.SelectedValuePath = "SovAcronym";
@@ -537,324 +446,6 @@ namespace WpfApp
                     secondGrid.Children.Add(TotalCost_TextBox);
 
                     Grid.SetRow(secondGrid, rowIndex);
-
-                    SOVGrid2.Children.Add(secondGrid);
-                    rowIndex += 1;
-                }
-
-                // Tracking Report Grid1
-                sqlquery = "Select MatReqdDate, tblManufacturers.Manuf_Name, Qty_Ord, tblProjMat.Mat_Phase, tblProjMat.Mat_Type, Manuf_LeadTime, PO_Number, ShopReqDate, ShopRecvdDate, SubmitIssue, Resubmit_Date, SubmitAppr,tblProjMat.Color_Selected, Guar_Dim, Field_Dim, ReleasedForFab, LaborComplete from tblManufacturers RIGHT JOIN(Select tblProjectMaterialsTrack.*, tblMat.Color_Selected, tblMat.Mat_Phase, tblMat.Mat_Type from tblProjectMaterialsTrack RIGHT JOIN(SELECT * FROM tblProjectMaterials WHERE tblProjectMaterials.Project_ID = " + selectedProjectID.ToString() + ") AS tblMat ON tblMat.ProjMat_ID = tblProjectMaterialsTrack.ProjMat_ID) AS tblProjMat ON tblManufacturers.Manuf_ID = tblProjMat.Manuf_ID ORDER BY MatReqdDate;";
-                rowIndex = 0;
-
-                cmd = new SqlCommand(sqlquery, dbConnection.Connection);
-                sda = new SqlDataAdapter(cmd);
-                ds = new DataSet();
-                sda.Fill(ds);
-                rowCount = ds.Tables[0].Rows.Count; // number of rows
-
-                for (int i = 0; i < rowCount; i++)
-                {
-                    RowDefinition rowDef = new RowDefinition();
-                    rowDef.Height = GridLength.Auto;
-                    TrackingReportGrid1.RowDefinitions.Add(rowDef);
-                }
-
-                TrackingReportGrid1.Children.Clear();
-                sb_trackReports.Clear();
-                foreach (DataRow row in ds.Tables[0].Rows)
-                {
-                    DateTime matReqdDate = new DateTime();
-
-                    string manufName = "";
-                    string qtyOrd = "";
-                    string phase = "";
-                    string type = "";
-                    string leadTime = "";
-                    string gapPO = "";
-                    DateTime shopReq = new DateTime();
-                    DateTime shopRecv = new DateTime();
-                    DateTime submIssue = new DateTime();
-                    DateTime reSubmit = new DateTime();
-                    DateTime submAppr = new DateTime();
-                    string color = "";
-                    bool guarDim = false;
-                    DateTime fieldDim = new DateTime();
-                    DateTime rff = new DateTime();
-                    bool laborComplete = false;
-
-                    if (!row.IsNull("MatReqdDate"))
-                        matReqdDate = row.Field<DateTime>("MatReqdDate");
-                    if (!row.IsNull("Manuf_Name"))
-                        manufName = row["Manuf_Name"].ToString();
-                    if (!row.IsNull("Qty_Ord"))
-                        qtyOrd = row["Qty_Ord"].ToString();
-                    if (!row.IsNull("Mat_Phase"))
-                        phase = row["Mat_Phase"].ToString();
-                    if (!row.IsNull("Mat_Type"))
-                        type = row["Mat_Type"].ToString();
-                    if (!row.IsNull("Manuf_LeadTime"))
-                        leadTime = row["Manuf_LeadTime"].ToString();
-                    if (!row.IsNull("PO_Number"))
-                        gapPO = row["PO_Number"].ToString();
-                    if (!row.IsNull("ShopReqDate"))
-                        shopReq = row.Field<DateTime>("ShopReqDate");
-                    if (!row.IsNull("ShopRecvdDate"))
-                        shopRecv = row.Field<DateTime>("ShopRecvdDate");
-                    if (!row.IsNull("SubmitIssue"))
-                        submIssue = row.Field<DateTime>("SubmitIssue");
-                    if (!row.IsNull("Resubmit_Date"))
-                        reSubmit = row.Field<DateTime>("Resubmit_Date");
-                    if (!row.IsNull("SubmitAppr"))
-                        submAppr = row.Field<DateTime>("SubmitAppr");
-                    if (!row.IsNull("Color_Selected"))
-                        color = row["Color_Selected"].ToString();
-                    if (!row.IsNull("Guar_Dim"))
-                        guarDim = row.Field<Boolean>("Guar_Dim");
-                    if (!row.IsNull("Field_Dim"))
-                        fieldDim = row.Field<DateTime>("Field_Dim");
-                    if (!row.IsNull("ReleasedForFab"))
-                        rff = row.Field<DateTime>("ReleasedForFab");
-                    if (!row.IsNull("LaborComplete"))
-                        laborComplete = row.Field<Boolean>("LaborComplete");
-
-                    sb_trackReports.Add(new TrackReport
-                    {
-                        //ProjMat = int.Parse(selectedId),
-                        MatReqdDate = matReqdDate,
-                        ManufacturerName = manufName,
-                        QtyOrd = qtyOrd,
-                        Phase = phase,
-                        Type = type,
-                        ManufLeadTime = leadTime,
-                        PoNumber = gapPO,
-                        ShopReqDate = shopReq,
-                        ShopRecvdDate = shopRecv,
-                        SubmIssue = submIssue,
-                        ReSubmit = reSubmit,
-                        SubmAppr = submAppr,
-                        Color = color,
-                        GuarDim = guarDim,
-                        FieldDim = fieldDim,
-                        RFF = rff,
-                        LaborComplete = laborComplete
-                    });
-                }
-
-                foreach (TrackReport report in sb_trackReports)
-                {
-                    // Create the row dynamically
-                    DatePicker MatlReqd_Date = new DatePicker();
-                    Label Manufacturer_TextBox = new Label();
-                    //Manufacturer_TextBox.IsReadOnly = true;
-                    Label QtyOrd_TextBox = new Label();
-                    Label Phase_TextBox = new Label();
-                    Label Type_TextBox = new Label();
-                    Label LeadTime_TextBox = new Label();
-                    Label PONumber_TextBox = new Label();
-                    DatePicker ShopReqst_Date = new DatePicker();
-                    DatePicker ShopRecvd_Date = new DatePicker();
-                    DatePicker Subm_Date = new DatePicker();
-                    DatePicker Resubmit_Date = new DatePicker();
-                    DatePicker SubmAppr_Date = new DatePicker();
-                    Label Color_TextBox = new Label();
-                    CheckBox GuarDim_CheckBox = new CheckBox();
-                    DatePicker FieldDim_Date = new DatePicker();
-                    DatePicker RFF_Date = new DatePicker();
-                    CheckBox Labor_CheckBox = new CheckBox();
-
-                    //Manufacturer_TextBox.IsReadOnly = true;
-                    //Type_TextBox.IsReadOnly = true;
-                    //LeadTime_TextBox.IsReadOnly = true;
-                    //Color_TextBox.IsReadOnly = true;
-
-                    MatlReqd_Date.Text = report.MatReqdDate.ToString();
-                    Manufacturer_TextBox.Content = report.ManufacturerName;
-                    QtyOrd_TextBox.Content = report.QtyOrd;
-                    Phase_TextBox.Content = report.Phase;
-                    Type_TextBox.Content = report.Type;
-                    LeadTime_TextBox.Content = report.ManufLeadTime;
-                    PONumber_TextBox.Content = report.PoNumber;
-                    ShopReqst_Date.Text = report.ShopReqDate.ToString();
-                    ShopRecvd_Date.Text = report.ShopRecvdDate.ToString();
-                    Subm_Date.Text = report.SubmIssue.ToString();
-                    Resubmit_Date.Text = report.ReSubmit.ToString();
-                    SubmAppr_Date.Text = report.SubmAppr.ToString();
-                    Color_TextBox.Content = report.Color;
-                    GuarDim_CheckBox.IsChecked = report.GuarDim;
-                    FieldDim_Date.Text = report.FieldDim.ToString();
-                    RFF_Date.Text = report.RFF.ToString();
-                    Labor_CheckBox.IsChecked = report.LaborComplete;
-
-                    Grid secondGrid = new Grid();
-                    //TrackingGrid
-                    for (int i = 0; i < 18; i++)
-                    {
-                        secondGrid.ColumnDefinitions.Add(new ColumnDefinition());
-                    }
-
-                    secondGrid.ColumnDefinitions[0].Width = new GridLength(2.5, GridUnitType.Star);
-                    secondGrid.ColumnDefinitions[1].Width = new GridLength(4, GridUnitType.Star);
-                    secondGrid.ColumnDefinitions[2].Width = new GridLength(1.5, GridUnitType.Star);
-                    secondGrid.ColumnDefinitions[3].Width = new GridLength(3, GridUnitType.Star);
-                    secondGrid.ColumnDefinitions[4].Width = new GridLength(3, GridUnitType.Star);
-                    secondGrid.ColumnDefinitions[5].Width = new GridLength(2, GridUnitType.Star);
-                    secondGrid.ColumnDefinitions[6].Width = new GridLength(2, GridUnitType.Star);
-                    secondGrid.ColumnDefinitions[7].Width = new GridLength(2.5, GridUnitType.Star);
-                    secondGrid.ColumnDefinitions[8].Width = new GridLength(2.5, GridUnitType.Star);
-                    secondGrid.ColumnDefinitions[9].Width = new GridLength(2.5, GridUnitType.Star);
-                    secondGrid.ColumnDefinitions[10].Width = new GridLength(2.5, GridUnitType.Star);
-                    secondGrid.ColumnDefinitions[11].Width = new GridLength(2.5, GridUnitType.Star);
-                    secondGrid.ColumnDefinitions[12].Width = new GridLength(2, GridUnitType.Star);
-                    secondGrid.ColumnDefinitions[13].Width = new GridLength(1.5, GridUnitType.Star);
-                    secondGrid.ColumnDefinitions[14].Width = new GridLength(2.5, GridUnitType.Star);
-                    secondGrid.ColumnDefinitions[15].Width = new GridLength(2.5, GridUnitType.Star);
-                    secondGrid.ColumnDefinitions[16].Width = new GridLength(2, GridUnitType.Star);
-
-                    Grid.SetColumn(MatlReqd_Date, 0);
-                    Grid.SetColumn(Manufacturer_TextBox, 1);
-                    Grid.SetColumn(QtyOrd_TextBox, 2);
-                    Grid.SetColumn(Phase_TextBox, 3);
-                    Grid.SetColumn(Type_TextBox, 4);
-                    Grid.SetColumn(LeadTime_TextBox, 5);
-                    Grid.SetColumn(PONumber_TextBox, 6);
-                    Grid.SetColumn(ShopReqst_Date, 7);
-                    Grid.SetColumn(ShopRecvd_Date, 8);
-                    Grid.SetColumn(Subm_Date, 9);
-                    Grid.SetColumn(Resubmit_Date, 10);
-                    Grid.SetColumn(SubmAppr_Date, 11);
-                    Grid.SetColumn(Color_TextBox, 12);
-                    Grid.SetColumn(GuarDim_CheckBox, 13);
-                    Grid.SetColumn(FieldDim_Date, 14);
-                    Grid.SetColumn(RFF_Date, 15);
-                    Grid.SetColumn(Labor_CheckBox, 16);
-
-                    secondGrid.Children.Add(MatlReqd_Date);
-                    secondGrid.Children.Add(Manufacturer_TextBox);
-                    secondGrid.Children.Add(QtyOrd_TextBox);
-                    secondGrid.Children.Add(Phase_TextBox);
-                    secondGrid.Children.Add(Type_TextBox);
-                    secondGrid.Children.Add(LeadTime_TextBox);
-                    secondGrid.Children.Add(PONumber_TextBox);
-                    secondGrid.Children.Add(ShopReqst_Date);
-                    secondGrid.Children.Add(ShopRecvd_Date);
-                    secondGrid.Children.Add(Subm_Date);
-                    secondGrid.Children.Add(Resubmit_Date);
-                    secondGrid.Children.Add(SubmAppr_Date);
-                    secondGrid.Children.Add(Color_TextBox);
-                    secondGrid.Children.Add(GuarDim_CheckBox);
-                    secondGrid.Children.Add(FieldDim_Date);
-                    secondGrid.Children.Add(RFF_Date);
-                    secondGrid.Children.Add(Labor_CheckBox);
-
-                    if (rowIndex % 2 != 0)
-                    {
-                        secondGrid.Background = new SolidColorBrush(Colors.Gainsboro);
-                    }
-                    Grid.SetRow(secondGrid, rowIndex);
-
-                    TrackingReportGrid1.Children.Add(secondGrid);
-
-                    rowIndex += 1;
-                }
-
-                // Tracking Report Grid2
-                sqlquery = "SELECT tblLab.SOV_Acronym, tblLab.Labor_Desc, tblProjectChangeOrders.CO_ItemNo, tblLab.Lab_Phase, tblLab.Complete FROM tblProjectChangeOrders RIGHT JOIN (SELECT tblSOV.SOV_Acronym, tblLabor.Labor_Desc, tblSOV.CO_ID, tblSOV.Lab_Phase, tblSOV.Complete FROM tblLabor RIGHT JOIN (SELECT  tblProjectLabor.Labor_ID, tblProjectLabor.Lab_Phase, tblSOV.ProjSOV_ID, tblSOV.SOV_Acronym, tblSOV.CO_ID, tblProjectLabor.Complete FROM tblProjectLabor RIGHT JOIN (SELECT * FROM tblProjectSOV WHERE Project_ID = " + selectedProjectID.ToString() + ") AS tblSOV ON tblProjectLabor.ProjSOV_ID = tblSOV.ProjSOV_ID) AS tblSOV ON tblSOV.Labor_ID = tblLabor.Labor_ID) AS tblLab ON tblLab.CO_ID = tblProjectChangeOrders.CO_ID; ";
-                rowIndex = 0;
-
-                cmd = new SqlCommand(sqlquery, dbConnection.Connection);
-                sda = new SqlDataAdapter(cmd);
-                ds = new DataSet();
-                sda.Fill(ds);
-                rowCount = ds.Tables[0].Rows.Count; // number of rows
-
-                TrackingReportGrid2.Children.Clear();
-                sb_trackLaborReports.Clear();
-
-                foreach (DataRow row in ds.Tables[0].Rows)
-                {
-                    string sovAcronym = "";
-                    string laborDesc = "";
-                    string coItemNo = "";
-                    string labPhase = "";
-                    bool laborComplete = false;
-
-
-                    if (!row.IsNull("SOV_Acronym"))
-                        sovAcronym = row["SOV_Acronym"].ToString();
-                    if (!row.IsNull("Labor_Desc"))
-                        laborDesc = row["Labor_Desc"].ToString();
-                    if (!row.IsNull("CO_ItemNo"))
-                        coItemNo = row["CO_ItemNo"].ToString();
-                    if (!row.IsNull("Lab_Phase"))
-                        labPhase = row["Lab_Phase"].ToString();
-                    if (!row.IsNull("Complete"))
-                        laborComplete = row.Field<Boolean>("Complete");
-
-                    sb_trackLaborReports.Add(new TrackLaborReport
-                    {
-                        //ProjMat = int.Parse(selectedId),
-                        SovAcronym = sovAcronym,
-                        LaborDesc = laborDesc,
-                        CoItemNo = coItemNo,
-                        LabPhase = labPhase,
-                        Complete = laborComplete
-                    });
-
-                }
-
-                for (int i = 0; i < rowCount; i++)
-                {
-                    RowDefinition rowDef = new RowDefinition();
-                    rowDef.Height = GridLength.Auto;
-                    TrackingReportGrid2.RowDefinitions.Add(rowDef);
-                }
-
-                foreach (TrackLaborReport laborReport in sb_trackLaborReports)
-                {
-                    Grid secondGrid = new Grid();
-
-                    Label SovAcronym_Label = new Label();
-                    Label LaborDesc_Label = new Label();
-                    Label ChangeOrder_Label = new Label();
-                    Label Phase_Label = new Label();
-                    CheckBox Complete_CheckBox = new CheckBox();
-
-                    SovAcronym_Label.Content = laborReport.SovAcronym;
-                    LaborDesc_Label.Content = laborReport.LaborDesc;
-                    ChangeOrder_Label.Content = laborReport.CoItemNo;
-                    Phase_Label.Content = laborReport.LabPhase;
-                    Complete_CheckBox.IsChecked = laborReport.Complete;
-
-                    Grid.SetColumn(SovAcronym_Label, 0);
-                    Grid.SetColumn(LaborDesc_Label, 1);
-                    Grid.SetColumn(ChangeOrder_Label, 2);
-                    Grid.SetColumn(Phase_Label, 3);
-                    Grid.SetColumn(Complete_CheckBox, 4);
-
-                    for (int i = 0; i < 5; i++)
-                    {
-                        secondGrid.ColumnDefinitions.Add(new ColumnDefinition());
-                    }
-
-                    secondGrid.ColumnDefinitions[0].Width = new GridLength(1, GridUnitType.Star);
-                    secondGrid.ColumnDefinitions[1].Width = new GridLength(2, GridUnitType.Star);
-                    secondGrid.ColumnDefinitions[2].Width = new GridLength(1, GridUnitType.Star);
-                    secondGrid.ColumnDefinitions[3].Width = new GridLength(1, GridUnitType.Star);
-                    secondGrid.ColumnDefinitions[4].Width = new GridLength(1, GridUnitType.Star);
-
-                    secondGrid.Children.Add(SovAcronym_Label);
-                    secondGrid.Children.Add(LaborDesc_Label);
-                    secondGrid.Children.Add(ChangeOrder_Label);
-                    secondGrid.Children.Add(Phase_Label);
-                    secondGrid.Children.Add(Complete_CheckBox);
-
-                    if (rowIndex % 2 != 0)
-                    {
-                        secondGrid.Background = new SolidColorBrush(Colors.Gainsboro);
-                    }
-                    Grid.SetRow(secondGrid, rowIndex);
-
-                    TrackingReportGrid2.Children.Add(secondGrid);
 
                     rowIndex += 1;
                 }
@@ -1541,130 +1132,16 @@ namespace WpfApp
 
                     rowIndex += 1;
                 }
-
-                //// ProjMatList
-                //sqlquery = " SELECT tblWorkOrdersMat.Mat_Qty, tblMat.* FROM tblWorkOrdersMat RIGHT JOIN ( SELECT tblProjectSOV.SOV_Acronym, tblMat.* FROM tblProjectSOV RIGHT JOIN ( SELECT tblMat.*, tblProjectMaterialsShip.Qty_Recvd, tblProjectMaterialsShip.ProjMS_ID FROM tblProjectMaterialsShip RIGHT JOIN ( SELECT tblManufacturers.Manuf_Name, tblMat.* FROM tblManufacturers RIGHT JOIN (  SELECT tblMaterials.Material_Desc,tblMat.* FROM tblMaterials RIGHT JOIN (SELECT tblProjectMaterialsTrack.MatReqdDate, tblProjectMaterialsTrack.TakeFromStock, tblMat.*, tblProjectMaterialsTrack.ProjMT_ID, tblProjectMaterialsTrack.Manuf_ID, tblProjectMaterialsTrack.Qty_Ord  FROM tblProjectMaterialsTrack RIGHT JOIN (SELECT Project_ID, ProjMat_ID, ProjSOV_ID ,Material_ID, Qty_Reqd FROM tblProjectMaterials WHERE Project_ID = " + selectedProjectID.ToString() + ") AS tblMat ON tblProjectMaterialsTrack.ProjMat_ID = tblMat.ProjMat_ID) AS tblMat ON tblMaterials.Material_ID = tblMat.Material_ID) AS tblMat ON tblMat.Manuf_ID = tblManufacturers.Manuf_ID) AS tblMat ON tblMat.ProjMT_ID = tblProjectMaterialsShip.ProjMT_ID) AS tblMat ON tblMat.ProjSOV_ID = tblProjectSOV.ProjSOV_ID) AS tblMat ON tblWorkOrdersMat.ProjMS_ID = tblMat.ProjMS_ID ORDER BY Material_Desc";
-
-                //cmd = new SqlCommand(sqlquery, dbConnection.Connection);
-                //sda = new SqlDataAdapter(cmd);
-                //ds = new DataSet();
-                //sda.Fill(ds);
-                //rowCount = ds.Tables[0].Rows.Count; // number of rows
-                //rowIndex = 0;
-
-                //sb_projectWorkOrder.Clear();
-                //foreach (DataRow row in ds.Tables[0].Rows)
-                //{
-                //    int _projectID = 0;
-                //    string _sovAcronym = "";
-                //    string _matName = "";
-                //    string _manufName = "";
-                //    bool _stock = false;
-                //    DateTime _matlReqd = new DateTime();
-                //    int _qtyReqd = 0;
-                //    int _qtyOrd = 0;
-                //    int _qtyRecvd = 0;
-                //    int _matQty = 0;
-
-                //    if (!row.IsNull("Project_ID"))
-                //        _projectID = row.Field<int>("Project_ID");
-                //    if (!row.IsNull("SOV_Acronym"))
-                //        _sovAcronym = row["SOV_Acronym"].ToString();
-                //    if (!row.IsNull("Material_Desc"))
-                //        _matName = row["Material_Desc"].ToString(); ;
-                //    if (!row.IsNull("Manuf_Name"))
-                //        _manufName = row["Manuf_Name"].ToString();
-                //    if (!row.IsNull("TakeFromStock"))
-                //        _stock = row.Field<Boolean>("TakeFromStock");
-                //    if (!row.IsNull("MatReqdDate"))
-                //        _matlReqd = row.Field<DateTime>("MatReqdDate");
-                //    if (!row.IsNull("Qty_Reqd"))
-                //        _qtyReqd = int.Parse(row["Qty_Reqd"].ToString());
-                //    if (!row.IsNull("Qty_Ord"))
-                //        _qtyOrd = int.Parse(row["Qty_Ord"].ToString());
-                //    if (!row.IsNull("Qty_Recvd"))
-                //        _qtyRecvd = int.Parse(row["Qty_Recvd"].ToString());
-                //    if (!row.IsNull("Mat_Qty"))
-                //        _matQty = int.Parse(row["Mat_Qty"].ToString());
-
-                //    sb_projectWorkOrder.Add(new ProjectWorkOrder
-                //    {
-                //        ProjectID = _projectID,
-                //        SovAcronym = _sovAcronym,
-                //        MatName = _matName,
-                //        ManufName = _manufName,
-                //        Stock = _stock,
-                //        MatlReqd = _matlReqd,
-                //        QtyReqd = _qtyReqd,
-                //        QtyOrd = _qtyOrd,
-                //        QtyRecvd = _qtyRecvd,
-                //        MatQty = _matQty
-                //    });
-                //}
-
-                //ProjectWorkOrderList.ItemsSource = sb_projectWorkOrder;
-                //ProjectWorkOrderList.SelectedValuePath = "ProjectID";
-
-                //// Project Labor List
-                //sqlquery = " SELECT CO_ItemNo, tblLab.* FROM tblProjectChangeOrders RIGHT JOIN (SELECT tblProjectSOV.SOV_Acronym, tblProjectSOV.CO_ID, tblLab.Labor_Desc, tblLab.Qty_Reqd, tblLab.UnitPrice, tblLab.Lab_Phase FROM tblProjectSOV RIGHT JOIN ( SELECT tblLabor.Labor_Desc, tblLab.*  FROM tblLabor RIGHT JOIN ( SELECT * FROM tblProjectLabor WHERE Project_ID = " + selectedProjectID.ToString() + ") AS tblLab ON tblLabor.Labor_ID = tblLab.Labor_ID) AS tblLab ON tblProjectSOV.ProjSOV_ID = tblLab.ProjSOV_ID) AS tblLab ON tblProjectChangeOrders.CO_ID = tblLab.CO_ID ORDER BY tblLab.SOV_Acronym";
-
-                //cmd = new SqlCommand(sqlquery, dbConnection.Connection);
-                //sda = new SqlDataAdapter(cmd);
-                //ds = new DataSet();
-                //sda.Fill(ds);
-                //rowCount = ds.Tables[0].Rows.Count; // number of rows
-                //rowIndex = 0;
-
-                //foreach (DataRow row in ds.Tables[0].Rows)
-                //{
-                //    string _sovAcronym = "";
-                //    string _labor = "";
-                //    double _qtyReqd = 0;
-                //    double _unitPrice = 0;
-                //    //int    = 0;
-                //    int _changeOrder = 0;
-                //    string _phase = "";
-                //    if (!row.IsNull("SOV_Acronym"))
-                //        _sovAcronym = row["SOV_Acronym"].ToString();
-                //    if (!row.IsNull("Labor_Desc"))
-                //        _labor = row["Labor_Desc"].ToString();
-                //    if (!row.IsNull("Qty_Reqd"))
-                //        _qtyReqd = double.Parse(row["Qty_Reqd"].ToString());
-                //    if (!row.IsNull("UnitPrice"))
-                //        _unitPrice = row.Field<double>("UnitPrice");
-                //    if (!row.IsNull("CO_ItemNo"))
-                //        _changeOrder = int.Parse(row["CO_ItemNo"].ToString());
-                //    if (!row.IsNull("Lab_Phase"))
-                //        _phase = row["Lab_Phase"].ToString();
-                //    sb_projectLabor.Add(new ProjectLabor
-                //    {
-                //        ProjectID = selectedProjectID,
-                //        SovAcronym = _sovAcronym,
-                //        Labor = _labor,
-                //        QtyReqd = _qtyReqd,
-                //        UnitPrice = _unitPrice,
-                //        ChangeOrder = _changeOrder,
-                //        Phase = _phase
-                //    });
-                //}
-                //ProjectLaborList.ItemsSource = sb_projectLabor;
-                //ProjectLaborList.SelectedValuePath = "ProjectID";
             }
             else
             {
                 PMGrid.Children.Clear();
                 SuptGrid.Children.Clear();
                 ProjectNoteGrid.Children.Clear();
-                SOVGrid1.Children.Clear();
-                SOVGrid2.Children.Clear();
-                TrackingReportGrid1.Children.Clear();
-                TrackingReportGrid2.Children.Clear();
                 PreInstallGrid.Children.Clear();
                 ContractGrid.Children.Clear();
                 CIPGrid.Children.Clear();
                 ProjectWorkOrderList.SelectedIndex = -1;
-                //TrackShipList.SelectedValue = -1;
-                //TrackShipList.ItemsSource = "";
                 WorkOrderNoteGrid.Children.Clear();
 
                 ProjectName_TB.Clear();
@@ -1695,7 +1172,6 @@ namespace WpfApp
                 OrigProfit_LB.Content = "";
                 OrigTotalAmt_LB.Content = "";
             }
-
         }
 
         private void SelectPaymentComboBoxItem(object sender, MouseButtonEventArgs e)
@@ -1711,443 +1187,6 @@ namespace WpfApp
         private void SelectPaymentCheckBox(object sender, MouseButtonEventArgs e)
         {
             e.Handled = true;
-        }
-
-        private void SelectTrackShipList(object sender, SelectionChangedEventArgs e)
-        {
-            if (TrackShipList.SelectedItem != null)
-            {
-                string selectedId = TrackShipList.SelectedValue.ToString();
-
-                int rowIndex = 0;
-                int rowCount = 0;
-                if (!string.IsNullOrEmpty(selectedId))
-                {
-                    sqlquery = "Select MatReqdDate, Qty_Ord, tblManufacturers.Manuf_ID, TakeFromStock, Manuf_LeadTime, Manuf_Order_No, PO_Number, ShopReqDate, ShopRecvdDate, SubmitIssue, Resubmit_Date, SubmitAppr, No_Sub_Needed, Ship_to_Job, FM_Needed, Guar_Dim, Field_Dim, Finals_Rev,  ReleasedForFab, MatComplete, LaborComplete from tblManufacturers RIGHT JOIN(Select * from tblProjectMaterialsTrack where ProjMat_ID = " + selectedId + ") AS tblProjMat ON tblManufacturers.Manuf_ID = tblProjMat.Manuf_ID;";
-                    cmd = new SqlCommand(sqlquery, dbConnection.Connection);
-                    sda = new SqlDataAdapter(cmd);
-                    ds = new DataSet();
-                    sda.Fill(ds);
-                    rowCount = ds.Tables[0].Rows.Count; // number of rows
-                }
-
-                for (int i = 0; i < rowCount; i++)
-                {
-                    RowDefinition rowDef = new RowDefinition();
-                    rowDef.Height = GridLength.Auto;
-                    TrackingGrid.RowDefinitions.Add(rowDef);
-                }
-
-                sb_projectMatTrackings.Clear();
-                TrackingGrid.Children.Clear();
-
-                foreach (DataRow row in ds.Tables[0].Rows)
-                {
-                    DateTime matReqdDate = new DateTime();
-
-                    if (!row.IsNull("MatReqdDate"))
-                        matReqdDate = row.Field<DateTime>("MatReqdDate");
-                    string qtyOrd = "";
-                    if (!row.IsNull("Qty_Ord"))
-                        qtyOrd = row.Field<int>("Qty_Ord").ToString();
-                    int manufID = row.Field<int>("Manuf_ID");
-                    bool stock = row.Field<Boolean>("TakeFromStock");
-                    string leadTime = "";
-                    if (!row.IsNull("Manuf_LeadTime"))
-                        leadTime = row["Manuf_LeadTime"].ToString();
-                    string manufOrd = "";
-                    if (!row.IsNull("Manuf_Order_No"))
-                        manufOrd = row["Manuf_Order_No"].ToString();
-                    string gapPO = "";
-                    if (!row.IsNull("PO_Number"))
-                        gapPO = row["PO_Number"].ToString();
-                    DateTime shopReq = new DateTime();
-                    if (!row.IsNull("ShopReqDate"))
-                        shopReq = row.Field<DateTime>("ShopReqDate");
-                    DateTime shopRecv = new DateTime();
-                    if (!row.IsNull("ShopRecvdDate"))
-                        shopRecv = row.Field<DateTime>("ShopRecvdDate");
-                    DateTime submIssue = new DateTime();
-                    if (!row.IsNull("SubmitIssue"))
-                        submIssue = row.Field<DateTime>("SubmitIssue");
-                    DateTime reSubmit = new DateTime();
-                    if (!row.IsNull("Resubmit_Date"))
-                        reSubmit = row.Field<DateTime>("Resubmit_Date");
-                    DateTime submAppr = new DateTime();
-                    if (!row.IsNull("SubmitAppr"))
-                        submAppr = row.Field<DateTime>("SubmitAppr");
-                    bool noSubNeeded = row.Field<Boolean>("No_Sub_Needed");
-                    bool shipToJob = row.Field<Boolean>("Ship_to_Job");
-                    bool fmNeeded = row.Field<Boolean>("FM_Needed");
-                    bool guarDim = row.Field<Boolean>("Guar_Dim");
-                    DateTime fieldDim = new DateTime();
-                    if (!row.IsNull("Field_Dim"))
-                        fieldDim = row.Field<DateTime>("Field_Dim");
-                    bool finalsRev = row.Field<Boolean>("Finals_Rev");
-                    DateTime rff = new DateTime();
-                    if (!row.IsNull("ReleasedForFab"))
-                        rff = row.Field<DateTime>("ReleasedForFab");
-                    bool matComplete = row.Field<Boolean>("MatComplete");
-                    bool laborComplete = row.Field<Boolean>("LaborComplete");
-
-                    sb_projectMatTrackings.Add(new ProjectMatTracking
-                    {
-                        ProjMat = int.Parse(selectedId),
-                        MatReqdDate = matReqdDate,
-                        QtyOrd = qtyOrd,
-                        ManufacturerID = manufID,
-                        TakeFromStock = stock,
-                        LeadTime = leadTime,
-                        ManuOrderNo = manufOrd,
-                        PoNumber = gapPO,
-                        ShopReqDate = shopReq,
-                        ShopRecvdDate = shopRecv,
-                        SubmAppr = submAppr,
-                        NoSubm = noSubNeeded,
-                        ShipToJob = shipToJob,
-                        NeedFM = fmNeeded,
-                        GuarDim = guarDim,
-                        FieldDim = fieldDim,
-                        FinalsRev = finalsRev,
-                        RFF = rff,
-                        OrderComplete = matComplete,
-                        LaborComplete = laborComplete
-                    });
-
-                    foreach (ProjectMatTracking track in sb_projectMatTrackings)
-                    {
-                        Grid secondGrid = new Grid();
-
-                        //TrackingGrid
-                        for (int i = 0; i < 21; i++)
-                        {
-                            secondGrid.ColumnDefinitions.Add(new ColumnDefinition());
-                        }
-
-                        secondGrid.ColumnDefinitions[0].Width = new GridLength(2.5, GridUnitType.Star);
-                        secondGrid.ColumnDefinitions[1].Width = new GridLength(1.5, GridUnitType.Star);
-                        secondGrid.ColumnDefinitions[2].Width = new GridLength(4, GridUnitType.Star);
-                        secondGrid.ColumnDefinitions[3].Width = new GridLength(1, GridUnitType.Star);
-                        secondGrid.ColumnDefinitions[4].Width = new GridLength(2, GridUnitType.Star);
-                        secondGrid.ColumnDefinitions[5].Width = new GridLength(2, GridUnitType.Star);
-                        secondGrid.ColumnDefinitions[6].Width = new GridLength(2, GridUnitType.Star);
-                        secondGrid.ColumnDefinitions[7].Width = new GridLength(2.5, GridUnitType.Star);
-                        secondGrid.ColumnDefinitions[8].Width = new GridLength(2.5, GridUnitType.Star);
-                        secondGrid.ColumnDefinitions[9].Width = new GridLength(2.5, GridUnitType.Star);
-                        secondGrid.ColumnDefinitions[10].Width = new GridLength(2.5, GridUnitType.Star);
-                        secondGrid.ColumnDefinitions[11].Width = new GridLength(2.5, GridUnitType.Star);
-                        secondGrid.ColumnDefinitions[12].Width = new GridLength(1, GridUnitType.Star);
-                        secondGrid.ColumnDefinitions[13].Width = new GridLength(1, GridUnitType.Star);
-                        secondGrid.ColumnDefinitions[14].Width = new GridLength(1, GridUnitType.Star);
-                        secondGrid.ColumnDefinitions[15].Width = new GridLength(1, GridUnitType.Star);
-                        secondGrid.ColumnDefinitions[16].Width = new GridLength(2.5, GridUnitType.Star);
-                        secondGrid.ColumnDefinitions[17].Width = new GridLength(1, GridUnitType.Star);
-                        secondGrid.ColumnDefinitions[18].Width = new GridLength(2.5, GridUnitType.Star);
-                        secondGrid.ColumnDefinitions[19].Width = new GridLength(1.5, GridUnitType.Star);
-                        secondGrid.ColumnDefinitions[20].Width = new GridLength(1.5, GridUnitType.Star);
-
-                        DatePicker MatlReqd_Date = new DatePicker();
-                        TextBox QtyOrd_TextBox = new TextBox();
-                        ComboBox Manufacturer_Combo = new ComboBox();
-                        CheckBox Stock_CheckBox = new CheckBox();
-                        TextBox LeadTime_TextBox = new TextBox();
-                        TextBox ManuOrd_TextBox = new TextBox();
-                        TextBox Gap_TB = new TextBox();
-                        DatePicker ShopReqst_Date = new DatePicker();
-                        DatePicker ShopRecvd_Date = new DatePicker();
-                        DatePicker Subm_Date = new DatePicker();
-                        DatePicker Resubmit_Date = new DatePicker();
-                        DatePicker SubmAppr_Date = new DatePicker();
-                        CheckBox NoSubm_CheckBox = new CheckBox();
-                        CheckBox ShipToJob_CheckBox = new CheckBox();
-                        CheckBox NeedFM_CheckBox = new CheckBox();
-                        CheckBox GuarDim_CheckBox = new CheckBox();
-                        DatePicker FieldDim_Date = new DatePicker();
-                        CheckBox FinalsRev_CheckBox = new CheckBox();
-                        DatePicker RFF_Date = new DatePicker();
-                        CheckBox Order_CheckBox = new CheckBox();
-                        CheckBox Labor_CheckBox = new CheckBox();
-
-                        //MatlReqd_Date.SetBinding(DatePicker.TextProperty, new Binding("MatReqdDate"));
-                        //QtyOrd_TextBox.SetBinding(TextBox.TextProperty, new Binding("QtyOrd"));
-
-                        MatlReqd_Date.Text = track.MatReqdDate.Date.ToShortDateString();
-                        QtyOrd_TextBox.Text = track.QtyOrd;
-                        Manufacturer_Combo.ItemsSource = ProjectVM.Manufacturers;
-                        Manufacturer_Combo.DisplayMemberPath = "ManufacturerName";
-                        Manufacturer_Combo.SelectedValuePath = "ID";
-                        Manufacturer_Combo.SelectedValue = track.ManufacturerID;
-
-                        Stock_CheckBox.IsChecked = track.TakeFromStock;
-                        LeadTime_TextBox.Text = track.LeadTime.ToString();
-                        ManuOrd_TextBox.Text = track.ManuOrderNo.ToString();
-                        Gap_TB.Text = track.PoNumber;
-                        ShopReqst_Date.Text = track.ShopReqDate.ToString();
-                        ShopRecvd_Date.Text = track.ShopRecvdDate.ToString();
-                        Subm_Date.Text = track.SubmIssue.ToString();
-                        Resubmit_Date.Text = track.ReSubmit.ToString();
-                        SubmAppr_Date.Text = track.SubmAppr.ToString();
-                        NoSubm_CheckBox.IsChecked = track.NoSubm;
-                        ShipToJob_CheckBox.IsChecked = track.ShipToJob;
-                        NeedFM_CheckBox.IsChecked = track.NeedFM;
-                        GuarDim_CheckBox.IsChecked = track.GuarDim;
-                        FieldDim_Date.Text = track.FieldDim.ToString();
-                        FinalsRev_CheckBox.IsChecked = track.FinalsRev;
-                        RFF_Date.Text = track.RFF.ToString();
-                        Order_CheckBox.IsChecked = track.OrderComplete;
-                        Labor_CheckBox.IsChecked = track.LaborComplete;
-
-                        Grid.SetColumn(MatlReqd_Date, 0);
-                        Grid.SetColumn(QtyOrd_TextBox, 1);
-                        Grid.SetColumn(Manufacturer_Combo, 2);
-                        Grid.SetColumn(Stock_CheckBox, 3);
-                        Grid.SetColumn(LeadTime_TextBox, 4);
-                        Grid.SetColumn(ManuOrd_TextBox, 5);
-                        Grid.SetColumn(Gap_TB, 6);
-                        Grid.SetColumn(ShopReqst_Date, 7);
-                        Grid.SetColumn(ShopRecvd_Date, 8);
-                        Grid.SetColumn(Subm_Date, 9);
-                        Grid.SetColumn(Resubmit_Date, 10);
-                        Grid.SetColumn(SubmAppr_Date, 11);
-                        Grid.SetColumn(NoSubm_CheckBox, 12);
-                        Grid.SetColumn(ShipToJob_CheckBox, 13);
-                        Grid.SetColumn(NeedFM_CheckBox, 14);
-                        Grid.SetColumn(GuarDim_CheckBox, 15);
-                        Grid.SetColumn(FieldDim_Date, 16);
-                        Grid.SetColumn(FinalsRev_CheckBox, 17);
-                        Grid.SetColumn(RFF_Date, 18);
-                        Grid.SetColumn(Order_CheckBox, 19);
-                        Grid.SetColumn(Labor_CheckBox, 20);
-
-                        secondGrid.Children.Add(MatlReqd_Date);
-                        secondGrid.Children.Add(QtyOrd_TextBox);
-                        secondGrid.Children.Add(Manufacturer_Combo);
-                        secondGrid.Children.Add(Stock_CheckBox);
-                        secondGrid.Children.Add(LeadTime_TextBox);
-                        secondGrid.Children.Add(ManuOrd_TextBox);
-                        secondGrid.Children.Add(Gap_TB);
-                        secondGrid.Children.Add(ShopReqst_Date);
-                        secondGrid.Children.Add(ShopRecvd_Date);
-                        secondGrid.Children.Add(Subm_Date);
-                        secondGrid.Children.Add(Resubmit_Date);
-                        secondGrid.Children.Add(SubmAppr_Date);
-                        secondGrid.Children.Add(NoSubm_CheckBox);
-                        secondGrid.Children.Add(ShipToJob_CheckBox);
-                        secondGrid.Children.Add(NeedFM_CheckBox);
-                        secondGrid.Children.Add(GuarDim_CheckBox);
-                        secondGrid.Children.Add(FieldDim_Date);
-                        secondGrid.Children.Add(FinalsRev_CheckBox);
-                        secondGrid.Children.Add(RFF_Date);
-                        secondGrid.Children.Add(Order_CheckBox);
-                        secondGrid.Children.Add(Labor_CheckBox);
-
-                        Grid.SetRow(secondGrid, rowIndex);
-
-                        TrackingGrid.Children.Add(secondGrid);
-                        rowIndex += 1;
-                    }
-                }
-
-                if (!string.IsNullOrEmpty(selectedId))
-                {
-                    sqlquery = "SELECT * FROM tblProjectMaterialsShip RIGHT JOIN (SELECT ProjMT_ID FROM tblProjectMaterialsTrack WHERE ProjMat_ID = " + selectedId + ") AS tblMat ON tblProjectMaterialsShip.ProjMT_ID = tblMat.ProjMT_ID;";
-                    cmd = new SqlCommand(sqlquery, dbConnection.Connection);
-                    sda = new SqlDataAdapter(cmd);
-                    ds = new DataSet();
-                    sda.Fill(ds);
-                    rowCount = ds.Tables[0].Rows.Count; // number of rows
-                }
-
-                ShippingGrid.Children.Clear();
-
-                for (int i = 0; i < rowCount; i++)
-                {
-                    RowDefinition rowDef = new RowDefinition();
-                    rowDef.Height = GridLength.Auto;
-                    TrackingGrid.RowDefinitions.Add(rowDef);
-                }
-
-                foreach (DataRow row in ds.Tables[0].Rows)
-                {
-                    DateTime schedShip = new DateTime();
-                    DateTime estDeliv = new DateTime();
-                    DateTime estInstall = new DateTime();
-                    string estWeight = "";
-                    int estNoPallets = 0;
-                    int freightCoID = 0;
-                    string tracking = "";
-                    DateTime dateShipped = new DateTime();
-                    int qtyShipped = 0;
-                    int noOfPallet = 0;
-                    DateTime dateRecvd = new DateTime();
-                    int qtyRecvd = 0;
-                    bool freightDamage = false;
-                    DateTime deliverToJob = new DateTime();
-                    string siteStroage = "";
-                    string stroageDetail = "";
-
-                    if (!row.IsNull("SchedShipDate"))
-                        schedShip = row.Field<DateTime>("SchedShipDate");
-                    if (!row.IsNull("EstDelivDate"))
-                        estDeliv = row.Field<DateTime>("EstDelivDate");
-                    if (!row.IsNull("EstInstallDate"))
-                        estInstall = row.Field<DateTime>("EstInstallDate");
-                    if (!row.IsNull("EstWeight"))
-                        estWeight = row["EstWeight"].ToString();
-                    if (!row.IsNull("EstNoPallets"))
-                        estNoPallets = row.Field<int>("EstNoPallets");
-                    if (!row.IsNull("FreightCo_ID"))
-                        freightCoID = row.Field<int>("FreightCo_ID");
-                    if (!row.IsNull("TrackingNo"))
-                        tracking = row["TrackingNo"].ToString();
-                    if (!row.IsNull("Qty_Shipped"))
-                        dateShipped = row.Field<DateTime>("Qty_Shipped");
-                    if (!row.IsNull("EstNoPallets"))
-                        qtyShipped = row.Field<int>("Qty_Shipped");
-                    if (!row.IsNull("NoOfPallets"))
-                        noOfPallet = int.Parse(row["NoOfPallets"].ToString());
-                    if (!row.IsNull("Date_Recvd"))
-                        dateRecvd = row.Field<DateTime>("Date_Recvd");
-                    if (!row.IsNull("Qty_Recvd"))
-                        qtyRecvd = row.Field<int>("Qty_Recvd");
-                    if (!row.IsNull("FreightDamage"))
-                        freightDamage = row.Field<Boolean>("FreightDamage");
-                    if (!row.IsNull("DelivertoJob"))
-                        deliverToJob = row.Field<DateTime>("DelivertoJob");
-                    if (!row.IsNull("SiteStorage"))
-                        siteStroage = row["SiteStorage"].ToString();
-                    if (!row.IsNull("StorageDetail"))
-                        stroageDetail = row["StorageDetail"].ToString();
-
-                    sb_projectMtShip.Clear();
-                    sb_projectMtShip.Add(new ProjectMatShip
-                    {
-                        SchedShipDate = schedShip,
-                        EstDelivDate = estDeliv,
-                        EstInstallDate = estInstall,
-                        EstWeight = estWeight,
-                        EstPallet = estNoPallets,
-                        FreightCoID = freightCoID,
-                        TrackingNo = tracking,
-                        DateShipped = dateShipped,
-                        QtyShipped = qtyShipped,
-                        NoOfPallet = noOfPallet,
-                        DateRecvd = dateRecvd,
-                        QtyRecvd = qtyRecvd,
-                        FreightDamage = freightDamage,
-                        DeliverToJob = deliverToJob,
-                        SiteStroage = siteStroage,
-                        StroageDetail = stroageDetail
-                    });
-
-                    foreach (ProjectMatShip ship in sb_projectMtShip)
-                    {
-                        Grid secondGrid = new Grid();
-
-                        for (int i = 0; i < 16; i++)
-                        {
-                            secondGrid.ColumnDefinitions.Add(new ColumnDefinition());
-                        }
-
-                        secondGrid.ColumnDefinitions[0].Width = new GridLength(2.5, GridUnitType.Star);
-                        secondGrid.ColumnDefinitions[1].Width = new GridLength(2.5, GridUnitType.Star);
-                        secondGrid.ColumnDefinitions[2].Width = new GridLength(2.5, GridUnitType.Star);
-                        secondGrid.ColumnDefinitions[3].Width = new GridLength(2.5, GridUnitType.Star);
-                        secondGrid.ColumnDefinitions[4].Width = new GridLength(2.5, GridUnitType.Star);
-                        secondGrid.ColumnDefinitions[5].Width = new GridLength(4, GridUnitType.Star);
-                        secondGrid.ColumnDefinitions[6].Width = new GridLength(3, GridUnitType.Star);
-                        secondGrid.ColumnDefinitions[7].Width = new GridLength(2.5, GridUnitType.Star);
-                        secondGrid.ColumnDefinitions[8].Width = new GridLength(2.5, GridUnitType.Star);
-                        secondGrid.ColumnDefinitions[9].Width = new GridLength(2, GridUnitType.Star);
-                        secondGrid.ColumnDefinitions[10].Width = new GridLength(2.5, GridUnitType.Star);
-                        secondGrid.ColumnDefinitions[11].Width = new GridLength(2, GridUnitType.Star);
-                        secondGrid.ColumnDefinitions[12].Width = new GridLength(2, GridUnitType.Star);
-                        secondGrid.ColumnDefinitions[13].Width = new GridLength(2, GridUnitType.Star);
-                        secondGrid.ColumnDefinitions[14].Width = new GridLength(3, GridUnitType.Star);
-                        secondGrid.ColumnDefinitions[15].Width = new GridLength(3, GridUnitType.Star);
-
-                        DatePicker SchedShip_Date = new DatePicker();
-                        DatePicker EstDeliv_Date = new DatePicker();
-                        DatePicker EstInstall_Date = new DatePicker();
-                        TextBox EstWeight_TextBox = new TextBox();
-                        TextBox EstPallet_TextBox = new TextBox();
-                        ComboBox FreightCo_ComBo = new ComboBox();
-                        TextBox Tracking_TextBox = new TextBox();
-                        DatePicker DateShipped_Date = new DatePicker();
-                        TextBox QtyShipped_TextBox = new TextBox();
-                        TextBox Pallet_TextBox = new TextBox();
-                        DatePicker DateRecvd_Date = new DatePicker();
-                        TextBox QtyRecvd_TextBox = new TextBox();
-                        CheckBox FreightDamage_CheckBox = new CheckBox();
-                        DatePicker DeliverToJob_Date = new DatePicker();
-                        ComboBox SiteStroage_ComBo = new ComboBox();
-                        TextBox StroageDetail_TextBox = new TextBox();
-
-                        SchedShip_Date.Text = ship.SchedShipDate.ToString();
-                        EstDeliv_Date.Text = ship.EstDelivDate.ToString();
-                        EstInstall_Date.Text = ship.EstInstallDate.ToString();
-                        EstWeight_TextBox.Text = ship.EstWeight.ToString();
-                        EstPallet_TextBox.Text = ship.EstPallet.ToString();
-                        //FreightCo_ComBo.Text = ship.FreightCoID.ToString();
-                        FreightCo_ComBo.ItemsSource = ProjectVM.FreightCos;
-                        FreightCo_ComBo.DisplayMemberPath = "FreightName";
-                        FreightCo_ComBo.SelectedValuePath = "FreightCoID";
-                        //FreightCo_ComBo.SelectedValue = ship.FreightCoID;
-                        FreightCo_ComBo.SelectedValue = 0;
-
-                        Tracking_TextBox.Text = ship.TrackingNo.ToString();
-                        DateShipped_Date.Text = ship.DateShipped.ToString();
-                        QtyShipped_TextBox.Text = ship.QtyShipped.ToString();
-
-                        Pallet_TextBox.Text = ship.NoOfPallet.ToString();
-                        DateRecvd_Date.Text = ship.DateRecvd.ToString();
-                        QtyRecvd_TextBox.Text = ship.QtyRecvd.ToString();
-                        //FreightDamage_CheckBox.Text = ship.EstWeight.ToString();
-                        DeliverToJob_Date.Text = ship.DeliverToJob.ToString();
-                        //SiteStroage_ComBo.Text = ship.SiteStroage.ToString();
-                        StroageDetail_TextBox.Text = ship.StroageDetail.ToString();
-
-                        Grid.SetColumn(SchedShip_Date, 0);
-                        Grid.SetColumn(EstDeliv_Date, 1);
-                        Grid.SetColumn(EstInstall_Date, 2);
-                        Grid.SetColumn(EstWeight_TextBox, 3);
-                        Grid.SetColumn(EstPallet_TextBox, 4);
-                        Grid.SetColumn(FreightCo_ComBo, 5);
-                        Grid.SetColumn(Tracking_TextBox, 6);
-                        Grid.SetColumn(DateShipped_Date, 7);
-                        Grid.SetColumn(QtyShipped_TextBox, 8);
-                        Grid.SetColumn(Pallet_TextBox, 9);
-                        Grid.SetColumn(DateRecvd_Date, 10);
-                        Grid.SetColumn(QtyRecvd_TextBox, 11);
-                        Grid.SetColumn(FreightDamage_CheckBox, 12);
-                        Grid.SetColumn(DeliverToJob_Date, 13);
-                        Grid.SetColumn(SiteStroage_ComBo, 14);
-                        Grid.SetColumn(StroageDetail_TextBox, 15);
-
-                        secondGrid.Children.Add(SchedShip_Date);
-                        secondGrid.Children.Add(EstDeliv_Date);
-                        secondGrid.Children.Add(EstInstall_Date);
-                        secondGrid.Children.Add(EstWeight_TextBox);
-                        secondGrid.Children.Add(EstPallet_TextBox);
-                        secondGrid.Children.Add(FreightCo_ComBo);
-                        secondGrid.Children.Add(Tracking_TextBox);
-                        secondGrid.Children.Add(DateShipped_Date);
-                        secondGrid.Children.Add(QtyShipped_TextBox);
-                        secondGrid.Children.Add(Pallet_TextBox);
-                        secondGrid.Children.Add(DateRecvd_Date);
-                        secondGrid.Children.Add(QtyRecvd_TextBox);
-                        secondGrid.Children.Add(FreightDamage_CheckBox);
-                        secondGrid.Children.Add(DeliverToJob_Date);
-                        secondGrid.Children.Add(SiteStroage_ComBo);
-                        secondGrid.Children.Add(StroageDetail_TextBox);
-
-                        Grid.SetRow(secondGrid, rowIndex);
-
-                        ShippingGrid.Children.Add(secondGrid);
-                        rowIndex += 1;
-                    }
-                }
-            }
         }
 
         private void SelectWorkOrdersList(object sender, SelectionChangedEventArgs e)

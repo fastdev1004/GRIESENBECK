@@ -62,7 +62,7 @@
                 <Grid.RowDefinitions>
                     <RowDefinition Height="Auto" />
                 </Grid.RowDefinitions>
-                <DataGrid GridLinesVisibility="None" ItemsSource="{Binding Reports}" SelectedValue="{Binding ID, Mode=TwoWay}" SelectedValuePath="ID" AutoGenerateColumns="False" CanUserResizeColumns="False" Background="White" HeadersVisibility="Column">
+                <DataGrid GridLinesVisibility="None" ItemsSource="{Binding Reports}" SelectedValue="{Binding ID, Mode=TwoWay}" SelectedValuePath="ID" AutoGenerateColumns="False" CanUserAddRows="False" Background="White" HeadersVisibility="Column">
                     <DataGrid.Resources>
                         <Style TargetType="DataGridRow">
                             <Setter Property="Height" Value="15" />

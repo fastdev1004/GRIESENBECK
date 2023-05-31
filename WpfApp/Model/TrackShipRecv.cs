@@ -19,7 +19,7 @@ namespace WpfApp.Model
         private string _type;
         private string _color;
         private string _qtyReqd;
-        private string _projMatID;
+        private int _projMatID;
 
         public int ID
         {
@@ -103,7 +103,7 @@ namespace WpfApp.Model
             }
         }
 
-        public string ProjMatID
+        public int ProjMatID
         {
             get => _projMatID;
             set

@@ -68,7 +68,7 @@
                         <Label Grid.Column="1" FontStyle="Italic">(click to select WO)</Label>
                     </Grid>
                     <Grid Grid.Row="1">
-                        <DataGrid x:Name="WOListView" GridLinesVisibility="None" ItemsSource="{Binding WorkOrders, Mode=TwoWay}" SelectedValue="{Binding WorkOrderID, Mode=TwoWay}" SelectedValuePath="WoID" SelectionChanged="SelectWorkOrdersList" AutoGenerateColumns="False" CanUserResizeColumns="False" Background="White" HeadersVisibility="Column">
+                        <DataGrid x:Name="WOListView" GridLinesVisibility="None" ItemsSource="{Binding WorkOrders, Mode=TwoWay}" SelectedValue="{Binding WorkOrderID, Mode=TwoWay}" SelectedValuePath="WoID" SelectionChanged="SelectWorkOrdersList" AutoGenerateColumns="False" CanUserAddRows="False"  Background="White" HeadersVisibility="Column">
                             <DataGrid.Resources>
                                 <Style TargetType="DataGridRow">
                                     <Setter Property="Height" Value="15" />
@@ -87,11 +87,56 @@
                                 </Style>
                             </DataGrid.Resources>
                             <DataGrid.Columns>
-                                <DataGridTextColumn Width="4*" Binding="{Binding Path=WoID}" IsReadOnly="True" Header="WO" />
-                                <DataGridTextColumn Width="2*" Binding="{Binding Path=WoNumber}" IsReadOnly="True" Header="WO #" />
-                                <DataGridTextColumn Width="2*" Binding="{Binding Path=CrewName}" IsReadOnly="True" Header="Crew" />
-                                <DataGridTextColumn Width="2*" Binding="{Binding Path=DateStarted}" IsReadOnly="True" Header="Started" />
-                                <DataGridTextColumn Width="2*" Binding="{Binding Path=DateCompleted}" IsReadOnly="True" Header="Completed" />
+                                <DataGridTemplateColumn IsReadOnly="True" Width="2*">
+                                    <DataGridTemplateColumn.Header>
+                                        <TextBlock Text="WO" TextWrapping="Wrap" />
+                                    </DataGridTemplateColumn.Header>
+                                    <DataGridTemplateColumn.CellTemplate>
+                                        <DataTemplate>
+                                            <TextBlock Text="{Binding Path=WoID}" />
+                                        </DataTemplate>
+                                    </DataGridTemplateColumn.CellTemplate>
+                                </DataGridTemplateColumn>
+                                <DataGridTemplateColumn IsReadOnly="True" Width="1*">
+                                    <DataGridTemplateColumn.Header>
+                                        <TextBlock Text="WO #" TextWrapping="Wrap" />
+                                    </DataGridTemplateColumn.Header>
+                                    <DataGridTemplateColumn.CellTemplate>
+                                        <DataTemplate>
+                                            <TextBlock Text="{Binding Path=WoNumber}" />
+                                        </DataTemplate>
+                                    </DataGridTemplateColumn.CellTemplate>
+                                </DataGridTemplateColumn>
+                                <DataGridTemplateColumn IsReadOnly="True" Width="4*">
+                                    <DataGridTemplateColumn.Header>
+                                        <TextBlock Text="Crew" TextWrapping="Wrap" />
+                                    </DataGridTemplateColumn.Header>
+                                    <DataGridTemplateColumn.CellTemplate>
+                                        <DataTemplate>
+                                            <TextBlock Text="{Binding Path=CrewName}" />
+                                        </DataTemplate>
+                                    </DataGridTemplateColumn.CellTemplate>
+                                </DataGridTemplateColumn>
+                                <DataGridTemplateColumn IsReadOnly="True" Width="2*">
+                                    <DataGridTemplateColumn.Header>
+                                        <TextBlock Text="Started" TextWrapping="Wrap" />
+                                    </DataGridTemplateColumn.Header>
+                                    <DataGridTemplateColumn.CellTemplate>
+                                        <DataTemplate>
+                                            <TextBlock Text="{Binding Path=DateStarted}" />
+                                        </DataTemplate>
+                                    </DataGridTemplateColumn.CellTemplate>
+                                </DataGridTemplateColumn>
+                                <DataGridTemplateColumn IsReadOnly="True" Width="2*">
+                                    <DataGridTemplateColumn.Header>
+                                        <TextBlock Text="Completed" TextWrapping="Wrap" />
+                                    </DataGridTemplateColumn.Header>
+                                    <DataGridTemplateColumn.CellTemplate>
+                                        <DataTemplate>
+                                            <TextBlock Text="{Binding Path=DateCompleted}" />
+                                        </DataTemplate>
+                                    </DataGridTemplateColumn.CellTemplate>
+                                </DataGridTemplateColumn>
                             </DataGrid.Columns>
                         </DataGrid>
                     </Grid>
@@ -238,7 +283,7 @@
                                     <RowDefinition Height="1*" />
                                 </Grid.RowDefinitions>
                                 <Grid>
-                                    <DataGrid x:Name="ProjectWorkOrderList" GridLinesVisibility="None" ItemsSource="{Binding ProjectWorkOrders, Mode=TwoWay}" SelectedValuePath="ProjMatID" AutoGenerateColumns="False" CanUserResizeColumns="False" Background="LightGray" HeadersVisibility="Column">
+                                    <DataGrid x:Name="ProjectWorkOrderList" GridLinesVisibility="None" ItemsSource="{Binding ProjectWorkOrders, Mode=TwoWay}" SelectedValuePath="ProjMatID" AutoGenerateColumns="False" CanUserAddRows="False" Background="LightGray" HeadersVisibility="Column">
                                         <DataGrid.Resources>
                                             <Style TargetType="DataGridRow">
                                                 <Setter Property="Height" Value="15" />
@@ -303,7 +348,7 @@
                                     <RowDefinition Height="1*" />
                                 </Grid.RowDefinitions>
                                 <Grid>
-                                    <DataGrid x:Name="ProjectLaborList" GridLinesVisibility="None" ItemsSource="{Binding ProjectLabors, Mode=TwoWay}" SelectedValuePath="ProjMatID" AutoGenerateColumns="False" CanUserResizeColumns="False" Background="LightGray" HeadersVisibility="Column">
+                                    <DataGrid x:Name="ProjectLaborList" GridLinesVisibility="None" ItemsSource="{Binding ProjectLabors, Mode=TwoWay}" SelectedValuePath="ProjMatID" AutoGenerateColumns="False" CanUserAddRows="False" Background="LightGray" HeadersVisibility="Column">
                                         <DataGrid.Resources>
                                             <Style TargetType="DataGridRow">
                                                 <Setter Property="Height" Value="15" />

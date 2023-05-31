@@ -12,7 +12,9 @@ namespace WpfApp.Model
     class SovCO:ViewModelBase
     {
         private string _sovAcronym;
-        private string _coItem;
+        private int _coItemNo;
+        private string _sovDesc;
+        private bool _matOnly;
 
         public string SovAcronym
         {
@@ -25,13 +27,35 @@ namespace WpfApp.Model
             }
         }
 
-        public string CoItem
+        public int CoItemNo
         {
-            get => _coItem;
+            get => _coItemNo;
             set
             {
-                if (value == _coItem) return;
-                _coItem = value;
+                if (value == _coItemNo) return;
+                _coItemNo = value;
+                OnPropertyChanged();
+            }
+        }
+
+        public string SovDesc
+        {
+            get => _sovDesc;
+            set
+            {
+                if (value == _sovDesc) return;
+                _sovDesc = value;
+                OnPropertyChanged();
+            }
+        }
+
+        public bool MatOnly
+        {
+            get => _matOnly;
+            set
+            {
+                if (value == _matOnly) return;
+                _matOnly = value;
                 OnPropertyChanged();
             }
         }
@@ -40,7 +64,7 @@ namespace WpfApp.Model
         {
             get
             {
-                return _sovAcronym + " | " + _coItem;
+                return _sovAcronym + " | " + _sovDesc;
             }
         }
     }

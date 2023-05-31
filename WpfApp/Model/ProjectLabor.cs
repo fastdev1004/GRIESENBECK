@@ -17,6 +17,7 @@ namespace WpfApp.Model
         private double _total;
         private int _changeOrder;
         private string _phase;
+        private bool _complete;
 
         public int ProjectID
         {
@@ -102,6 +103,17 @@ namespace WpfApp.Model
             {
                 if (value == _phase) return;
                 _phase = value;
+                OnPropertyChanged();
+            }
+        }
+
+        public bool Complete
+        {
+            get => _complete;
+            set
+            {
+                if (value == _complete) return;
+                _complete = value;
                 OnPropertyChanged();
             }
         }
