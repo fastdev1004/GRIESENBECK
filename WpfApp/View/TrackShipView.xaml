@@ -21,7 +21,9 @@
                 </Style>
             </Style.Resources>
         </Style>
-        
+        <Style x:Key="ParentGridStyle" TargetType="{x:Type Grid}">
+            <Setter Property="Margin" Value="0,4,0,4" />
+        </Style>
         <Style x:Key="GridColumnHeaderBase" TargetType="DataGridColumnHeader">
             <Setter Property="Background" Value="#648278" />
             <Setter Property="Foreground" Value="White" />

@@ -69,3 +69,4 @@ G:\GRIESENBECK\WpfApp\obj\Debug\View\AdminView.g.cs
 G:\GRIESENBECK\WpfApp\obj\Debug\View\AdminView.baml
 G:\GRIESENBECK\WpfApp\obj\Debug\View\ImportView.g.cs
 G:\GRIESENBECK\WpfApp\obj\Debug\View\ImportView.baml
+G:\GRIESENBECK\WpfApp\obj\Debug\GeneratedInternalTypeHelper.g.cs

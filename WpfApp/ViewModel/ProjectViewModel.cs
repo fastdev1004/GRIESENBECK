@@ -434,7 +434,26 @@ namespace WpfApp.ViewModel
 
             CrewEnrolls = st_crewEnroll;
 
-            
+            // ApprDen Type
+            ObservableCollection<string> st_apprDen = new ObservableCollection<string>();
+
+            sqlquery = "SELECT DISTINCT CO_AppDEn FROM tblProjectChangeOrders";
+            cmd = new SqlCommand(sqlquery, dbConnection.Connection);
+            sda = new SqlDataAdapter(cmd);
+            ds = new DataSet();
+            sda.Fill(ds);
+
+            foreach (DataRow row in ds.Tables[0].Rows)
+            {
+                string apprDen = "";
+                if (!row.IsNull("CO_AppDEn"))
+                {
+                    apprDen = row["CO_AppDEn"].ToString();
+                    st_apprDen.Add(apprDen);
+                }
+            }
+
+            ApprDens = st_apprDen;
 
             cmd.Dispose();
             dbConnection.Close();
@@ -470,6 +489,7 @@ namespace WpfApp.ViewModel
             SelectedCCID = -1;
             SelectedCrewID = -1;
             SelectedMCID = -1;
+            AdditionalInfoNote = "";
             if (!firstRow.IsNull("Project_Name"))
                 ProjectName = firstRow["Project_Name"].ToString();
             if (!firstRow.IsNull("Target_Date"))
@@ -516,6 +536,10 @@ namespace WpfApp.ViewModel
                 else SelectedMCID = 1;
             if (!firstRow.IsNull("Customer_ID"))
                 SelectedCustomerId = firstRow.Field<int>("Customer_ID");
+            if (!firstRow.IsNull("Addtl_Info"))
+                AdditionalInfoNote = firstRow["Addtl_Info"].ToString();
+            if (!firstRow.IsNull("Safety_Badging"))
+                SafetyBadging = firstRow["Safety_Badging"].ToString();
 
             string[] paymentItems = { "Background Check", "Cert Pay Reqd", "CIP Project", "C3 Project", "P&P Bond", "GAP Bid Incl", "GAP Est Incl", "LCP Tracker", "Down Payment" };
 
@@ -939,10 +963,38 @@ namespace WpfApp.ViewModel
             ObservableCollection<ChangeOrder> sb_changeOrder = new ObservableCollection<ChangeOrder>();
             foreach (DataRow row in ds.Tables[0].Rows)
             {
-                
+                int _projectID = 0;
+                int _coID = 0;
+                int _coItemNo = 0;
+                DateTime _coDate = new DateTime();
+                string _coAppDen = "";
+                DateTime _coDateAppDen = new DateTime();
+                string _coComment = "";
+
+                if (!row.IsNull("Project_ID"))
+                    _projectID = int.Parse(row["Project_ID"].ToString());
+                if (!row.IsNull("CO_ID"))
+                    _coID = int.Parse(row["CO_ID"].ToString());
+                if (!row.IsNull("CO_ItemNo"))
+                    _coItemNo = int.Parse(row["CO_ItemNo"].ToString());
+                if (!row.IsNull("CO_Date"))
+                    _coDate = row.Field<DateTime>("CO_Date");
+                if (!row.IsNull("CO_DateAppDen"))
+                    _coDateAppDen = row.Field<DateTime>("CO_DateAppDen");
+                if (!row.IsNull("CO_AppDen"))
+                    _coAppDen = row["CO_AppDen"].ToString();
+                if (!row.IsNull("CO_Comments"))
+                    _coComment = row["CO_Comments"].ToString();
+
                 sb_changeOrder.Add(new ChangeOrder
                 {
-                    CoItemNo = int.Parse(row["CO_ItemNo"].ToString())
+                    CoItemNo = _coItemNo,
+                    ProjectID = _projectID,
+                    CoID = _coID,
+                    CoDate = _coDate,
+                    CoDateAppDen = _coDateAppDen,
+                    CoAppDen = _coAppDen,
+                    CoComment = _coComment
                 });
             }
 
@@ -955,7 +1007,6 @@ namespace WpfApp.ViewModel
             ds = new DataSet();
             sda.Fill(ds);
 
-            ///////////////////////////////////////
             ///SovMaterials
             ObservableCollection<SovMaterial> sb_sovMaterial = new ObservableCollection<SovMaterial>();
             foreach(DataRow row in ds.Tables[0].Rows)
@@ -1024,6 +1075,297 @@ namespace WpfApp.ViewModel
             }
             Labors = st_labor;
 
+            // Installation Notes
+            sqlquery = "SELECT * FROM tblInstallNotes WHERE Project_ID = " + ProjectID.ToString();
+
+            cmd = new SqlCommand(sqlquery, dbConnection.Connection);
+            sda = new SqlDataAdapter(cmd);
+            ds = new DataSet();
+            sda.Fill(ds);
+            rowCount = ds.Tables[0].Rows.Count; // number of rows
+
+            ObservableCollection<InstallationNote> sb_installationNote = new ObservableCollection<InstallationNote>();
+
+            foreach (DataRow row in ds.Tables[0].Rows)
+            {
+                int id = row.Field<int>("InstallNotes_ID");
+                int projectID = row.Field<int>("Project_ID");
+                string installNote = row["Install_Note"].ToString();
+                DateTime installDateAdded = row.Field<DateTime>("InstallNotes_DateAdded");
+
+                sb_installationNote.Add(new InstallationNote
+                {
+                    ID = id,
+                    ProjectID = projectID,
+                    InstallNote = installNote,
+                    InstallDateAdded = installDateAdded
+                });
+            }
+
+            InstallationNotes = sb_installationNote;
+
+            // Contracts
+            sqlquery = "SELECT tblProj.Job_No, Contractnumber, ChangeOrder, ChangeOrderNo, DateRecD, DateProcessed, AmtOfcontract, SignedoffbySales, Signedoffbyoperations, GivenAcctingforreview, Givenforfinalsignature, Scope, ReturnedVia, ReturnedtoDawn, Comments FROM tblSC RIGHT JOIN (SELECT Project_ID, Job_No FROM tblProjects WHERE Project_ID = " + ProjectID.ToString() + ") AS tblProj ON tblSC.ProjectID = tblProj.Project_ID";
+
+            cmd = new SqlCommand(sqlquery, dbConnection.Connection);
+            sda = new SqlDataAdapter(cmd);
+            ds = new DataSet();
+            sda.Fill(ds);
+
+            ObservableCollection<Contract> sb_contract = new ObservableCollection<Contract>();
+            foreach (DataRow row in ds.Tables[0].Rows)
+            {
+                string _jobNo = "";
+                string _contractNumber = "";
+                bool _changeOrder = false;
+                string _changeOrderNo = "";
+                DateTime _dateRecd = new DateTime();
+                int _amtOfContract = 0;
+                DateTime _dateProcessed = new DateTime();
+                DateTime _signedoffbySales = new DateTime();
+                DateTime _signedoffbyoperations = new DateTime();
+                DateTime _givenAcctingforreview = new DateTime();
+                DateTime _givenforfinalsignature = new DateTime();
+                string _scope = "";
+                string _returnedVia = "";
+                DateTime _returnedDate = new DateTime();
+                string _comment = "";
+
+                if (!row.IsNull("Job_No"))
+                    _jobNo = row["Job_No"].ToString();
+                if (!row.IsNull("Contractnumber"))
+                    _contractNumber = row["Contractnumber"].ToString();
+                if (!row.IsNull("ChangeOrder"))
+                    _changeOrder = row.Field<Boolean>("ChangeOrder"); ;
+                if (!row.IsNull("ChangeOrderNo"))
+                    _changeOrderNo = row["ChangeOrderNo"].ToString();
+                if (!row.IsNull("DateRecD"))
+                    _dateRecd = row.Field<DateTime>("DateRecD");
+                if (!row.IsNull("DateProcessed"))
+                    _dateProcessed = row.Field<DateTime>("DateProcessed");
+                if (!row.IsNull("AmtOfcontract"))
+                    _amtOfContract = int.Parse(row["AmtOfcontract"].ToString());
+                if (!row.IsNull("SignedoffbySales"))
+                    _signedoffbySales = row.Field<DateTime>("SignedoffbySales");
+                if (!row.IsNull("Signedoffbyoperations"))
+                    _signedoffbyoperations = row.Field<DateTime>("Signedoffbyoperations");
+                if (!row.IsNull("GivenAcctingforreview"))
+                    _givenAcctingforreview = row.Field<DateTime>("GivenAcctingforreview");
+                if (!row.IsNull("Givenforfinalsignature"))
+                    _givenforfinalsignature = row.Field<DateTime>("Givenforfinalsignature");
+                if (!row.IsNull("Scope"))
+                    _scope = row["Scope"].ToString();
+                if (!row.IsNull("ReturnedVia"))
+                    _returnedVia = row["ReturnedVia"].ToString();
+                if (!row.IsNull("ReturnedtoDawn"))
+                    _returnedDate = row.Field<DateTime>("ReturnedtoDawn");
+                if (!row.IsNull("Comments"))
+                    _comment = row["Comments"].ToString();
+
+                sb_contract.Add(new Contract
+                {
+                    JobNo = _jobNo,
+                    ContractNumber = _contractNumber,
+                    ChangeOrder = _changeOrder,
+                    ChangeOrderNo = _changeOrderNo,
+                    DateRecd = _dateRecd,
+                    AmtOfContract = _amtOfContract,
+                    DateProcessed = _dateProcessed,
+                    Signedoffbyoperations = _signedoffbyoperations,
+                    SignedoffbySales = _signedoffbySales,
+                    GivenAcctingforreview = _givenAcctingforreview,
+                    Givenforfinalsignature = _givenforfinalsignature,
+                    Scope = _scope,
+                    ReturnedDate = _returnedDate,
+                    ReturnedVia = _returnedVia,
+                    Comment = _comment
+                });
+            }
+            Contracts = sb_contract;
+
+            // Project Manager List
+            sqlquery = "select * from tblProjectManagers RIGHT JOIN (Select PM_ID from tblProjectPMs where Project_ID = "+ ProjectID.ToString() +") AS tblProject ON tblProjectManagers.PM_ID = tblProject.PM_ID";
+
+            cmd = new SqlCommand(sqlquery, dbConnection.Connection);
+            sda = new SqlDataAdapter(cmd);
+            ds = new DataSet();
+            sda.Fill(ds);
+
+            ObservableCollection<ProjectManager> sb_pm = new ObservableCollection<ProjectManager>();
+            foreach (DataRow row in ds.Tables[0].Rows)
+            {
+                int pmID = int.Parse(row["PM_ID"].ToString());
+                string pmName = row["PM_Name"].ToString();
+                string pmCellPhone = row["PM_CellPhone"].ToString();
+                string pmEmail = row["PM_Email"].ToString();
+                sb_pm.Add(new ProjectManager
+                {
+                    ID = pmID,
+                    PMName = pmName,
+                    PMCellPhone = pmCellPhone,
+                    PMEmail = pmEmail
+                });
+            }
+
+            ProjectManagerList = sb_pm;
+
+            // Superintendent List
+            sqlquery = "SELECT * FROM tblSuperintendents RIGHT JOIN (SELECT * FROM tblProjectSups WHERE Project_ID = " + ProjectID.ToString() + ") AS tblProject ON tblSuperintendents.Sup_ID = tblProject.Sup_ID";
+
+            cmd = new SqlCommand(sqlquery, dbConnection.Connection);
+            sda = new SqlDataAdapter(cmd);
+            ds = new DataSet();
+            sda.Fill(ds);
+
+            ObservableCollection<Superintendent> sb_supt = new ObservableCollection<Superintendent>();
+            foreach (DataRow row in ds.Tables[0].Rows)
+            {
+                int _supID = 0;
+                string _supName = "";
+                string _supPhone = "";
+                string _cellPhone = "";
+                string _email = "";
+                bool _active = false;
+
+                if (!row.IsNull("Sup_ID"))
+                    _supID = int.Parse(row["Sup_ID"].ToString());
+                if (!row.IsNull("Sup_Name"))
+                    _supName = row["Sup_Name"].ToString();
+                if (!row.IsNull("Sup_Phone"))
+                    _supPhone = row["Sup_Phone"].ToString();
+                if (!row.IsNull("Sup_CellPhone"))
+                    _cellPhone = row["Sup_CellPhone"].ToString();
+                if (!row.IsNull("Sup_Email"))
+                    _email = row["Sup_Email"].ToString();
+                if (!row.IsNull("Active"))
+                    _active = row.Field<Boolean>("Active");
+
+                sb_supt.Add(new Superintendent
+                {
+                   SupID = _supID,
+                   SupName = _supName,
+                   SupPhone = _supPhone,
+                   SupCellPhone = _cellPhone,
+                   SupEmail = _email,
+                   Active = _active
+                });
+            }
+            SuperintendentList = sb_supt;
+
+            // ProjectNote Grid
+            sqlquery = "SELECT * FROM tblNotes WHERE Notes_PK_Desc = 'Project' AND Notes_PK =" + ProjectID.ToString();
+            cmd = new SqlCommand(sqlquery, dbConnection.Connection);
+            sda = new SqlDataAdapter(cmd);
+            ds = new DataSet();
+            sda.Fill(ds);
+
+            ObservableCollection<Note> sb_projectnotes = new ObservableCollection<Note>();
+            foreach (DataRow row in ds.Tables[0].Rows)
+            {
+                int _notesID = 0;
+                int _notesPK = 0;
+                string _notesPKDesc = "";
+                string _notesNote = "";
+                DateTime _notesDateAdded = new DateTime();
+                string _notesUser = "";
+                string _notesUserName = "";
+
+                if (!row.IsNull("Notes_ID"))
+                    _notesID = int.Parse(row["Notes_ID"].ToString());
+                if (!row.IsNull("Notes_PK"))
+                    _notesPK = int.Parse(row["Notes_PK"].ToString());
+                if (!row.IsNull("Notes_PK_Desc"))
+                    _notesPKDesc = row["Notes_PK_Desc"].ToString();
+                if (!row.IsNull("Notes_Note"))
+                    _notesNote = row["Notes_Note"].ToString();
+                if (!row.IsNull("Notes_DateAdded"))
+                    _notesDateAdded = row.Field<DateTime>("Notes_DateAdded");
+                if (!row.IsNull("Notes_User"))
+                    _notesUser = row["Notes_User"].ToString();
+                if (!row.IsNull("Notes_UserName"))
+                    _notesUserName = row["Notes_UserName"].ToString();
+                sb_projectnotes.Add(new Note
+                {
+                    NoteID = _notesID,
+                    NotePK = _notesPK,
+                    NotesPKDesc = _notesPKDesc,
+                    NotesNote = _notesNote,
+                    NotesDateAdded = _notesDateAdded,
+                    NoteUser = _notesUser,
+                    NoteUserName = _notesUserName
+                });
+            }
+
+            ProjectNotes = sb_projectnotes;
+
+            // CIPGrid
+            sqlquery = "SELECT Job_No, CIPType, TargetDate, OriginalContractAmt, FinalContractAmt, FormsRecD, FormsSent, CertRecD, ExemptionApproved, ExemptionAppDate, CrewEnrolled, Notes FROM tblCIPs RIGHT JOIN (SELECT Project_ID, Job_No FROM tblProjects WHERE Project_ID = " + ProjectID .ToString() + ") AS tblProjs ON tblCIPs.Project_ID = tblProjs.Project_ID";
+
+            cmd = new SqlCommand(sqlquery, dbConnection.Connection);
+            sda = new SqlDataAdapter(cmd);
+            ds = new DataSet();
+            sda.Fill(ds);
+
+            ObservableCollection<CIP> sb_cips = new ObservableCollection<CIP>();
+            foreach (DataRow row in ds.Tables[0].Rows)
+            {
+                string _jobNo = "";
+                string _cipType = "";
+                DateTime _targetDate = new DateTime();
+                double _originalContractAmt = 0;
+                double _finalContractAmt = 0;
+                DateTime _formsRecD = new DateTime();
+                DateTime _formsSent = new DateTime();
+                DateTime _certRecD = new DateTime();
+                bool _exemptionApproved = false;
+                DateTime _exemptionAppDate = new DateTime();
+                string _crewEnrolled = "";
+                string _notes = "";
+
+                if (!row.IsNull("Job_No"))
+                    _jobNo = row["Job_No"].ToString();
+                if (!row.IsNull("CIPType"))
+                    _cipType = row["CIPType"].ToString();
+                if (!row.IsNull("TargetDate"))
+                    _targetDate = row.Field<DateTime>("TargetDate");
+                if (!row.IsNull("OriginalContractAmt"))
+                    _originalContractAmt = double.Parse(row["OriginalContractAmt"].ToString());
+                if (!row.IsNull("FinalContractAmt"))
+                    _finalContractAmt = double.Parse(row["FinalContractAmt"].ToString());
+                if (!row.IsNull("FormsRecD"))
+                    _formsRecD = row.Field<DateTime>("FormsRecD");
+                if (!row.IsNull("FormsSent"))
+                    _formsSent = row.Field<DateTime>("FormsSent");
+                if (!row.IsNull("CertRecD"))
+                    _certRecD = row.Field<DateTime>("CertRecD");
+                if (!row.IsNull("ExemptionApproved"))
+                    _exemptionApproved = row.Field<Boolean>("ExemptionApproved");
+                if (!row.IsNull("ExemptionAppDate"))
+                    _exemptionAppDate = row.Field<DateTime>("ExemptionAppDate");
+                if (!row.IsNull("CrewEnrolled"))
+                    _crewEnrolled = row["CrewEnrolled"].ToString();
+                if (!row.IsNull("Notes"))
+                    _notes = row["Notes"].ToString();
+
+                sb_cips.Add(new CIP
+                {
+                    JobNo = _jobNo,
+                    CipType = _cipType,
+                    TargetDate = _targetDate,
+                    OriginalContractAmt = _originalContractAmt,
+                    FinalContractAmt = _finalContractAmt,
+                    FormsRecD = _formsRecD,
+                    FormsSent = _formsSent,
+                    CertRecD = _certRecD,
+                    ExemptionApproved = _exemptionApproved,
+                    ExemptionAppDate = _exemptionAppDate,
+                    CrewEnrolled = _crewEnrolled,
+                    Notes = _notes
+                });
+            }
+
+            ProjectCIPs = sb_cips;
+
             cmd.Dispose();
             dbConnection.Close();
         }
@@ -1037,7 +1379,6 @@ namespace WpfApp.ViewModel
             set
             {
                 _selectetProjectId = value;
-                Console.WriteLine(123123123);
                 ChangeProject();
             }
         }
@@ -1093,10 +1434,17 @@ namespace WpfApp.ViewModel
             set;
         }
 
+        private ObservableCollection<ProjectManager> _projectManagers;
+
         public ObservableCollection<ProjectManager> ProjectManagers
         {
-            get;
-            set;
+            get => _projectManagers;
+            set
+            {
+                if (value == _projectManagers) return;
+                _projectManagers = value;
+                OnPropertyChanged();
+            }
         }
 
         public ObservableCollection<Superintendent> Superintendents
@@ -1342,6 +1690,100 @@ namespace WpfApp.ViewModel
             }
         }
 
+        private ObservableCollection<InstallationNote> _installationNotes;
+
+        public ObservableCollection<InstallationNote> InstallationNotes
+        {
+            get { return _installationNotes; }
+            set
+            {
+                _installationNotes = value;
+                OnPropertyChanged();
+            }
+        }
+
+        private ObservableCollection<Contract> _contracts;
+
+        public ObservableCollection<Contract> Contracts
+        {
+            get { return _contracts; }
+            set
+            {
+                _contracts = value;
+                OnPropertyChanged();
+            }
+        }
+
+        private ObservableCollection<string> _apprDen;
+        public ObservableCollection<string> ApprDens
+        {
+            get { return _apprDen; }
+            set
+            {
+                if (_apprDen != value)
+                {
+                    _apprDen = value;
+                    OnPropertyChanged();
+                }
+            }
+        }
+
+        private ObservableCollection<ProjectManager> _projectManagerList;
+        public ObservableCollection<ProjectManager> ProjectManagerList
+        {
+            get { return _projectManagerList; }
+            set
+            {
+                if (_projectManagerList != value)
+                {
+                    _projectManagerList = value;
+                    OnPropertyChanged();
+                }
+            }
+        }
+
+        private ObservableCollection<Superintendent> _superintendentLIst;
+        public ObservableCollection<Superintendent> SuperintendentList
+        {
+            get { return _superintendentLIst; }
+            set
+            {
+                if (_superintendentLIst != value)
+                {
+                    _superintendentLIst = value;
+                    OnPropertyChanged();
+                }
+            }
+        }
+
+        private ObservableCollection<Note> _projectnotes;
+        public ObservableCollection<Note> ProjectNotes
+        {
+            get { return _projectnotes; }
+            set
+            {
+                if (_projectnotes != value)
+                {
+                    _projectnotes = value;
+                    OnPropertyChanged();
+                }
+            }
+        }
+
+        private ObservableCollection<CIP> _projectCIP;
+        public ObservableCollection<CIP> ProjectCIPs
+        {
+            get { return _projectCIP; }
+            set
+            {
+                if (_projectCIP != value)
+                {
+                    _projectCIP = value;
+                    OnPropertyChanged();
+                }
+            }
+        }
+
         private int _workOrderID;
 
         public int WorkOrderID
@@ -1358,28 +1800,28 @@ namespace WpfApp.ViewModel
             }
         }
 
-        public string _projectName;
-        public string _paymentNote;
+        private string _projectName;
+        private string _paymentNote;
         private DateTime _targetDate;
         private DateTime _completedDate;
-        public string _jobNo;
-        public Boolean _onHold;
-        public string _address;
-        public string _city;
-        public string _state;
-        public string _zip;
-        public string _origTaxAmt;
-        public string _origProfit;
-        public string _origTotalMatCost;
-        public string _billingDate;
-        public int _selectedCustomerId;
-        public int _selectedEstimatorID;
-        public int _selectedProjectCoordID;
-        public int _selectedArchRepID;
-        public int _selectedCCID;
-        public int _selectedArchitectID;
-        public int _selectedCrewID;
-        public int _selectedMCID;
+        private string _jobNo;
+        private Boolean _onHold;
+        private string _address;
+        private string _city;
+        private string _state;
+        private string _zip;
+        private string _origTaxAmt;
+        private string _origProfit;
+        private string _origTotalMatCost;
+        private string _billingDate;
+        private int _selectedCustomerId;
+        private int _selectedEstimatorID;
+        private int _selectedProjectCoordID;
+        private int _selectedArchRepID;
+        private int _selectedCCID;
+        private int _selectedArchitectID;
+        private int _selectedCrewID;
+        private int _selectedMCID;
         public string ProjectName
         {
             get => _projectName;
@@ -1703,7 +2145,6 @@ namespace WpfApp.ViewModel
             {
                 if (_projMatID != value)
                 {
-                    Console.WriteLine("ProjectMatTrackings");
                     _projMatID = value;
                     OnPropertyChanged();
                     ChangeMaterial();
@@ -1726,6 +2167,53 @@ namespace WpfApp.ViewModel
             }
         }
 
+        private string _additionalInfoNote;
+
+        public string AdditionalInfoNote
+        {
+            get { return _additionalInfoNote; }
+            set
+            {
+                if (_additionalInfoNote != value)
+                {
+                    _additionalInfoNote = value;
+                    OnPropertyChanged();
+                }
+            }
+        }
+
+        private string _safetyBadging;
+
+        public string SafetyBadging
+        {
+            get { return _safetyBadging; }
+            set
+            {
+                if (_safetyBadging != value)
+                {
+                    _safetyBadging = value;
+                    OnPropertyChanged();
+                }
+            }
+        }
+
+        private string _coAppDen;
+
+        public string CoAppDen
+        {
+            get { return _coAppDen; }
+            set
+            {
+                if (_coAppDen != value)
+                {
+                    _coAppDen = value;
+                    OnPropertyChanged();
+                }
+            }
+        }
+
+
+
         private void ChangeWorkOrder()
         {
             WorkOrder _workOrder = WorkOrders.Where(item => item.WoID == WorkOrderID).ToList()[0];
@@ -1736,7 +2224,6 @@ namespace WpfApp.ViewModel
             SchedComplDate = _workOrder.SchedComplDate;
             StartDate = _workOrder.DateStarted;
             ComplDate = _workOrder.DateCompleted;
-            Console.WriteLine("WorkOrderID");
         }
 
         private void ChangeMaterial()
@@ -1824,8 +2311,6 @@ namespace WpfApp.ViewModel
                     LaborComplete = laborComplete
                 });
                 ProjectMatTrackings = sb_projectMatTrackings;
-                Console.WriteLine(ProjectMatTrackings.Count);
-                Console.WriteLine("ProjectMatTrackings");
             }
 
             // Project Ship
@@ -1834,7 +2319,6 @@ namespace WpfApp.ViewModel
             sda = new SqlDataAdapter(cmd);
             ds = new DataSet();
             sda.Fill(ds);
-
 
             ObservableCollection<ProjectMatShip> sb_projectMtShip = new ObservableCollection<ProjectMatShip>();
 
@@ -1910,13 +2394,7 @@ namespace WpfApp.ViewModel
                     StroageDetail = stroageDetail
                 });
             }
-            if (sb_projectMtShip.Count != 0)
-                ProjectMtShips = sb_projectMtShip;
-            else
-            {
-                //sb_projectMtShip.Add(new ProjectMatShip());
-                //ProjectMtShips = sb_projectMtShip;
-            }
+            ProjectMtShips = sb_projectMtShip;
         }
     }
 

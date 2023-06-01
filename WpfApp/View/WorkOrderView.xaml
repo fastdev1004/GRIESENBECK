@@ -68,7 +68,7 @@
                         <Label Grid.Column="1" FontStyle="Italic">(click to select WO)</Label>
                     </Grid>
                     <Grid Grid.Row="1">
-                        <DataGrid x:Name="WOListView" GridLinesVisibility="None" ItemsSource="{Binding WorkOrders, Mode=TwoWay}" SelectedValue="{Binding WorkOrderID, Mode=TwoWay}" SelectedValuePath="WoID" SelectionChanged="SelectWorkOrdersList" AutoGenerateColumns="False" CanUserAddRows="False"  Background="White" HeadersVisibility="Column">
+                        <DataGrid x:Name="WOListView" GridLinesVisibility="None" ItemsSource="{Binding WorkOrders, Mode=TwoWay}" SelectedValue="{Binding WorkOrderID, Mode=TwoWay}" SelectedValuePath="WoID" AutoGenerateColumns="False" CanUserAddRows="False"  Background="White" HeadersVisibility="Column">
                             <DataGrid.Resources>
                                 <Style TargetType="DataGridRow">
                                     <Setter Property="Height" Value="15" />

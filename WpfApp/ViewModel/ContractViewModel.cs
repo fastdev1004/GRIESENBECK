@@ -11,7 +11,7 @@ using WpfApp.Utils;
 
 namespace WpfApp.ViewModel
 {
-    class ContractViewModel
+    class ContractViewModel:ViewModelBase
     {
         private DatabaseConnection dbConnection;
         public SqlCommand cmd;
@@ -85,14 +85,168 @@ namespace WpfApp.ViewModel
             set
             {
                 _projectId = value;
-                //ChangeProject();
+                ChangeProject();
             }
+        }
+
+        public void ChangeProject()
+        {
+            // Contracts
+            sqlquery = "SELECT tblProj.Job_No, Contractnumber, ChangeOrder, ChangeOrderNo, DateRecD, DateProcessed, AmtOfcontract, SignedoffbySales, Signedoffbyoperations, GivenAcctingforreview, Givenforfinalsignature, Scope, ReturnedVia, ReturnedtoDawn, Comments FROM tblSC RIGHT JOIN (SELECT Project_ID, Job_No FROM tblProjects WHERE Project_ID = " + ProjectID.ToString() + ") AS tblProj ON tblSC.ProjectID = tblProj.Project_ID";
+
+            cmd = new SqlCommand(sqlquery, dbConnection.Connection);
+            sda = new SqlDataAdapter(cmd);
+            ds = new DataSet();
+            sda.Fill(ds);
+
+            ObservableCollection<Contract> sb_contract = new ObservableCollection<Contract>();
+            foreach (DataRow row in ds.Tables[0].Rows)
+            {
+                string _jobNo = "";
+                string _contractNumber = "";
+                bool _changeOrder = false;
+                string _changeOrderNo = "";
+                DateTime _dateRecd = new DateTime();
+                int _amtOfContract = 0;
+                DateTime _dateProcessed = new DateTime();
+                DateTime _signedoffbySales = new DateTime();
+                DateTime _signedoffbyoperations = new DateTime();
+                DateTime _givenAcctingforreview = new DateTime();
+                DateTime _givenforfinalsignature = new DateTime();
+                string _scope = "";
+                string _returnedVia = "";
+                DateTime _returnedDate = new DateTime();
+                string _comment = "";
+
+                if (!row.IsNull("Job_No"))
+                    _jobNo = row["Job_No"].ToString();
+                if (!row.IsNull("Contractnumber"))
+                    _contractNumber = row["Contractnumber"].ToString();
+                if (!row.IsNull("ChangeOrder"))
+                    _changeOrder = row.Field<Boolean>("ChangeOrder"); ;
+                if (!row.IsNull("ChangeOrderNo"))
+                    _changeOrderNo = row["ChangeOrderNo"].ToString();
+                if (!row.IsNull("DateRecD"))
+                    _dateRecd = row.Field<DateTime>("DateRecD");
+                if (!row.IsNull("DateProcessed"))
+                    _dateProcessed = row.Field<DateTime>("DateProcessed");
+                if (!row.IsNull("AmtOfcontract"))
+                    _amtOfContract = int.Parse(row["AmtOfcontract"].ToString());
+                if (!row.IsNull("SignedoffbySales"))
+                    _signedoffbySales = row.Field<DateTime>("SignedoffbySales");
+                if (!row.IsNull("Signedoffbyoperations"))
+                    _signedoffbyoperations = row.Field<DateTime>("Signedoffbyoperations");
+                if (!row.IsNull("GivenAcctingforreview"))
+                    _givenAcctingforreview = row.Field<DateTime>("GivenAcctingforreview");
+                if (!row.IsNull("Givenforfinalsignature"))
+                    _givenforfinalsignature = row.Field<DateTime>("Givenforfinalsignature");
+                if (!row.IsNull("Scope"))
+                    _scope = row["Scope"].ToString();
+                if (!row.IsNull("ReturnedVia"))
+                    _returnedVia = row["ReturnedVia"].ToString();
+                if (!row.IsNull("ReturnedtoDawn"))
+                    _returnedDate = row.Field<DateTime>("ReturnedtoDawn");
+                if (!row.IsNull("Comments"))
+                    _comment = row["Comments"].ToString();
+
+                sb_contract.Add(new Contract
+                {
+                    JobNo = _jobNo,
+                    ContractNumber = _contractNumber,
+                    ChangeOrder = _changeOrder,
+                    ChangeOrderNo = _changeOrderNo,
+                    DateRecd = _dateRecd,
+                    AmtOfContract = _amtOfContract,
+                    DateProcessed = _dateProcessed,
+                    Signedoffbyoperations = _signedoffbyoperations,
+                    SignedoffbySales = _signedoffbySales,
+                    GivenAcctingforreview = _givenAcctingforreview,
+                    Givenforfinalsignature = _givenforfinalsignature,
+                    Scope = _scope,
+                    ReturnedDate = _returnedDate,
+                    ReturnedVia = _returnedVia,
+                    Comment = _comment
+                });
+            }
+            Contracts = sb_contract;
+
+            // Project Change Orders
+            sqlquery = "select * from tblProjectChangeOrders where Project_ID = " + ProjectID.ToString();
+            cmd = new SqlCommand(sqlquery, dbConnection.Connection);
+            sda = new SqlDataAdapter(cmd);
+            ds = new DataSet();
+            sda.Fill(ds);
+
+            ObservableCollection<ChangeOrder> sb_changeOrder = new ObservableCollection<ChangeOrder>();
+            foreach (DataRow row in ds.Tables[0].Rows)
+            {
+                int _projectID = 0;
+                int _coID = 0;
+                int _coItemNo = 0;
+                DateTime _coDate = new DateTime();
+                string _coAppDen = "";
+                DateTime _coDateAppDen = new DateTime();
+                string _coComment = "";
+
+                if (!row.IsNull("Project_ID"))
+                    _projectID = int.Parse(row["Project_ID"].ToString());
+                if (!row.IsNull("CO_ID"))
+                    _coID = int.Parse(row["CO_ID"].ToString());
+                if (!row.IsNull("CO_ItemNo"))
+                    _coItemNo = int.Parse(row["CO_ItemNo"].ToString());
+                if (!row.IsNull("CO_Date"))
+                    _coDate = row.Field<DateTime>("CO_Date");
+                if (!row.IsNull("CO_DateAppDen"))
+                    _coDateAppDen = row.Field<DateTime>("CO_DateAppDen");
+                if (!row.IsNull("CO_AppDen"))
+                    _coAppDen = row["CO_AppDen"].ToString();
+                if (!row.IsNull("CO_Comments"))
+                    _coComment = row["CO_Comments"].ToString();
+
+                sb_changeOrder.Add(new ChangeOrder
+                {
+                    CoItemNo = _coItemNo,
+                    ProjectID = _projectID,
+                    CoID = _coID,
+                    CoDate = _coDate,
+                    CoDateAppDen = _coDateAppDen,
+                    CoAppDen = _coAppDen,
+                    CoComment = _coComment
+                });
+            }
+
+            ChangeOrders = sb_changeOrder;
         }
 
         public ObservableCollection<ReturnedVia> ReturnedViaNames
         {
             get;
             set;
+        }
+
+        private ObservableCollection<Contract> _contracts;
+
+        public ObservableCollection<Contract> Contracts
+        {
+            get { return _contracts; }
+            set
+            {
+                _contracts = value;
+                OnPropertyChanged();
+            }
+        }
+
+        private ObservableCollection<ChangeOrder> _changeOrders;
+
+        public ObservableCollection<ChangeOrder> ChangeOrders
+        {
+            get => _changeOrders;
+            set
+            {
+                if (value == _changeOrders) return;
+                _changeOrders = value;
+                OnPropertyChanged();
+            }
         }
     }
 }

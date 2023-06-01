@@ -58,6 +58,7 @@
       <SubType>Designer</SubType>
     </ApplicationDefinition>
     <Compile Include="Controls\CustomDatePicker.cs" />
+    <Compile Include="Converter\ApprDenToValueConverter.cs" />
     <Compile Include="Converter\SelectedValueToIntConverter.cs" />
     <Compile Include="Model\Acronym.cs" />
     <Compile Include="Model\Architect.cs" />
