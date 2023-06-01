@@ -11,7 +11,7 @@ using WpfApp.Utils;
 
 namespace WpfApp.ViewModel
 {
-    class CloseOutViewModel
+    class CloseOutViewModel:ViewModelBase
     {
         public SqlCommand cmd;
         public SqlDataAdapter sda;
@@ -26,7 +26,7 @@ namespace WpfApp.ViewModel
             LoadCloseOuts();
         }
 
-        public void LoadCloseOuts()
+        private void LoadCloseOuts()
         {
             // Projects
             sqlquery = "SELECT tblProjects.Project_ID, tblProjects.Project_Name, tblCustomers.Full_Name FROM tblProjects LEFT JOIN tblCustomers ON tblProjects.Customer_ID = tblCustomers.Customer_ID ORDER BY Project_Name ASC;";
@@ -63,11 +63,76 @@ namespace WpfApp.ViewModel
                 string viaName = row["ReturnedVia"].ToString();
                 st_returnedVia.Add(new ReturnedVia { ID = viaID, ReturnedViaName = viaName });
             }
-
             ReturnedViaNames = st_returnedVia;
+            Console.WriteLine(ReturnedViaNames.Count);
+            Console.WriteLine("Returned Via Names");
 
             cmd.Dispose();
             dbConnection.Close();
+        }
+
+        private void ChangeProject()
+        {
+            sqlquery = "SELECT * FROM tblWarranties WHERE ProjectId = " + ProjectID.ToString();
+
+            cmd = new SqlCommand(sqlquery, dbConnection.Connection);
+            sda = new SqlDataAdapter(cmd);
+            ds = new DataSet();
+            sda.Fill(ds);
+
+            ObservableCollection<Warranty> sb_warranties = new ObservableCollection<Warranty>();
+
+            foreach (DataRow row in ds.Tables[0].Rows)
+            {
+                int _warrantyID = 0;
+                string _docuReq = "";
+                DateTime _complDate = new DateTime();
+                DateTime _dateRecd = new DateTime();
+                int _numOfCopy = 0;
+                string _contractName = "";
+                string _submVia = "";
+                DateTime _dateSent = new DateTime();
+                string _sentVia = "";
+                string _notes = "";
+
+                if (!row.IsNull("WarrantiID"))
+                    _warrantyID = int.Parse(row["WarrantiID"].ToString());
+                if (!row.IsNull("documentRequest"))
+                    _docuReq = row["documentRequest"].ToString();
+                if (!row.IsNull("CompletionDate"))
+                    _complDate = row.Field<DateTime>("CompletionDate");
+                if (!row.IsNull("DateRecD"))
+                    _dateRecd = row.Field<DateTime>("DateRecD");
+                if (!row.IsNull("NumberofCopiesrequested"))
+                    _numOfCopy = int.Parse(row["NumberofCopiesrequested"].ToString());
+                if (!row.IsNull("Contact"))
+                    _contractName = row["Contact"].ToString();
+                if (!row.IsNull("SubmitVia"))
+                    _submVia = row["SubmitVia"].ToString();
+                if (!row.IsNull("Datesent"))
+                    _dateSent = row.Field<DateTime>("Datesent");
+                if (!row.IsNull("SentVia"))
+                    _sentVia = row["SentVia"].ToString();
+                if (!row.IsNull("Notes"))
+                    _notes = row["Notes"].ToString();
+
+                sb_warranties.Add(new Warranty
+                {
+                    ID = _warrantyID,
+                    DocuReq = _docuReq,
+                    ComplDate = _complDate,
+                    DateRecd = _dateRecd,
+                    NumOfCopy = _numOfCopy,
+                    ContractName = _contractName,
+                    SubmVia = _submVia,
+                    DateSent = _dateRecd,
+                    SentVia = _sentVia,
+                    Notes = _notes
+                });
+            }
+            Warranties = sb_warranties;
+            Console.WriteLine(Warranties.Count);
+            Console.WriteLine("warranty");
         }
 
         public ObservableCollection<Project> Projects
@@ -83,7 +148,7 @@ namespace WpfApp.ViewModel
             set
             {
                 _projectId = value;
-                //ChangeProject();
+                ChangeProject();
             }
         }
 
@@ -95,6 +160,18 @@ namespace WpfApp.ViewModel
             set
             {
                 _returnedVia = value;
+                OnPropertyChanged();
+            }
+        }
+        private ObservableCollection<Warranty> _warranty;
+
+        public ObservableCollection<Warranty> Warranties
+        {
+            get { return _warranty; }
+            set
+            {
+                _warranty = value;
+                OnPropertyChanged();
             }
         }
     }

@@ -28,7 +28,6 @@ namespace WpfApp.View
 
         private void goBack(object sender, RoutedEventArgs e)
         {
-            //con.Close();
             this.NavigationService.Navigate(new Uri("View/Start.xaml", UriKind.Relative));
         }
     }

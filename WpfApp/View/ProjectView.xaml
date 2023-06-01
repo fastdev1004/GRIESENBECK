@@ -1741,7 +1741,52 @@
                                     </Grid>
                                 </Border>
                             </Grid>
-                            <ScrollViewer Grid.Row="2" VerticalScrollBarVisibility="Auto">
+                            <DataGrid Grid.Row="2" Margin="4,0" Padding="10" ItemsSource="{Binding WorkOrderNotes}" GridLinesVisibility="None" AutoGenerateColumns="False" HeadersVisibility="None" BorderThickness="0" Background="#F5FFAF">
+                                <DataGrid.Resources>
+                                    <Style TargetType="DataGridColumnHeader" BasedOn="{StaticResource GridColumnHeaderBase}">
+                                        <Setter Property="Background" Value="#4BACC6" />
+                                    </Style>
+                                    <Style TargetType="TextBox">
+                                        <Setter Property="TextWrapping" Value="Wrap" />
+                                    </Style>
+                                    <Style TargetType="Label">
+                                        <Setter Property="HorizontalAlignment" Value="Right" />
+                                    </Style>
+                                    <Style TargetType="DataGridRow">
+                                        <Setter Property="Height" Value="Auto" />
+                                        <Setter Property="BorderThickness" Value="0" />
+                                        <Setter Property="Margin" Value="0,4" />
+                                    </Style>
+                                </DataGrid.Resources>
+                                <DataGrid.Columns>
+                                    <DataGridTemplateColumn Header="Installation Notes" Width="*">
+                                        <DataGridTemplateColumn.CellTemplate>
+                                            <DataTemplate>
+                                                <Grid>
+                                                    <Grid Style="{StaticResource ParentGridStyle}">
+                                                        <Grid.RowDefinitions>
+                                                            <RowDefinition Height="Auto" />
+                                                            <RowDefinition Height="Auto" />
+                                                        </Grid.RowDefinitions>
+                                                        <Grid>
+                                                            <Grid.ColumnDefinitions>
+                                                                <ColumnDefinition Width="1*" />
+                                                                <ColumnDefinition Width="1*" />
+                                                            </Grid.ColumnDefinitions>
+                                                            <TextBlock Text="{Binding NotesDateAdded , Mode=TwoWay}" />
+                                                            <TextBlock Text="{Binding NoteUserName}" HorizontalAlignment="Right" />
+                                                        </Grid>
+                                                        <Grid Grid.Row="1">
+                                                            <TextBox Text="{Binding NotesNote, Mode=TwoWay}" AcceptsReturn="True" ScrollViewer.VerticalScrollBarVisibility="Auto"  Height="40"/>
+                                                        </Grid>
+                                                    </Grid>
+                                                </Grid>
+                                            </DataTemplate>
+                                        </DataGridTemplateColumn.CellTemplate>
+                                    </DataGridTemplateColumn>
+                                </DataGrid.Columns>
+                            </DataGrid>
+                            <!--<ScrollViewer Grid.Row="2" VerticalScrollBarVisibility="Auto">
                                 <Grid x:Name="WorkOrderNoteGrid" Background="#F5FFAF">
                                     <Grid.RowDefinitions>
                                         <RowDefinition Height="Auto" />
@@ -1765,7 +1810,7 @@
                                         </Grid>
                                     </Grid>
                                 </Grid>
-                            </ScrollViewer>
+                            </ScrollViewer>-->
                         </Grid>
                         <Grid Grid.Column="1">
                             <Grid.RowDefinitions>
@@ -2104,7 +2149,7 @@
                                         <Setter Property="TextWrapping" Value="Wrap" />
                                     </Style>
                                     <Style TargetType="Label">
-                                        <Setter Property="HorizontalAlignment" Value="Left" />
+                                        <Setter Property="HorizontalAlignment" Value="Right" />
                                     </Style>
                                     <Style TargetType="CheckBox">
                                         <Setter Property="HorizontalAlignment" Value="Left" />
@@ -2115,7 +2160,7 @@
                                     </Style>
                                 </DataGrid.Resources>
                                 <DataGrid.Columns>
-                                    <DataGridTemplateColumn Header="Installation Notes">
+                                    <DataGridTemplateColumn Header="Installation Notes" Width="*">
                                         <DataGridTemplateColumn.CellTemplate>
                                             <DataTemplate>
                                                 <Grid Margin="10">
@@ -2231,7 +2276,7 @@
                                                                 <ColumnDefinition Width="2*" />
                                                             </Grid.ColumnDefinitions>
                                                             <Label Content="Scope" />
-                                                            <TextBox Grid.Column="1" Width="260" Height="80" Text="{Binding Scope, Mode=TwoWay}"/>
+                                                            <TextBox Grid.Column="1" Height="80" Text="{Binding Scope, Mode=TwoWay}"/>
                                                         </Grid>
                                                         <Grid Grid.Row="1" Style="{StaticResource ParentGridStyle}">
                                                             <Grid.ColumnDefinitions>
@@ -2256,7 +2301,7 @@
                                                                 <ColumnDefinition Width="2*" />
                                                             </Grid.ColumnDefinitions>
                                                             <Label Content="Notes" />
-                                                            <TextBox AcceptsReturn="True" ScrollViewer.VerticalScrollBarVisibility="Auto" Grid.Column="1" Height="80" Width="260" Text="{Binding Comment, Mode=TwoWay}" />
+                                                            <TextBox AcceptsReturn="True" ScrollViewer.VerticalScrollBarVisibility="Auto" Grid.Column="1" Height="80" Text="{Binding Comment, Mode=TwoWay}" />
                                                         </Grid>
                                                     </Grid>
                                                 </Grid>
@@ -2396,7 +2441,7 @@
                                                             <ColumnDefinition Width="3*" />
                                                             <ColumnDefinition Width="2*" />
                                                         </Grid.ColumnDefinitions>
-                                                        <Label Content="GAP Job #" HorizontalAlignment="Left" />
+                                                        <Label Content="GAP Job #" />
                                                         <TextBox Grid.Column="1" Text="{Binding JobNo, Mode=TwoWay}" />
                                                     </Grid>
                                                     <Grid Grid.Row="1" Style="{StaticResource ParentGridStyle}">
@@ -2404,7 +2449,7 @@
                                                             <ColumnDefinition Width="3*" />
                                                             <ColumnDefinition Width="2*" />
                                                         </Grid.ColumnDefinitions>
-                                                        <Label Content="CIP Type" HorizontalAlignment="Left" />
+                                                        <Label Content="CIP Type" />
                                                         <ComboBox Grid.Column="1" ItemsSource="{Binding DataContext.CIPTypes, RelativeSource={RelativeSource AncestorType=local:ProjectView}}" DisplayMemberPath="PMName" SelectedValuePath="Type" IsEditable="True" SelectedValue="{Binding CipType, Mode=TwoWay}" />
                                                     </Grid>
                                                     <Grid Grid.Row="2" Style="{StaticResource ParentGridStyle}">
@@ -2412,7 +2457,7 @@
                                                             <ColumnDefinition Width="3*" />
                                                             <ColumnDefinition Width="2*" />
                                                         </Grid.ColumnDefinitions>
-                                                        <Label Content="Target Date" HorizontalAlignment="Left" />
+                                                        <Label Content="Target Date" />
                                                         <DatePicker Grid.Column="1" SelectedDate="{Binding TargetDate, Mode=TwoWay}" />
                                                     </Grid>
                                                     <Grid Grid.Row="3" Style="{StaticResource ParentGridStyle}">
@@ -2420,7 +2465,7 @@
                                                             <ColumnDefinition Width="3*" />
                                                             <ColumnDefinition Width="2*" />
                                                         </Grid.ColumnDefinitions>
-                                                        <Label Content="Original Contract Amount" HorizontalAlignment="Left" />
+                                                        <Label Content="Original Contract Amount" />
                                                         <TextBox Grid.Column="1" Text="{Binding OriginalContractAmt, Mode=TwoWay}" />
                                                     </Grid>
                                                     <Grid Grid.Row="4" Style="{StaticResource ParentGridStyle}">
@@ -2428,7 +2473,7 @@
                                                             <ColumnDefinition Width="3*" />
                                                             <ColumnDefinition Width="2*" />
                                                         </Grid.ColumnDefinitions>
-                                                        <Label Content="Final Contract Amount" HorizontalAlignment="Left" />
+                                                        <Label Content="Final Contract Amount" />
                                                         <TextBox Grid.Column="1" Text="{Binding FinalContractAmt, Mode=TwoWay}" />
                                                     </Grid>
                                                 </Grid>
@@ -2445,7 +2490,7 @@
                                                             <ColumnDefinition Width="3*" />
                                                             <ColumnDefinition Width="2*" />
                                                         </Grid.ColumnDefinitions>
-                                                        <Label Content="Forms Received" HorizontalAlignment="Left" />
+                                                        <Label Content="Forms Received" />
                                                         <DatePicker Grid.Column="1" SelectedDate="{Binding FormsRecD, Mode=TwoWay}" />
                                                     </Grid>
                                                     <Grid Grid.Row="1" Style="{StaticResource ParentGridStyle}">
@@ -2453,7 +2498,7 @@
                                                             <ColumnDefinition Width="3*" />
                                                             <ColumnDefinition Width="2*" />
                                                         </Grid.ColumnDefinitions>
-                                                        <Label Content="Forms Sent" HorizontalAlignment="Left" />
+                                                        <Label Content="Forms Sent" />
                                                         <DatePicker Grid.Column="1" SelectedDate="{Binding FormsSent, Mode=TwoWay}" />
                                                     </Grid>
                                                     <Grid  Grid.Row="2" Style="{StaticResource ParentGridStyle}">
@@ -2461,7 +2506,7 @@
                                                             <ColumnDefinition Width="3*" />
                                                             <ColumnDefinition Width="2*" />
                                                         </Grid.ColumnDefinitions>
-                                                        <Label Content="Certificate Received" HorizontalAlignment="Left" />
+                                                        <Label Content="Certificate Received" />
                                                         <DatePicker Grid.Column="1" SelectedDate="{Binding CertRecD, Mode=TwoWay}" />
                                                     </Grid>
                                                     <Grid Grid.Row="3" Style="{StaticResource ParentGridStyle}">
@@ -2469,7 +2514,7 @@
                                                             <ColumnDefinition Width="3*" />
                                                             <ColumnDefinition Width="2*" />
                                                         </Grid.ColumnDefinitions>
-                                                        <Label Content="Exemption Approved" HorizontalAlignment="Left" />
+                                                        <Label Content="Exemption Approved" />
                                                         <Grid Grid.Column="1" Margin="0">
                                                             <Grid.ColumnDefinitions>
                                                                 <ColumnDefinition Width="20" />
@@ -2484,7 +2529,7 @@
                                                             <ColumnDefinition Width="3*" />
                                                             <ColumnDefinition Width="2*" />
                                                         </Grid.ColumnDefinitions>
-                                                        <Label Content="Crew Enrolled" HorizontalAlignment="Left" />
+                                                        <Label Content="Crew Enrolled" />
                                                         <ComboBox Grid.Column="1" ItemsSource="{Binding DataContext.CrewEnrolls, RelativeSource={RelativeSource AncestorType=local:ProjectView}}" DisplayMemberPath="PMName" SelectedValuePath="Type" IsEditable="True" SelectedValue="{Binding CipType, Mode=TwoWay}" />
                                                     </Grid>
                                                 </Grid>
@@ -2494,7 +2539,7 @@
                                                             <ColumnDefinition Width="Auto" />
                                                             <ColumnDefinition Width="*" />
                                                         </Grid.ColumnDefinitions>
-                                                        <Label Content="Notes" HorizontalAlignment="Left" />
+                                                        <Label Content="Notes" />
                                                         <TextBox Grid.Column="1" Text="{Binding Notes, Mode=TwoWay}" />
                                                     </Grid>
                                                 </Grid>

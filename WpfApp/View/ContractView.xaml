@@ -96,7 +96,7 @@
                             <Setter Property="TextWrapping" Value="Wrap" />
                         </Style>
                         <Style TargetType="Label">
-                            <Setter Property="HorizontalAlignment" Value="Left" />
+                            <Setter Property="HorizontalAlignment" Value="Right" />
                         </Style>
                         <Style TargetType="CheckBox">
                             <Setter Property="HorizontalAlignment" Value="Left" />
@@ -107,7 +107,7 @@
                         </Style>
                     </DataGrid.Resources>
                     <DataGrid.Columns>
-                        <DataGridTemplateColumn>
+                        <DataGridTemplateColumn Width="*">
                             <DataGridTemplateColumn.CellTemplate>
                                 <DataTemplate>
                                     <Grid Margin="10">
@@ -223,7 +223,7 @@
                                                     <ColumnDefinition Width="2*" />
                                                 </Grid.ColumnDefinitions>
                                                 <Label Content="Scope" />
-                                                <TextBox Grid.Column="1" Width="260" Height="80" Text="{Binding Scope, Mode=TwoWay}"/>
+                                                <TextBox Grid.Column="1" Height="80" Text="{Binding Scope, Mode=TwoWay}"/>
                                             </Grid>
                                             <Grid Grid.Row="1" Style="{StaticResource ParentGridStyle}">
                                                 <Grid.ColumnDefinitions>
@@ -248,7 +248,7 @@
                                                     <ColumnDefinition Width="2*" />
                                                 </Grid.ColumnDefinitions>
                                                 <Label Content="Notes" />
-                                                <TextBox AcceptsReturn="True" ScrollViewer.VerticalScrollBarVisibility="Auto" Grid.Column="1" Height="80" Width="260" Text="{Binding Comment, Mode=TwoWay}" />
+                                                <TextBox AcceptsReturn="True" ScrollViewer.VerticalScrollBarVisibility="Auto" Grid.Column="1" Height="80" Text="{Binding Comment, Mode=TwoWay}" />
                                             </Grid>
                                         </Grid>
                                     </Grid>
@@ -346,171 +346,4 @@
             </Grid>
         </Grid>
     </Grid>
-    <!--<Grid Grid.Row="2" Margin="10" x:Name="ContractGrid" HorizontalAlignment="Left" Width="1000">
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="1*"/>
-                <ColumnDefinition Width="1*" />
-                <ColumnDefinition Width="1*" />
-            </Grid.ColumnDefinitions>
-            <Grid.Resources>
-                <Style TargetType="{x:Type CheckBox}">
-                    <Setter Property="VerticalAlignment" Value="Center"/>
-                    <Setter Property="HorizontalAlignment" Value="Left"/>
-                </Style>
-                <Style TargetType="{x:Type TextBox}">
-                    <Setter Property="Margin" Value="0,1,4,1" />
-                    <Setter Property="BorderThickness" Value="1,1,1,1" />
-                    <Setter Property="VerticalContentAlignment" Value="Center"/>
-                </Style>
-                <Style TargetType="{x:Type DatePicker}">
-                    <Setter Property="Margin" Value="0,1,4,1" />
-                </Style>
-                <Style TargetType="{x:Type ComboBox}">
-                    <Setter Property="Margin" Value="0,1,4,1" />
-                </Style>
-                <Style TargetType="{x:Type Label}">
-                    <Setter Property="HorizontalAlignment" Value="Left"/>
-                </Style>
-            </Grid.Resources>
-            <Grid>
-                <Grid.RowDefinitions>
-                    <RowDefinition Height="Auto"/>
-                    <RowDefinition Height="Auto"/>
-                    <RowDefinition Height="Auto"/>
-                    <RowDefinition Height="Auto"/>
-                    <RowDefinition Height="Auto"/>
-                </Grid.RowDefinitions>
-                <Grid>
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="3*" />
-                        <ColumnDefinition Width="2*" />
-                    </Grid.ColumnDefinitions>
-                    <Label Content="GAP Job #" HorizontalAlignment="Left" />
-                    <TextBox Grid.Column="1" />
-                </Grid>
-                <Grid Grid.Row="1">
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="3*" />
-                        <ColumnDefinition Width="2*" />
-                    </Grid.ColumnDefinitions>
-                    <Label Content="Contract #" HorizontalAlignment="Left" />
-                    <TextBox Grid.Column="1" />
-                </Grid>
-                <Grid Grid.Row="2">
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="3*" />
-                        <ColumnDefinition Width="2*" />
-                    </Grid.ColumnDefinitions>
-                    <Label Content="Change Order" HorizontalAlignment="Left" />
-                    <CheckBox Grid.Column="1" VerticalAlignment="Center" />
-                </Grid>
-                <Grid Grid.Row="3">
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="3*" />
-                        <ColumnDefinition Width="2*" />
-                    </Grid.ColumnDefinitions>
-                    <Label Content="Change Order #" HorizontalAlignment="Left" />
-                    <TextBox Grid.Column="1" />
-                </Grid>
-                <Grid Grid.Row="4">
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="3*" />
-                        <ColumnDefinition Width="2*" />
-                    </Grid.ColumnDefinitions>
-                    <Label Content="Recd Date" HorizontalAlignment="Left" />
-                    <DatePicker Grid.Column="1" />
-                </Grid>
-            </Grid>
-            <Grid Grid.Column="1">
-                <Grid.RowDefinitions>
-                    <RowDefinition Height="Auto"/>
-                    <RowDefinition Height="Auto"/>
-                    <RowDefinition Height="Auto"/>
-                    <RowDefinition Height="Auto"/>
-                    <RowDefinition Height="Auto"/>
-                </Grid.RowDefinitions>
-                <Grid>
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="3*" />
-                        <ColumnDefinition Width="2*" />
-                    </Grid.ColumnDefinitions>
-                    <Label Content="Processed Date" HorizontalAlignment="Left" />
-                    <TextBox Grid.Column="1" />
-                </Grid>
-                <Grid Grid.Row="1">
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="3*" />
-                        <ColumnDefinition Width="2*" />
-                    </Grid.ColumnDefinitions>
-                    <Label Content="Contract Amt" HorizontalAlignment="Left" />
-                    <TextBox Grid.Column="1" />
-                </Grid>
-                <Grid Grid.Row="2">
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="3*" />
-                        <ColumnDefinition Width="2*" />
-                    </Grid.ColumnDefinitions>
-                    <Label Content="Signed off by Sales" HorizontalAlignment="Left" />
-                    <DatePicker Grid.Column="1" />
-                </Grid>
-                <Grid Grid.Row="3">
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="3*" />
-                        <ColumnDefinition Width="2*" />
-                    </Grid.ColumnDefinitions>
-                    <Label Content="Given Accting for Review" HorizontalAlignment="Left" />
-                    <DatePicker Grid.Column="1" />
-                </Grid>
-                <Grid Grid.Row="4">
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="3*" />
-                        <ColumnDefinition Width="2*" />
-                    </Grid.ColumnDefinitions>
-                    <Label Content="Given for Final Signature" HorizontalAlignment="Left" />
-                    <DatePicker Grid.Column="1" />
-                </Grid>
-            </Grid>
-            <Grid Grid.Column="2">
-                <Grid.RowDefinitions>
-                    <RowDefinition Height="Auto" />
-                    <RowDefinition Height="Auto" />
-                    <RowDefinition Height="Auto" />
-                    <RowDefinition Height="Auto" />
-                </Grid.RowDefinitions>
-                <Grid>
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="1*" />
-                        <ColumnDefinition Width="2*" />
-                    </Grid.ColumnDefinitions>
-                    <Label Content="Scope" HorizontalAlignment="Left" />
-                    <TextBox Grid.Column="1" Height="38"/>
-                </Grid>
-                <Grid Grid.Row="1">
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="1*" />
-                        <ColumnDefinition Width="2*" />
-                    </Grid.ColumnDefinitions>
-                    <Label Content="Returned Via" HorizontalAlignment="Left" />
-                    <ComboBox Grid.Column="1" />
-                </Grid>
-                <Grid Grid.Row="2">
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="1*" />
-                        <ColumnDefinition Width="1*" />
-                        <ColumnDefinition Width="1*" />
-                    </Grid.ColumnDefinitions>
-                    <Label Content="Returned Date" HorizontalAlignment="Left" />
-                    <DatePicker Grid.Column="1" />
-                </Grid>
-                <Grid Grid.Row="3">
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="1*" />
-                        <ColumnDefinition Width="2*" />
-                    </Grid.ColumnDefinitions>
-                    <Label Content="Notes" HorizontalAlignment="Left" />
-                    <TextBox AcceptsReturn="True" ScrollViewer.VerticalScrollBarVisibility="Auto" Grid.Column="1" Height="39" />
-                </Grid>
-            </Grid>
-        </Grid>-->
-        
 </Page>

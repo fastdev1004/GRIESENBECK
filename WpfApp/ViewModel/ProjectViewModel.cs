@@ -1784,6 +1784,21 @@ namespace WpfApp.ViewModel
             }
         }
 
+        private ObservableCollection<Note> _workOrderNotes;
+
+        public ObservableCollection<Note> WorkOrderNotes
+        {
+            get { return _workOrderNotes; }
+            set
+            {
+                if (_workOrderNotes != value)
+                {
+                    _workOrderNotes = value;
+                    OnPropertyChanged();
+                }
+            }
+        }
+
         private int _workOrderID;
 
         public int WorkOrderID
@@ -2224,6 +2239,53 @@ namespace WpfApp.ViewModel
             SchedComplDate = _workOrder.SchedComplDate;
             StartDate = _workOrder.DateStarted;
             ComplDate = _workOrder.DateCompleted;
+
+            // Work Order Notes
+            sqlquery = "SELECT * FROM tblNotes WHERE Notes_PK = " + WorkOrderID + " AND Notes_PK_Desc = 'WorkOrder';";
+            cmd = new SqlCommand(sqlquery, dbConnection.Connection);
+            sda = new SqlDataAdapter(cmd);
+            ds = new DataSet();
+            sda.Fill(ds);
+
+            ObservableCollection<Note> st_workOrderNotes = new ObservableCollection<Note>();
+            foreach (DataRow row in ds.Tables[0].Rows)
+            {
+                string notesUser = "";
+                string notesNote = "";
+                string notesUserName = "";
+                int notesID = 0;
+                int notesPK = 0;
+                DateTime notesDateAdded = new DateTime();
+                string notesPKDesc = "";
+
+                if (!row.IsNull("Notes_ID"))
+                    notesID = row.Field<int>("Notes_ID");
+                if (!row.IsNull("Notes_PK"))
+                    notesPK = row.Field<int>("Notes_PK");
+                if (!row.IsNull("Notes_Note"))
+                    notesNote = row["Notes_Note"].ToString();
+                if (!row.IsNull("Notes_User"))
+                    notesUser = row["Notes_User"].ToString();
+                if (!row.IsNull("Notes_UserName"))
+                    notesUserName = row["Notes_UserName"].ToString();
+                if (!row.IsNull("Notes_PK_Desc"))
+                    notesPKDesc = row["Notes_PK_Desc"].ToString();
+                if (!row.IsNull("Notes_DateAdded"))
+                    notesDateAdded = row.Field<DateTime>("Notes_DateAdded");
+
+                st_workOrderNotes.Add(new Note
+                {
+                    NoteID = notesID,
+                    NotePK = notesPK,
+                    NotesPKDesc = notesPKDesc,
+                    NotesNote = notesNote,
+                    NoteUser = notesUser,
+                    NoteUserName = notesUserName,
+                    NotesDateAdded = notesDateAdded
+                });
+            }
+
+            WorkOrderNotes = st_workOrderNotes;
         }
 
         private void ChangeMaterial()

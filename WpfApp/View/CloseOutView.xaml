@@ -4,10 +4,12 @@
       xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
       xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
       xmlns:local="clr-namespace:WpfApp.View"
+      xmlns:converter="clr-namespace:WpfApp.Converter"
       mc:Ignorable="d" 
       d:DesignHeight="900" d:DesignWidth="1700"
       Title="ColseOutView">
     <Page.Resources>
+        <converter:ApprDenToValueConverter x:Key="ApprDenToValueConverter" />
         <Style x:Name="operation" TargetType="Button">
             <Setter Property="Width" Value="Auto" />
             <Setter Property="Height" Value="20" />
@@ -20,6 +22,42 @@
                     <Setter Property="CornerRadius" Value="3"></Setter>
                 </Style>
             </Style.Resources>
+        </Style>
+        <Style x:Key="GridColumnHeaderBase" TargetType="DataGridColumnHeader">
+            <Setter Property="Background" Value="#648278" />
+            <Setter Property="Foreground" Value="White" />
+            <Setter Property="Height" Value="40" />
+            <Setter Property="Padding" Value="10,0,0,0" />
+            <Style.Resources>
+                <Style TargetType="TextBlock">
+                    <Setter Property="TextAlignment" Value="Center" />
+                </Style>
+            </Style.Resources>
+        </Style>
+        <Style TargetType="DataGridRow">
+            <Setter Property="Height" Value="25" />
+            <Setter Property="BorderThickness" Value="0" />
+        </Style>
+        <Style TargetType="{x:Type DataGridCell}">
+            <Setter Property="VerticalAlignment" Value="Center" />
+            <Setter Property="BorderThickness" Value="0" />
+            <Setter Property="Foreground" Value="Black" />
+            <Setter Property="Margin" Value="4,0,4,0" />
+            <Style.Resources>
+                <Style TargetType="CheckBox">
+                    <Setter Property="VerticalAlignment" Value="Center" />
+                    <Setter Property="HorizontalAlignment" Value="Center" />
+                </Style>
+            </Style.Resources>
+            <Style.Triggers>
+                <Trigger Property="IsSelected" Value="True">
+                    <Setter Property="Background" Value="{x:Null}" />
+                    <Setter Property="BorderBrush" Value="{x:Null}" />
+                </Trigger>
+            </Style.Triggers>
+        </Style>
+        <Style x:Key="ParentGridStyle" TargetType="{x:Type Grid}">
+            <Setter Property="Margin" Value="0,4,0,4" />
         </Style>
     </Page.Resources>
 
@@ -41,30 +79,143 @@
         <Grid Grid.Row="1" Margin="10, 24, 10, 10">
             <WrapPanel>
                 <Label>Select Project:</Label>
-                <ComboBox IsEditable="True" Width="400" Name="projectContacts" ItemsSource="{Binding Projects}" DisplayMemberPath="ProjectName" SelectedValuePath="ID" SelectedValue="{Binding ProjectID, Mode=TwoWay}" SelectionChanged="SelectProjectItem"></ComboBox>
+                <ComboBox IsEditable="True" Width="400" Name="projectContacts" ItemsSource="{Binding Projects}" DisplayMemberPath="ProjectName" SelectedValuePath="ID" SelectedValue="{Binding ProjectID, Mode=TwoWay}"></ComboBox>
             </WrapPanel>
         </Grid>
-        <Grid Grid.Row="2" x:Name="CloseOutGrid" HorizontalAlignment="Left" Width="1000">
-            <Grid.Resources>
-                <Style TargetType="{x:Type CheckBox}">
-                    <Setter Property="VerticalAlignment" Value="Center"/>
-                    <Setter Property="HorizontalAlignment" Value="Left"/>
-                </Style>
-                <Style TargetType="{x:Type TextBox}">
-                    <Setter Property="Margin" Value="0,1,4,1" />
-                    <Setter Property="BorderThickness" Value="1,1,1,1" />
-                    <Setter Property="VerticalContentAlignment" Value="Center"/>
-                </Style>
-                <Style TargetType="{x:Type DatePicker}">
-                    <Setter Property="Margin" Value="0,1,4,1" />
-                </Style>
-                <Style TargetType="{x:Type ComboBox}">
-                    <Setter Property="Margin" Value="0,1,4,1" />
-                </Style>
-                <Style TargetType="{x:Type Label}">
-                    <Setter Property="HorizontalAlignment" Value="Left"/>
-                </Style>
-            </Grid.Resources>
+        <Grid Grid.Row="2" Margin="10">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="6*" />
+                <ColumnDefinition Width="4*" />
+            </Grid.ColumnDefinitions>
+            <DataGrid Grid.Row="2" Margin="10" ItemsSource="{Binding Warranties, Mode=TwoWay}" GridLinesVisibility="None" AutoGenerateColumns="False" HeadersVisibility="None" BorderThickness="0" Background="White" AlternatingRowBackground="LightGray">
+                <DataGrid.Resources>
+                    <Style TargetType="DataGridColumnHeader" BasedOn="{StaticResource GridColumnHeaderBase}">
+                        <Setter Property="Background" Value="#4BACC6" />
+                    </Style>
+                    <Style TargetType="TextBox">
+                        <Setter Property="TextWrapping" Value="Wrap" />
+                    </Style>
+                    <Style TargetType="Label">
+                        <Setter Property="HorizontalAlignment" Value="Right" />
+                    </Style>
+                    <Style TargetType="CheckBox">
+                        <Setter Property="HorizontalAlignment" Value="Left" />
+                    </Style>
+                    <Style TargetType="DataGridRow">
+                        <Setter Property="Height" Value="Auto" />
+                        <Setter Property="BorderThickness" Value="0" />
+                    </Style>
+                </DataGrid.Resources>
+                <DataGrid.Columns>
+                    <DataGridTemplateColumn Width="*">
+                        <DataGridTemplateColumn.CellTemplate>
+                            <DataTemplate>
+                                <Grid>
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="1*" />
+                                        <ColumnDefinition Width="1*" />
+                                        <ColumnDefinition Width="1*" />
+                                    </Grid.ColumnDefinitions>
+                                    <Grid>
+                                        <Grid.RowDefinitions>
+                                            <RowDefinition Height="Auto" />
+                                            <RowDefinition Height="Auto" />
+                                            <RowDefinition Height="Auto" />
+                                        </Grid.RowDefinitions>
+                                        <Grid Style="{StaticResource ParentGridStyle}">
+                                            <Grid.ColumnDefinitions>
+                                                <ColumnDefinition Width="2*" />
+                                                <ColumnDefinition Width="3*" />
+                                            </Grid.ColumnDefinitions>
+                                            <Label Content="Documenet Request" />
+                                            <TextBox Grid.Column="1" Text="{Binding DocuReq, Mode=TwoWay}" />
+                                        </Grid>
+                                        <Grid Grid.Row="1" Style="{StaticResource ParentGridStyle}">
+                                            <Grid.ColumnDefinitions>
+                                                <ColumnDefinition Width="2*" />
+                                                <ColumnDefinition Width="3*" />
+                                            </Grid.ColumnDefinitions>
+                                            <Label Content="Request Recd Date" />
+                                            <DatePicker Grid.Column="1" Text="{Binding DateRecd, Mode=TwoWay}" />
+                                        </Grid>
+                                        <Grid Grid.Row="2" Style="{StaticResource ParentGridStyle}">
+                                            <Grid.ColumnDefinitions>
+                                                <ColumnDefinition Width="2*" />
+                                                <ColumnDefinition Width="3*" />
+                                            </Grid.ColumnDefinitions>
+                                            <Label Content="Sustantial Completion" />
+                                            <CheckBox Grid.Column="1" VerticalAlignment="Center" IsChecked="{Binding ComplDate, Mode=TwoWay}" HorizontalAlignment="Left" />
+                                        </Grid>
+                                    </Grid>
+                                    <Grid Grid.Column="1">
+                                        <Grid.RowDefinitions>
+                                            <RowDefinition Height="Auto" />
+                                            <RowDefinition Height="Auto" />
+                                            <RowDefinition Height="Auto" />
+                                        </Grid.RowDefinitions>
+                                        <Grid Style="{StaticResource ParentGridStyle}">
+                                            <Grid.ColumnDefinitions>
+                                                <ColumnDefinition Width="2*" />
+                                                <ColumnDefinition Width="3*" />
+                                            </Grid.ColumnDefinitions>
+                                            <Label Content="Processed Date" />
+                                            <TextBox Grid.Column="1" Text="{Binding NumOfCopy, Mode=TwoWay}"/>
+                                        </Grid>
+                                        <Grid Grid.Row="1" Style="{StaticResource ParentGridStyle}">
+                                            <Grid.ColumnDefinitions>
+                                                <ColumnDefinition Width="2*" />
+                                                <ColumnDefinition Width="3*" />
+                                            </Grid.ColumnDefinitions>
+                                            <Label Content="Contract Amt" />
+                                            <TextBox Grid.Column="1" Text="{Binding ContractName, Mode=TwoWay}"/>
+                                        </Grid>
+                                        <Grid Grid.Row="2" Style="{StaticResource ParentGridStyle}">
+                                            <Grid.ColumnDefinitions>
+                                                <ColumnDefinition Width="2*" />
+                                                <ColumnDefinition Width="3*" />
+                                            </Grid.ColumnDefinitions>
+                                            <Label Content="Signed off by Sales" />
+                                            <ComboBox ItemsSource="{Binding DataContext.ReturnedViaNames, RelativeSource={RelativeSource AncestorType=local:CloseOutView}}" Grid.Column="1" SelectedValuePath="ReturnedViaName" SelectedValue="{Binding SubmVia, Mode=TwoWay}" DisplayMemberPath="ReturnedViaName" IsEditable="True" />
+                                        </Grid>
+                                    </Grid>
+                                    <Grid Grid.Column="2">
+                                        <Grid.RowDefinitions>
+                                            <RowDefinition Height="Auto" />
+                                            <RowDefinition Height="Auto" />
+                                            <RowDefinition Height="Auto" />
+                                        </Grid.RowDefinitions>
+                                        <Grid Style="{StaticResource ParentGridStyle}">
+                                            <Grid.ColumnDefinitions>
+                                                <ColumnDefinition Width="2*" />
+                                                <ColumnDefinition Width="3*" />
+                                            </Grid.ColumnDefinitions>
+                                            <Label Content="Date Sent" />
+                                            <DatePicker Grid.Column="1" Text="{Binding DateSent, Mode=TwoWay}" />
+                                        </Grid>
+                                        <Grid Grid.Row="1" Style="{StaticResource ParentGridStyle}">
+                                            <Grid.ColumnDefinitions>
+                                                <ColumnDefinition Width="2*" />
+                                                <ColumnDefinition Width="3*" />
+                                            </Grid.ColumnDefinitions>
+                                            <Label Content="Sent Via" />
+                                            <ComboBox ItemsSource="{Binding DataContext.ReturnedViaNames, RelativeSource={RelativeSource AncestorType=local:CloseOutView}}" Grid.Column="1" SelectedValuePath="ReturnedViaName" SelectedValue="{Binding SentVia, Mode=TwoWay}" DisplayMemberPath="ReturnedViaName" IsEditable="True" />
+                                        </Grid>
+                                        <Grid Grid.Row="2" Style="{StaticResource ParentGridStyle}">
+                                            <Grid.ColumnDefinitions>
+                                                <ColumnDefinition Width="2*" />
+                                                <ColumnDefinition Width="3*" />
+                                            </Grid.ColumnDefinitions>
+                                            <Label Content="Notes" />
+                                            <DatePicker Grid.Column="1" Text="{Binding Notes, Mode=TwoWay}" />
+                                        </Grid>
+                                    </Grid>
+
+                                </Grid>
+                            </DataTemplate>
+                        </DataGridTemplateColumn.CellTemplate>
+                    </DataGridTemplateColumn>
+                </DataGrid.Columns>
+            </DataGrid>
         </Grid>
     </Grid>
 </Page>

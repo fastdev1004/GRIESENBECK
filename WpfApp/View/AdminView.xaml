@@ -94,6 +94,11 @@
                 </TabControl.Resources>
                 <TabItem Header="Customers" HorizontalAlignment="Left" Width="114">
                     <Grid Margin="10">
+                        <Grid.Resources>
+                            <Style TargetType="Label">
+                                <Setter Property="HorizontalAlignment" Value="Right" />
+                            </Style>
+                        </Grid.Resources>
                         <Grid.RowDefinitions>
                             <RowDefinition Height="2*" />
                             <RowDefinition Height="1*" />
