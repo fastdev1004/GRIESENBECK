@@ -78,7 +78,7 @@
         <Grid Grid.Row="1" Margin="10, 24, 10, 10">
             <WrapPanel>
                 <Label>Select Project:</Label>
-                <ComboBox IsEditable="True" Width="400" Name="projectContacts" ItemsSource="{Binding Projects}" DisplayMemberPath="ProjectName" SelectedValuePath="ID" SelectedValue="{Binding ProjectID, Mode=TwoWay}"></ComboBox>
+                <ComboBox IsEditable="True" Width="400" ItemsSource="{Binding Projects}" DisplayMemberPath="ProjectName" SelectedValuePath="ID" SelectedValue="{Binding ProjectID, Mode=TwoWay}"></ComboBox>
             </WrapPanel>
         </Grid>
         <Grid Grid.Row="2" Margin="10">

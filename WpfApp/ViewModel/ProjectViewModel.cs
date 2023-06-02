@@ -455,6 +455,11 @@ namespace WpfApp.ViewModel
 
             ApprDens = st_apprDen;
 
+            ObservableCollection<string> st_masterContracts = new ObservableCollection<string>();
+            st_masterContracts.Add("Yes");
+            st_masterContracts.Add("No");
+            MasterContracts = st_masterContracts;
+
             cmd.Dispose();
             dbConnection.Close();
         }
@@ -488,7 +493,7 @@ namespace WpfApp.ViewModel
             SelectedArchitectID = -1;
             SelectedCCID = -1;
             SelectedCrewID = -1;
-            SelectedMCID = -1;
+            MasterContractID = "";
             AdditionalInfoNote = "";
             if (!firstRow.IsNull("Project_Name"))
                 ProjectName = firstRow["Project_Name"].ToString();
@@ -531,9 +536,7 @@ namespace WpfApp.ViewModel
             if (!firstRow.IsNull("Crew_ID"))
                 SelectedCrewID = firstRow.Field<int>("Crew_ID");
             if (!firstRow.IsNull("Master_Contract"))
-                if (firstRow.Field<string>("Master_Contract") == "Yes")
-                    SelectedMCID = 0;
-                else SelectedMCID = 1;
+                MasterContractID = firstRow["Master_Contract"].ToString();
             if (!firstRow.IsNull("Customer_ID"))
                 SelectedCustomerId = firstRow.Field<int>("Customer_ID");
             if (!firstRow.IsNull("Addtl_Info"))
@@ -1366,6 +1369,61 @@ namespace WpfApp.ViewModel
 
             ProjectCIPs = sb_cips;
 
+            // Project Link
+            sqlquery = "SELECT * FROM tblProjectLinks WHERE Project_ID = " + ProjectID.ToString();
+
+            cmd = new SqlCommand(sqlquery, dbConnection.Connection);
+            sda = new SqlDataAdapter(cmd);
+            ds = new DataSet();
+            sda.Fill(ds);
+
+            ObservableCollection<ProjectLink> sb_projectLinks = new ObservableCollection<ProjectLink>();
+            foreach (DataRow row in ds.Tables[0].Rows)
+            {
+                int _linkID = 0;
+                int _projectID = 0;
+                string _pathDesc = "";
+                string _pathName = "";
+
+                if (!row.IsNull("Link_ID"))
+                    _linkID = int.Parse(row["Link_ID"].ToString());
+                if (!row.IsNull("Project_ID"))
+                    _projectID = int.Parse(row["Project_ID"].ToString());
+                if (!row.IsNull("PathDesc"))
+                    _pathDesc = row["PathDesc"].ToString();
+                if (!row.IsNull("PathName"))
+                    _pathName = row["PathName"].ToString();
+
+                sb_projectLinks.Add(new ProjectLink
+                {
+                    LinkID = _linkID,
+                    ProjectID = _projectID,
+                    PathDesc = _pathDesc,
+                    PathName = _pathName
+                });
+            }
+            foreach (DataRow row in ds.Tables[0].Rows)
+            {
+                ProjectLinks = sb_projectLinks;
+            }
+
+            // Path Desc
+            sqlquery = "SELECT DISTINCT PathDesc FROM tblProjectLinks ORDER BY PathDesc";
+
+            cmd = new SqlCommand(sqlquery, dbConnection.Connection);
+            sda = new SqlDataAdapter(cmd);
+            ds = new DataSet();
+            sda.Fill(ds);
+
+            ObservableCollection<string> sb_pathDesc= new ObservableCollection<string>();
+
+            foreach (DataRow row in ds.Tables[0].Rows)
+            {
+                sb_pathDesc.Add(row["PathDesc"].ToString());
+            }
+
+            PathDescritpions = sb_pathDesc;
+
             cmd.Dispose();
             dbConnection.Close();
         }
@@ -1434,6 +1492,12 @@ namespace WpfApp.ViewModel
             set;
         }
 
+
+        public ObservableCollection<string> JobNos
+        {
+            get;
+            set;
+        }
         private ObservableCollection<ProjectManager> _projectManagers;
 
         public ObservableCollection<ProjectManager> ProjectManagers
@@ -1799,6 +1863,37 @@ namespace WpfApp.ViewModel
             }
         }
 
+        private ObservableCollection<ProjectLink> _projectLinks;
+
+        public ObservableCollection<ProjectLink> ProjectLinks
+        {
+            get { return _projectLinks; }
+            set
+            {
+                if (_projectLinks != value)
+                {
+                    _projectLinks = value;
+                    OnPropertyChanged();
+                }
+            }
+        }
+
+        private ObservableCollection<string> _pathDesc;
+
+        public ObservableCollection<string> PathDescritpions
+        {
+            get { return _pathDesc; }
+            set
+            {
+                if (_pathDesc != value)
+                {
+                    _pathDesc = value;
+                    OnPropertyChanged();
+                }
+            }
+        }
+
+
         private int _workOrderID;
 
         public int WorkOrderID
@@ -1815,7 +1910,7 @@ namespace WpfApp.ViewModel
             }
         }
 
-        private string _projectName;
+        
         private string _paymentNote;
         private DateTime _targetDate;
         private DateTime _completedDate;
@@ -1836,7 +1931,10 @@ namespace WpfApp.ViewModel
         private int _selectedCCID;
         private int _selectedArchitectID;
         private int _selectedCrewID;
-        private int _selectedMCID;
+        private string _masterContractID;
+
+        private string _projectName;
+
         public string ProjectName
         {
             get => _projectName;
@@ -1847,6 +1945,20 @@ namespace WpfApp.ViewModel
                 OnPropertyChanged();
             }
         }
+
+        private string _customerName;
+
+        public string CustomerName
+        {
+            get => _customerName;
+            set
+            {
+                if (value == _customerName) return;
+                _customerName = value;
+                OnPropertyChanged();
+            }
+        }
+
         public string PaymentNote
         {
             get => _paymentNote;
@@ -2051,13 +2163,13 @@ namespace WpfApp.ViewModel
                 OnPropertyChanged();
             }
         }
-        public int SelectedMCID
+        public string MasterContractID
         {
-            get => _selectedMCID;
+            get => _masterContractID;
             set
             {
-                if (value == _selectedMCID) return;
-                _selectedMCID = value;
+                if (value == _masterContractID) return;
+                _masterContractID = value;
                 OnPropertyChanged();
             }
         }
@@ -2222,6 +2334,21 @@ namespace WpfApp.ViewModel
                 if (_coAppDen != value)
                 {
                     _coAppDen = value;
+                    OnPropertyChanged();
+                }
+            }
+        }
+
+        private ObservableCollection<string> _masterContracts;
+
+        public ObservableCollection<string> MasterContracts
+        {
+            get { return _masterContracts; }
+            set
+            {
+                if (_masterContracts != value)
+                {
+                    _masterContracts = value;
                     OnPropertyChanged();
                 }
             }

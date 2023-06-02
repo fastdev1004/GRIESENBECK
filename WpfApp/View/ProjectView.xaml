@@ -11,6 +11,7 @@
       Title="ViewProject">
     <Page.Resources>
         <converter:ApprDenToValueConverter x:Key="ApprDenToValueConverter" />
+        <converter:ZeroToEmptyStringConverter x:Key="ZeroToEmptyStringConverter" />
         <Style x:Name="operation" TargetType="Button">
             <Setter Property="Width" Value="Auto" />
             <Setter Property="Height" Value="20" />
@@ -261,10 +262,7 @@
                                                         <ColumnDefinition Width="1*" />
                                                     </Grid.ColumnDefinitions>
                                                     <Label>Master Contract:</Label>
-                                                    <ComboBox x:Name="MasterContract_CB" SelectedIndex="{Binding SelectedMCID}" Grid.Column="1" Margin="0,0,4,0">
-                                                        <ComboBoxItem>Yes</ComboBoxItem>
-                                                        <ComboBoxItem>No</ComboBoxItem>
-                                                    </ComboBox>
+                                                    <ComboBox x:Name="MasterContract_CB" ItemsSource="{Binding MasterContracts}" SelectedValue="{Binding MasterContractID, Mode=TwoWay}" Grid.Column="1" />
                                                 </Grid>
                                                 <Grid Grid.Row="1" Style="{StaticResource ParentGridStyle}">
                                                     <Grid.ColumnDefinitions>
@@ -272,7 +270,7 @@
                                                         <ColumnDefinition Width="1*" />
                                                     </Grid.ColumnDefinitions>
                                                     <Label>Crew:</Label>
-                                                    <ComboBox x:Name="Crew_CB" ItemsSource="{Binding Crews}" DisplayMemberPath="CrewName" SelectedValuePath="ID" SelectedValue="{Binding SelectedCrewID}" Grid.Column="1" Margin="0,0,4,0" IsEditable="True" />
+                                                    <ComboBox x:Name="Crew_CB" ItemsSource="{Binding Crews}" DisplayMemberPath="CrewName" SelectedValuePath="ID" SelectedValue="{Binding SelectedCrewID}" Grid.Column="1" IsEditable="True" />
                                                 </Grid>
                                                
                                             </Grid>
@@ -459,19 +457,6 @@
                                     </DataGridTemplateColumn>
                                 </DataGrid.Columns>
                             </DataGrid>
-                            <!--<ScrollViewer Margin="4,0" Grid.Column="1" VerticalScrollBarVisibility="Auto">
-                                <Grid Background="#F5FFAF" x:Name="ProjectNoteGrid">
-                                    <Grid Margin="10">
-                                        <Grid.RowDefinitions>
-                                            <RowDefinition Height="Auto" />
-                                            <RowDefinition Height="Auto" />
-                                        </Grid.RowDefinitions>
-                                        <TextBlock>7/13/2021 12:42:52 PM</TextBlock>
-                                        <TextBox Grid.Row="1" AcceptsReturn="True" ScrollViewer.VerticalScrollBarVisibility="Auto"  Height="40"/>
-                                    </Grid>
-                                </Grid>
-                            </ScrollViewer>-->
-                            
                         </Grid>
                         <Grid Margin="4" Grid.Row="1">
                             <Grid.ColumnDefinitions>
@@ -652,6 +637,55 @@
                                 <Grid Background="#D79619" Height="30">
                                     <Label Content="Description" HorizontalAlignment="Left" Foreground="white"/>
                                 </Grid>
+                                <Grid Grid.Row="1" Margin="10">
+                                    <DataGrid Grid.Row="1" ItemsSource="{Binding ProjectLinks}" GridLinesVisibility="None" AutoGenerateColumns="False" HeadersVisibility="None" BorderThickness="0" Background="White">
+                                        <DataGrid.Resources>
+                                            <Style TargetType="DataGridColumnHeader" BasedOn="{StaticResource GridColumnHeaderBase}">
+                                                <Setter Property="Background" Value="#4BACC6" />
+                                            </Style>
+                                            <Style TargetType="TextBox">
+                                                <Setter Property="TextWrapping" Value="Wrap" />
+                                            </Style>
+                                            <Style TargetType="Label">
+                                                <Setter Property="HorizontalAlignment" Value="Right" />
+                                            </Style>
+                                            <Style TargetType="DataGridRow">
+                                                <Setter Property="Height" Value="Auto" />
+                                                <Setter Property="BorderThickness" Value="0" />
+                                            </Style>
+                                        </DataGrid.Resources>
+                                        <DataGrid.Columns>
+                                            <DataGridTemplateColumn Header="Installation Notes" Width="*">
+                                                <DataGridTemplateColumn.CellTemplate>
+                                                    <DataTemplate>
+                                                        <Grid>
+                                                            <Grid Style="{StaticResource ParentGridStyle}">
+                                                                <Grid.RowDefinitions>
+                                                                    <RowDefinition Height="Auto" />
+                                                                    <RowDefinition Height="Auto" />
+                                                                </Grid.RowDefinitions>
+                                                                <Grid>
+                                                                    <Grid.ColumnDefinitions>
+                                                                        <ColumnDefinition Width="1*" />
+                                                                        <ColumnDefinition Width="1*" />
+                                                                    </Grid.ColumnDefinitions>
+                                                                    <ComboBox ItemsSource="{Binding DataContext.PathDescritpions, RelativeSource={RelativeSource AncestorType=local:ProjectView}}" IsEditable="True" SelectedValue="{Binding PathDesc, Mode=TwoWay}" />
+                                                                    <WrapPanel Name="Operation" Grid.Column="1" HorizontalAlignment="Right">
+                                                                        <Button Content="Folder" Width="40" />
+                                                                        <Button Content="File" Margin="8,0,0,0" Width="40" />
+                                                                    </WrapPanel>
+                                                                </Grid>
+                                                                <Grid Grid.Row="1">
+                                                                    <TextBlock Text="{Binding PathName, Mode=TwoWay}" />
+                                                                </Grid>
+                                                            </Grid>
+                                                        </Grid>
+                                                    </DataTemplate>
+                                                </DataGridTemplateColumn.CellTemplate>
+                                            </DataGridTemplateColumn>
+                                        </DataGrid.Columns>
+                                    </DataGrid>
+                                </Grid>
                             </Grid>
                         </Grid>
                     </Grid>
@@ -701,7 +735,7 @@
                                         </DataGridTemplateColumn.Header>
                                         <DataGridTemplateColumn.CellTemplate>
                                             <DataTemplate>
-                                                <ComboBox ItemsSource="{Binding DataContext.ChangeOrders, RelativeSource={RelativeSource AncestorType=local:ProjectView}}" DisplayMemberPath="CoItemNo" SelectedValuePath="CoItemNo" SelectedValue="{Binding CoItemNo, Mode=TwoWay}"></ComboBox>
+                                                <ComboBox ItemsSource="{Binding DataContext.ChangeOrders, RelativeSource={RelativeSource AncestorType=local:ProjectView}}" DisplayMemberPath="CoItemNo" SelectedValuePath="CoItemNo" SelectedValue="{Binding CoItemNo, Mode=TwoWay}" HorizontalContentAlignment="Center"></ComboBox>
                                             </DataTemplate>
                                         </DataGridTemplateColumn.CellTemplate>
                                     </DataGridTemplateColumn>
@@ -711,7 +745,7 @@
                                         </DataGridTemplateColumn.Header>
                                         <DataGridTemplateColumn.CellTemplate>
                                             <DataTemplate>
-                                                <TextBox Text="{Binding SovDesc}" />
+                                                <TextBox     Text="{Binding SovDesc}" />
                                             </DataTemplate>
                                         </DataGridTemplateColumn.CellTemplate>
                                     </DataGridTemplateColumn>
@@ -785,7 +819,7 @@
                                                 </DataGridTemplateColumn.Header>
                                                 <DataGridTemplateColumn.CellTemplate>
                                                     <DataTemplate>
-                                                        <TextBlock Text="{Binding CoItemNo}" HorizontalAlignment="Center" />
+                                                        <TextBlock Text="{Binding CoItemNo, Converter={StaticResource ZeroToEmptyStringConverter}}" HorizontalAlignment="Center" />
                                                     </DataTemplate>
                                                 </DataGridTemplateColumn.CellTemplate>
                                             </DataGridTemplateColumn>
@@ -1450,7 +1484,7 @@
                                         </DataGridTemplateColumn.Header>
                                         <DataGridTemplateColumn.CellTemplate>
                                             <DataTemplate>
-                                                <TextBox Text="{Binding Phase}" />
+                                                <TextBox Text="{Binding ManufLeadTime}" />
                                             </DataTemplate>
                                         </DataGridTemplateColumn.CellTemplate>
                                     </DataGridTemplateColumn>
@@ -1530,7 +1564,7 @@
                                         </DataGridTemplateColumn.Header>
                                         <DataGridTemplateColumn.CellTemplate>
                                             <DataTemplate>
-                                                <DatePicker SelectedDate="{Binding SubmAppr}" />
+                                                <CheckBox IsChecked="{Binding SubmAppr, Mode=TwoWay}" />
                                             </DataTemplate>
                                         </DataGridTemplateColumn.CellTemplate>
                                     </DataGridTemplateColumn>
@@ -1677,7 +1711,7 @@
                                         <ColumnDefinition Width="1*" />
                                     </Grid.ColumnDefinitions>
                                     <Label HorizontalAlignment="Left" FontWeight="Bold">Workd Orders</Label>
-                                    <Label Grid.Column="1" FontStyle="Italic">(click to select WO)</Label>
+                                    <Label Grid.Column="1" FontStyle="Italic" HorizontalAlignment="Right">(click to select WO)</Label>
                                 </Grid>
                                 <Grid Grid.Row="1">
                                     <DataGrid x:Name="WOListView" GridLinesVisibility="None" ItemsSource="{Binding WorkOrders, Mode=TwoWay}" SelectedValue="{Binding WorkOrderID, Mode=TwoWay}" SelectedValuePath="WoID" AutoGenerateColumns="False" CanUserAddRows="False" Background="White" HeadersVisibility="Column">

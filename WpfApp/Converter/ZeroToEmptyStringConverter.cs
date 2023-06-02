@@ -8,29 +8,20 @@ using System.Windows.Data;
 
 namespace WpfApp.Converter
 {
-    class ApprDenToValueConverter : IValueConverter
+    class ZeroToEmptyStringConverter : IValueConverter
     {
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {
-            string input = value?.ToString();
-            if (input == "A")
+            if (value is int intValue && intValue == 0)
             {
-                return "Approved";
+                return string.Empty;
             }
-            else if (input == "D")
-            {
-                return "Denied";
-            }
-            else
-            {
-                return "Unknown";
-            }
+            return value;
         }
-
 
         public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
         {
-            return value.ToString();
+            throw new NotImplementedException();
         }
     }
 }

@@ -221,8 +221,6 @@ namespace WpfApp.ViewModel
                     LaborComplete = laborComplete
                 });
                 ProjectMatTrackings = sb_projectMatTrackings;
-                Console.WriteLine(ProjectMatTrackings.Count);
-                Console.WriteLine("ProjectMatTrackings");
             }
 
             // Project Ship
@@ -400,7 +398,6 @@ namespace WpfApp.ViewModel
             {
                 if (_projMatID != value)
                 {
-                    Console.WriteLine("ProjectMatTrackings");
                     _projMatID = value;
                     OnPropertyChanged();
                     ChangeMaterial();

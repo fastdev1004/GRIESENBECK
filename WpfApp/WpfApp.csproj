@@ -60,6 +60,7 @@
     <Compile Include="Controls\CustomDatePicker.cs" />
     <Compile Include="Converter\ApprDenToValueConverter.cs" />
     <Compile Include="Converter\SelectedValueToIntConverter.cs" />
+    <Compile Include="Converter\ZeroToEmptyStringConverter.cs" />
     <Compile Include="Model\Acronym.cs" />
     <Compile Include="Model\Architect.cs" />
     <Compile Include="Model\ArchRep.cs" />
@@ -81,6 +82,7 @@
     <Compile Include="Model\PC.cs" />
     <Compile Include="Model\Project.cs" />
     <Compile Include="Model\ProjectLabor.cs" />
+    <Compile Include="Model\ProjectLink.cs" />
     <Compile Include="Model\ProjectManager.cs" />
     <Compile Include="Model\ProjectMatShip.cs" />
     <Compile Include="Model\ProjectMatTracking.cs" />

@@ -193,6 +193,22 @@ namespace WpfApp.ViewModel
             }
             Crews = st_crew;
 
+            // Job No
+            sqlquery = "SELECT Job_No FROM tblProjects ORDER BY Job_No";
+
+            cmd = new SqlCommand(sqlquery, dbConnection.Connection);
+            sda = new SqlDataAdapter(cmd);
+            ds = new DataSet();
+            sda.Fill(ds);
+
+            ObservableCollection<string> sb_jobNo = new ObservableCollection<string>();
+            foreach (DataRow row in ds.Tables[0].Rows)
+            {
+                if (!row.IsNull("Job_No"))
+                    sb_jobNo.Add(row["Job_No"].ToString());
+            }
+            JobNos = sb_jobNo;
+
             cmd.Dispose();
             dbConnection.Close();
         }
@@ -305,6 +321,12 @@ namespace WpfApp.ViewModel
             {
                 _keyword = value;
             }
+        }
+
+        public ObservableCollection<string> JobNos
+        {
+            get;
+            set;
         }
     }
 }

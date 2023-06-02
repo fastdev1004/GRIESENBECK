@@ -64,8 +64,6 @@ namespace WpfApp.ViewModel
                 st_returnedVia.Add(new ReturnedVia { ID = viaID, ReturnedViaName = viaName });
             }
             ReturnedViaNames = st_returnedVia;
-            Console.WriteLine(ReturnedViaNames.Count);
-            Console.WriteLine("Returned Via Names");
 
             cmd.Dispose();
             dbConnection.Close();
@@ -131,8 +129,6 @@ namespace WpfApp.ViewModel
                 });
             }
             Warranties = sb_warranties;
-            Console.WriteLine(Warranties.Count);
-            Console.WriteLine("warranty");
         }
 
         public ObservableCollection<Project> Projects

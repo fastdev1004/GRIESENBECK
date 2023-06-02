@@ -121,7 +121,7 @@
                         <ColumnDefinition Width="2.5*" />
                     </Grid.ColumnDefinitions>
                     <Label>Job No:</Label>
-                    <ComboBox Grid.Column="1" />
+                    <ComboBox ItemsSource="{Binding JobNos}" Grid.Column="1" />
                 </Grid>
                 <Grid Grid.Row="2">
                     <Grid.ColumnDefinitions>
@@ -208,7 +208,7 @@
                         <ColumnDefinition Width="1*" />
                     </Grid.ColumnDefinitions>
                     <Label>Keyword:</Label>
-                    <ComboBox ItemsSource="{Binding Materials}" DisplayMemberPath="Material_Desc" Grid.Column="1" />
+                    <ComboBox ItemsSource="{Binding Materials}" DisplayMemberPath="MatDesc" Grid.Column="1" />
                 </Grid>
             </Grid>
         </Grid>
