@@ -60,6 +60,7 @@
     <Compile Include="Command\RelayCommand.cs" />
     <Compile Include="Controls\CustomDatePicker.cs" />
     <Compile Include="Converter\ApprDenToValueConverter.cs" />
+    <Compile Include="Converter\BoolToVisibleConverter.cs" />
     <Compile Include="Converter\DateTimeToDateConverter.cs" />
     <Compile Include="Converter\SelectedValueToIntConverter.cs" />
     <Compile Include="Converter\YesNoConverter.cs" />
@@ -92,6 +93,7 @@
     <Compile Include="Model\ProjectWorkOrder.cs" />
     <Compile Include="Model\Report.cs" />
     <Compile Include="Model\ReportActiveLabor.cs" />
+    <Compile Include="Model\ReportApproveNotRelease.cs" />
     <Compile Include="Model\ReportSelection.cs" />
     <Compile Include="Model\ReturnedVia.cs" />
     <Compile Include="Model\Salesman.cs" />

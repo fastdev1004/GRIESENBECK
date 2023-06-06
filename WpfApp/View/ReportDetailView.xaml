@@ -11,6 +11,7 @@
 
     <Page.Resources>
         <ResourceDictionary>
+            <converter:BoolToVisibleConverter x:Key="BoolToVisibleConverter" />
             <converter:DateTimeToDateConverter x:Key="DateTimeToDateConverter" />
             <ResourceDictionary.MergedDictionaries>
                 <ResourceDictionary Source="../Themes/Generic.xaml" />
@@ -27,12 +28,12 @@
             <Border BorderThickness="0 0 0 4" BorderBrush="#B6302D">
                 <Grid Background="#14305F">
                     <Button Click="GoBack" Width="40" Height="20" HorizontalAlignment="Left" Margin="10,0,0,0">Back</Button>
-                    <TextBlock Margin="80, 0,0,0" Text="Report View Detail"  FontSize="32" Foreground="White" VerticalAlignment="Center">
+                    <TextBlock Margin="80, 0,0,0" Text="Report View Detail" FontSize="32" Foreground="White" VerticalAlignment="Center">
                     </TextBlock>
                 </Grid>
             </Border>
         </Grid>
-        <Grid Grid.Row="1" Margin="10">
+        <Grid Grid.Row="1" Margin="10" Visibility="{Binding ActiveLaborListVisibility, Mode=TwoWay, Converter={StaticResource BoolToVisibleConverter}}">
             <Grid.RowDefinitions>
                 <RowDefinition Height="Auto" />
                 <RowDefinition Height="*" />
@@ -177,9 +178,137 @@
                                                         </DataGridTemplateColumn>
                                                     </DataGrid.Columns>
                                                 </DataGrid>
-                                            </Grid>
                                         </Grid>
+                                    </Grid>
                                     </Border>
+                                </DataTemplate>
+                            </DataGridTemplateColumn.CellTemplate>
+                        </DataGridTemplateColumn>
+                    </DataGrid.Columns>
+                </DataGrid>
+            </Grid>
+        </Grid>
+        <Grid Grid.Row="1" Margin="10" Visibility="{Binding ApprovedVisibility, Mode=TwoWay, Converter={StaticResource BoolToVisibleConverter}}">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="*" />
+            </Grid.RowDefinitions>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="6*" />
+                <ColumnDefinition Width="4*" />
+            </Grid.ColumnDefinitions>
+            <Grid>
+                <TextBlock Style="{StaticResource ReportViewHeader}" Text="Approved, Not Released" />
+            </Grid>
+            <Grid Grid.Row="1" >
+                <DataGrid ItemsSource="{Binding ReportApproveNotReleases, Mode=TwoWay}" GridLinesVisibility="None" AutoGenerateColumns="False" HeadersVisibility="Column" BorderThickness="0" Background="White">
+                    <DataGrid.Resources>
+                        <Style TargetType="DataGridColumnHeader" BasedOn="{StaticResource GridColumnHeaderBase}">
+                            <Setter Property="Background" Value="White" />
+                            <Setter Property="Foreground" Value="Black" />
+                        </Style>
+                        <Style TargetType="TextBox">
+                            <Setter Property="BorderThickness" Value="0,0,0,1" />
+                        </Style>
+                        <Style TargetType="ComboBox">
+                            <Setter Property="BorderThickness" Value="0,0,0,1" />
+                            <Setter Property="IsEditable" Value="True" />
+                        </Style>
+                    </DataGrid.Resources>
+                    <DataGrid.Columns>
+                        <DataGridTemplateColumn IsReadOnly="False" Width="2*">
+                            <DataGridTemplateColumn.Header>
+                                <Border BorderBrush="Black" BorderThickness="0,0,0,1">
+                                    <TextBlock Text="Mat Req Date" TextWrapping="Wrap" />
+                                </Border>
+                            </DataGridTemplateColumn.Header>
+                            <DataGridTemplateColumn.CellTemplate>
+                                <DataTemplate>
+                                    <TextBlock Text="{Binding MatReqDate , Converter={StaticResource DateTimeToDateConverter}}" />
+                                </DataTemplate>
+                            </DataGridTemplateColumn.CellTemplate>
+                        </DataGridTemplateColumn>
+                        <DataGridTemplateColumn IsReadOnly="False" Width="1*">
+                            <DataGridTemplateColumn.Header>
+                                <Border BorderBrush="Black" BorderThickness="0,0,0,1">
+                                    <TextBlock Text="Job No" TextWrapping="Wrap" />
+                                </Border>
+                            </DataGridTemplateColumn.Header>
+                            <DataGridTemplateColumn.CellTemplate>
+                                <DataTemplate>
+                                    <TextBlock Text="{Binding JobNo}" />
+                                </DataTemplate>
+                            </DataGridTemplateColumn.CellTemplate>
+                        </DataGridTemplateColumn>
+                        <DataGridTemplateColumn IsReadOnly="False" Width="4*">
+                            <DataGridTemplateColumn.Header>
+                                <Border BorderBrush="Black" BorderThickness="0,0,0,1">
+                                    <TextBlock Text="Project" TextWrapping="Wrap" />
+                                </Border>
+                            </DataGridTemplateColumn.Header>
+                            <DataGridTemplateColumn.CellTemplate>
+                                <DataTemplate>
+                                    <TextBlock Text="{Binding ProjectName}" />
+                                </DataTemplate>
+                            </DataGridTemplateColumn.CellTemplate>
+                        </DataGridTemplateColumn>
+                        <DataGridTemplateColumn IsReadOnly="False" Width="3*">
+                            <DataGridTemplateColumn.Header>
+                                <Border BorderBrush="Black" BorderThickness="0,0,0,1">
+                                    <TextBlock Text="Salesman" TextWrapping="Wrap" />
+                                </Border>
+                            </DataGridTemplateColumn.Header>
+                            <DataGridTemplateColumn.CellTemplate>
+                                <DataTemplate>
+                                    <TextBlock Text="{Binding SalesmanName}" />
+                                </DataTemplate>
+                            </DataGridTemplateColumn.CellTemplate>
+                        </DataGridTemplateColumn>
+                        <DataGridTemplateColumn IsReadOnly="False" Width="3*">
+                            <DataGridTemplateColumn.Header>
+                                <Border BorderBrush="Black" BorderThickness="0,0,0,1">
+                                    <TextBlock Text="Material" TextWrapping="Wrap" />
+                                </Border>
+                            </DataGridTemplateColumn.Header>
+                            <DataGridTemplateColumn.CellTemplate>
+                                <DataTemplate>
+                                    <TextBlock Text="{Binding MaterialName}" />
+                                </DataTemplate>
+                            </DataGridTemplateColumn.CellTemplate>
+                        </DataGridTemplateColumn>
+                        <DataGridTemplateColumn IsReadOnly="False" Width="3*">
+                            <DataGridTemplateColumn.Header>
+                                <Border BorderBrush="Black" BorderThickness="0,0,0,1">
+                                    <TextBlock Text="Manufacturer" TextWrapping="Wrap" />
+                                </Border>
+                            </DataGridTemplateColumn.Header>
+                            <DataGridTemplateColumn.CellTemplate>
+                                <DataTemplate>
+                                    <TextBlock Text="{Binding ManufName}" />
+                                </DataTemplate>
+                            </DataGridTemplateColumn.CellTemplate>
+                        </DataGridTemplateColumn>
+                        <DataGridTemplateColumn IsReadOnly="False" Width="3*">
+                            <DataGridTemplateColumn.Header>
+                                <Border BorderBrush="Black" BorderThickness="0,0,0,1">
+                                    <TextBlock Text="Subm Appr" TextWrapping="Wrap" />
+                                </Border>
+                            </DataGridTemplateColumn.Header>
+                            <DataGridTemplateColumn.CellTemplate>
+                                <DataTemplate>
+                                    <TextBlock Text="{Binding SubmAppr, Converter={StaticResource DateTimeToDateConverter}}" />
+                                </DataTemplate>
+                            </DataGridTemplateColumn.CellTemplate>
+                        </DataGridTemplateColumn>
+                        <DataGridTemplateColumn IsReadOnly="False" Width="3*">
+                            <DataGridTemplateColumn.Header>
+                                <Border BorderBrush="Black" BorderThickness="0,0,0,1">
+                                    <TextBlock Text="Lead Time" TextWrapping="Wrap" />
+                                </Border>
+                            </DataGridTemplateColumn.Header>
+                            <DataGridTemplateColumn.CellTemplate>
+                                <DataTemplate>
+                                    <TextBlock Text="{Binding LeadTime}" />
                                 </DataTemplate>
                             </DataGridTemplateColumn.CellTemplate>
                         </DataGridTemplateColumn>

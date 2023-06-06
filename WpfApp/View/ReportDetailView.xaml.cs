@@ -41,27 +41,28 @@ namespace WpfApp.View
                 int salesmanID = loadContext.SalesmanID;
                 int archRepID = loadContext.ArchRepID;
                 int customerID = loadContext.CustomerID;
+                int manufID = loadContext.ManufID;
                 int architectID = loadContext.ArchitectID;
+                int matID = loadContext.MaterialID;
                 int crewID = loadContext.CrewID;
                 DateTime dateFrom = loadContext.DateFrom;
                 DateTime toDate = loadContext.ToDate;
                 string keyword = loadContext.Keyword;
 
-                ReportDetailVM.ReportID = reportID;
                 ReportDetailVM.ProjectID = projectID;
                 ReportDetailVM.SelectedJobNo = jobNo;
                 ReportDetailVM.SelectedSalesmanID = salesmanID;
                 ReportDetailVM.SelectedArchRepID = archRepID;
+                ReportDetailVM.SelectedManufID = manufID;
                 ReportDetailVM.SelectedCustomerID = customerID;
                 ReportDetailVM.SelectedArchitectID = architectID;
+                ReportDetailVM.SelectedMatID = matID;
                 ReportDetailVM.SelectedCrewID = crewID;
                 ReportDetailVM.SelectedDateFrom = dateFrom;
                 ReportDetailVM.SelectedToDate = toDate;
                 ReportDetailVM.Keyword = keyword;
+                ReportDetailVM.ReportID = reportID;
 
-                Console.WriteLine(reportID);
-                Console.WriteLine("reportID");
-                ReportDetailVM.LoadData();
                 this.DataContext = ReportDetailVM;
             }
         }
