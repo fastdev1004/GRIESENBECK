@@ -278,6 +278,30 @@ namespace WpfApp.ViewModel
          
         private void ChangeReportID()
         {
+            ActiveLaborListVisibility = false;
+            ApprovedVisibility = false;
+            ChangeOrderVisibility = false;
+            CONotRetVisibility = false;
+            CipVisibility = false;
+            ContractVisibility = false;
+            ContractNotRetVisibility = false;
+            CustomerContactVisibility = false;
+            FieldMeasureVisibility = false;
+            FinalFabVisibility = false;
+            InstallForecastVisibility = false;
+            JobArchRepVisibility = false;
+            JobArchitectVisibility = false;
+            JobManufVisibility = false;
+            LeedVisibility = false;
+            OpenJobVisibility = false;
+            PastDueVisibility = false;
+            PmVisibility = false;
+            ReleasedVisibility = false;
+            ShipVisibility = false;
+            ShopRecvVisibility = false;
+            SubmitVisibility = false;
+            ShopReqVisibility = false;
+            VendorVisibility = false;
             switch (ReportID)
             {
                 case 13:
