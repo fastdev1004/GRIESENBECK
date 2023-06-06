@@ -10,11 +10,11 @@ none
 false
 DEBUG;TRACE
 G:\GRIESENBECK\WpfApp\App.xaml
-10-849331483
+12830515976
 
-71-1774442368
+78105280487
 152084120597
-MainWindow.xaml;View\AdminView.xaml;View\CloseOutView.xaml;View\ContractView.xaml;View\ImportView.xaml;View\ReportView.xaml;View\Start.xaml;View\ProjectView.xaml;View\TrackShipView.xaml;View\WorkOrderView.xaml;
+MainWindow.xaml;Themes\Generic.xaml;View\AdminView.xaml;View\CloseOutView.xaml;View\ContractView.xaml;View\ImportView.xaml;View\ReportDetailView.xaml;View\ReportView.xaml;View\Start.xaml;View\ProjectView.xaml;View\TrackShipView.xaml;View\WorkOrderView.xaml;
 
 True
 

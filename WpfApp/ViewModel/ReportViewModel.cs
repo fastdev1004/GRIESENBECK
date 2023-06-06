@@ -8,17 +8,20 @@ using System.Text;
 using System.Threading.Tasks;
 using WpfApp.Model;
 using WpfApp.Utils;
+using WpfApp.Command;
+using System.Windows;
+using System.Windows.Controls;
 
 namespace WpfApp.ViewModel
 {
-    class ReportViewModel
+    class ReportViewModel : ViewModelBase
     {
         private DatabaseConnection dbConnection;
         public SqlCommand cmd;
         public SqlDataAdapter sda;
         public DataSet ds;
         public string sqlquery;
-
+       
         public ReportViewModel()
         {
             dbConnection = new DatabaseConnection();
@@ -26,7 +29,7 @@ namespace WpfApp.ViewModel
             LoadReports();
         }
 
-        public void LoadReports()
+        private void LoadReports()
         {
             // Reports
             sqlquery = "SELECT * FROM tblReportsList WHERE Active = 1 ORDER BY Report_Name";
@@ -209,8 +212,96 @@ namespace WpfApp.ViewModel
             }
             JobNos = sb_jobNo;
 
+            // ReportSelection
+            sqlquery = "SELECT * FROM tblReportsSelections";
+
+            cmd = new SqlCommand(sqlquery, dbConnection.Connection);
+            sda = new SqlDataAdapter(cmd);
+            ds = new DataSet();
+            sda.Fill(ds);
+
+            ObservableCollection<ReportSelection> sb_reportSelection = new ObservableCollection<ReportSelection>();
+            foreach (DataRow row in ds.Tables[0].Rows)
+            {
+                sb_reportSelection.Add(new ReportSelection
+                {
+                    ReportID = int.Parse(row["Report_ID"].ToString()),
+                    SelecionName = row["Selection_NameOnTbl"].ToString(),
+                    SelectionDataType = row["Selection_DataType"].ToString()
+                });
+            }
+
+            ReportSelections = sb_reportSelection;
+
+            // Complte Combo Box
+            ObservableCollection<bool> st_completeCB = new ObservableCollection<bool>();
+            st_completeCB.Add(true);
+            st_completeCB.Add(false);
+            CompleteCB = st_completeCB;
+
             cmd.Dispose();
             dbConnection.Close();
+        }
+
+        private void ChangeReportItem()
+        {
+            List<ReportSelection> _reportSelections = ReportSelections.Where(item => item.ReportID == ReportID).ToList();
+
+            ArchRepCbEnable = false;
+            ArchitectCbEnable = false;
+            CompleteCbEnable = false;
+            CrewCbEnable = false;
+            CustomerCbEnable = false;
+            DateDpEnable = false;
+            JobCbEnable = false;
+            ManufIDCbEnable = false;
+            ManufDescCbEnable = false;
+            ProjectCbEnable = false;
+            MaterialCbEnable = false;
+            SalesmanCbEnable = false;
+
+            foreach (ReportSelection item in _reportSelections)
+            {
+                switch(item.SelecionName)
+                {
+                    case "Arch_Rep_ID":
+                        ArchRepCbEnable = true;
+                        break;
+                    case "Architect_ID":
+                        ArchitectCbEnable = true;
+                        break;
+                    case "Complete":
+                        CompleteCbEnable = true;
+                        break;
+                    case "Crew_ID":
+                        CrewCbEnable = true;
+                        break;
+                    case "Customer_ID":
+                        CustomerCbEnable = true;
+                        break;
+                    case "Date":
+                        DateDpEnable = true;
+                        break;
+                    case "Job_No":
+                        JobCbEnable = true;
+                        break;
+                    case "Manuf_ID":
+                        ManufIDCbEnable = true;
+                        break;
+                    case "Manuf_Desc":
+                        ManufDescCbEnable = true;
+                        break;
+                    case "Project_ID":
+                        ProjectCbEnable = true;
+                        break;
+                    case "Material_Desc":
+                        MaterialCbEnable = true;
+                        break;
+                    case "Salesman_ID":
+                        SalesmanCbEnable = true;
+                        break;
+                }
+            }
         }
 
         private ObservableCollection<Report> _reports;
@@ -223,6 +314,386 @@ namespace WpfApp.ViewModel
                 _reports = value;
             }
         }
+
+        public ObservableCollection<bool> CompleteCB { get; set; }
+
+        private int _reportID;
+
+        public int ReportID
+        {
+            get { return _reportID; }
+            set
+            {
+                if (_reportID != value)
+                {
+                    _reportID = value;
+                    ChangeReportItem();
+                    OnPropertyChanged();
+                }
+            }
+        }
+
+        private bool _projectCbEnable;
+
+        public bool ProjectCbEnable
+        {
+            get { return _projectCbEnable; }
+            set
+            {
+                if (_projectCbEnable != value)
+                {
+                    _projectCbEnable = value;
+                    OnPropertyChanged();
+                }
+            }
+        }
+
+        private bool _jobCbEnable;
+
+        public bool JobCbEnable
+        {
+            get { return _jobCbEnable; }
+            set
+            {
+                if (_jobCbEnable != value)
+                {
+                    _jobCbEnable = value;
+                    OnPropertyChanged();
+                }
+            }
+        }
+
+        private bool _salesmanCbEnable;
+
+        public bool SalesmanCbEnable
+        {
+            get { return _salesmanCbEnable; }
+            set
+            {
+                if (_salesmanCbEnable != value)
+                {
+                    _salesmanCbEnable = value;
+                    OnPropertyChanged();
+                }
+            }
+        }
+
+        private bool _archRepCbEnable;
+
+        public bool ArchRepCbEnable
+        {
+            get { return _archRepCbEnable; }
+            set
+            {
+                if (_archRepCbEnable != value)
+                {
+                    _archRepCbEnable = value;
+                    OnPropertyChanged();
+                }
+            }
+        }
+
+        private bool _customerCbEnable;
+
+        public bool CustomerCbEnable
+        {
+            get { return _customerCbEnable; }
+            set
+            {
+                if (_customerCbEnable != value)
+                {
+                    _customerCbEnable = value;
+                    OnPropertyChanged();
+                }
+            }
+        }
+
+        private bool _manufIDCbEnable;
+
+        public bool ManufIDCbEnable
+        {
+            get { return _manufIDCbEnable; }
+            set
+            {
+                if (_manufIDCbEnable != value)
+                {
+                    _manufIDCbEnable = value;
+                    OnPropertyChanged();
+                }
+            }
+        }
+
+        private bool _manufDescCbEnable;
+
+        public bool ManufDescCbEnable
+        {
+            get { return _manufDescCbEnable; }
+            set
+            {
+                if (_manufDescCbEnable != value)
+                {
+                    _manufDescCbEnable = value;
+                    OnPropertyChanged();
+                }
+            }
+        }
+
+        private bool _architectCbEnable;
+
+        public bool ArchitectCbEnable
+        {
+            get { return _architectCbEnable; }
+            set
+            {
+                if (_architectCbEnable != value)
+                {
+                    _architectCbEnable = value;
+                    OnPropertyChanged();
+                }
+            }
+        }
+
+        private bool _materialCbEnable;
+
+        public bool MaterialCbEnable
+        {
+            get { return _materialCbEnable; }
+            set
+            {
+                if (_materialCbEnable != value)
+                {
+                    _materialCbEnable = value;
+                    OnPropertyChanged();
+                }
+            }
+        }
+
+        private bool _crewCbEnable;
+
+        public bool CrewCbEnable
+        {
+            get { return _crewCbEnable; }
+            set
+            {
+                if (_crewCbEnable != value)
+                {
+                    _crewCbEnable = value;
+                    OnPropertyChanged();
+                }
+            }
+        }
+
+        private bool _completeCbEnable;
+
+        public bool CompleteCbEnable
+        {
+            get { return _completeCbEnable; }
+            set
+            {
+                if (_completeCbEnable != value)
+                {
+                    _completeCbEnable = value;
+                    OnPropertyChanged();
+                }
+            }
+        }
+
+        private bool _dateDpEnable;
+
+        public bool DateDpEnable
+        {
+            get { return _dateDpEnable; }
+            set
+            {
+                if (_dateDpEnable != value)
+                {
+                    _dateDpEnable = value;
+                    OnPropertyChanged();
+                }
+            }
+        }
+
+        private int _projectID;
+
+        public int ProjectID
+        {
+            get { return _projectID; }
+            set
+            {
+                if (_projectID != value)
+                {
+                    _projectID = value;
+                    OnPropertyChanged();
+                }
+            }
+        }
+
+        private string _jobNo;
+
+        public string JobNo
+        {
+            get { return _jobNo; }
+            set
+            {
+                if (_jobNo != value)
+                {
+                    _jobNo = value;
+                    OnPropertyChanged();
+                }
+            }
+        }
+
+        private int _salesmanID;
+
+        public int SalesmanID
+        {
+            get { return _salesmanID; }
+            set
+            {
+                if (_salesmanID != value)
+                {
+                    _salesmanID = value;
+                    OnPropertyChanged();
+                }
+            }
+        }
+
+        private int _archRepID;
+
+        public int ArchRepID
+        {
+            get { return _archRepID; }
+            set
+            {
+                if (_archRepID != value)
+                {
+                    _archRepID = value;
+                    OnPropertyChanged();
+                }
+            }
+        }
+
+        private int _customerID;
+
+        public int CustomerID
+        {
+            get { return _customerID; }
+            set
+            {
+                if (_customerID != value)
+                {
+                    _customerID = value;
+                    OnPropertyChanged();
+                }
+            }
+        }
+
+        private int _manufID;
+
+        public int ManufID
+        {
+            get { return _manufID; }
+            set
+            {
+                if (_manufID != value)
+                {
+                    _manufID = value;
+                    OnPropertyChanged();
+                }
+            }
+        }
+
+        private int _architectID;
+
+        public int ArchitectID
+        {
+            get { return _architectID; }
+            set
+            {
+                if (_architectID != value)
+                {
+                    _architectID = value;
+                    OnPropertyChanged();
+                }
+            }
+        }
+
+        private int _materialID;
+
+        public int MaterialID
+        {
+            get { return _materialID; }
+            set
+            {
+                if (_materialID != value)
+                {
+                    _materialID = value;
+                    OnPropertyChanged();
+                }
+            }
+        }
+
+        private int _crewID;
+
+        public int CrewID
+        {
+            get { return _crewID; }
+            set
+            {
+                if (_crewID != value)
+                {
+                    _crewID = value;
+                    OnPropertyChanged();
+                }
+            }
+        }
+
+        private DateTime _dateFrom;
+
+        public DateTime DateFrom
+        {
+            get { return _dateFrom; }
+            set
+            {
+                if (_dateFrom != value)
+                {
+                    _dateFrom = value;
+                    OnPropertyChanged();
+                }
+            }
+        }
+
+        private DateTime _toDate;
+
+        public DateTime ToDate
+        {
+            get { return _toDate; }
+            set
+            {
+                if (_toDate != value)
+                {
+                    _toDate = value;
+                    OnPropertyChanged();
+                }
+            }
+        }
+
+        private string _keyword;
+
+        public string Keyword
+        {
+            get { return _keyword; }
+            set
+            {
+                if (_keyword != value)
+                {
+                    _keyword = value;
+                    OnPropertyChanged();
+                }
+            }
+        }
+
+        //here
 
         private ObservableCollection<Project> _projects;
 
@@ -312,21 +783,28 @@ namespace WpfApp.ViewModel
             }
         }
 
-        private ObservableCollection<Crew> _keyword;
-
-        public ObservableCollection<Crew> Keywords
-        {
-            get { return _keyword; }
-            set
-            {
-                _keyword = value;
-            }
-        }
-
         public ObservableCollection<string> JobNos
         {
             get;
             set;
+        }
+
+        public ObservableCollection<ReportSelection> ReportSelections;
+
+
+        private bool _complete;
+
+        public bool Complete
+        {
+            get { return _complete; }
+            set
+            {
+                if (_complete != value)
+                {
+                    _complete = value;
+                    OnPropertyChanged();
+                }
+            }
         }
     }
 }

@@ -13,6 +13,7 @@ using System.Windows;
 using System.Windows.Controls;
 using WpfApp.Model;
 using WpfApp.Utils;
+using WpfApp.Command;
 
 namespace WpfApp.ViewModel
 {
@@ -29,6 +30,84 @@ namespace WpfApp.ViewModel
             dbConnection = new DatabaseConnection();
             dbConnection.Open();
             LoadProjects();
+            ProjectManagerList = new ObservableCollection<ProjectManager>();
+            SuperintendentList = new ObservableCollection<Superintendent>();
+            ProjectNotes = new ObservableCollection<Note>();
+            ProjectLinks = new ObservableCollection<ProjectLink>();
+            SovCOs = new ObservableCollection<SovCO>();
+            SovMaterials = new ObservableCollection<SovMaterial>();
+            ProjectMatTrackings = new ObservableCollection<ProjectMatTracking>();
+            ProjectMtShips = new ObservableCollection<ProjectMatShip>();
+
+            ProjectSelectionEnable = true;
+            
+
+            this.NewProjectCommand = new RelayCommand((e)=> this.ClearProject());
+        }
+
+        private void ClearProject()
+        {
+            ProjectID = -1;
+            ProjectName = "";
+            CustomerID = -1;
+            Proj_TargetDate = new DateTime();
+            Proj_CompletedDate = new DateTime();
+            Payments.Clear();
+            PaymentNote = "";
+            AdditionalInfoNote = "";
+            BillingDate = "";
+            MasterContractID = "";
+            SelectedCrewID = -1;
+            JobNo = "";
+            OnHold = false;
+            Address = "";
+            City = "";
+            State = "";
+            Zip = "";
+            OrigTaxAmt = "";
+            OrigProfit = "";
+            OrigTotalMatCost = "";
+            ProjectManagerList.Clear();
+            SuperintendentList.Clear();
+            EstimatorID = -1;
+            ArchitectID = -1;
+            ProjectCoordID = -1;
+            ArchRepID = -1;
+            CCID = -1;
+            ArchitectID = -1;
+            ProjectNotes.Clear();
+            ProjectLinks.Clear();
+            Proj_Complete = false;
+            SafetyBadging = "";
+            InstallationNotes.Clear();
+            ProjectCIPs.Clear();
+            Contracts.Clear();
+            ChangeOrders.Clear();
+
+            //ProjectSelectionEnable = false;
+            // SOV
+            SovCOs.Clear();
+            SovMaterials.Clear();
+            // Track/Ship/Recv
+            TrackShipRecvs.Clear();
+            ProjectMatTrackings.Clear();
+            ProjectMtShips.Clear();
+            // Tracking
+            TrackReports.Clear();
+            TrackLaborReports.Clear();
+            // Wok Orders
+            ProjectWorkOrders.Clear();
+            WorkOrders.Clear();
+
+            ObservableCollection<Payment> _paymentItems = new ObservableCollection<Payment>();
+            Payments = new ObservableCollection<Payment>();
+            string[] paymentItems = { "Background Check", "Cert Pay Reqd", "CIP Project", "C3 Project", "P&P Bond", "GAP Bid Incl", "GAP Est Incl", "LCP Tracker", "Down Payment" };
+
+            foreach (string item in paymentItems)
+            {
+                _paymentItems.Add(new Payment { Name = item, IsChecked = false });
+            }
+            Payments = _paymentItems;
         }
 
         private void LoadProjects()
@@ -474,8 +553,8 @@ namespace WpfApp.ViewModel
 
             DataRow firstRow = ds.Tables[0].Rows[0];
             ProjectName = "";
-            TargetDate = new DateTime();
-            CompletedDate = new DateTime();
+            Proj_TargetDate = new DateTime();
+            Proj_CompletedDate = new DateTime();
             PaymentNote = "";
             JobNo = "";
             Address = "";
@@ -487,20 +566,21 @@ namespace WpfApp.ViewModel
             OrigTotalMatCost = "";
             OnHold = false;
             BillingDate = "";
-            SelectedEstimatorID = -1;
-            SelectedProjectCoordID = -1;
-            SelectedArchRepID = -1;
-            SelectedArchitectID = -1;
-            SelectedCCID = -1;
+            EstimatorID = -1;
+            ProjectCoordID = -1;
+            ArchRepID = -1;
+            ArchitectID = -1;
+            CCID = -1;
             SelectedCrewID = -1;
             MasterContractID = "";
             AdditionalInfoNote = "";
+            Proj_Complete = false;
             if (!firstRow.IsNull("Project_Name"))
                 ProjectName = firstRow["Project_Name"].ToString();
             if (!firstRow.IsNull("Target_Date"))
-                TargetDate = firstRow.Field<DateTime>("Target_Date");
+                Proj_TargetDate = firstRow.Field<DateTime>("Target_Date");
             if (!firstRow.IsNull("Date_Completed"))
-                CompletedDate = firstRow.Field<DateTime>("Date_Completed");
+                Proj_CompletedDate = firstRow.Field<DateTime>("Date_Completed");
             if (!firstRow.IsNull("Pay_Reqd_Note"))
                 PaymentNote = firstRow["Pay_Reqd_Note"].ToString();
             if (!firstRow.IsNull("Job_No"))
@@ -524,25 +604,27 @@ namespace WpfApp.ViewModel
             if (!firstRow.IsNull("Billing_Date"))
                 BillingDate = firstRow["Billing_Date"].ToString();
             if (!firstRow.IsNull("Estimator_ID"))
-                SelectedEstimatorID = firstRow.Field<int>("Estimator_ID");
+                EstimatorID = firstRow.Field<int>("Estimator_ID");
             if (!firstRow.IsNull("PC_ID"))
-                SelectedProjectCoordID = firstRow.Field<int>("PC_ID");
+                ProjectCoordID = firstRow.Field<int>("PC_ID");
             if (!firstRow.IsNull("Arch_Rep_ID"))
-                SelectedArchRepID = firstRow.Field<int>("Arch_Rep_ID");
+                ArchRepID = firstRow.Field<int>("Arch_Rep_ID");
             if (!firstRow.IsNull("CC_ID"))
-                SelectedCCID = firstRow.Field<int>("CC_ID");
+                CCID = firstRow.Field<int>("CC_ID");
             if (!firstRow.IsNull("Architect_ID"))
-                SelectedArchitectID = firstRow.Field<int>("Architect_ID");
+                ArchitectID = firstRow.Field<int>("Architect_ID");
             if (!firstRow.IsNull("Crew_ID"))
                 SelectedCrewID = firstRow.Field<int>("Crew_ID");
             if (!firstRow.IsNull("Master_Contract"))
                 MasterContractID = firstRow["Master_Contract"].ToString();
             if (!firstRow.IsNull("Customer_ID"))
-                SelectedCustomerId = firstRow.Field<int>("Customer_ID");
+                CustomerID = firstRow.Field<int>("Customer_ID");
             if (!firstRow.IsNull("Addtl_Info"))
                 AdditionalInfoNote = firstRow["Addtl_Info"].ToString();
             if (!firstRow.IsNull("Safety_Badging"))
                 SafetyBadging = firstRow["Safety_Badging"].ToString();
+            if(!firstRow.IsNull("Complete"))
+                Proj_Complete = firstRow.Field<Boolean>("Complete");
 
             string[] paymentItems = { "Background Check", "Cert Pay Reqd", "CIP Project", "C3 Project", "P&P Bond", "GAP Bid Incl", "GAP Est Incl", "LCP Tracker", "Down Payment" };
 
@@ -1428,20 +1510,24 @@ namespace WpfApp.ViewModel
             dbConnection.Close();
         }
 
-        private int _selectetProjectId;
-        private int _selectetPMId;
         private ObservableCollection<Payment> _payments;
+        
+        private int _projectID;
         public int ProjectID
         {
-            get { return _selectetProjectId; }
+            get { return _projectID; }
             set
             {
-                _selectetProjectId = value;
+                if (value == _projectID || value == -1) return;
+                _projectID = value;
+                OnPropertyChanged();
                 ChangeProject();
             }
         }
 
-        public int SelectedPMId
+        private int _selectetPMId;
+
+        public int ProjectManagerID
         {
             get { return _selectetPMId; }
             set
@@ -1893,7 +1979,6 @@ namespace WpfApp.ViewModel
             }
         }
 
-
         private int _workOrderID;
 
         public int WorkOrderID
@@ -1924,12 +2009,12 @@ namespace WpfApp.ViewModel
         private string _origProfit;
         private string _origTotalMatCost;
         private string _billingDate;
-        private int _selectedCustomerId;
-        private int _selectedEstimatorID;
-        private int _selectedProjectCoordID;
-        private int _selectedArchRepID;
-        private int _selectedCCID;
-        private int _selectedArchitectID;
+        private int _customerID;
+        private int _estimatorID;
+        private int _projectCoordID;
+        private int _archRepID;
+        private int _CCID;
+        private int _architectID;
         private int _selectedCrewID;
         private string _masterContractID;
 
@@ -1969,7 +2054,7 @@ namespace WpfApp.ViewModel
                 OnPropertyChanged();
             }
         }
-        public DateTime TargetDate
+        public DateTime Proj_TargetDate
         {
             get { return _targetDate; }
             set
@@ -1977,11 +2062,11 @@ namespace WpfApp.ViewModel
                 if (_targetDate != value)
                 {
                     _targetDate = value;
-                    OnPropertyChanged(nameof(TargetDate));
+                    OnPropertyChanged(nameof(Proj_TargetDate));
                 }
             }
         }
-        public DateTime CompletedDate
+        public DateTime Proj_CompletedDate
         {
             get { return _completedDate; }
             set
@@ -1989,7 +2074,7 @@ namespace WpfApp.ViewModel
                 if (_completedDate != value)
                 {
                     _completedDate = value;
-                    OnPropertyChanged(nameof(CompletedDate));
+                    OnPropertyChanged(nameof(Proj_CompletedDate));
                 }
             }
         }
@@ -2093,63 +2178,63 @@ namespace WpfApp.ViewModel
                 OnPropertyChanged();
             }
         }
-        public int SelectedCustomerId
+        public int CustomerID
         {
-            get => _selectedCustomerId;
+            get => _customerID;
             set
             {
-                if (value == _selectedCustomerId) return;
-                _selectedCustomerId = value;
+                if (value == _customerID) return;
+                _customerID = value;
                 OnPropertyChanged();
             }
         }
-        public int SelectedEstimatorID
+        public int EstimatorID
         {
-            get => _selectedEstimatorID;
+            get => _estimatorID;
             set
             {
-                if (value == _selectedEstimatorID) return;
-                _selectedEstimatorID = value;
+                if (value == _estimatorID) return;
+                _estimatorID = value;
                 OnPropertyChanged();
             }
         }
-        public int SelectedProjectCoordID
+        public int ProjectCoordID
         {
-            get => _selectedProjectCoordID;
+            get => _projectCoordID;
             set
             {
-                if (value == _selectedProjectCoordID) return;
-                _selectedProjectCoordID = value;
+                if (value == _projectCoordID) return;
+                _projectCoordID = value;
                 OnPropertyChanged();
             }
         }
-        public int SelectedArchRepID
+        public int ArchRepID
         {
-            get => _selectedArchRepID;
+            get => _archRepID;
             set
             {
-                if (value == _selectedArchRepID) return;
-                _selectedArchRepID = value;
+                if (value == _archRepID) return;
+                _archRepID = value;
                 OnPropertyChanged();
             }
         }
-        public int SelectedCCID
+        public int CCID
         {
-            get => _selectedCCID;
+            get => _CCID;
             set
             {
-                if (value == _selectedCCID) return;
-                _selectedCCID = value;
+                if (value == _CCID) return;
+                _CCID = value;
                 OnPropertyChanged();
             }
         }
-        public int SelectedArchitectID
+        public int ArchitectID
         {
-            get => _selectedArchitectID;
+            get => _architectID;
             set
             {
-                if (value == _selectedArchitectID) return;
-                _selectedArchitectID = value;
+                if (value == _architectID) return;
+                _architectID = value;
                 OnPropertyChanged();
             }
         }
@@ -2174,30 +2259,30 @@ namespace WpfApp.ViewModel
             }
         }
 
-        private int _crewID;
+        private int _woCrewID;
 
-        public int CrewID
+        public int WO_CrewID
         {
-            get { return _crewID; }
+            get { return _woCrewID; }
             set
             {
-                if (_crewID != value)
+                if (_woCrewID != value)
                 {
-                    _crewID = value;
+                    _woCrewID = value;
                     OnPropertyChanged();
                 }
             }
         }
 
-        private int _suptID;
-        public int SuptID
+        private int _woSuptID;
+        public int WO_SuptID
         {
-            get { return _suptID; }
+            get { return _woSuptID; }
             set
             {
-                if (_suptID != value)
+                if (_woSuptID != value)
                 {
-                    _suptID = value;
+                    _woSuptID = value;
                     OnPropertyChanged();
                 }
             }
@@ -2205,7 +2290,7 @@ namespace WpfApp.ViewModel
 
         private int _woNumber;
 
-        public int WoNumber
+        public int WO_Number
         {
             get { return _woNumber; }
             set
@@ -2218,46 +2303,46 @@ namespace WpfApp.ViewModel
             }
         }
 
-        private DateTime _schedStartDate;
+        private DateTime _woSchedStartDate;
 
-        public DateTime SchedStartDate
+        public DateTime WO_SchedStartDate
         {
-            get { return _schedStartDate; }
+            get { return _woSchedStartDate; }
             set
             {
-                if (_schedStartDate != value)
+                if (_woSchedStartDate != value)
                 {
-                    _schedStartDate = value;
+                    _woSchedStartDate = value;
                     OnPropertyChanged();
                 }
             }
         }
 
-        private DateTime _schedComplDate;
+        private DateTime _woSchedComplDate;
 
-        public DateTime SchedComplDate
+        public DateTime WO_SchedComplDate
         {
-            get { return _schedComplDate; }
+            get { return _woSchedComplDate; }
             set
             {
-                if (_schedComplDate != value)
+                if (_woSchedComplDate != value)
                 {
-                    _schedComplDate = value;
+                    _woSchedComplDate = value;
                     OnPropertyChanged();
                 }
             }
         }
 
-        private DateTime _startDate;
+        private DateTime _woStartDate;
 
-        public DateTime StartDate
+        public DateTime WO_StartDate
         {
-            get { return _startDate; }
+            get { return _woStartDate; }
             set
             {
-                if (_startDate != value)
+                if (_woStartDate != value)
                 {
-                    _startDate = value;
+                    _woStartDate = value;
                     OnPropertyChanged();
                 }
             }
@@ -2279,16 +2364,16 @@ namespace WpfApp.ViewModel
             }
         }
 
-        private DateTime _complDate;
+        private DateTime _woComplDate;
 
-        public DateTime ComplDate
+        public DateTime WO_ComplDate
         {
-            get { return _complDate; }
+            get { return _woComplDate; }
             set
             {
-                if (_complDate != value)
+                if (_woComplDate != value)
                 {
-                    _complDate = value;
+                    _woComplDate = value;
                     OnPropertyChanged();
                 }
             }
@@ -2339,33 +2424,49 @@ namespace WpfApp.ViewModel
             }
         }
 
-        private ObservableCollection<string> _masterContracts;
+        private bool _projComplete;
 
-        public ObservableCollection<string> MasterContracts
+        public bool Proj_Complete
         {
-            get { return _masterContracts; }
+            get { return _projComplete; }
             set
             {
-                if (_masterContracts != value)
+                if (_projComplete != value)
                 {
-                    _masterContracts = value;
+                    _projComplete = value;
                     OnPropertyChanged();
                 }
             }
         }
 
+        private bool _projectSelectionEnable;
 
+        public bool ProjectSelectionEnable
+        {
+            get { return _projectSelectionEnable; }
+            set
+            {
+                if (_projectSelectionEnable != value)
+                    _projectSelectionEnable = value;
+                OnPropertyChanged();
+            }
+        }
+
+        public ObservableCollection<string> MasterContracts { get; set; }
+
+        // Command
+        public RelayCommand NewProjectCommand { get; set; }
 
         private void ChangeWorkOrder()
         {
             WorkOrder _workOrder = WorkOrders.Where(item => item.WoID == WorkOrderID).ToList()[0];
-            CrewID = _workOrder.CrewID;
-            SuptID = _workOrder.SuptID;
-            WoNumber = _workOrder.WoNumber;
-            SchedStartDate = _workOrder.SchedStartDate;
-            SchedComplDate = _workOrder.SchedComplDate;
-            StartDate = _workOrder.DateStarted;
-            ComplDate = _workOrder.DateCompleted;
+            WO_Number = _workOrder.WoNumber;
+            WO_CrewID = _workOrder.CrewID;
+            WO_SuptID = _workOrder.SuptID;
+            WO_SchedStartDate = _workOrder.SchedStartDate;
+            WO_SchedComplDate = _workOrder.SchedComplDate;
+            WO_StartDate = _workOrder.DateStarted;
+            WO_ComplDate = _workOrder.DateCompleted;
 
             // Work Order Notes
             sqlquery = "SELECT * FROM tblNotes WHERE Notes_PK = " + WorkOrderID + " AND Notes_PK_Desc = 'WorkOrder';";

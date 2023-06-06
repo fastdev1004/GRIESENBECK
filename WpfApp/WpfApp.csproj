@@ -57,9 +57,12 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="Command\RelayCommand.cs" />
     <Compile Include="Controls\CustomDatePicker.cs" />
     <Compile Include="Converter\ApprDenToValueConverter.cs" />
+    <Compile Include="Converter\DateTimeToDateConverter.cs" />
     <Compile Include="Converter\SelectedValueToIntConverter.cs" />
+    <Compile Include="Converter\YesNoConverter.cs" />
     <Compile Include="Converter\ZeroToEmptyStringConverter.cs" />
     <Compile Include="Model\Acronym.cs" />
     <Compile Include="Model\Architect.cs" />
@@ -88,6 +91,8 @@
     <Compile Include="Model\ProjectMatTracking.cs" />
     <Compile Include="Model\ProjectWorkOrder.cs" />
     <Compile Include="Model\Report.cs" />
+    <Compile Include="Model\ReportActiveLabor.cs" />
+    <Compile Include="Model\ReportSelection.cs" />
     <Compile Include="Model\ReturnedVia.cs" />
     <Compile Include="Model\Salesman.cs" />
     <Compile Include="Model\SovCO.cs" />
@@ -106,6 +111,7 @@
     <Compile Include="ViewModel\ContractViewModel.cs" />
     <Compile Include="ViewModel\ImportViewModel.cs" />
     <Compile Include="ViewModel\ProjectViewModel.cs" />
+    <Compile Include="ViewModel\ReportDetailViewModel.cs" />
     <Compile Include="ViewModel\ReportViewModel.cs" />
     <Compile Include="ViewModel\TrackShipViewModel.cs" />
     <Compile Include="ViewModel\ViewModelBase.cs" />
@@ -121,6 +127,9 @@
     </Compile>
     <Compile Include="View\ImportView.xaml.cs">
       <DependentUpon>ImportView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="View\ReportDetailView.xaml.cs">
+      <DependentUpon>ReportDetailView.xaml</DependentUpon>
     </Compile>
     <Compile Include="View\ReportView.xaml.cs">
       <DependentUpon>ReportView.xaml</DependentUpon>
@@ -149,6 +158,10 @@
       <DependentUpon>MainWindow.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
+    <Page Include="Themes\Generic.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="View\AdminView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -162,6 +175,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="View\ImportView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="View\ReportDetailView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

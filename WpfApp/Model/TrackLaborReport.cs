@@ -9,11 +9,35 @@ namespace WpfApp.Model
 {
     class TrackLaborReport:ViewModelBase
     {
+        private int _projectID;
         private string _sovAcronym;
         private string _laborDesc;
         private string _coItemNo;
         private string _labPhase;
         private bool _complete;
+        private DateTime _targetDate;
+
+        public int ProjectID
+        {
+            get => _projectID;
+            set
+            {
+                if (value == _projectID) return;
+                _projectID = value;
+                OnPropertyChanged();
+            }
+        }
+
+        public DateTime TargetDate
+        {
+            get => _targetDate;
+            set
+            {
+                if (value == _targetDate) return;
+                _targetDate = value;
+                OnPropertyChanged();
+            }
+        }
 
         public string SovAcronym
         {

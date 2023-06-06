@@ -8,56 +8,13 @@
       d:DesignHeight="900" d:DesignWidth="1700"
       Title="WorkOrderView">
     <Page.Resources>
-        <Style x:Name="operation" TargetType="Button">
-            <Setter Property="Width" Value="Auto" />
-            <Setter Property="Height" Value="20" />
-            <Setter Property="Foreground" Value="White" />
-            <Setter Property="Background" Value="#14305F" />
-            <Setter Property="FontWeight" Value="Bold" />
-            <Setter Property="Padding" Value="4,0" />
-            <Style.Resources>
-                <Style TargetType="Border">
-                    <Setter Property="CornerRadius" Value="3"></Setter>
-                </Style>
-            </Style.Resources>
-        </Style>
-        <Style x:Key="GridColumnHeaderBase" TargetType="DataGridColumnHeader">
-            <Setter Property="Background" Value="#648278" />
-            <Setter Property="Foreground" Value="White" />
-            <Setter Property="Height" Value="40" />
-            <Setter Property="Padding" Value="10,0,0,0" />
-            <Style.Resources>
-                <Style TargetType="TextBlock">
-                    <Setter Property="TextAlignment" Value="Center" />
-                </Style>
-            </Style.Resources>
-        </Style>
-        <Style TargetType="DataGridRow">
-            <Setter Property="Height" Value="25" />
-            <Setter Property="BorderThickness" Value="0" />
-        </Style>
-        <Style TargetType="{x:Type DataGridCell}">
-            <Setter Property="VerticalAlignment" Value="Center" />
-            <Setter Property="BorderThickness" Value="0" />
-            <Setter Property="Foreground" Value="Black" />
-            <Setter Property="Margin" Value="4,0,4,0" />
-            <Style.Resources>
-                <Style TargetType="CheckBox">
-                    <Setter Property="VerticalAlignment" Value="Center" />
-                    <Setter Property="HorizontalAlignment" Value="Center" />
-                </Style>
-            </Style.Resources>
-            <Style.Triggers>
-                <Trigger Property="IsSelected" Value="True">
-                    <Setter Property="Background" Value="{x:Null}" />
-                    <Setter Property="BorderBrush" Value="{x:Null}" />
-                </Trigger>
-            </Style.Triggers>
-        </Style>
-        <Style x:Key="ParentGridStyle" TargetType="{x:Type Grid}">
-            <Setter Property="Margin" Value="0,4,0,4" />
-        </Style>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="../Themes/Generic.xaml" />
+            </ResourceDictionary.MergedDictionaries>
+        </ResourceDictionary>
     </Page.Resources>
+    
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto" />
@@ -67,7 +24,7 @@
         <Grid>
             <Border BorderThickness="0 0 0 4" BorderBrush="#B6302D">
                 <Grid Background="#14305F">
-                    <Button Click="goBack" Width="40" Height="20" HorizontalAlignment="Left" Margin="10,0,0,0">Back</Button>
+                    <Button Click="GoBack" Width="40" Height="20" HorizontalAlignment="Left" Margin="10,0,0,0">Back</Button>
                     <TextBlock Margin="80, 0,0,0" Text="Work Orders" FontSize="32" Foreground="White" VerticalAlignment="Center">
                     </TextBlock>
                 </Grid>

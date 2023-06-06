@@ -8,48 +8,11 @@
       d:DesignHeight="960" d:DesignWidth="1700"
       Title="ImportView">
     <Page.Resources>
-        <Style TargetType="Button">
-            <Setter Property="Width" Value="Auto" />
-            <Setter Property="Height" Value="35" />
-            <Setter Property="Foreground" Value="White" />
-            <Setter Property="Background" Value="#14305F" />
-            <Setter Property="FontWeight" Value="Bold" />
-            <Setter Property="Padding" Value="4,0" />
-            <Style.Resources>
-                <Style TargetType="Border">
-                    <Setter Property="CornerRadius" Value="3"></Setter>
-                    <Setter Property="HorizontalAlignment" Value="Left" />
-                </Style>
-            </Style.Resources>
-        </Style>
-        <Style x:Key="ParentGridStyle" TargetType="{x:Type Grid}">
-            <Setter Property="Margin" Value="0,0,0,4" />
-        </Style>
-        <Style TargetType="DataGridColumnHeader">
-            <Setter Property="Background" Value="#648278" />
-            <Setter Property="Foreground" Value="White" />
-            <Setter Property="Height" Value="30" />
-            <Setter Property="Padding" Value="10,0,0,0" />
-        </Style>
-        <Style TargetType="DataGridRow">
-            <Setter Property="Height" Value="25" />
-            <Setter Property="BorderThickness" Value="0" />
-        </Style>
-        <Style TargetType="{x:Type DataGridCell}">
-            <Setter Property="VerticalAlignment" Value="Center" />
-            <Setter Property="BorderThickness" Value="0" />
-            <Setter Property="Foreground" Value="Black" />
-            <Setter Property="Margin" Value="10,0,0,0" />
-            <Style.Triggers>
-                <Trigger Property="IsSelected" Value="True">
-                    <Setter Property="Background" Value="{x:Null}" />
-                    <Setter Property="BorderBrush" Value="{x:Null}" />
-                </Trigger>
-            </Style.Triggers>
-        </Style>
-        <Style TargetType="{x:Type CheckBox}">
-            <Setter Property="VerticalAlignment" Value="Center" />
-        </Style>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="../Themes/Generic.xaml" />
+            </ResourceDictionary.MergedDictionaries>
+        </ResourceDictionary>
     </Page.Resources>
 
     <Grid>
@@ -61,7 +24,7 @@
         <Grid>
             <Border BorderThickness="0 0 0 4" BorderBrush="#B6302D">
                 <Grid Background="#14305F">
-                    <Button Click="goBack" Width="40" Height="20" HorizontalAlignment="Left" Margin="10,0,0,0">Back</Button>
+                    <Button Click="GoBack" Width="40" Height="20" HorizontalAlignment="Left" Margin="10,0,0,0">Back</Button>
                     <TextBlock Margin="80,0,0,0" Text="Import"  FontSize="32" Foreground="White" VerticalAlignment="Center">
                     </TextBlock>
                 </Grid>
@@ -75,7 +38,7 @@
                 <ColumnDefinition Width="1*" />
             </Grid.ColumnDefinitions>
             <Grid>
-                <Button Margin="40,0,0,0">Import Excel Files</Button>
+                <Button Margin="40,0,0,0" HorizontalAlignment="Left">Import Excel Files</Button>
             </Grid>
             <Grid Grid.Column="1">
                 <TextBox Grid.Column="1" Background="Gray"></TextBox>

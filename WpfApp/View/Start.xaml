@@ -8,26 +8,19 @@
       d:DesignHeight="970" d:DesignWidth="1700"
       Title="Start">
     <Page.Resources>
-        <Style TargetType="Button">
-            <Setter Property="Width" Value="144" />
-            <Setter Property="Height" Value="48" />
-            <Setter Property="Margin" Value="10" />
-            <Setter Property="Foreground" Value="White" />
-            <Setter Property="Background" Value="#14305F" />
-            <Setter Property="FontWeight" Value="Bold" />
-            <Style.Resources>
-                <Style TargetType="Border">
-                    <Setter Property="CornerRadius" Value="8, 8, 0, 0"></Setter>
-                </Style>
-            </Style.Resources>
-        </Style>
-        <BitmapImage x:Key="MyImageSource" UriSource="/logo.png"/>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="../Themes/Generic.xaml" />
+            </ResourceDictionary.MergedDictionaries>
+        </ResourceDictionary>
     </Page.Resources>
+    
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto" />
+            <RowDefinition Height="1*" />
             <RowDefinition Height="Auto" />
-            <RowDefinition />
+            <RowDefinition Height="2*" />
         </Grid.RowDefinitions>
         <Grid>
             <Border BorderThickness="0 0 0 4" BorderBrush="#B6302D">
@@ -37,7 +30,7 @@
                 </Grid>
             </Border>
         </Grid>
-        <Grid Grid.Row="1" Margin="0, 100, 0, 0">
+        <Grid Grid.Row="2">
             <Grid>
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="4*" />
@@ -59,23 +52,23 @@
                                 <RowDefinition Height="Auto" />
                             </Grid.RowDefinitions>
                             <StackPanel>
-                                <Button Click="navigateProject">Projects</Button>
-                                <Button Click="navigateWorkOrder">Work Orders</Button>
-                                <Button Click="navigateTrackShip">Tracking/Shipping</Button>
-                                <Button Click="navigateContract">Contracts</Button>
-                                <Button Click="navigateCloseOut">Close Outs</Button>
+                                <Button Click="navigateProject" Style="{StaticResource StartButton}">Projects</Button>
+                                <Button Click="navigateWorkOrder" Style="{StaticResource StartButton}">Work Orders</Button>
+                                <Button Click="navigateTrackShip" Style="{StaticResource StartButton}">Tracking/Shipping</Button>
+                                <Button Click="navigateContract" Style="{StaticResource StartButton}">Contracts</Button>
+                            <Button Click="navigateCloseOut" Style="{StaticResource StartButton}">Close Outs</Button>
                             </StackPanel>
-                            <StackPanel Grid.Column="2" HorizontalAlignment="Right">
-                                <Button Click="navigateReport" Background="#555050">Reports</Button>
-                                <Button Click="navigateImport" Background="#555050">Import</Button>
-                                <Button Click="navigateAdmin" Background="#555050">Admin</Button>
-                                <Button Background="#555050">Open Previous System</Button>
-                                <Button Width="64" Background="#B6302D" Click="close_win" HorizontalAlignment="Right">Exit</Button>
-                            </StackPanel>
+                                <StackPanel Grid.Column="2" HorizontalAlignment="Right">
+                                <Button Click="navigateReport" Background="#555050" Style="{StaticResource StartButton}">Reports</Button>
+                                <Button Click="navigateImport" Background="#555050" Style="{StaticResource StartButton}">Import</Button>
+                                <Button Click="navigateAdmin" Background="#555050" Style="{StaticResource StartButton}">Admin</Button>
+                                <Button Background="#555050" Style="{StaticResource StartButton}">Open Previous System</Button>
+                            <Button Width="64" Background="#B6302D" Click="close_win" HorizontalAlignment="Right" Style="{StaticResource StartButton}">Exit</Button>
+                        </StackPanel>
                         </Grid>
                     </Grid>
                     <Grid Grid.Column="2">
-                        <Button>User Info</Button>
+                        <Button Style="{StaticResource StartButton}">User Info</Button>
                     </Grid>
                 </Grid>
         </Grid>

@@ -31,7 +31,7 @@ namespace WpfApp.View
             this.DataContext = TrackShipVM;
         }
 
-        private void goBack(object sender, RoutedEventArgs e)
+        private void GoBack(object sender, RoutedEventArgs e)
         {
             dbConnection.Close();
             this.NavigationService.Navigate(new Uri("View/Start.xaml", UriKind.Relative));

@@ -4,23 +4,17 @@
       xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
       xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
       xmlns:local="clr-namespace:WpfApp.View"
+      xmlns:converter="clr-namespace:WpfApp.Converter"
       mc:Ignorable="d" 
       d:DesignHeight="900" d:DesignWidth="1400"
       Title="ReportingView">
     <Page.Resources>
-        <Style x:Name="operation" TargetType="Button">
-            <Setter Property="Width" Value="Auto" />
-            <Setter Property="Height" Value="20" />
-            <Setter Property="Foreground" Value="White" />
-            <Setter Property="Background" Value="#14305F" />
-            <Setter Property="FontWeight" Value="Bold" />
-            <Setter Property="Padding" Value="4,0" />
-            <Style.Resources>
-                <Style TargetType="Border">
-                    <Setter Property="CornerRadius" Value="3"></Setter>
-                </Style>
-            </Style.Resources>
-        </Style>
+        <ResourceDictionary>
+            <converter:YesNoConverter x:Key="YesNoConverter" />
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="../Themes/Generic.xaml" />
+            </ResourceDictionary.MergedDictionaries>
+        </ResourceDictionary>
     </Page.Resources>
 
     <Grid>
@@ -28,7 +22,7 @@
             <Style TargetType="Label">
                 <Setter Property="HorizontalAlignment" Value="Right" />
             </Style>
-            
+
         </Grid.Resources>
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto" />
@@ -38,7 +32,7 @@
         <Grid>
             <Border BorderThickness="0 0 0 4" BorderBrush="#B6302D">
                 <Grid Background="#14305F">
-                    <Button Click="goBack" Width="40" Height="20" HorizontalAlignment="Left" Margin="10,0,0,0">Back</Button>
+                    <Button Click="GoBack" Width="40" Height="20" HorizontalAlignment="Left" Margin="10,0,0,0">Back</Button>
                     <TextBlock Margin="80, 0,0,0" Text="Reporting" FontSize="32" Foreground="White" VerticalAlignment="Center">
                     </TextBlock>
                 </Grid>
@@ -50,7 +44,7 @@
                 <ColumnDefinition Width="1*" />
                 <ColumnDefinition Width="1*" />
             </Grid.ColumnDefinitions>
-            <Button Grid.Column="1" Width="40" HorizontalAlignment="Left" Height="20" Margin="0,0,0,0">View</Button>
+            <Button Click="GoReportDetail" Grid.Column="1" Width="40" HorizontalAlignment="Left" Height="20" Margin="0,0,0,0">View</Button>
         </Grid>
         <Grid Grid.Row="2" Margin="10, 24, 10, 10">
             <Grid.ColumnDefinitions>
@@ -58,11 +52,8 @@
                 <ColumnDefinition Width="0.8*" />
                 <ColumnDefinition Width="1.2*" />
             </Grid.ColumnDefinitions>
-            <Grid>
-                <Grid.RowDefinitions>
-                    <RowDefinition Height="Auto" />
-                </Grid.RowDefinitions>
-                <DataGrid GridLinesVisibility="None" ItemsSource="{Binding Reports}" SelectedValue="{Binding ID, Mode=TwoWay}" SelectedValuePath="ID" AutoGenerateColumns="False" CanUserAddRows="False" Background="White" HeadersVisibility="Column">
+            <Grid VerticalAlignment="Top" Height="350">
+                <DataGrid GridLinesVisibility="None" ItemsSource="{Binding Reports}" SelectedValue="{Binding ReportID, Mode=TwoWay}" SelectedValuePath="ID" AutoGenerateColumns="False" CanUserAddRows="False" Background="White" HeadersVisibility="Column" VerticalScrollBarVisibility="Auto" SelectionMode="Single" >
                     <DataGrid.Resources>
                         <Style TargetType="DataGridRow">
                             <Setter Property="Height" Value="15" />
@@ -100,6 +91,7 @@
                     <RowDefinition Height="Auto" />
                     <RowDefinition Height="Auto" />
                     <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
                 </Grid.RowDefinitions>
                 <Grid.Resources>
                     <Style TargetType="Grid">
@@ -112,7 +104,7 @@
                         <ColumnDefinition Width="4*" />
                     </Grid.ColumnDefinitions>
                     <Label>Project:</Label>
-                    <ComboBox ItemsSource="{Binding Projects}" DisplayMemberPath="ProjectName" Grid.Column="1" />
+                    <ComboBox ItemsSource="{Binding Projects}" DisplayMemberPath="ProjectName" Grid.Column="1" IsEditable="True" IsEnabled="{Binding ProjectCbEnable, Mode=TwoWay}" SelectedValuePath="ID" SelectedValue="{Binding ProjectID, Mode=TwoWay}" />
                 </Grid>
                 <Grid Grid.Row="1">
                     <Grid.ColumnDefinitions>
@@ -121,7 +113,7 @@
                         <ColumnDefinition Width="2.5*" />
                     </Grid.ColumnDefinitions>
                     <Label>Job No:</Label>
-                    <ComboBox ItemsSource="{Binding JobNos}" Grid.Column="1" />
+                    <ComboBox ItemsSource="{Binding JobNos}" Grid.Column="1" IsEditable="True" IsEnabled="{Binding JobCbEnable, Mode=TwoWay}" SelectedValue="{Binding JobNo, Mode=TwoWay}" />
                 </Grid>
                 <Grid Grid.Row="2">
                     <Grid.ColumnDefinitions>
@@ -129,7 +121,7 @@
                         <ColumnDefinition Width="4*" />
                     </Grid.ColumnDefinitions>
                     <Label>SalesNo:</Label>
-                    <ComboBox ItemsSource="{Binding SalesMans}" DisplayMemberPath="SalesmanName" Grid.Column="1" />
+                    <ComboBox ItemsSource="{Binding SalesMans}" DisplayMemberPath="SalesmanName" Grid.Column="1" IsEditable="True" IsEnabled="{Binding SalesmanCbEnable, Mode=TwoWay}" SelectedValuePath="ID" SelectedValue="{Binding SalesmanID, Mode=TwoWay}" />
                 </Grid>
                 <Grid Grid.Row="3">
                     <Grid.ColumnDefinitions>
@@ -137,7 +129,7 @@
                         <ColumnDefinition Width="4*" />
                     </Grid.ColumnDefinitions>
                     <Label>Arch Rep:</Label>
-                    <ComboBox ItemsSource="{Binding ArchReps}" DisplayMemberPath="ArchRepName" Grid.Column="1" />
+                    <ComboBox ItemsSource="{Binding ArchReps}" DisplayMemberPath="ArchRepName" Grid.Column="1" IsEditable="True" IsEnabled="{Binding ArchRepCbEnable, Mode=TwoWay}" SelectedValuePath="ID" SelectedValue="{Binding ArchRepID, Mode=TwoWay}" />
                 </Grid>
                 <Grid Grid.Row="4">
                     <Grid.ColumnDefinitions>
@@ -145,7 +137,7 @@
                         <ColumnDefinition Width="4*" />
                     </Grid.ColumnDefinitions>
                     <Label>Customer:</Label>
-                    <ComboBox ItemsSource="{Binding Customers}" DisplayMemberPath="FullName" Grid.Column="1" />
+                    <ComboBox ItemsSource="{Binding Customers}" DisplayMemberPath="FullName" Grid.Column="1"  IsEditable="True" IsEnabled="{Binding CustomerCbEnable, Mode=TwoWay}" SelectedValuePath="ID" SelectedValue="{Binding CustomerID, Mode=TwoWay}" />
                 </Grid>
                 <Grid Grid.Row="5">
                     <Grid.ColumnDefinitions>
@@ -153,7 +145,7 @@
                         <ColumnDefinition Width="4*" />
                     </Grid.ColumnDefinitions>
                     <Label>Manufacturer:</Label>
-                    <ComboBox ItemsSource="{Binding Manufacturers}" DisplayMemberPath="ManufacturerName" Grid.Column="1" />
+                    <ComboBox ItemsSource="{Binding Manufacturers}" DisplayMemberPath="ManufacturerName" Grid.Column="1" IsEditable="True" IsEnabled="{Binding ManufIDCbEnable, Mode=TwoWay}" SelectedValuePath="ID" SelectedValue="{Binding ManufID, Mode=TwoWay}" />
                 </Grid>
                 <Grid Grid.Row="6">
                     <Grid.ColumnDefinitions>
@@ -161,7 +153,7 @@
                         <ColumnDefinition Width="4*" />
                     </Grid.ColumnDefinitions>
                     <Label>Architect:</Label>
-                    <ComboBox ItemsSource="{Binding Architects}" DisplayMemberPath="ArchCompany" Grid.Column="1" />
+                    <ComboBox ItemsSource="{Binding Architects}" DisplayMemberPath="ArchCompany" Grid.Column="1" IsEditable="True" IsEnabled="{Binding ArchitectCbEnable, Mode=TwoWay}" SelectedValuePath="ID" SelectedValue="{Binding ArchitectID, Mode=TwoWay}" />
                 </Grid>
                 <Grid Grid.Row="7">
                     <Grid.ColumnDefinitions>
@@ -169,7 +161,7 @@
                         <ColumnDefinition Width="4*" />
                     </Grid.ColumnDefinitions>
                     <Label>Materials:</Label>
-                    <ComboBox ItemsSource="{Binding Materials}" DisplayMemberPath="MatDesc" Grid.Column="1" />
+                    <ComboBox ItemsSource="{Binding Materials}" DisplayMemberPath="MatDesc" Grid.Column="1" IsEditable="True" IsEnabled="{Binding MaterialCbEnable, Mode=TwoWay}" SelectedValuePath="ID" SelectedValue="{Binding MaterialID, Mode=TwoWay}" />
                 </Grid>
                 <Grid Grid.Row="8">
                     <Grid.ColumnDefinitions>
@@ -178,28 +170,29 @@
                         <ColumnDefinition Width="1*" />
                     </Grid.ColumnDefinitions>
                     <Label>Crew:</Label>
-                    <ComboBox ItemsSource="{Binding Crews}" DisplayMemberPath="CrewName" Grid.Column="1" />
+                    <ComboBox ItemsSource="{Binding Crews}" DisplayMemberPath="CrewName" Grid.Column="1" IsEditable="True" IsEnabled="{Binding CrewCbEnable, Mode=TwoWay}" SelectedValuePath="ID" SelectedValue="{Binding CrewID, Mode=TwoWay}" />
                 </Grid>
                 <Grid Grid.Row="9">
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="1*" />
-                        <ColumnDefinition Width="4*" />
+                        <ColumnDefinition Width="1*" />
+                        <ColumnDefinition Width="3*" />
                     </Grid.ColumnDefinitions>
                     <Label>Complete:</Label>
-                    <ComboBox Grid.Column="1" />
+                    <ComboBox ItemsSource="{Binding CompleteCB, Mode=TwoWay}" SelectedValue="{Binding Complete, Mode=TwoWay, Converter={StaticResource YesNoConverter}}" Text="{Binding Complete, Mode=TwoWay, Converter={StaticResource YesNoConverter}}" Grid.Column="1" IsEditable="True" IsEnabled="{Binding CompleteCbEnable, Mode=TwoWay}" />
                 </Grid>
                 <Grid Grid.Row="10">
                     <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="1*" />
-                        <ColumnDefinition Width="1*" />
-                        <ColumnDefinition Width="1*" />
-                        <ColumnDefinition Width="1*" />
-                        <ColumnDefinition Width="1*" />
+                        <ColumnDefinition Width="74*" />
+                        <ColumnDefinition Width="74" />
+                        <ColumnDefinition Width="73*" />
+                        <ColumnDefinition Width="74*" />
+                        <ColumnDefinition Width="73*" />
                     </Grid.ColumnDefinitions>
                     <Label>Date From:</Label>
-                    <DatePicker Grid.Column="1" />
+                    <DatePicker Grid.Column="1" IsEnabled="{Binding DateDpEnable, Mode=TwoWay}" SelectedDate="{Binding DateFrom, Mode=TwoWay}" PreviewMouseUp="DatePicker_PreviewMouseUp" />
                     <Label Grid.Column="2">To:</Label>
-                    <DatePicker Grid.Column="3" />
+                    <DatePicker Grid.Column="3" IsEnabled="{Binding DateDpEnable, Mode=TwoWay}" SelectedDate="{Binding ToDate, Mode=TwoWay}" PreviewMouseUp="DatePicker_PreviewMouseUp" />
                 </Grid>
                 <Grid Grid.Row="11">
                     <Grid.ColumnDefinitions>
@@ -208,7 +201,7 @@
                         <ColumnDefinition Width="1*" />
                     </Grid.ColumnDefinitions>
                     <Label>Keyword:</Label>
-                    <ComboBox ItemsSource="{Binding Materials}" DisplayMemberPath="MatDesc" Grid.Column="1" />
+                    <ComboBox ItemsSource="{Binding Materials}" DisplayMemberPath="MatDesc" Grid.Column="1" IsEditable="True" SelectedValuePath="MatDesc" SelectedValue="{Binding Keyword, Mode=TwoWay}" />
                 </Grid>
             </Grid>
         </Grid>

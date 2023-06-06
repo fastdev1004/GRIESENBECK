@@ -10,58 +10,15 @@
       d:DesignHeight="900" d:DesignWidth="1700"
       Title="ViewProject">
     <Page.Resources>
-        <converter:ApprDenToValueConverter x:Key="ApprDenToValueConverter" />
-        <converter:ZeroToEmptyStringConverter x:Key="ZeroToEmptyStringConverter" />
-        <Style x:Name="operation" TargetType="Button">
-            <Setter Property="Width" Value="Auto" />
-            <Setter Property="Height" Value="20" />
-            <Setter Property="Foreground" Value="White" />
-            <Setter Property="Background" Value="#14305F" />
-            <Setter Property="FontWeight" Value="Bold" />
-            <Setter Property="Padding" Value="4,0" />
-            <Style.Resources>
-                <Style TargetType="Border">
-                    <Setter Property="CornerRadius" Value="3"></Setter>
-                </Style>
-            </Style.Resources>
-        </Style>
-        <Style x:Key="GridColumnHeaderBase" TargetType="DataGridColumnHeader">
-            <Setter Property="Background" Value="#648278" />
-            <Setter Property="Foreground" Value="White" />
-            <Setter Property="Height" Value="40" />
-            <Setter Property="Padding" Value="10,0,0,0" />
-            <Style.Resources>
-                <Style TargetType="TextBlock">
-                    <Setter Property="TextAlignment" Value="Center" />
-                </Style>
-            </Style.Resources>
-        </Style>
-        <Style TargetType="DataGridRow">
-            <Setter Property="Height" Value="25" />
-            <Setter Property="BorderThickness" Value="0" />
-        </Style>
-        <Style TargetType="{x:Type DataGridCell}">
-            <Setter Property="VerticalAlignment" Value="Center" />
-            <Setter Property="BorderThickness" Value="0" />
-            <Setter Property="Foreground" Value="Black" />
-            <Setter Property="Margin" Value="4,0,4,0" />
-            <Style.Resources>
-                <Style TargetType="CheckBox">
-                    <Setter Property="VerticalAlignment" Value="Center" />
-                    <Setter Property="HorizontalAlignment" Value="Center" />
-                </Style>
-            </Style.Resources>
-            <Style.Triggers>
-                <Trigger Property="IsSelected" Value="True">
-                    <Setter Property="Background" Value="{x:Null}" />
-                    <Setter Property="BorderBrush" Value="{x:Null}" />
-                </Trigger>
-            </Style.Triggers>
-        </Style>
-        <Style x:Key="ParentGridStyle" TargetType="{x:Type Grid}">
-            <Setter Property="Margin" Value="0,4,0,4" />
-        </Style>
+        <ResourceDictionary>
+            <converter:ApprDenToValueConverter x:Key="ApprDenToValueConverter" />
+            <converter:ZeroToEmptyStringConverter x:Key="ZeroToEmptyStringConverter" />
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="../Themes/Generic.xaml" />
+            </ResourceDictionary.MergedDictionaries>
+        </ResourceDictionary>
     </Page.Resources>
+    
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto" />
@@ -71,7 +28,7 @@
         <Grid>
             <Border BorderThickness="0 0 0 4" BorderBrush="#B6302D">
                 <Grid Background="#14305F">
-                    <Button Click="goBack" Width="40" Height="20" HorizontalAlignment="Left" Margin="10,0,0,0">Back</Button>
+                    <Button Click="GoBack" Width="40" Height="20" HorizontalAlignment="Left" Margin="10,0,0,0">Back</Button>
                     <TextBlock Margin="80, 0,0,0" Text="Projects" FontSize="32" Foreground="White" VerticalAlignment="Center">
                     </TextBlock>
                 </Grid>
@@ -85,10 +42,10 @@
                 </Grid.ColumnDefinitions>
                 <WrapPanel>
                     <Label>Select Project:</Label>
-                    <ComboBox IsEditable="True" Width="400" Name="projectContacts" ItemsSource="{Binding Projects}" DisplayMemberPath="Product_Customer_Name" SelectedValuePath="ID" SelectedValue="{Binding ProjectID, Mode=TwoWay}"></ComboBox>
+                    <ComboBox IsEditable="True" Width="400" ItemsSource="{Binding Projects, Mode=TwoWay}" DisplayMemberPath="Product_Customer_Name" SelectedValuePath="ID" SelectedValue="{Binding ProjectID, Mode=TwoWay}" IsEnabled="{Binding ProjectSelectionEnable}" />
                 </WrapPanel>
-                <WrapPanel Name="Operation" Grid.Column="1" HorizontalAlignment="Left">
-                    <Button Content="New" />
+                <WrapPanel Grid.Column="1" HorizontalAlignment="Left">
+                    <Button Content="New" Command="{Binding NewProjectCommand}" />
                     <Button Content="Print" Margin="8,0,0,0" />
                     <Button Content="Email" Margin="8,0,0,0" />
                 </WrapPanel>
@@ -170,7 +127,7 @@
                                             <ColumnDefinition Width="*" />
                                         </Grid.ColumnDefinitions>
                                         <Label Grid.Row="1">Customer:</Label>
-                                        <ComboBox x:Name="CustomerName_CB" ItemsSource="{Binding Customers}" Grid.Row="1" Grid.Column="1" Margin="0,0,64,0" DisplayMemberPath="Customer_Name_Address" SelectedValuePath="ID" SelectedValue="{Binding SelectedCustomerId}"></ComboBox>
+                                        <ComboBox x:Name="CustomerName_CB" ItemsSource="{Binding Customers}" Grid.Row="1" Grid.Column="1" Margin="0,0,64,0" DisplayMemberPath="Customer_Name_Address" SelectedValuePath="ID" SelectedValue="{Binding CustomerID, Mode=TwoWay}"></ComboBox>
                                     </Grid>
                                     <Grid Grid.Row="2" Style="{StaticResource ParentGridStyle}">
                                         <Grid.ColumnDefinitions>
@@ -183,14 +140,14 @@
                                                 <ColumnDefinition Width="1*" />
                                                 <ColumnDefinition Width="2*" />
                                             </Grid.ColumnDefinitions>
-                                            <DatePicker x:Name="TargetDate_DP" SelectedDate="{Binding TargetDate}"  HorizontalAlignment="Left"></DatePicker>
+                                            <DatePicker SelectedDate="{Binding Proj_TargetDate, Mode=TwoWay}"  HorizontalAlignment="Left"></DatePicker>
                                             <Grid Grid.Column="1">
                                                 <Grid.ColumnDefinitions>
                                                     <ColumnDefinition Width="1*" />
                                                     <ColumnDefinition Width="2*" />
                                                 </Grid.ColumnDefinitions>
                                                 <Label>Completed:</Label>
-                                                <CheckBox x:Name="Complete_CH" Grid.Column="1" VerticalAlignment="Center"></CheckBox>
+                                                <CheckBox IsChecked="{Binding Proj_Complete, Mode=TwoWay}" x:Name="Complete_CH" Grid.Column="1" VerticalAlignment="Center"></CheckBox>
                                             </Grid>
                                         </Grid>
                                     </Grid>
@@ -200,7 +157,7 @@
                                             <ColumnDefinition Width="*" />
                                         </Grid.ColumnDefinitions>
                                         <Label >Date Completed:</Label>
-                                        <DatePicker x:Name="Complete_DP" SelectedDate="{Binding CompletedDate}" Grid.Row="4" Grid.Column="1" HorizontalAlignment="Left"></DatePicker>
+                                        <DatePicker x:Name="Complete_DP" SelectedDate="{Binding Proj_CompletedDate, Mode=TwoWay}" Grid.Row="4" Grid.Column="1" HorizontalAlignment="Left"></DatePicker>
                                     </Grid>
                                     <Grid Grid.Row="4" Style="{StaticResource ParentGridStyle}">
                                         <Grid.ColumnDefinitions>
@@ -272,7 +229,7 @@
                                                     <Label>Crew:</Label>
                                                     <ComboBox x:Name="Crew_CB" ItemsSource="{Binding Crews}" DisplayMemberPath="CrewName" SelectedValuePath="ID" SelectedValue="{Binding SelectedCrewID}" Grid.Column="1" IsEditable="True" />
                                                 </Grid>
-                                               
+
                                             </Grid>
                                         </Grid>
                                     </Grid>
@@ -290,7 +247,7 @@
                                             <TextBox Text="{Binding AdditionalInfoNote, Mode=TwoWay}" AcceptsReturn="True" ScrollViewer.VerticalScrollBarVisibility="Auto" />
                                         </Grid>
                                     </Grid>
-                                   
+
                                 </Grid>
                                 <Grid Grid.Column="1">
                                     <Grid>
@@ -339,7 +296,7 @@
                                                             <ColumnDefinition Width="*" />
                                                         </Grid.ColumnDefinitions>
                                                         <Label>Address:</Label>
-                                                        <TextBox x:Name="Address_TB" Text="{Binding Address}" Grid.Column="1" />
+                                                        <TextBox x:Name="Address_TB" Text="{Binding Address, Mode=TwoWay}" Grid.Column="1" />
                                                     </Grid>
                                                     <Grid Grid.Row="1" Style="{StaticResource ParentGridStyle}">
                                                         <Grid.ColumnDefinitions>
@@ -347,7 +304,7 @@
                                                             <ColumnDefinition Width="*" />
                                                         </Grid.ColumnDefinitions>
                                                         <Label Grid.Row="1">City:</Label>
-                                                        <TextBox x:Name="City_TB" Text="{Binding City}" Grid.Column="1" />
+                                                        <TextBox x:Name="City_TB" Text="{Binding City, Mode=TwoWay}" Grid.Column="1" />
                                                     </Grid>
                                                 </Grid>
                                                 <Grid Grid.Row="1">
@@ -361,7 +318,7 @@
                                                             <ColumnDefinition Width="*" />
                                                         </Grid.ColumnDefinitions>
                                                         <Label>State:</Label>
-                                                        <TextBox x:Name="State_TB" Text="{Binding State}" Grid.Column="1" />
+                                                        <TextBox x:Name="State_TB" Text="{Binding State, Mode=TwoWay}" Grid.Column="1" />
                                                     </Grid>
                                                     <Grid Grid.Column="1" Margin="0,4,0,4">
                                                         <Grid.ColumnDefinitions>
@@ -387,7 +344,7 @@
                                                         <ColumnDefinition Width="2*" />
                                                     </Grid.ColumnDefinitions>
                                                     <Label>Original Contract Amt:</Label>
-                                                    <TextBlock x:Name="OrigAmt_LB" Text="{Binding OrigTaxAmt}" Grid.Column="1"></TextBlock>
+                                                    <TextBlock x:Name="OrigAmt_LB" Text="{Binding OrigTaxAmt, Mode=TwoWay}" Grid.Column="1"></TextBlock>
                                                 </Grid>
                                                 <Grid Grid.Row="1" Style="{StaticResource ParentGridStyle}">
                                                     <Grid.ColumnDefinitions>
@@ -396,7 +353,7 @@
                                                     </Grid.ColumnDefinitions>
                                                     <Label Grid.Row="1">Total Change Orders:</Label>
                                                     <Border Grid.Row="1" Grid.Column="1" BorderThickness="0,0,0,1" BorderBrush="Black">
-                                                        <TextBlock x:Name="OrigProfit_LB" Text="{Binding OrigProfit}"></TextBlock>
+                                                        <TextBlock x:Name="OrigProfit_LB" Text="{Binding OrigProfit, Mode=TwoWay}"></TextBlock>
                                                     </Border>
                                                 </Grid>
                                                 <Grid Grid.Row="2" Style="{StaticResource ParentGridStyle}">
@@ -405,7 +362,7 @@
                                                         <ColumnDefinition Width="2*" />
                                                     </Grid.ColumnDefinitions>
                                                     <Label>Total Contract Amt:</Label>
-                                                    <TextBlock x:Name="OrigTotalAmt_LB" Text="{Binding OrigTotalMatCost}" Grid.Column="1"></TextBlock>
+                                                    <TextBlock x:Name="OrigTotalAmt_LB" Text="{Binding OrigTotalMatCost, Mode=TwoWay}" Grid.Column="1"></TextBlock>
                                                 </Grid>
                                             </Grid>
                                         </GroupBox>
@@ -532,7 +489,7 @@
                                             <RowDefinition Height="*" />
                                         </Grid.RowDefinitions>
                                         <Label Content="Superintendent" HorizontalAlignment="Left" />
-                                        <DataGrid Grid.Row="1" ItemsSource="{Binding SuperintendentList}" GridLinesVisibility="None" AutoGenerateColumns="False" HeadersVisibility="None" BorderThickness="0" Background="White">
+                                        <DataGrid Grid.Row="1" ItemsSource="{Binding SuperintendentList, Mode=TwoWay}" GridLinesVisibility="None" AutoGenerateColumns="False" HeadersVisibility="None" BorderThickness="0" Background="White">
                                             <DataGrid.Resources>
                                                 <Style TargetType="DataGridColumnHeader" BasedOn="{StaticResource GridColumnHeaderBase}">
                                                     <Setter Property="Background" Value="#4BACC6" />
@@ -591,7 +548,7 @@
                                                     <ColumnDefinition Width="3*" />
                                                 </Grid.ColumnDefinitions>
                                                 <Label>Estimator:</Label>
-                                                <ComboBox x:Name="Estimator_CB" ItemsSource="{Binding Estimators}" Grid.Row="1" Grid.Column="1" DisplayMemberPath="EstimatorName" SelectedValuePath="ID" SelectedValue="{Binding SelectedEstimatorID}" IsEditable="True" />
+                                                <ComboBox x:Name="Estimator_CB" ItemsSource="{Binding Estimators}" Grid.Row="1" Grid.Column="1" DisplayMemberPath="EstimatorName" SelectedValuePath="ID" SelectedValue="{Binding EstimatorID, Mode=TwoWay}" IsEditable="True" />
                                             </Grid>
                                             <Grid Grid.Row="1" Style="{StaticResource ParentGridStyle}">
                                                 <Grid.ColumnDefinitions>
@@ -599,7 +556,7 @@
                                                     <ColumnDefinition Width="3*" />
                                                 </Grid.ColumnDefinitions>
                                                 <Label>Project Coord:</Label>
-                                                <ComboBox x:Name="ProjectCoord_CB" ItemsSource="{Binding PCs}" Grid.Row="1" Grid.Column="1" DisplayMemberPath="PCName" SelectedValuePath="ID" SelectedValue="{Binding SelectedProjectCoordID}" IsEditable="True" />
+                                                <ComboBox x:Name="ProjectCoord_CB" ItemsSource="{Binding PCs}" Grid.Row="1" Grid.Column="1" DisplayMemberPath="PCName" SelectedValuePath="ID" SelectedValue="{Binding ProjectCoordID, Mode=TwoWay}" IsEditable="True" />
                                             </Grid>
                                             <Grid Grid.Row="2" Style="{StaticResource ParentGridStyle}">
                                                 <Grid.ColumnDefinitions>
@@ -607,7 +564,7 @@
                                                     <ColumnDefinition Width="3*" />
                                                 </Grid.ColumnDefinitions>
                                                 <Label>Arch Rep:</Label>
-                                                <ComboBox x:Name="ArchRep_CB" ItemsSource="{Binding ArchReps}" Grid.Row="1" Grid.Column="1" DisplayMemberPath="ArchRepName" SelectedValuePath="ID" SelectedValue="{Binding SelectedArchRepID}" IsEditable="True" />
+                                                <ComboBox x:Name="ArchRep_CB" ItemsSource="{Binding ArchReps}" Grid.Row="1" Grid.Column="1" DisplayMemberPath="ArchRepName" SelectedValuePath="ID" SelectedValue="{Binding ArchRepID, Mode=TwoWay}" IsEditable="True" />
                                             </Grid>
                                             <Grid Grid.Row="3" Style="{StaticResource ParentGridStyle}">
                                                 <Grid.ColumnDefinitions>
@@ -615,7 +572,7 @@
                                                     <ColumnDefinition Width="3*" />
                                                 </Grid.ColumnDefinitions>
                                                 <Label>Submittal Contact:</Label>
-                                                <ComboBox x:Name="SubContact_CB" ItemsSource="{Binding CustomerContacts}" Grid.Row="1" Grid.Column="1" DisplayMemberPath="CCName" SelectedValuePath="ID" SelectedValue="{Binding SelectedCCID}" IsEditable="True" />
+                                                <ComboBox x:Name="SubContact_CB" ItemsSource="{Binding CustomerContacts}" Grid.Row="1" Grid.Column="1" DisplayMemberPath="CCName" SelectedValuePath="ID" SelectedValue="{Binding CCID, Mode=TwoWay}" IsEditable="True" />
                                             </Grid>
                                             <Grid Grid.Row="4" Style="{StaticResource ParentGridStyle}">
                                                 <Grid.ColumnDefinitions>
@@ -623,7 +580,7 @@
                                                     <ColumnDefinition Width="3*" />
                                                 </Grid.ColumnDefinitions>
                                                 <Label>Architect:</Label>
-                                                <ComboBox x:Name="Architect_CB" ItemsSource="{Binding Architects}" Grid.Row="1" Grid.Column="1" DisplayMemberPath="ArchCompany" SelectedValuePath="ID" SelectedValue="{Binding SelectedArchitectID}" IsEditable="True" />
+                                                <ComboBox x:Name="Architect_CB" ItemsSource="{Binding Architects}" Grid.Row="1" Grid.Column="1" DisplayMemberPath="ArchCompany" SelectedValuePath="ID" SelectedValue="{Binding ArchitectID, Mode=TwoWay}" IsEditable="True" />
                                             </Grid>
                                         </Grid>
                                     </Grid>
@@ -670,9 +627,9 @@
                                                                         <ColumnDefinition Width="1*" />
                                                                     </Grid.ColumnDefinitions>
                                                                     <ComboBox ItemsSource="{Binding DataContext.PathDescritpions, RelativeSource={RelativeSource AncestorType=local:ProjectView}}" IsEditable="True" SelectedValue="{Binding PathDesc, Mode=TwoWay}" />
-                                                                    <WrapPanel Name="Operation" Grid.Column="1" HorizontalAlignment="Right">
-                                                                        <Button Content="Folder" Width="40" />
-                                                                        <Button Content="File" Margin="8,0,0,0" Width="40" />
+                                                                    <WrapPanel Grid.Column="1" HorizontalAlignment="Right">
+                                                                        <Button Content="Folder" Width="50" />
+                                                                        <Button Content="File" Margin="8,0,0,0" Width="50" />
                                                                     </WrapPanel>
                                                                 </Grid>
                                                                 <Grid Grid.Row="1">
@@ -701,7 +658,7 @@
                                 <ColumnDefinition Width="1*" />
                                 <ColumnDefinition Width="1*" />
                             </Grid.ColumnDefinitions>
-                            <DataGrid ItemsSource="{Binding SovCOs}" GridLinesVisibility="None" AutoGenerateColumns="False" HeadersVisibility="Column" BorderThickness="0" Background="White">
+                            <DataGrid ItemsSource="{Binding SovCOs, Mode=TwoWay}" GridLinesVisibility="None" AutoGenerateColumns="False" HeadersVisibility="Column" BorderThickness="0" Background="White">
                                 <DataGrid.Resources>
                                     <Style TargetType="DataGridColumnHeader" BasedOn="{StaticResource GridColumnHeaderBase}">
                                         <Setter Property="Background" Value="#5C83B4" />
@@ -790,7 +747,7 @@
                                     </Style>
                                 </TabControl.Resources>
                                 <TabItem Header="Materials" HorizontalAlignment="Left" Width="114">
-                                    <DataGrid Margin="10" ItemsSource="{Binding SovMaterials}" GridLinesVisibility="None" AutoGenerateColumns="False" HeadersVisibility="Column" BorderThickness="0" Background="White">
+                                    <DataGrid Margin="10" ItemsSource="{Binding SovMaterials, Mode=TwoWay}" GridLinesVisibility="None" AutoGenerateColumns="False" HeadersVisibility="Column" BorderThickness="0" Background="White">
                                         <DataGrid.Resources>
                                             <Style TargetType="DataGridColumnHeader" BasedOn="{StaticResource GridColumnHeaderBase}">
                                                 <Setter Property="Background" Value="#BD623D" />
@@ -1435,7 +1392,11 @@
                             <RowDefinition Height="1*" />
                         </Grid.RowDefinitions>
                         <Grid>
-                            <DataGrid Grid.Row="1" ItemsSource="{Binding TrackReports}" GridLinesVisibility="None" AutoGenerateColumns="False" CanUserAddRows="False" HeadersVisibility="Column" BorderThickness="0" Background="White">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="483*"/>
+                                <ColumnDefinition Width="1171*"/>
+                            </Grid.ColumnDefinitions>
+                            <DataGrid ItemsSource="{Binding TrackReports}" GridLinesVisibility="None" AutoGenerateColumns="False" CanUserAddRows="False" HeadersVisibility="Column" BorderThickness="0" Background="White" Grid.ColumnSpan="2">
                                 <DataGrid.Resources>
                                     <Style TargetType="DataGridColumnHeader" BasedOn="{StaticResource GridColumnHeaderBase}">
                                         <Setter Property="Background" Value="#5C83B4" />
@@ -1715,7 +1676,7 @@
                                 </Grid>
                                 <Grid Grid.Row="1">
                                     <DataGrid x:Name="WOListView" GridLinesVisibility="None" ItemsSource="{Binding WorkOrders, Mode=TwoWay}" SelectedValue="{Binding WorkOrderID, Mode=TwoWay}" SelectedValuePath="WoID" AutoGenerateColumns="False" CanUserAddRows="False" Background="White" HeadersVisibility="Column">
-                                            <DataGrid.Resources>
+                                        <DataGrid.Resources>
                                             <Style TargetType="DataGridRow">
                                                 <Setter Property="Height" Value="15" />
                                                 <Setter Property="Background" Value="White" />
@@ -1759,19 +1720,19 @@
                                             <RowDefinition Height="Auto" />
                                         </Grid.RowDefinitions>
                                         <Label Content="WO Number:" Margin="0,4,0,4" />
-                                        <TextBox x:Name="WoNbr_TextBox" Grid.Column="1" Width="100" Margin="0,4,0,4" HorizontalAlignment="Left" />
+                                        <TextBox x:Name="WoNbr_TextBox" Text="{Binding WO_Number, Mode=TwoWay}" Grid.Column="1" Width="100" Margin="0,4,0,4" HorizontalAlignment="Left" />
                                         <Label Grid.Row="1" Content="Crew:" Margin="0,4,0,4" />
-                                        <ComboBox x:Name="Crew_ComBo" ItemsSource="{Binding Crews}" SelectedValuePath="ID" SelectedValue="{Binding CrewID}" DisplayMemberPath="CrewName" Grid.Row="1" Grid.Column="1" Width="200" HorizontalAlignment="Left" Margin="0,4,0,4" IsEditable="True" />
+                                        <ComboBox x:Name="Crew_ComBo" ItemsSource="{Binding Crews}" SelectedValuePath="ID" SelectedValue="{Binding WO_CrewID}" DisplayMemberPath="CrewName" Grid.Row="1" Grid.Column="1" Width="200" HorizontalAlignment="Left" Margin="0,4,0,4" IsEditable="True" />
                                         <Label Grid.Row="2" Content="Sched Start Date:" Margin="0,4,0,4" />
-                                        <DatePicker SelectedDate="{Binding SchedStartDate}" x:Name="SchedStartDate_Datepicker" Grid.Row="2" Grid.Column="1" Width="100" Margin="0,4,0,4" HorizontalAlignment="Left" />
+                                        <DatePicker SelectedDate="{Binding WO_SchedStartDate, Mode=TwoWay}" x:Name="SchedStartDate_Datepicker" Grid.Row="2" Grid.Column="1" Width="100" Margin="0,4,0,4" HorizontalAlignment="Left" />
                                         <Label Grid.Row="3" Content="Sched Compl Date:" Margin="0,4,0,4" />
-                                        <DatePicker SelectedDate="{Binding SchedComplDate}" x:Name="SchedComplDate_Datepicker" Grid.Row="3" Grid.Column="1" Width="100" Margin="0,4,0,4" HorizontalAlignment="Left" />
+                                        <DatePicker SelectedDate="{Binding WO_SchedComplDate, Mode=TwoWay}" x:Name="SchedComplDate_Datepicker" Grid.Row="3" Grid.Column="1" Width="100" Margin="0,4,0,4" HorizontalAlignment="Left" />
                                         <Label Grid.Row="4" Content="Supt:" Margin="0,4,0,4" />
-                                        <ComboBox SelectedValue="{Binding SuptID}" x:Name="Supt_ComBo" ItemsSource="{Binding Superintendents}" SelectedValuePath="SupID" DisplayMemberPath="SupName" Grid.Row="4" Grid.Column="1" Width="200" HorizontalAlignment="Left" Margin="0,4,0,4" IsEditable="True" />
+                                        <ComboBox SelectedValue="{Binding WO_SuptID, Mode=TwoWay}" x:Name="Supt_ComBo" ItemsSource="{Binding Superintendents}" SelectedValuePath="SupID" DisplayMemberPath="SupName" Grid.Row="4" Grid.Column="1" Width="200" HorizontalAlignment="Left" Margin="0,4,0,4" IsEditable="True" />
                                         <Label Grid.Row="5" Content="Start Date:" Margin="0,4,0,4" />
-                                        <DatePicker SelectedDate="{Binding StartDate}" x:Name="WoStartDate_Datepicker" Grid.Row="5" Grid.Column="1" Width="100" Margin="0,4,0,4" HorizontalAlignment="Left" />
+                                        <DatePicker SelectedDate="{Binding WO_StartDate, Mode=TwoWay}" x:Name="WoStartDate_Datepicker" Grid.Row="5" Grid.Column="1" Width="100" Margin="0,4,0,4" HorizontalAlignment="Left" />
                                         <Label Grid.Row="6" Content="Compl Date:" Margin="0,4,0,4" />
-                                        <DatePicker SelectedDate="{Binding ComplDate}" x:Name="WoComplDate_Datepicker" Grid.Row="6" Grid.Column="1" Width="100" Margin="0,4,0,4" HorizontalAlignment="Left" />
+                                        <DatePicker SelectedDate="{Binding WO_ComplDate, Mode=TwoWay}" x:Name="WoComplDate_Datepicker" Grid.Row="6" Grid.Column="1" Width="100" Margin="0,4,0,4" HorizontalAlignment="Left" />
                                     </Grid>
                                 </Border>
                             </Grid>
@@ -2435,7 +2396,7 @@
                 </TabItem>
                 <TabItem Header="CIPs">
                     <Grid Margin="10" x:Name="CIPGrid" HorizontalAlignment="Left" Width="1000">
-                        <DataGrid ItemsSource="{Binding ProjectCIPs}" GridLinesVisibility="None" AutoGenerateColumns="False" HeadersVisibility="None" BorderThickness="0" Background="White" AlternatingRowBackground="LightGray">
+                        <DataGrid ItemsSource="{Binding ProjectCIPs, Mode=TwoWay}" GridLinesVisibility="None" AutoGenerateColumns="False" HeadersVisibility="None" BorderThickness="0" Background="White" AlternatingRowBackground="LightGray">
                             <DataGrid.Resources>
                                 <Style TargetType="DataGridColumnHeader" BasedOn="{StaticResource GridColumnHeaderBase}">
                                     <Setter Property="Background" Value="#4BACC6" />

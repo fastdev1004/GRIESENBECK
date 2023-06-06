@@ -26,7 +26,7 @@ namespace WpfApp.View
             this.DataContext = AdminVM;
         }
 
-        private void goBack(object sender, RoutedEventArgs e)
+        private void GoBack(object sender, RoutedEventArgs e)
         {
             this.NavigationService.Navigate(new Uri("View/Start.xaml", UriKind.Relative));
         }

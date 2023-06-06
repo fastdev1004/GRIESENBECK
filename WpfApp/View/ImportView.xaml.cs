@@ -30,7 +30,7 @@ namespace WpfApp.View
             ImportVM = new ImportViewModel();
             this.DataContext = ImportVM;
         }
-        private void goBack(object sender, RoutedEventArgs e)
+        private void GoBack(object sender, RoutedEventArgs e)
         {
             this.NavigationService.Navigate(new Uri("View/Start.xaml", UriKind.Relative));
         }
