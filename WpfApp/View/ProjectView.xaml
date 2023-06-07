@@ -1421,7 +1421,7 @@
                                     </DataGridTemplateColumn>
                                     <DataGridTemplateColumn IsReadOnly="False" Width="2*">
                                         <DataGridTemplateColumn.Header>
-                                            <TextBlock Text="Qty Ord" TextWrapping="Wrap" />
+                                            <TextBlock Text="Manufacturer" TextWrapping="Wrap" />
                                         </DataGridTemplateColumn.Header>
                                         <DataGridTemplateColumn.CellTemplate>
                                             <DataTemplate>
@@ -1431,11 +1431,31 @@
                                     </DataGridTemplateColumn>
                                     <DataGridTemplateColumn IsReadOnly="False" Width="1*">
                                         <DataGridTemplateColumn.Header>
-                                            <TextBlock Text="Stock?" TextWrapping="Wrap" />
+                                            <TextBlock Text="Qty Ord" TextWrapping="Wrap" />
                                         </DataGridTemplateColumn.Header>
                                         <DataGridTemplateColumn.CellTemplate>
                                             <DataTemplate>
                                                 <TextBlock Text="{Binding QtyOrd}" />
+                                            </DataTemplate>
+                                        </DataGridTemplateColumn.CellTemplate>
+                                    </DataGridTemplateColumn>
+                                    <DataGridTemplateColumn IsReadOnly="False" Width="2*">
+                                        <DataGridTemplateColumn.Header>
+                                            <TextBlock Text="Phase" TextWrapping="Wrap" />
+                                        </DataGridTemplateColumn.Header>
+                                        <DataGridTemplateColumn.CellTemplate>
+                                            <DataTemplate>
+                                                <TextBox Text="{Binding Phase}" />
+                                            </DataTemplate>
+                                        </DataGridTemplateColumn.CellTemplate>
+                                    </DataGridTemplateColumn>
+                                    <DataGridTemplateColumn IsReadOnly="False" Width="2*">
+                                        <DataGridTemplateColumn.Header>
+                                            <TextBlock Text="Type" TextWrapping="Wrap" />
+                                        </DataGridTemplateColumn.Header>
+                                        <DataGridTemplateColumn.CellTemplate>
+                                            <DataTemplate>
+                                                <TextBox Text="{Binding Type}" />
                                             </DataTemplate>
                                         </DataGridTemplateColumn.CellTemplate>
                                     </DataGridTemplateColumn>
@@ -1451,27 +1471,7 @@
                                     </DataGridTemplateColumn>
                                     <DataGridTemplateColumn IsReadOnly="False" Width="2*">
                                         <DataGridTemplateColumn.Header>
-                                            <TextBlock Text="Manuf Ord #" TextWrapping="Wrap" />
-                                        </DataGridTemplateColumn.Header>
-                                        <DataGridTemplateColumn.CellTemplate>
-                                            <DataTemplate>
-                                                <TextBox Text="{Binding Type}" />
-                                            </DataTemplate>
-                                        </DataGridTemplateColumn.CellTemplate>
-                                    </DataGridTemplateColumn>
-                                    <DataGridTemplateColumn IsReadOnly="False" Width="2*">
-                                        <DataGridTemplateColumn.Header>
-                                            <TextBlock Text="GAP PO#" TextWrapping="Wrap" />
-                                        </DataGridTemplateColumn.Header>
-                                        <DataGridTemplateColumn.CellTemplate>
-                                            <DataTemplate>
-                                                <TextBox Text="{Binding ManufLeadTime}"/>
-                                            </DataTemplate>
-                                        </DataGridTemplateColumn.CellTemplate>
-                                    </DataGridTemplateColumn>
-                                    <DataGridTemplateColumn IsReadOnly="False" Width="2*">
-                                        <DataGridTemplateColumn.Header>
-                                            <TextBlock Text="Shop Reqst" TextWrapping="Wrap" />
+                                            <TextBlock Text="PO Number" TextWrapping="Wrap" />
                                         </DataGridTemplateColumn.Header>
                                         <DataGridTemplateColumn.CellTemplate>
                                             <DataTemplate>
@@ -1481,7 +1481,7 @@
                                     </DataGridTemplateColumn>
                                     <DataGridTemplateColumn IsReadOnly="False" Width="2*">
                                         <DataGridTemplateColumn.Header>
-                                            <TextBlock Text="Shop Recvd" TextWrapping="Wrap" />
+                                            <TextBlock Text="Shop Reqst" TextWrapping="Wrap" />
                                         </DataGridTemplateColumn.Header>
                                         <DataGridTemplateColumn.CellTemplate>
                                             <DataTemplate>
@@ -1491,7 +1491,7 @@
                                     </DataGridTemplateColumn>
                                     <DataGridTemplateColumn IsReadOnly="False" Width="2*">
                                         <DataGridTemplateColumn.Header>
-                                            <TextBlock Text="Subm Issue" TextWrapping="Wrap" />
+                                            <TextBlock Text="Shop Recvd" TextWrapping="Wrap" />
                                         </DataGridTemplateColumn.Header>
                                         <DataGridTemplateColumn.CellTemplate>
                                             <DataTemplate>
@@ -1501,7 +1501,7 @@
                                     </DataGridTemplateColumn>
                                     <DataGridTemplateColumn IsReadOnly="False" Width="2*">
                                         <DataGridTemplateColumn.Header>
-                                            <TextBlock Text="Resubmit" TextWrapping="Wrap" />
+                                            <TextBlock Text="Submit Issue" TextWrapping="Wrap" />
                                         </DataGridTemplateColumn.Header>
                                         <DataGridTemplateColumn.CellTemplate>
                                             <DataTemplate>
@@ -1511,7 +1511,7 @@
                                     </DataGridTemplateColumn>
                                     <DataGridTemplateColumn IsReadOnly="False" Width="2*">
                                         <DataGridTemplateColumn.Header>
-                                            <TextBlock Text="Subm Appr" TextWrapping="Wrap" />
+                                            <TextBlock Text="Resubmit" TextWrapping="Wrap" />
                                         </DataGridTemplateColumn.Header>
                                         <DataGridTemplateColumn.CellTemplate>
                                             <DataTemplate>
@@ -1521,7 +1521,7 @@
                                     </DataGridTemplateColumn>
                                     <DataGridTemplateColumn IsReadOnly="False" Width="1*">
                                         <DataGridTemplateColumn.Header>
-                                            <TextBlock Text="No Subm" TextWrapping="Wrap" />
+                                            <TextBlock Text="Submit Appr" TextWrapping="Wrap" />
                                         </DataGridTemplateColumn.Header>
                                         <DataGridTemplateColumn.CellTemplate>
                                             <DataTemplate>
@@ -1531,7 +1531,7 @@
                                     </DataGridTemplateColumn>
                                     <DataGridTemplateColumn IsReadOnly="False" Width="1*">
                                         <DataGridTemplateColumn.Header>
-                                            <TextBlock Text="Ship to Job?" TextWrapping="Wrap" />
+                                            <TextBlock Text="Color" TextWrapping="Wrap" />
                                         </DataGridTemplateColumn.Header>
                                         <DataGridTemplateColumn.CellTemplate>
                                             <DataTemplate>
@@ -1566,7 +1566,7 @@
                                             </DataTemplate>
                                         </DataGridTemplateColumn.CellTemplate>
                                     </DataGridTemplateColumn>
-                                    <DataGridTemplateColumn IsReadOnly="False" Header="R.F.F" Width="2*">
+                                    <DataGridTemplateColumn IsReadOnly="False" Header="Complete" Width="2*">
                                         <DataGridTemplateColumn.CellTemplate>
                                             <DataTemplate>
                                                 <CheckBox IsChecked="{Binding LaborComplete}" />

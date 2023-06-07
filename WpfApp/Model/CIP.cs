@@ -10,6 +10,7 @@ namespace WpfApp.Model
     class CIP:ViewModelBase
     {
         private string _jobNo;
+        private int _projectID;
         private string _cipType;
         private DateTime _targetDate;
         private double _originalContractAmt;
@@ -29,6 +30,17 @@ namespace WpfApp.Model
             {
                 if (value == _jobNo) return;
                 _jobNo = value;
+                OnPropertyChanged();
+            }
+        }
+
+        public int ProjectID
+        {
+            get => _projectID;
+            set
+            {
+                if (value == _projectID) return;
+                _projectID = value;
                 OnPropertyChanged();
             }
         }

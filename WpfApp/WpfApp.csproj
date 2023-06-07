@@ -63,7 +63,7 @@
     <Compile Include="Converter\BoolToVisibleConverter.cs" />
     <Compile Include="Converter\DateTimeToDateConverter.cs" />
     <Compile Include="Converter\SelectedValueToIntConverter.cs" />
-    <Compile Include="Converter\YesNoConverter.cs" />
+    <Compile Include="Converter\YesNoBothConverter.cs" />
     <Compile Include="Converter\ZeroToEmptyStringConverter.cs" />
     <Compile Include="Model\Acronym.cs" />
     <Compile Include="Model\Architect.cs" />
@@ -93,7 +93,14 @@
     <Compile Include="Model\ProjectWorkOrder.cs" />
     <Compile Include="Model\Report.cs" />
     <Compile Include="Model\ReportActiveLabor.cs" />
+    <Compile Include="Model\ReportActiveProject.cs" />
     <Compile Include="Model\ReportApproveNotRelease.cs" />
+    <Compile Include="Model\ReportCIP.cs" />
+    <Compile Include="Model\ReportCO.cs" />
+    <Compile Include="Model\ReportCOItem.cs" />
+    <Compile Include="Model\ReportContract.cs" />
+    <Compile Include="Model\ReportCustomerContact.cs" />
+    <Compile Include="Model\ReportFieldMeasure.cs" />
     <Compile Include="Model\ReportSelection.cs" />
     <Compile Include="Model\ReturnedVia.cs" />
     <Compile Include="Model\Salesman.cs" />

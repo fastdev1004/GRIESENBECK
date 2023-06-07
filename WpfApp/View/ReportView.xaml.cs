@@ -45,7 +45,7 @@ namespace WpfApp.View
             int architectID = ReportVM.ArchitectID;
             int materialID = ReportVM.MaterialID;
             int crewID = ReportVM.CrewID;
-            //int complete = ReportVM.;
+            int complete = ReportVM.Complete;
             DateTime dateFrom = ReportVM.DateFrom;
             DateTime toDate = ReportVM.ToDate;
             string keyWord = ReportVM.Keyword;
@@ -63,6 +63,7 @@ namespace WpfApp.View
             ReportDetailVM.DateFrom = dateFrom;
             ReportDetailVM.ToDate = toDate;
             ReportDetailVM.Keyword = keyWord;
+            ReportDetailVM.Complete = complete;
             ReportDetailView reportDetailPage = new ReportDetailView();
             reportDetailPage.DataContext = ReportDetailVM;
 

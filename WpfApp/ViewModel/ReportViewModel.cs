@@ -27,6 +27,7 @@ namespace WpfApp.ViewModel
             dbConnection = new DatabaseConnection();
             dbConnection.Open();
             LoadReports();
+            Complete = 2;
         }
 
         private void LoadReports()
@@ -234,9 +235,10 @@ namespace WpfApp.ViewModel
             ReportSelections = sb_reportSelection;
 
             // Complte Combo Box
-            ObservableCollection<bool> st_completeCB = new ObservableCollection<bool>();
-            st_completeCB.Add(true);
-            st_completeCB.Add(false);
+            ObservableCollection<int> st_completeCB = new ObservableCollection<int>();
+            st_completeCB.Add(1);
+            st_completeCB.Add(0);
+            st_completeCB.Add(2);
             CompleteCB = st_completeCB;
 
             cmd.Dispose();
@@ -315,7 +317,7 @@ namespace WpfApp.ViewModel
             }
         }
 
-        public ObservableCollection<bool> CompleteCB { get; set; }
+        public ObservableCollection<int> CompleteCB { get; set; }
 
         private int _reportID;
 
@@ -792,9 +794,9 @@ namespace WpfApp.ViewModel
         public ObservableCollection<ReportSelection> ReportSelections;
 
 
-        private bool _complete;
+        private int _complete;
 
-        public bool Complete
+        public int Complete
         {
             get { return _complete; }
             set

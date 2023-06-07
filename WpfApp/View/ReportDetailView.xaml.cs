@@ -24,7 +24,7 @@ namespace WpfApp.View
 
         private void GoBack(object sender, RoutedEventArgs e)
         {
-            this.NavigationService.Navigate(new Uri("View/Start.xaml", UriKind.Relative));
+            this.NavigationService.Navigate(new Uri("View/ReportView.xaml", UriKind.Relative));
         }
 
         private void LoadPage(object sender, RoutedEventArgs e)
@@ -45,6 +45,7 @@ namespace WpfApp.View
                 int architectID = loadContext.ArchitectID;
                 int matID = loadContext.MaterialID;
                 int crewID = loadContext.CrewID;
+                int complete = loadContext.Complete;
                 DateTime dateFrom = loadContext.DateFrom;
                 DateTime toDate = loadContext.ToDate;
                 string keyword = loadContext.Keyword;
@@ -60,6 +61,7 @@ namespace WpfApp.View
                 ReportDetailVM.SelectedCrewID = crewID;
                 ReportDetailVM.SelectedDateFrom = dateFrom;
                 ReportDetailVM.SelectedToDate = toDate;
+                ReportDetailVM.SelectedComplete = complete;
                 ReportDetailVM.Keyword = keyword;
                 ReportDetailVM.ReportID = reportID;
 

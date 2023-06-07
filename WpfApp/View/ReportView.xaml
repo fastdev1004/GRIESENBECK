@@ -10,7 +10,7 @@
       Title="ReportingView">
     <Page.Resources>
         <ResourceDictionary>
-            <converter:YesNoConverter x:Key="YesNoConverter" />
+            <converter:YesNoBothConverter x:Key="YesNoBothConverter" />
             <ResourceDictionary.MergedDictionaries>
                 <ResourceDictionary Source="../Themes/Generic.xaml" />
             </ResourceDictionary.MergedDictionaries>
@@ -179,7 +179,13 @@
                         <ColumnDefinition Width="3*" />
                     </Grid.ColumnDefinitions>
                     <Label>Complete:</Label>
-                    <ComboBox ItemsSource="{Binding CompleteCB, Mode=TwoWay}" SelectedValue="{Binding Complete, Mode=TwoWay, Converter={StaticResource YesNoConverter}}" Text="{Binding Complete, Mode=TwoWay, Converter={StaticResource YesNoConverter}}" Grid.Column="1" IsEditable="True" IsEnabled="{Binding CompleteCbEnable, Mode=TwoWay}" />
+                    <ComboBox ItemsSource="{Binding CompleteCB, Mode=TwoWay}" SelectedValue="{Binding Complete, Mode=TwoWay}" Grid.Column="1" IsEditable="True" IsEnabled="{Binding CompleteCbEnable, Mode=TwoWay}">
+                        <ComboBox.ItemTemplate>
+                            <DataTemplate>
+                                <TextBlock Text="{Binding Converter={StaticResource YesNoBothConverter}}"/>
+                            </DataTemplate>
+                        </ComboBox.ItemTemplate>
+                    </ComboBox>
                 </Grid>
                 <Grid Grid.Row="10">
                     <Grid.ColumnDefinitions>

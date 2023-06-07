@@ -24,6 +24,7 @@ namespace WpfApp.Model
         private string _returnedVia;
         private DateTime _returnedDate;
         private string _comment;
+        private int _projectID;
 
         public string JobNo
         {
@@ -189,6 +190,17 @@ namespace WpfApp.Model
             {
                 if (value == _comment) return;
                 _comment = value;
+                OnPropertyChanged();
+            }
+        }
+
+        public int ProjectID
+        {
+            get => _projectID;
+            set
+            {
+                if (value == _projectID) return;
+                _projectID = value;
                 OnPropertyChanged();
             }
         }

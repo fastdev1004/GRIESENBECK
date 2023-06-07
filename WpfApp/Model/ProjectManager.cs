@@ -12,6 +12,7 @@ namespace WpfApp.Model
     class ProjectManager:ViewModelBase
     {
         private int _id;
+        private int _customerID;
         private string _name;
         private string _phone;
         private string _cellPhone;
@@ -28,6 +29,17 @@ namespace WpfApp.Model
                 OnPropertyChanged();
             }
         }
+        
+        public int CustomerID
+        {
+            get => _customerID;
+            set
+            {
+                if (value == _customerID) return;
+                _customerID = value;
+                OnPropertyChanged();
+            }
+        }
 
         public string PMName
         {
@@ -40,7 +52,7 @@ namespace WpfApp.Model
             }
         }
 
-        public string Phone
+        public string PMPhone
         {
             get => _phone;
             set

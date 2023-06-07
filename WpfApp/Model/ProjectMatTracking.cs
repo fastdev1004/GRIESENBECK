@@ -11,8 +11,13 @@ namespace WpfApp.Model
 {
     class ProjectMatTracking:ViewModelBase
     {
+        private int _projectID;
         private int _projMat;
         private DateTime _matReqdDate;
+        private bool _matOnly;
+        private string _manufName;
+        private string _matPhase;
+        private string _matType;
         private string _qtyOrd;
         private int _manufacturer;
         private bool _takeFromStock;
@@ -34,6 +39,17 @@ namespace WpfApp.Model
         private bool _orderComplete;
         private bool _laborComplete;
 
+        public int ProjectID
+        {
+            get => _projectID;
+            set
+            {
+                if (value == _projectID) return;
+                _projectID = value;
+                OnPropertyChanged();
+            }
+        }
+
         public int ProjMat
         {
             get => _projMat;
@@ -52,6 +68,50 @@ namespace WpfApp.Model
             {
                 if (value == _matReqdDate) return;
                 _matReqdDate = value;
+                OnPropertyChanged();
+            }
+        }
+
+        public bool MatOnly
+        {
+            get => _matOnly;
+            set
+            {
+                if (value == _matOnly) return;
+                _matOnly = value;
+                OnPropertyChanged();
+            }
+        }
+
+        public string ManufName
+        {
+            get => _manufName;
+            set
+            {
+                if (value == _manufName) return;
+                _manufName = value;
+                OnPropertyChanged();
+            }
+        }
+
+        public string MatPhase
+        {
+            get => _matPhase;
+            set
+            {
+                if (value == _matPhase) return;
+                _matPhase = value;
+                OnPropertyChanged();
+            }
+        }
+
+        public string MatType
+        {
+            get => _matType;
+            set
+            {
+                if (value == _matType) return;
+                _matType = value;
                 OnPropertyChanged();
             }
         }

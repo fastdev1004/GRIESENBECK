@@ -315,7 +315,7 @@ namespace WpfApp.ViewModel
                 string email = row["PM_Email"].ToString();
                 bool active = row.Field<Boolean>("Active");
 
-                st_projectManagers.Add(new ProjectManager { ID = id, PMName=name, Phone=phone, PMCellPhone=cell, PMEmail=email, Active = active });
+                st_projectManagers.Add(new ProjectManager { ID = id, PMName=name, PMPhone=phone, PMCellPhone=cell, PMEmail=email, Active = active });
             }
             ProjectManagers = st_projectManagers;
 
