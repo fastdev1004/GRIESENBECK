@@ -1036,8 +1036,9 @@
                                                 <Grid.RowDefinitions>
                                                     <RowDefinition Height="Auto" />
                                                     <RowDefinition Height="Auto" />
+                                                    <RowDefinition Height="Auto" />
                                                 </Grid.RowDefinitions>
-                                                <Border BorderBrush="Black" BorderThickness="0">
+                                                <Border BorderBrush="Black" BorderThickness="0,2,0,0">
                                                     <Grid>
                                                         <Grid.ColumnDefinitions>
                                                             <ColumnDefinition Width="4*" />
@@ -1050,23 +1051,23 @@
                                                         </WrapPanel>
                                                         <WrapPanel Grid.Column="1">
                                                             <Label Content="Target Date:" />
-                                                            <TextBlock Text="{Binding TargetDate, Mode=TwoWay}" VerticalAlignment="Center" />
+                                                            <TextBlock Text="{Binding TargetDate, Mode=TwoWay, Converter={StaticResource DateTimeToDateConverter}}" VerticalAlignment="Center" />
                                                         </WrapPanel>
-                                                        <WrapPanel Grid.Column="2">
-                                                            <Button Content="View" VerticalAlignment="Center" />
-                                                        </WrapPanel>
+                                                        <Grid Grid.Column="2">
+                                                            <Button Content="View" VerticalAlignment="Center" Width="40" />
+                                                        </Grid>
                                                         <WrapPanel Grid.Column="3">
                                                             <Label Content="Completed:" />
-                                                            <TextBlock Text="{Binding DateComplete, Mode=TwoWay}" VerticalAlignment="Center"/>
+                                                            <TextBlock Text="{Binding DateComplete, Mode=TwoWay, Converter={StaticResource DateTimeToDateConverter}}" VerticalAlignment="Center"/>
                                                         </WrapPanel>
                                                     </Grid>
                                                 </Border>
                                                 <Grid Grid.Row="1">
                                                     <Grid.ColumnDefinitions>
-                                                        <ColumnDefinition Width="4*" />
                                                         <ColumnDefinition Width="2*" />
+                                                        <ColumnDefinition Width="1*" />
                                                         <ColumnDefinition Width="2*" />
-                                                        <ColumnDefinition Width="2*" />
+                                                        <ColumnDefinition Width="3*" />
                                                         <ColumnDefinition Width="2*" />
                                                     </Grid.ColumnDefinitions>
                                                     <WrapPanel>
@@ -1093,6 +1094,31 @@
                                                         <CheckBox IsChecked="{Binding StoredMat, Mode=TwoWay}" VerticalAlignment="Center" />
                                                     </WrapPanel>
                                                 </Grid>
+                                                <Grid Grid.Row="2">
+                                                    <Grid.ColumnDefinitions>
+                                                        <ColumnDefinition Width="3*" />
+                                                        <ColumnDefinition Width="1*" />
+                                                    </Grid.ColumnDefinitions>
+                                                    <TextBox Background="LightBlue" VerticalScrollBarVisibility="Auto" Height="60" Text="{Binding Notes, Mode=TwoWay}" />
+                                                    <Grid Grid.Column="1">
+                                                        <Grid.RowDefinitions>
+                                                            <RowDefinition Height="Auto" />
+                                                            <RowDefinition Height="*" />
+                                                        </Grid.RowDefinitions>
+                                                        <Grid.ColumnDefinitions>
+                                                            <ColumnDefinition Width="1*" />
+                                                            <ColumnDefinition Width="1*" />
+                                                        </Grid.ColumnDefinitions>
+                                                        <WrapPanel>
+                                                            <Label Content="Billing Due:" />
+                                                            <TextBlock Text="{Binding BillingDue, Mode=TwoWay}" VerticalAlignment="Center" />
+                                                        </WrapPanel>
+                                                        <WrapPanel Grid.Column="1">
+                                                            <Label Content="Thru:" />
+                                                            <TextBlock />
+                                                        </WrapPanel>
+                                                    </Grid>
+                                                </Grid>
                                             </Grid>
                                             
                                             <Grid Grid.Row="1">
@@ -1107,7 +1133,7 @@
                                                     <DataGrid.Columns>
                                                         <DataGridTemplateColumn IsReadOnly="False" Width="2*">
                                                             <DataGridTemplateColumn.Header>
-                                                                <Border BorderBrush="Black" BorderThickness="0,0,0,1">
+                                                                <Border BorderBrush="Black" BorderThickness="0,0,0,0">
                                                                     <TextBlock Text="Matl Reqd" TextWrapping="Wrap" FontWeight="Bold" />
                                                                 </Border>
                                                             </DataGridTemplateColumn.Header>
@@ -1119,7 +1145,7 @@
                                                         </DataGridTemplateColumn>
                                                         <DataGridTemplateColumn IsReadOnly="False" Width="1*">
                                                             <DataGridTemplateColumn.Header>
-                                                                <Border BorderBrush="Black" BorderThickness="0,0,0,1">
+                                                                <Border BorderBrush="Black" BorderThickness="0,0,0,0">
                                                                     <TextBlock Text="Matl" TextWrapping="Wrap" FontWeight="Bold" />
                                                                 </Border>
                                                             </DataGridTemplateColumn.Header>
@@ -1131,7 +1157,7 @@
                                                         </DataGridTemplateColumn>
                                                         <DataGridTemplateColumn IsReadOnly="False" Width="4*">
                                                             <DataGridTemplateColumn.Header>
-                                                                <Border BorderBrush="Black" BorderThickness="0,0,0,1">
+                                                                <Border BorderBrush="Black" BorderThickness="0,0,0,0">
                                                                     <TextBlock Text="Manufacturer" TextWrapping="Wrap" FontWeight="Bold" />
                                                                 </Border>
                                                             </DataGridTemplateColumn.Header>
@@ -1143,7 +1169,7 @@
                                                         </DataGridTemplateColumn>
                                                         <DataGridTemplateColumn IsReadOnly="False" Width="1*">
                                                             <DataGridTemplateColumn.Header>
-                                                                <Border BorderBrush="Black" BorderThickness="0,0,0,1">
+                                                                <Border BorderBrush="Black" BorderThickness="0,0,0,0">
                                                                     <TextBlock Text="CO" TextWrapping="Wrap" FontWeight="Bold" />
                                                                 </Border>
                                                             </DataGridTemplateColumn.Header>
@@ -1155,7 +1181,7 @@
                                                         </DataGridTemplateColumn>
                                                         <DataGridTemplateColumn IsReadOnly="False" Width="3*">
                                                             <DataGridTemplateColumn.Header>
-                                                                <Border BorderBrush="Black" BorderThickness="0,0,0,1">
+                                                                <Border BorderBrush="Black" BorderThickness="0,0,0,0">
                                                                     <TextBlock Text="Phase" TextWrapping="Wrap" FontWeight="Bold" />
                                                                 </Border>
                                                             </DataGridTemplateColumn.Header>
@@ -1167,7 +1193,7 @@
                                                         </DataGridTemplateColumn>
                                                         <DataGridTemplateColumn IsReadOnly="False" Width="3*">
                                                             <DataGridTemplateColumn.Header>
-                                                                <Border BorderBrush="Black" BorderThickness="0,0,0,1">
+                                                                <Border BorderBrush="Black" BorderThickness="0,0,0,0">
                                                                     <TextBlock Text="Type" TextWrapping="Wrap" FontWeight="Bold" />
                                                                 </Border>
                                                             </DataGridTemplateColumn.Header>
@@ -1179,7 +1205,7 @@
                                                         </DataGridTemplateColumn>
                                                         <DataGridTemplateColumn IsReadOnly="False" Width="2*">
                                                             <DataGridTemplateColumn.Header>
-                                                                <Border BorderBrush="Black" BorderThickness="0,0,0,1">
+                                                                <Border BorderBrush="Black" BorderThickness="0,0,0,0">
                                                                     <TextBlock Text="Subm Appr" TextWrapping="Wrap" FontWeight="Bold" />
                                                                 </Border>
                                                             </DataGridTemplateColumn.Header>
@@ -1191,7 +1217,7 @@
                                                         </DataGridTemplateColumn>
                                                         <DataGridTemplateColumn IsReadOnly="False" Width="1*">
                                                             <DataGridTemplateColumn.Header>
-                                                                <Border BorderBrush="Black" BorderThickness="0,0,0,1">
+                                                                <Border BorderBrush="Black" BorderThickness="0,0,0,0">
                                                                     <TextBlock Text="Need FM?" TextWrapping="Wrap" FontWeight="Bold" />
                                                                 </Border>
                                                             </DataGridTemplateColumn.Header>
@@ -1203,7 +1229,7 @@
                                                         </DataGridTemplateColumn>
                                                         <DataGridTemplateColumn IsReadOnly="False" Width="2*">
                                                             <DataGridTemplateColumn.Header>
-                                                                <Border BorderBrush="Black" BorderThickness="0,0,0,1">
+                                                                <Border BorderBrush="Black" BorderThickness="0,0,0,0">
                                                                     <TextBlock Text="Field Dim" TextWrapping="Wrap" FontWeight="Bold" />
                                                                 </Border>
                                                             </DataGridTemplateColumn.Header>
@@ -1215,7 +1241,7 @@
                                                         </DataGridTemplateColumn>
                                                         <DataGridTemplateColumn IsReadOnly="False" Width="1*">
                                                             <DataGridTemplateColumn.Header>
-                                                                <Border BorderBrush="Black" BorderThickness="0,0,0,1">
+                                                                <Border BorderBrush="Black" BorderThickness="0,0,0,0">
                                                                     <TextBlock Text="Guar Dim" TextWrapping="Wrap" FontWeight="Bold" />
                                                                 </Border>
                                                             </DataGridTemplateColumn.Header>
@@ -1227,7 +1253,7 @@
                                                         </DataGridTemplateColumn>
                                                         <DataGridTemplateColumn IsReadOnly="False" Width="2*">
                                                             <DataGridTemplateColumn.Header>
-                                                                <Border BorderBrush="Black" BorderThickness="0,0,0,1">
+                                                                <Border BorderBrush="Black" BorderThickness="0,0,0,0">
                                                                     <TextBlock Text="R.F.F" TextWrapping="Wrap" FontWeight="Bold" />
                                                                 </Border>
                                                             </DataGridTemplateColumn.Header>

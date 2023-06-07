@@ -601,8 +601,7 @@ namespace WpfApp.ViewModel
                 whereClause2 += $" AND tblMaterials.Material_ID = '{SelectedMatID}'";
             }
 
-            // Mat Tracking
-            sqlquery = "SELECT tblProjectChangeOrders.CO_ItemNo, tblProjects.* FROM tblProjectChangeOrders RIGHT JOIN (SELECT tblManufacturers.Manuf_Name, tblProjects.* FROM tblManufacturers RIGHT JOIN(SELECT tblProjectMaterials.Mat_Type, tblProjectMaterials.Mat_Only, tblProjectMaterials.Mat_Phase, tblProjects.* FROM tblProjectMaterials RIGHT JOIN(SELECT ProjMat_ID, Manuf_ID, MatReqdDate, SubmitAppr, FM_Needed, Field_Dim, Guar_Dim, ReleasedForFab, tblProjects.* FROM tblProjectMaterialsTrack RIGHT JOIN(SELECT tblProjects.Project_ID FROM tblProjects INNER JOIN tblProjectMaterialsTrack ON tblProjectMaterialsTrack.Project_ID = tblProjects.Project_ID "+ whereProjectClause + ") AS tblProjects ON tblProjectMaterialsTrack.Project_ID = tblProjects.Project_ID) AS tblProjects ON tblProjects.ProjMat_ID = tblProjectMaterials.ProjMat_ID) AS tblProjects ON tblProjects.Manuf_ID = tblManufacturers.Manuf_ID "+ whereClause1 + ") AS tblProjects ON tblProjects.Project_ID = tblProjectChangeOrders.Project_ID";
+            sqlquery = "SELECT tblProjectChangeOrders.CO_ItemNo, tblProjects.* FROM tblProjectChangeOrders RIGHT JOIN(SELECT tblProjectSOV.CO_ID, tblProjects.* FROM tblProjectSOV RIGHT JOIN(SELECT tblManufacturers.Manuf_Name, tblProjects.* FROM tblManufacturers RIGHT JOIN(SELECT tblProjectMaterialsTrack.MatReqdDate, tblProjectMaterialsTrack.Manuf_ID, tblProjectMaterialsTrack.SubmitAppr, tblProjectMaterialsTrack.FM_Needed, tblProjectMaterialsTrack.Field_Dim, tblProjectMaterialsTrack.Guar_Dim, tblProjectMaterialsTrack.ReleasedForFab, tblProjects.* FROM tblProjectMaterialsTrack INNER JOIN(SELECT tblProjectMaterials.ProjMat_ID, tblProjectMaterials.ProjSOV_ID, tblProjectMaterials.Mat_Only, tblProjectMaterials.Mat_Phase, tblProjectMaterials.Mat_Type, tblProjects.* FROM tblProjectMaterials RIGHT JOIN(SELECT tblSalesmen.Salesman_Name, tblProjects.* FROM tblSalesmen RIGHT JOIN(SELECT tblCustomers.Full_Name, tblProjects.* FROM tblCustomers RIGHT JOIN(SELECT tblProjects.Project_ID, tblProjects.Project_Name, tblProjects.Target_Date, tblProjects.Date_Completed, tblProjects.Address, tblProjects.State, tblProjects.ZIP, tblProjects.Job_No, tblProjects.Salesman_ID, tblProjects.Customer_ID, tblProjects.Stored_Materials, tblProjects.Billing_Date FROM tblProjects "+ whereProjectClause +") AS tblProjects ON tblProjects.Customer_ID = tblCustomers.Customer_ID) AS tblProjects ON tblProjects.Salesman_ID = tblSalesmen.Salesman_ID) AS tblProjects ON tblProjectMaterials.Project_ID = tblProjects.Project_ID) AS tblProjects ON tblProjects.ProjMat_ID = tblProjectMaterialsTrack.ProjMat_ID) AS tblProjects ON tblProjects.Manuf_ID = tblManufacturers.Manuf_ID) AS tblProjects ON tblProjects.ProjSOV_ID = tblProjectSOV.ProjSOV_ID) AS tblProjects ON tblProjectChangeOrders.CO_ID = tblProjects.CO_ID";
             cmd = new SqlCommand(sqlquery, dbConnection.Connection);
             sda = new SqlDataAdapter(cmd);
             ds = new DataSet();
@@ -670,8 +669,51 @@ namespace WpfApp.ViewModel
             }
             ProjectMatTrackings = sb_matTrackings;
 
+            // Notes
+            sqlquery = "SELECT * FROM tblNotes WHERE Notes_PK_Desc = 'Project'";
+            cmd = new SqlCommand(sqlquery, dbConnection.Connection);
+            sda = new SqlDataAdapter(cmd);
+            ds = new DataSet();
+            sda.Fill(ds);
+            ObservableCollection<Note> sb_projectNotes = new ObservableCollection<Note>();
+            foreach (DataRow row in ds.Tables[0].Rows)
+            {
+                int _notesID = 0;
+                int _notesPK = 0;
+                string _notesPKDesc = "";
+                string _notesNote = "";
+                DateTime _notesDateAdded = new DateTime();
+                string _notesUser = "";
+                string _notesUserName = "";
+
+                if (!row.IsNull("Notes_ID"))
+                    _notesID = int.Parse(row["Notes_ID"].ToString());
+                if (!row.IsNull("Notes_PK"))
+                    _notesPK = int.Parse(row["Notes_PK"].ToString());
+                if (!row.IsNull("Notes_PK_Desc"))
+                    _notesPKDesc = row["Notes_PK_Desc"].ToString();
+                if (!row.IsNull("Notes_Note"))
+                    _notesNote = row["Notes_Note"].ToString();
+                if (!row.IsNull("Notes_DateAdded"))
+                    _notesDateAdded = row.Field<DateTime>("Notes_DateAdded");
+                if (!row.IsNull("Notes_User"))
+                    _notesUser = row["Notes_User"].ToString();
+                if (!row.IsNull("Notes_UserName"))
+                    _notesUserName = row["Notes_UserName"].ToString();
+                sb_projectNotes.Add(new Note
+                {
+                    NoteID = _notesID,
+                    NotePK = _notesPK,
+                    NotesPKDesc = _notesPKDesc,
+                    NotesNote = _notesNote,
+                    NotesDateAdded = _notesDateAdded,
+                    NoteUser = _notesUser,
+                    NoteUserName = _notesUserName
+                });
+            }
+
             // Field Measure
-            sqlquery = "SELECT tblSalesmen.Salesman_Name, tblProjects.* FROM tblSalesmen RIGHT JOIN (SELECT tblCustomers.Full_Name, tblProjects.* FROM tblCustomers RIGHT JOIN(SELECT tblNotes.Notes_Note, tblProject.* FROM tblNotes RIGHT JOIN(SELECT tblProjects.Project_ID, tblProjects.Project_Name, tblProjects.Target_Date, tblProjects.Date_Completed, tblProjects.Address, tblProjects.State, tblProjects.ZIP, tblProjects.Job_No, tblProjects.Salesman_ID, tblProjects.Customer_ID, tblProjects.Stored_Materials, tblProjects.Billing_Date FROM tblProjects INNER JOIN tblProjectMaterialsTrack ON tblProjectMaterialsTrack.Project_ID = tblProjects.Project_ID) AS tblProject ON tblProject.Project_ID = tblNotes.Notes_PK AND tblNotes.Notes_PK_Desc = 'Project') AS tblProjects ON tblProjects.Customer_ID = tblCustomers.Customer_ID) AS tblProjects ON tblProjects.Salesman_ID = tblSalesmen.Salesman_ID; ";
+            sqlquery = "SELECT DISTINCT tblProjects.* FROM tblProjectMaterialsTrack INNER JOIN (SELECT tblProjectMaterials.ProjMat_ID, tblProjects.* FROM tblProjectMaterials INNER JOIN(SELECT tblSalesmen.Salesman_Name, tblProjects.* FROM tblSalesmen RIGHT JOIN(SELECT tblCustomers.Full_Name, tblProjects.* FROM tblCustomers RIGHT JOIN(SELECT tblProjects.Project_ID, tblProjects.Project_Name, tblProjects.Target_Date, tblProjects.Date_Completed, tblProjects.Address, tblProjects.State, tblProjects.ZIP, tblProjects.Job_No, tblProjects.Salesman_ID, tblProjects.Customer_ID, tblProjects.Stored_Materials, tblProjects.Billing_Date FROM tblProjects) AS tblProjects ON tblProjects.Customer_ID = tblCustomers.Customer_ID) AS tblProjects ON tblProjects.Salesman_ID = tblSalesmen.Salesman_ID) AS tblProjects ON tblProjectMaterials.Project_ID = tblProjects.Project_ID) AS tblProjects ON tblProjects.ProjMat_ID = tblProjectMaterialsTrack.ProjMat_ID; ";
             cmd = new SqlCommand(sqlquery, dbConnection.Connection);
             sda = new SqlDataAdapter(cmd);
             ds = new DataSet();
@@ -717,8 +759,11 @@ namespace WpfApp.ViewModel
                     _customerName = row["Full_Name"].ToString();
                 if (!row.IsNull("Stored_Materials"))
                     _storedMat = row.Field<Boolean>("Stored_Materials");
-                if (!row.IsNull("Notes_Note"))
-                    _notes = row["Notes_Note"].ToString();
+                List<Note> sb_Notes = sb_projectNotes.Where(item => item.NotePK == _projectID).ToList();
+                foreach(Note item in sb_Notes)
+                {
+                    _notes += item.NotesNote;
+                }
                 if (!row.IsNull("Billing_Date"))
                     _billingDue = int.Parse(row["Billing_Date"].ToString());
 

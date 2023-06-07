@@ -440,7 +440,7 @@
                                             <RowDefinition Height="*" />
                                         </Grid.RowDefinitions>
                                         <Label Content="Project Manager" HorizontalAlignment="Left" />
-                                        <DataGrid Grid.Row="1" ItemsSource="{Binding ProjectManagerList}" GridLinesVisibility="None" AutoGenerateColumns="False" HeadersVisibility="None" BorderThickness="0" Background="White">
+                                        <DataGrid Grid.Row="1" ItemsSource="{Binding ProjectManagerList}" GridLinesVisibility="None" AutoGenerateColumns="False" HeadersVisibility="None" BorderThickness="0" Background="White" Padding="4,0">
                                             <DataGrid.Resources>
                                                 <Style TargetType="DataGridColumnHeader" BasedOn="{StaticResource GridColumnHeaderBase}">
                                                     <Setter Property="Background" Value="#4BACC6" />
@@ -489,7 +489,7 @@
                                             <RowDefinition Height="*" />
                                         </Grid.RowDefinitions>
                                         <Label Content="Superintendent" HorizontalAlignment="Left" />
-                                        <DataGrid Grid.Row="1" ItemsSource="{Binding SuperintendentList, Mode=TwoWay}" GridLinesVisibility="None" AutoGenerateColumns="False" HeadersVisibility="None" BorderThickness="0" Background="White">
+                                        <DataGrid Grid.Row="1" ItemsSource="{Binding SuperintendentList, Mode=TwoWay}" GridLinesVisibility="None" AutoGenerateColumns="False" HeadersVisibility="None" BorderThickness="0" Background="White" Padding="4,0">
                                             <DataGrid.Resources>
                                                 <Style TargetType="DataGridColumnHeader" BasedOn="{StaticResource GridColumnHeaderBase}">
                                                     <Setter Property="Background" Value="#4BACC6" />
@@ -669,6 +669,9 @@
                                     <Style TargetType="ComboBox">
                                         <Setter Property="BorderThickness" Value="0,0,0,1" />
                                         <Setter Property="IsEditable" Value="True" />
+                                    </Style>
+                                    <Style TargetType="DataGridCell">
+                                        <Setter Property="Padding" Value="4,0" />
                                     </Style>
                                 </DataGrid.Resources>
                                 <DataGrid.Columns>
