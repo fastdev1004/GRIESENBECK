@@ -1,15 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel;
 using System.Linq;
-using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading.Tasks;
 using WpfApp.ViewModel;
 
 namespace WpfApp.Model
 {
-    public class Project:ViewModelBase
+    class ReportPmMeeting:ViewModelBase
     {
         private int _id;
         private string _projectName;
@@ -27,10 +25,11 @@ namespace WpfApp.Model
         private bool _isCip;
         private bool _isC3;
         private bool _isCertPayroll;
-        private bool _contractRecvd;
+        private bool _isContractRecvd;
         private bool _storedMat;
+        private List<ProjectMatTracking> _projectMatTracking;
 
-        public int ID
+        public int ProjectID
         {
             get => _id;
             set
@@ -74,7 +73,7 @@ namespace WpfApp.Model
             }
         }
 
-        public string Architect
+        public string ArchitectName
         {
             get => _architect;
             set
@@ -192,13 +191,13 @@ namespace WpfApp.Model
             }
         }
 
-        public bool ContractRecvd
+        public bool IsContractRecvd
         {
-            get => _contractRecvd;
+            get => _isContractRecvd;
             set
             {
-                if (value == _contractRecvd) return;
-                _contractRecvd = value;
+                if (value == _isContractRecvd) return;
+                _isContractRecvd = value;
                 OnPropertyChanged();
             }
         }
@@ -230,6 +229,25 @@ namespace WpfApp.Model
             get
             {
                 return _projectName + " | " + _customerName;
+            }
+        }
+
+        public List<ProjectMatTracking> ProjectMatTrackings
+        {
+            get => _projectMatTracking;
+            set
+            {
+                if (value == _projectMatTracking) return;
+                _projectMatTracking = value;
+                OnPropertyChanged();
+            }
+        }
+
+        public string FullAddress
+        {
+            get
+            {
+                return _address + ", " + _state + ", " + _zip;
             }
         }
     }

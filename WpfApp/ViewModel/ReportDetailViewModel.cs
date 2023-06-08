@@ -218,7 +218,7 @@ namespace WpfApp.ViewModel
         {
             string whereClause = GetProjectWhereClasuse();
 
-            sqlquery = "SELECT Project_ID, Salesman_ID, Job_No, Customer_ID, Project_Name, Complete, tblCOTracking.COID, tblCOTracking.Contractnumber, tblCOTracking.DateOfCO, tblCOTracking.AmtOfCO, tblCOTracking.ChangeOrderNo, tblCOTracking.SignedoffbySales, tblCOTracking.Givenforfinalsignature, tblCOTracking.ExecutedForReturn, tblCOTracking.ReturnedVia, tblCOTracking.Comments, tblCOTracking.DateProcessed, tblCOTracking.Scope, tblCOTracking.Datereturnedback FROM tblProjects INNER JOIN tblCOTracking ON tblProjects.Project_ID = tblCOTracking.ProjectID WHERE tblProjects.Complete=0;";
+            sqlquery = "SELECT Project_ID, Salesman_ID, Job_No, Customer_ID, Project_Name, Complete, tblCOTracking.COID, tblCOTracking.Contractnumber, tblCOTracking.DateOfCO, tblCOTracking.AmtOfCO, tblCOTracking.ChangeOrderNo, tblCOTracking.SignedoffbySales, tblCOTracking.Givenforfinalsignature, tblCOTracking.ExecutedForReturn, tblCOTracking.ReturnedVia, tblCOTracking.Comments, tblCOTracking.DateProcessed, tblCOTracking.Scope, tblCOTracking.Datereturnedback FROM tblProjects INNER JOIN tblCOTracking ON tblProjects.Project_ID = tblCOTracking.ProjectID";
             cmd = new SqlCommand(sqlquery, dbConnection.Connection);
             sda = new SqlDataAdapter(cmd);
             ds = new DataSet();
@@ -284,8 +284,7 @@ namespace WpfApp.ViewModel
             ReportCOItems = st_reportCOItems;
 
 
-            sqlquery = "SELECT tblCustomers.Full_Name, tblProjects.* FROM tblCustomers INNER JOIN (SELECT tblSalesmen.Salesman_Name, tblProjects.* FROM tblSalesmen RIGHT JOIN(SELECT Project_ID, Project_Name, Job_No, Salesman_ID, Customer_ID FROM tblProjects RIGHT JOIN(SELECT DISTINCT tblCOTracking.ProjectID FROM tblCOTracking) AS tblCOTracking ON tblCOTracking.ProjectID = tblProjects.Project_ID "+ whereClause + ") AS tblProjects ON tblProjects.Salesman_ID = tblSalesmen.Salesman_ID) AS tblProjects ON tblProjects.Customer_ID = tblCustomers.Customer_ID";
-            Console.WriteLine(sqlquery);
+            sqlquery = "SELECT DISTINCT tblProjects.* FROM tblCOTracking INNER JOIN (SELECT tblCustomers.Full_Name, tblProjects.* FROM tblCustomers INNER JOIN (SELECT tblSalesmen.Salesman_Name, tblProjects.* FROM tblSalesmen RIGHT JOIN(SELECT Project_ID, Project_Name, Job_No, Salesman_ID, Customer_ID FROM tblProjects RIGHT JOIN(SELECT DISTINCT tblCOTracking.ProjectID FROM tblCOTracking) AS tblCOTracking ON tblCOTracking.ProjectID = tblProjects.Project_ID) AS tblProjects ON tblProjects.Salesman_ID = tblSalesmen.Salesman_ID) AS tblProjects ON tblProjects.Customer_ID = tblCustomers.Customer_ID) AS tblProjects ON tblCOTracking.ProjectID = tblProjects.Project_ID ORDER BY Project_ID;";
 
             cmd = new SqlCommand(sqlquery, dbConnection.Connection);
             sda = new SqlDataAdapter(cmd);
@@ -313,7 +312,6 @@ namespace WpfApp.ViewModel
                 if (!row.IsNull("Full_Name"))
                     _customerName = row["Full_Name"].ToString();
                 _reportCOItems = ReportCOItems.Where(item => item.ProjectID == _projectID).ToList();
-
                 st_reportCOs.Add(new ReportCO
                 {
                     ProjectID = _projectID,
@@ -379,7 +377,6 @@ namespace WpfApp.ViewModel
             CIPs = sb_cip;
 
             sqlquery = "SELECT tblProjects.*, tblSalesmen.Salesman_Name FROM tblSalesmen RIGHT JOIN (SELECT tblProjects.*, tblCustomers.Full_Name FROM tblCustomers RIGHT JOIN(SELECT tblprojs.Project_ID, Job_No, CIPType, OriginalContractAmt, FinalContractAmt, FormsRecD, FormsSent, CertRecD, ExemptionApproved, ExemptionAppDate, CrewEnrolled, Notes, Customer_ID, Salesman_ID, tblProjs.Target_Date FROM tblCIPs INNER JOIN(SELECT Project_ID, Job_No, Salesman_ID, Customer_ID, Target_Date FROM tblProjects "+ whereClause +") AS tblProjs ON tblCIPs.Project_ID = tblProjs.Project_ID) AS tblProjects ON tblProjects.Customer_ID = tblCustomers.Customer_ID) AS tblProjects ON tblProjects.Salesman_ID = tblSalesmen.Salesman_ID";
-            Console.WriteLine(sqlquery);
             cmd = new SqlCommand(sqlquery, dbConnection.Connection);
             sda = new SqlDataAdapter(cmd);
             ds = new DataSet();
@@ -601,7 +598,8 @@ namespace WpfApp.ViewModel
                 whereClause2 += $" AND tblMaterials.Material_ID = '{SelectedMatID}'";
             }
 
-            sqlquery = "SELECT tblProjectChangeOrders.CO_ItemNo, tblProjects.* FROM tblProjectChangeOrders RIGHT JOIN(SELECT tblProjectSOV.CO_ID, tblProjects.* FROM tblProjectSOV RIGHT JOIN(SELECT tblManufacturers.Manuf_Name, tblProjects.* FROM tblManufacturers RIGHT JOIN(SELECT tblProjectMaterialsTrack.MatReqdDate, tblProjectMaterialsTrack.Manuf_ID, tblProjectMaterialsTrack.SubmitAppr, tblProjectMaterialsTrack.FM_Needed, tblProjectMaterialsTrack.Field_Dim, tblProjectMaterialsTrack.Guar_Dim, tblProjectMaterialsTrack.ReleasedForFab, tblProjects.* FROM tblProjectMaterialsTrack INNER JOIN(SELECT tblProjectMaterials.ProjMat_ID, tblProjectMaterials.ProjSOV_ID, tblProjectMaterials.Mat_Only, tblProjectMaterials.Mat_Phase, tblProjectMaterials.Mat_Type, tblProjects.* FROM tblProjectMaterials RIGHT JOIN(SELECT tblSalesmen.Salesman_Name, tblProjects.* FROM tblSalesmen RIGHT JOIN(SELECT tblCustomers.Full_Name, tblProjects.* FROM tblCustomers RIGHT JOIN(SELECT tblProjects.Project_ID, tblProjects.Project_Name, tblProjects.Target_Date, tblProjects.Date_Completed, tblProjects.Address, tblProjects.State, tblProjects.ZIP, tblProjects.Job_No, tblProjects.Salesman_ID, tblProjects.Customer_ID, tblProjects.Stored_Materials, tblProjects.Billing_Date FROM tblProjects "+ whereProjectClause +") AS tblProjects ON tblProjects.Customer_ID = tblCustomers.Customer_ID) AS tblProjects ON tblProjects.Salesman_ID = tblSalesmen.Salesman_ID) AS tblProjects ON tblProjectMaterials.Project_ID = tblProjects.Project_ID) AS tblProjects ON tblProjects.ProjMat_ID = tblProjectMaterialsTrack.ProjMat_ID) AS tblProjects ON tblProjects.Manuf_ID = tblManufacturers.Manuf_ID) AS tblProjects ON tblProjects.ProjSOV_ID = tblProjectSOV.ProjSOV_ID) AS tblProjects ON tblProjectChangeOrders.CO_ID = tblProjects.CO_ID";
+            sqlquery = "SELECT tblProjectChangeOrders.CO_ItemNo, tblProjects.* FROM tblProjectChangeOrders RIGHT JOIN(SELECT tblProjectSOV.CO_ID, tblProjects.* FROM tblProjectSOV RIGHT JOIN(SELECT tblManufacturers.Manuf_Name, tblProjects.* FROM tblManufacturers RIGHT JOIN(SELECT tblProjectMaterialsTrack.MatReqdDate, tblProjectMaterialsTrack.Manuf_ID, tblProjectMaterialsTrack.SubmitAppr, tblProjectMaterialsTrack.FM_Needed, tblProjectMaterialsTrack.Field_Dim, tblProjectMaterialsTrack.Guar_Dim, tblProjectMaterialsTrack.ReleasedForFab, tblProjects.* FROM tblProjectMaterialsTrack INNER JOIN(SELECT tblProjectMaterials.ProjMat_ID, tblProjectMaterials.ProjSOV_ID, tblProjectMaterials.Mat_Only, tblProjectMaterials.Mat_Phase, tblProjectMaterials.Mat_Type, tblProjects.* FROM tblProjectMaterials RIGHT JOIN(SELECT tblSalesmen.Salesman_Name, tblProjects.* FROM tblSalesmen RIGHT JOIN(SELECT tblCustomers.Full_Name, tblProjects.* FROM tblCustomers RIGHT JOIN(SELECT tblProjects.Project_ID, tblProjects.Project_Name, tblProjects.Target_Date, tblProjects.Date_Completed, tblProjects.Address, tblProjects.State, tblProjects.ZIP, tblProjects.Job_No, tblProjects.Salesman_ID, tblProjects.Customer_ID, tblProjects.Stored_Materials, tblProjects.Billing_Date FROM tblProjects "+ whereProjectClause +") AS tblProjects ON tblProjects.Customer_ID = tblCustomers.Customer_ID) AS tblProjects ON tblProjects.Salesman_ID = tblSalesmen.Salesman_ID) AS tblProjects ON tblProjectMaterials.Project_ID = tblProjects.Project_ID) AS tblProjects ON tblProjects.ProjMat_ID = tblProjectMaterialsTrack.ProjMat_ID) AS tblProjects ON tblProjects.Manuf_ID = tblManufacturers.Manuf_ID "+ whereClause1 +") AS tblProjects ON tblProjects.ProjSOV_ID = tblProjectSOV.ProjSOV_ID) AS tblProjects ON tblProjectChangeOrders.CO_ID = tblProjects.CO_ID";
+
             cmd = new SqlCommand(sqlquery, dbConnection.Connection);
             sda = new SqlDataAdapter(cmd);
             ds = new DataSet();
@@ -789,6 +787,893 @@ namespace WpfApp.ViewModel
             }
             ReportFieldMeasures = sb_reportFieldMeasures;
         }
+
+        public void LoadArchRepData()
+        {
+            string whereProjectClause = GetProjectWhereClasuse();
+            string whereClause1 = " WHERE 1=1";
+            string whereClause2 = " WHERE 1=1";
+
+            if (SelectedManufID != 0)
+            {
+                whereClause1 += $" AND tblManufacturers.Manuf_ID = '{SelectedManufID}'";
+            }
+
+            if (SelectedMatID != 0)
+            {
+                whereClause2 += $" AND tblMaterials.Material_ID = '{SelectedMatID}'";
+            }
+
+            sqlquery = "SELECT tblManufacturers.Manuf_Name, tblManuf.* FROM tblManufacturers RIGHT JOIN (SELECT tblProjectChangeOrders.CO_ItemNo, tblCOItem.* FROM tblProjectChangeOrders RIGHT JOIN(SELECT tblMaterials.Material_Desc, tblProjects.* FROM tblMaterials RIGHT JOIN(SELECT tblManufacturers.Manuf_Name, tblprojects.* FROM tblManufacturers RIGHT JOIN(SELECT tblProjectMaterialsTrack.MatReqdDate, tblProjectMaterialsTrack.ProjMat_ID, CO_ID, Manuf_ID, Mat_Phase, Mat_Type, SOV_Acronym, Material_ID, ReleasedForFab, Complete, tblProjects.Project_ID FROM tblProjectMaterialsTrack INNER JOIN(SELECT tblProjectSOV.CO_ID, tblProjectSOV.SOV_Acronym, tblprojects.* FROM tblProjectSOV RIGHT JOIN(SELECT tblProjectMaterials.ProjMat_ID, tblProjectMaterials.Material_ID, tblProjectMaterials.ProjSOV_ID, tblProjectMaterials.Mat_Only, tblProjectMaterials.Mat_Phase, tblProjectMaterials.Mat_Type, tblProjects.* FROM tblProjectMaterials RIGHT JOIN(SELECT * FROM tblProjects) AS tblProjects ON tblProjectMaterials.Project_ID = tblProjects.Project_ID) AS tblProjects ON tblProjects.ProjSOV_ID = tblProjectSOV.ProjSOV_ID) AS tblProjects ON tblProjectMaterialsTrack.ProjMat_ID = tblProjects.ProjMat_ID) AS tblProjects ON tblProjects.Manuf_ID = tblManufacturers.Manuf_ID "+ whereClause1 +") AS tblProjects on tblProjects.Material_ID = tblMaterials.Material_ID) AS tblCOItem ON tblCOItem.CO_ID = tblProjectChangeOrders.CO_ID) AS tblManuf ON tblManuf.Manuf_ID = tblManufacturers.Manuf_ID";
+            cmd = new SqlCommand(sqlquery, dbConnection.Connection);
+            sda = new SqlDataAdapter(cmd);
+            ds = new DataSet();
+            sda.Fill(ds);
+            ObservableCollection<ProjectMatTracking> sb_matTrackings = new ObservableCollection<ProjectMatTracking>();
+            foreach (DataRow row in ds.Tables[0].Rows)
+            {
+                int _projectID = 0;
+                int _projMat = 0;
+                DateTime _matReqdDate = new DateTime();
+                string _manufName = "";
+                string _matPhase = "";
+                string _matType = "";
+                string _matDesc = "";
+                string _orderNo = "";
+                DateTime _rFF = new DateTime();
+                bool _orderComplete = false;
+
+                if (!row.IsNull("Project_ID"))
+                    _projectID = int.Parse(row["Project_ID"].ToString());
+                if(!row.IsNull("ProjMat_ID"))
+                    _projMat = int.Parse(row["ProjMat_ID"].ToString());
+                if (!row.IsNull("MatReqdDate"))
+                    _matReqdDate = row.Field<DateTime>("MatReqdDate");
+                if (!row.IsNull("Manuf_Name"))
+                    _manufName = row["Manuf_Name"].ToString();
+                if (!row.IsNull("CO_ItemNo"))
+                    _orderNo = row["CO_ItemNo"].ToString();
+                if (!row.IsNull("Mat_Phase"))
+                    _matPhase = row["Mat_Phase"].ToString();
+                if (!row.IsNull("Mat_Type"))
+                    _matType = row["Mat_Type"].ToString();
+                if (!row.IsNull("Material_Desc"))
+                    _matDesc = row["Material_Desc"].ToString();
+                if (!row.IsNull("ReleasedForFab"))
+                      _rFF = row.Field<DateTime>("ReleasedForFab");
+                if (!row.IsNull("Complete"))
+                    _orderComplete = row.Field<Boolean>("Complete");
+                sb_matTrackings.Add(new ProjectMatTracking
+                {
+                    ProjectID = _projectID,
+                    ProjMat = _projMat,
+                    MatReqdDate = _matReqdDate,
+                    ManufName = _manufName,
+                    ManuOrderNo = _orderNo,
+                    MatPhase = _matPhase,
+                    MatType = _matType,
+                    MatDesc = _matDesc,
+                    RFF = _rFF,
+                    OrderComplete = _orderComplete
+                });
+            }
+            ProjectMatTrackings = sb_matTrackings;
+
+            sqlquery = "SELECT tblArchRep.Arch_Rep_Name, tblProjArchRep.* FROM tblArchRep RIGHT JOIN (SELECT tblArchitects.Arch_Company, tblProjArch.* FROM tblArchitects RIGHT JOIN(SELECT tblSalesmen.Salesman_Name, tblProjSalesman.* FROM tblSalesmen RIGHT JOIN(SELECT tblCustomers.Full_Name, tblProjCustomer.* FROM tblCustomers RIGHT JOIN(SELECT tblProjects.Project_ID, Project_Name, Target_Date, Arch_Rep_ID, Architect_ID, Customer_ID, Job_No, Salesman_ID, tblProjects.Address, tblProjects.State, tblProjects.ZIP FROM tblProjects INNER JOIN(SELECT DISTINCT tblProjectMat.Project_ID FROM tblProjectMaterialsTrack INNER JOIN(SELECT tblProjectMaterials.ProjMat_ID, tblProjectMat.* FROM tblProjectMaterials INNER JOIN(SELECT Project_ID, Project_Name, Customer_ID, Job_No, Salesman_ID FROM tblProjects " + whereProjectClause + ") AS tblProjectMat ON tblProjectMat.Project_ID = tblProjectMaterials.Project_ID) AS tblProjectMat ON tblProjectMat.ProjMat_ID = tblProjectMaterialsTrack.ProjMat_ID) AS tblProj ON tblProj.Project_ID = tblProjects.Project_ID) AS tblProjCustomer ON tblProjCustomer.Customer_ID = tblCustomers.Customer_ID) AS tblProjSalesman ON tblProjSalesman.Salesman_ID = tblSalesmen.Salesman_ID) AS tblProjArch ON tblProjArch.Architect_ID = tblArchitects.Architect_ID) AS tblProjArchRep ON tblProjArchRep.Arch_Rep_ID = tblArchRep.Arch_Rep_ID ORDER BY Target_Date";
+            cmd = new SqlCommand(sqlquery, dbConnection.Connection);
+            sda = new SqlDataAdapter(cmd);
+            ds = new DataSet();
+            sda.Fill(ds);
+
+            ObservableCollection<ReportJobArchRep> sb_reportJobArch = new ObservableCollection<ReportJobArchRep>();
+            foreach(DataRow row in ds.Tables[0].Rows)
+            {
+                int _projectID = 0;
+                int _projMat = 0;
+                DateTime _targetDate = new DateTime();
+                string _architect = "";
+                string _archRep = "";
+                string _projectName = "";
+                string _customerName = "";
+                string _salesmanName = "";
+                string _address = "";
+                string _state = "";
+                string _zip = "";
+                string _jobNo = "";
+                List<ProjectMatTracking> _projectMatTrackings = new List<ProjectMatTracking>();
+
+                if (!row.IsNull("Project_ID"))
+                    _projectID = int.Parse(row["Project_ID"].ToString());
+                //if (!row.IsNull("ProjMat_ID"))
+                //    _projMat = int.Parse(row["ProjMat_ID"].ToString());
+                if (!row.IsNull("Target_Date"))
+                    _targetDate = row.Field<DateTime>("Target_Date");
+                if (!row.IsNull("Project_Name"))
+                    _projectName = row["Project_Name"].ToString();
+                if (!row.IsNull("Arch_Company"))
+                    _architect = row["Arch_Company"].ToString();
+                if (!row.IsNull("Arch_Rep_Name"))
+                    _archRep = row["Arch_Rep_Name"].ToString();
+                if (!row.IsNull("Full_Name"))
+                    _customerName = row["Full_Name"].ToString();
+                if (!row.IsNull("Salesman_Name"))
+                    _salesmanName = row["Salesman_Name"].ToString();
+                if (!row.IsNull("Address"))
+                    _address = row["Address"].ToString();
+                if (!row.IsNull("State"))
+                    _state = row["State"].ToString();
+                if (!row.IsNull("Zip"))
+                    _zip = row["Zip"].ToString();
+                if (!row.IsNull("Job_No"))
+                    _jobNo = row["Job_No"].ToString();
+
+                _projectMatTrackings = ProjectMatTrackings.Where(item => item.ProjectID == _projectID).ToList();
+
+                sb_reportJobArch.Add(new ReportJobArchRep
+                {
+                   ProjectID = _projectID,
+                   //ProjectMatID = _projMat,
+                   ProjectName = _projectName,
+                   TargetDate = _targetDate,
+                   Architect = _architect,
+                   ArchRep = _archRep,
+                   CustomerName = _customerName,
+                   SalesmanName = _salesmanName,
+                   Address = _address,
+                   State = _state,
+                   Zip = _zip,
+                   JobNo = _jobNo,
+                   ProjectMatTrackings = _projectMatTrackings
+                });
+            }
+            ReportJobArchReps = sb_reportJobArch;
+        }
+
+        public void LoadArchitectData()
+        {
+            string whereProjectClause = GetProjectWhereClasuse();
+            string whereClause1 = " WHERE 1=1";
+            string whereClause2 = " WHERE 1=1";
+
+            if (SelectedManufID != 0)
+            {
+                whereClause1 += $" AND tblManufacturers.Manuf_ID = '{SelectedManufID}'";
+            }
+
+            if (SelectedMatID != 0)
+            {
+                whereClause2 += $" AND tblMaterials.Material_ID = '{SelectedMatID}'";
+            }
+
+            sqlquery = "SELECT tblManufacturers.Manuf_Name, tblManuf.* FROM tblManufacturers RIGHT JOIN (SELECT tblProjectChangeOrders.CO_ItemNo, tblCOItem.* FROM tblProjectChangeOrders RIGHT JOIN(SELECT tblMaterials.Material_Desc, tblProjects.* FROM tblMaterials RIGHT JOIN(SELECT tblManufacturers.Manuf_Name, tblprojects.* FROM tblManufacturers RIGHT JOIN(SELECT tblProjectMaterialsTrack.MatReqdDate, tblProjectMaterialsTrack.ProjMat_ID, CO_ID, Manuf_ID, Mat_Phase, Mat_Type, SOV_Acronym, Material_ID, ReleasedForFab, Complete, tblProjects.Project_ID FROM tblProjectMaterialsTrack INNER JOIN(SELECT tblProjectSOV.CO_ID, tblProjectSOV.SOV_Acronym, tblprojects.* FROM tblProjectSOV RIGHT JOIN(SELECT tblProjectMaterials.ProjMat_ID, tblProjectMaterials.Material_ID, tblProjectMaterials.ProjSOV_ID, tblProjectMaterials.Mat_Only, tblProjectMaterials.Mat_Phase, tblProjectMaterials.Mat_Type, tblProjects.* FROM tblProjectMaterials RIGHT JOIN(SELECT * FROM tblProjects) AS tblProjects ON tblProjectMaterials.Project_ID = tblProjects.Project_ID) AS tblProjects ON tblProjects.ProjSOV_ID = tblProjectSOV.ProjSOV_ID) AS tblProjects ON tblProjectMaterialsTrack.ProjMat_ID = tblProjects.ProjMat_ID) AS tblProjects ON tblProjects.Manuf_ID = tblManufacturers.Manuf_ID "+ whereClause1 +") AS tblProjects on tblProjects.Material_ID = tblMaterials.Material_ID) AS tblCOItem ON tblCOItem.CO_ID = tblProjectChangeOrders.CO_ID) AS tblManuf ON tblManuf.Manuf_ID = tblManufacturers.Manuf_ID";
+            cmd = new SqlCommand(sqlquery, dbConnection.Connection);
+            sda = new SqlDataAdapter(cmd);
+            ds = new DataSet();
+            sda.Fill(ds);
+            ObservableCollection<ProjectMatTracking> sb_matTrackings = new ObservableCollection<ProjectMatTracking>();
+            foreach (DataRow row in ds.Tables[0].Rows)
+            {
+                int _projectID = 0;
+                int _projMat = 0;
+                DateTime _matReqdDate = new DateTime();
+                string _manufName = "";
+                string _matPhase = "";
+                string _matType = "";
+                string _matDesc = "";
+                string _orderNo = "";
+                DateTime _rFF = new DateTime();
+                bool _orderComplete = false;
+
+                if (!row.IsNull("Project_ID"))
+                    _projectID = int.Parse(row["Project_ID"].ToString());
+                if (!row.IsNull("ProjMat_ID"))
+                    _projMat = int.Parse(row["ProjMat_ID"].ToString());
+                if (!row.IsNull("MatReqdDate"))
+                    _matReqdDate = row.Field<DateTime>("MatReqdDate");
+                if (!row.IsNull("Manuf_Name"))
+                    _manufName = row["Manuf_Name"].ToString();
+                if (!row.IsNull("CO_ItemNo"))
+                    _orderNo = row["CO_ItemNo"].ToString();
+                if (!row.IsNull("Mat_Phase"))
+                    _matPhase = row["Mat_Phase"].ToString();
+                if (!row.IsNull("Mat_Type"))
+                    _matType = row["Mat_Type"].ToString();
+                if (!row.IsNull("Material_Desc"))
+                    _matDesc = row["Material_Desc"].ToString();
+                if (!row.IsNull("ReleasedForFab"))
+                    _rFF = row.Field<DateTime>("ReleasedForFab");
+                if (!row.IsNull("Complete"))
+                    _orderComplete = row.Field<Boolean>("Complete");
+                sb_matTrackings.Add(new ProjectMatTracking
+                {
+                    ProjectID = _projectID,
+                    ProjMat = _projMat,
+                    MatReqdDate = _matReqdDate,
+                    ManufName = _manufName,
+                    ManuOrderNo = _orderNo,
+                    MatPhase = _matPhase,
+                    MatType = _matType,
+                    MatDesc = _matDesc,
+                    RFF = _rFF,
+                    OrderComplete = _orderComplete
+                });
+            }
+            ProjectMatTrackings = sb_matTrackings;
+
+            sqlquery = "SELECT tblArchRep.Arch_Rep_Name, tblProjArchRep.* FROM tblArchRep RIGHT JOIN (SELECT tblArchitects.Arch_Company, tblProjArch.* FROM tblArchitects RIGHT JOIN(SELECT tblSalesmen.Salesman_Name, tblProjSalesman.* FROM tblSalesmen RIGHT JOIN(SELECT tblCustomers.Full_Name, tblProjCustomer.* FROM tblCustomers RIGHT JOIN(SELECT tblProjects.Project_ID, Project_Name, Target_Date, Arch_Rep_ID, Architect_ID, Customer_ID, Job_No, Salesman_ID, tblProjects.Address, tblProjects.State, tblProjects.ZIP FROM tblProjects INNER JOIN(SELECT DISTINCT tblProjectMat.Project_ID FROM tblProjectMaterialsTrack INNER JOIN(SELECT tblProjectMaterials.ProjMat_ID, tblProjectMat.* FROM tblProjectMaterials INNER JOIN(SELECT Project_ID, Project_Name, Customer_ID, Job_No, Salesman_ID FROM tblProjects " + whereProjectClause + ") AS tblProjectMat ON tblProjectMat.Project_ID = tblProjectMaterials.Project_ID) AS tblProjectMat ON tblProjectMat.ProjMat_ID = tblProjectMaterialsTrack.ProjMat_ID) AS tblProj ON tblProj.Project_ID = tblProjects.Project_ID) AS tblProjCustomer ON tblProjCustomer.Customer_ID = tblCustomers.Customer_ID) AS tblProjSalesman ON tblProjSalesman.Salesman_ID = tblSalesmen.Salesman_ID) AS tblProjArch ON tblProjArch.Architect_ID = tblArchitects.Architect_ID) AS tblProjArchRep ON tblProjArchRep.Arch_Rep_ID = tblArchRep.Arch_Rep_ID ORDER BY Project_Name";
+            cmd = new SqlCommand(sqlquery, dbConnection.Connection);
+            sda = new SqlDataAdapter(cmd);
+            ds = new DataSet();
+            sda.Fill(ds);
+
+            ObservableCollection<ReportJobArchRep> sb_reportJobArch = new ObservableCollection<ReportJobArchRep>();
+            foreach (DataRow row in ds.Tables[0].Rows)
+            {
+                int _projectID = 0;
+                int _projMat = 0;
+                DateTime _targetDate = new DateTime();
+                string _architect = "";
+                string _archRep = "";
+                string _projectName = "";
+                string _customerName = "";
+                string _salesmanName = "";
+                string _address = "";
+                string _state = "";
+                string _zip = "";
+                string _jobNo = "";
+                List<ProjectMatTracking> _projectMatTrackings = new List<ProjectMatTracking>();
+
+                if (!row.IsNull("Project_ID"))
+                    _projectID = int.Parse(row["Project_ID"].ToString());
+                //if (!row.IsNull("ProjMat_ID"))
+                //    _projMat = int.Parse(row["ProjMat_ID"].ToString());
+                if (!row.IsNull("Target_Date"))
+                    _targetDate = row.Field<DateTime>("Target_Date");
+                if (!row.IsNull("Project_Name"))
+                    _projectName = row["Project_Name"].ToString();
+                if (!row.IsNull("Arch_Company"))
+                    _architect = row["Arch_Company"].ToString();
+                if (!row.IsNull("Arch_Rep_Name"))
+                    _archRep = row["Arch_Rep_Name"].ToString();
+                if (!row.IsNull("Full_Name"))
+                    _customerName = row["Full_Name"].ToString();
+                if (!row.IsNull("Salesman_Name"))
+                    _salesmanName = row["Salesman_Name"].ToString();
+                if (!row.IsNull("Address"))
+                    _address = row["Address"].ToString();
+                if (!row.IsNull("State"))
+                    _state = row["State"].ToString();
+                if (!row.IsNull("Zip"))
+                    _zip = row["Zip"].ToString();
+                if (!row.IsNull("Job_No"))
+                    _jobNo = row["Job_No"].ToString();
+
+                _projectMatTrackings = ProjectMatTrackings.Where(item => item.ProjectID == _projectID).ToList();
+
+                sb_reportJobArch.Add(new ReportJobArchRep
+                {
+                    ProjectID = _projectID,
+                    //ProjectMatID = _projMat,
+                    ProjectName = _projectName,
+                    TargetDate = _targetDate,
+                    Architect = _architect,
+                    ArchRep = _archRep,
+                    CustomerName = _customerName,
+                    SalesmanName = _salesmanName,
+                    Address = _address,
+                    State = _state,
+                    Zip = _zip,
+                    JobNo = _jobNo,
+                    ProjectMatTrackings = _projectMatTrackings
+                });
+            }
+            ReportJobArchReps = sb_reportJobArch;
+        }
+
+        public void LoadActiveProjectData()
+        {
+            string whereProjectClause = GetProjectWhereClasuse();
+            string whereClause1 = " WHERE 1=1";
+            string whereClause2 = " WHERE 1=1";
+
+            if (SelectedManufID != 0)
+            {
+                whereClause1 += $" AND tblManufacturers.Manuf_ID = '{SelectedManufID}'";
+            }
+
+            if (SelectedMatID != 0)
+            {
+                whereClause2 += $" AND tblMaterials.Material_ID = '{SelectedMatID}'";
+            }
+
+            sqlquery = "SELECT SchedShipDate, tblProjMat.* FROM tblProjectMaterialsShip RIGHT JOIN (SELECT tblProjectChangeOrders.CO_ItemNo, tblCOItem.* FROM tblProjectChangeOrders RIGHT JOIN(SELECT tblMaterials.Material_Desc, tblProjects.* FROM tblMaterials RIGHT JOIN(SELECT tblManufacturers.Manuf_Name, tblprojects.* FROM tblManufacturers RIGHT JOIN(SELECT tblProjectMaterialsTrack.MatReqdDate, tblProjectMaterialsTrack.ProjMat_ID, tblProjectMaterialsTrack.ProjMT_ID, CO_ID, Manuf_ID, Mat_Phase, Mat_Type, SOV_Acronym, Material_ID, ReleasedForFab, Complete, tblProjects.Project_ID FROM tblProjectMaterialsTrack INNER JOIN(SELECT tblProjectSOV.CO_ID, tblProjectSOV.SOV_Acronym, tblprojects.* FROM tblProjectSOV RIGHT JOIN(SELECT tblProjectMaterials.ProjMat_ID, tblProjectMaterials.Material_ID, tblProjectMaterials.ProjSOV_ID, tblProjectMaterials.Mat_Only, tblProjectMaterials.Mat_Phase, tblProjectMaterials.Mat_Type, tblProjects.* FROM tblProjectMaterials RIGHT JOIN(SELECT * FROM tblProjects) AS tblProjects ON tblProjectMaterials.Project_ID = tblProjects.Project_ID) AS tblProjects ON tblProjects.ProjSOV_ID = tblProjectSOV.ProjSOV_ID) AS tblProjects ON tblProjectMaterialsTrack.ProjMat_ID = tblProjects.ProjMat_ID) AS tblProjects ON tblProjects.Manuf_ID = tblManufacturers.Manuf_ID) AS tblProjects on tblProjects.Material_ID = tblMaterials.Material_ID) AS tblCOItem ON tblCOItem.CO_ID = tblProjectChangeOrders.CO_ID) AS tblProjMat ON tblProjMat.ProjMT_ID = tblProjectMaterialsShip.ProjMT_ID";
+            cmd = new SqlCommand(sqlquery, dbConnection.Connection);
+            sda = new SqlDataAdapter(cmd);
+            ds = new DataSet();
+            sda.Fill(ds);
+
+            ObservableCollection<ProjectMatTracking> sb_matTrackings = new ObservableCollection<ProjectMatTracking>();
+
+            foreach (DataRow row in ds.Tables[0].Rows)
+            {
+                int _projectID = 0;
+                int _projMat = 0;
+                DateTime _matReqdDate = new DateTime();
+                string _manufName = "";
+                string _orderNo = "";
+                string _matPhase = "";
+                string _matType = "";
+                string _matDesc = "";
+                DateTime _rFF = new DateTime();
+                DateTime _schedShip = new DateTime();
+                bool _orderComplete = false;
+
+                if (!row.IsNull("Project_ID"))
+                    _projectID = int.Parse(row["Project_ID"].ToString());
+                if (!row.IsNull("ProjMat_ID"))
+                    _projMat = int.Parse(row["ProjMat_ID"].ToString());
+                if (!row.IsNull("MatReqdDate"))
+                    _matReqdDate = row.Field<DateTime>("MatReqdDate");
+                if (!row.IsNull("Manuf_Name"))
+                    _manufName = row["Manuf_Name"].ToString();
+                if (!row.IsNull("CO_ItemNo"))
+                    _orderNo = row["CO_ItemNo"].ToString();
+                if (!row.IsNull("Mat_Phase"))
+                    _matPhase = row["Mat_Phase"].ToString();
+                if (!row.IsNull("Mat_Type"))
+                    _matType = row["Mat_Type"].ToString();
+                if (!row.IsNull("Material_Desc"))
+                    _matDesc = row["Material_Desc"].ToString();
+                if (!row.IsNull("ReleasedForFab"))
+                    _rFF = row.Field<DateTime>("ReleasedForFab");
+                if (!row.IsNull("SchedShipDate"))
+                    _schedShip = row.Field<DateTime>("SchedShipDate");
+                if (!row.IsNull("Complete"))
+                    _orderComplete = row.Field<Boolean>("Complete");
+                sb_matTrackings.Add(new ProjectMatTracking
+                {
+                    ProjectID = _projectID,
+                    ProjMat = _projMat,
+                    MatReqdDate = _matReqdDate,
+                    ManufName = _manufName,
+                    ManuOrderNo = _orderNo,
+                    MatPhase = _matPhase,
+                    MatType = _matType,
+                    MatDesc = _matDesc,
+                    RFF = _rFF,
+                    SchedShip = _schedShip,
+                    OrderComplete = _orderComplete
+                });
+            }
+            ProjectMatTrackings = sb_matTrackings;
+
+            sqlquery = "SELECT tblSalesmen.Salesman_Name, tblProjSalesman.* FROM tblSalesmen RIGHT JOIN (SELECT tblCustomers.Full_Name, tblProjCustomer.* FROM tblCustomers RIGHT JOIN(SELECT tblProjects.Project_ID, Project_Name, Customer_ID, Job_No, Salesman_ID FROM tblProjects INNER JOIN(SELECT DISTINCT tblProjectMat.Project_ID FROM tblProjectMaterialsTrack INNER JOIN(SELECT tblProjectMaterials.ProjMat_ID, tblProjectMat.* FROM tblProjectMaterials INNER JOIN(SELECT Project_ID, Project_Name, Customer_ID, Job_No, Salesman_ID FROM tblProjects) AS tblProjectMat ON tblProjectMat.Project_ID = tblProjectMaterials.Project_ID) AS tblProjectMat ON tblProjectMat.ProjMat_ID = tblProjectMaterialsTrack.ProjMat_ID) AS tblProj ON tblProj.Project_ID = tblProjects.Project_ID) AS tblProjCustomer ON tblProjCustomer.Customer_ID = tblCustomers.Customer_ID) AS tblProjSalesman ON tblProjSalesman.Salesman_ID = tblSalesmen.Salesman_ID ORDER BY Project_Name";
+            cmd = new SqlCommand(sqlquery, dbConnection.Connection);
+            sda = new SqlDataAdapter(cmd);
+            ds = new DataSet();
+            sda.Fill(ds);
+
+            ObservableCollection<ReportActiveProject> sb_reportActiveProject = new ObservableCollection<ReportActiveProject>();
+            foreach (DataRow row in ds.Tables[0].Rows)
+            {
+                int _projectID = 0;
+                int _projMat = 0;
+                DateTime _targetDate = new DateTime();
+                string _projectName = "";
+                string _customerName = "";
+                string _salesmanName = "";
+                string _jobNo = "";
+                List<ProjectMatTracking> _projectMatTrackings = new List<ProjectMatTracking>();
+
+                if (!row.IsNull("Project_ID"))
+                    _projectID = int.Parse(row["Project_ID"].ToString());
+                if (!row.IsNull("Project_Name"))
+                    _projectName = row["Project_Name"].ToString();
+                if (!row.IsNull("Full_Name"))
+                    _customerName = row["Full_Name"].ToString();
+                if (!row.IsNull("Salesman_Name"))
+                    _salesmanName = row["Salesman_Name"].ToString();
+                if (!row.IsNull("Job_No"))
+                    _jobNo = row["Job_No"].ToString();
+
+                _projectMatTrackings = ProjectMatTrackings.Where(item => item.ProjectID == _projectID).ToList();
+
+                sb_reportActiveProject.Add(new ReportActiveProject
+                {
+                    ProjectID = _projectID,
+                    ProjectName = _projectName,
+                    CustomerName = _customerName,
+                    SalesmanName = _salesmanName,
+                    JobNo = _jobNo,
+                    ProjectMatTrackings = _projectMatTrackings
+                });
+            }
+            ReportActiveProjects = sb_reportActiveProject;
+        }
+
+        public void LoadJobByManufacturerData()
+        {
+            string whereProjectClause = GetProjectWhereClasuse();
+            string whereClause1 = " WHERE 1=1";
+            string whereClause2 = " WHERE 1=1";
+
+            if (SelectedManufID != 0)
+            {
+                whereClause1 += $" AND tblManufacturers.Manuf_ID = '{SelectedManufID}'";
+            }
+
+            if (SelectedMatID != 0)
+            {
+                whereClause2 += $" AND tblMaterials.Material_ID = '{SelectedMatID}'";
+            }
+
+            sqlquery = "SELECT tblManufacturers.Manuf_Name, tblManuf.* FROM tblManufacturers RIGHT JOIN (SELECT tblProjectChangeOrders.CO_ItemNo, tblCOItem.* FROM tblProjectChangeOrders RIGHT JOIN(SELECT tblMaterials.Material_Desc, tblProjects.* FROM tblMaterials RIGHT JOIN(SELECT tblManufacturers.Manuf_Name, tblprojects.* FROM tblManufacturers RIGHT JOIN(SELECT tblProjectMaterialsTrack.MatReqdDate, tblProjectMaterialsTrack.ProjMat_ID, CO_ID, Manuf_ID, Mat_Phase, Mat_Type, SOV_Acronym, Material_ID, ReleasedForFab, Complete, tblProjects.Project_ID FROM tblProjectMaterialsTrack INNER JOIN(SELECT tblProjectSOV.CO_ID, tblProjectSOV.SOV_Acronym, tblprojects.* FROM tblProjectSOV RIGHT JOIN(SELECT tblProjectMaterials.ProjMat_ID, tblProjectMaterials.Material_ID, tblProjectMaterials.ProjSOV_ID, tblProjectMaterials.Mat_Only, tblProjectMaterials.Mat_Phase, tblProjectMaterials.Mat_Type, tblProjects.* FROM tblProjectMaterials RIGHT JOIN(SELECT * FROM tblProjects) AS tblProjects ON tblProjectMaterials.Project_ID = tblProjects.Project_ID) AS tblProjects ON tblProjects.ProjSOV_ID = tblProjectSOV.ProjSOV_ID) AS tblProjects ON tblProjectMaterialsTrack.ProjMat_ID = tblProjects.ProjMat_ID) AS tblProjects ON tblProjects.Manuf_ID = tblManufacturers.Manuf_ID " + whereClause1 + ") AS tblProjects on tblProjects.Material_ID = tblMaterials.Material_ID) AS tblCOItem ON tblCOItem.CO_ID = tblProjectChangeOrders.CO_ID) AS tblManuf ON tblManuf.Manuf_ID = tblManufacturers.Manuf_ID";
+            cmd = new SqlCommand(sqlquery, dbConnection.Connection);
+            sda = new SqlDataAdapter(cmd);
+            ds = new DataSet();
+            sda.Fill(ds);
+            ObservableCollection<ProjectMatTracking> sb_matTrackings = new ObservableCollection<ProjectMatTracking>();
+            foreach (DataRow row in ds.Tables[0].Rows)
+            {
+                int _projectID = 0;
+                int _projMat = 0;
+                DateTime _matReqdDate = new DateTime();
+                string _manufName = "";
+                string _matPhase = "";
+                string _matType = "";
+                string _matDesc = "";
+                string _orderNo = "";
+                DateTime _rFF = new DateTime();
+                bool _orderComplete = false;
+
+                if (!row.IsNull("Project_ID"))
+                    _projectID = int.Parse(row["Project_ID"].ToString());
+                if (!row.IsNull("ProjMat_ID"))
+                    _projMat = int.Parse(row["ProjMat_ID"].ToString());
+                if (!row.IsNull("MatReqdDate"))
+                    _matReqdDate = row.Field<DateTime>("MatReqdDate");
+                if (!row.IsNull("Manuf_Name"))
+                    _manufName = row["Manuf_Name"].ToString();
+                if (!row.IsNull("CO_ItemNo"))
+                    _orderNo = row["CO_ItemNo"].ToString();
+                if (!row.IsNull("Mat_Phase"))
+                    _matPhase = row["Mat_Phase"].ToString();
+                if (!row.IsNull("Mat_Type"))
+                    _matType = row["Mat_Type"].ToString();
+                if (!row.IsNull("Material_Desc"))
+                    _matDesc = row["Material_Desc"].ToString();
+                if (!row.IsNull("ReleasedForFab"))
+                    _rFF = row.Field<DateTime>("ReleasedForFab");
+                if (!row.IsNull("Complete"))
+                    _orderComplete = row.Field<Boolean>("Complete");
+                sb_matTrackings.Add(new ProjectMatTracking
+                {
+                    ProjectID = _projectID,
+                    ProjMat = _projMat,
+                    MatReqdDate = _matReqdDate,
+                    ManufName = _manufName,
+                    ManuOrderNo = _orderNo,
+                    MatPhase = _matPhase,
+                    MatType = _matType,
+                    MatDesc = _matDesc,
+                    RFF = _rFF,
+                    OrderComplete = _orderComplete
+                });
+            }
+            ProjectMatTrackings = sb_matTrackings;
+
+            sqlquery = "SELECT tblArchRep.Arch_Rep_Name, tblProjArchRep.* FROM tblArchRep RIGHT JOIN (SELECT tblArchitects.Arch_Company, tblProjArch.* FROM tblArchitects RIGHT JOIN(SELECT tblSalesmen.Salesman_Name, tblProjSalesman.* FROM tblSalesmen RIGHT JOIN(SELECT tblCustomers.Full_Name, tblProjCustomer.* FROM tblCustomers RIGHT JOIN(SELECT tblProjects.Project_ID, Project_Name, Target_Date, Arch_Rep_ID, Architect_ID, Customer_ID, Job_No, Salesman_ID, tblProjects.Address, tblProjects.State, tblProjects.ZIP FROM tblProjects INNER JOIN(SELECT DISTINCT tblProjectMat.Project_ID FROM tblProjectMaterialsTrack INNER JOIN(SELECT tblProjectMaterials.ProjMat_ID, tblProjectMat.* FROM tblProjectMaterials INNER JOIN(SELECT Project_ID, Project_Name, Customer_ID, Job_No, Salesman_ID FROM tblProjects " + whereProjectClause + ") AS tblProjectMat ON tblProjectMat.Project_ID = tblProjectMaterials.Project_ID) AS tblProjectMat ON tblProjectMat.ProjMat_ID = tblProjectMaterialsTrack.ProjMat_ID) AS tblProj ON tblProj.Project_ID = tblProjects.Project_ID) AS tblProjCustomer ON tblProjCustomer.Customer_ID = tblCustomers.Customer_ID) AS tblProjSalesman ON tblProjSalesman.Salesman_ID = tblSalesmen.Salesman_ID) AS tblProjArch ON tblProjArch.Architect_ID = tblArchitects.Architect_ID) AS tblProjArchRep ON tblProjArchRep.Arch_Rep_ID = tblArchRep.Arch_Rep_ID ORDER BY Project_Name";
+            cmd = new SqlCommand(sqlquery, dbConnection.Connection);
+            sda = new SqlDataAdapter(cmd);
+            ds = new DataSet();
+            sda.Fill(ds);
+
+            ObservableCollection<ReportJobArchRep> sb_reportJobArch = new ObservableCollection<ReportJobArchRep>();
+            foreach (DataRow row in ds.Tables[0].Rows)
+            {
+                int _projectID = 0;
+                int _projMat = 0;
+                DateTime _targetDate = new DateTime();
+                string _architect = "";
+                string _archRep = "";
+                string _projectName = "";
+                string _customerName = "";
+                string _salesmanName = "";
+                string _address = "";
+                string _state = "";
+                string _zip = "";
+                string _jobNo = "";
+                List<ProjectMatTracking> _projectMatTrackings = new List<ProjectMatTracking>();
+
+                if (!row.IsNull("Project_ID"))
+                    _projectID = int.Parse(row["Project_ID"].ToString());
+                //if (!row.IsNull("ProjMat_ID"))
+                //    _projMat = int.Parse(row["ProjMat_ID"].ToString());
+                if (!row.IsNull("Target_Date"))
+                    _targetDate = row.Field<DateTime>("Target_Date");
+                if (!row.IsNull("Project_Name"))
+                    _projectName = row["Project_Name"].ToString();
+                if (!row.IsNull("Arch_Company"))
+                    _architect = row["Arch_Company"].ToString();
+                if (!row.IsNull("Arch_Rep_Name"))
+                    _archRep = row["Arch_Rep_Name"].ToString();
+                if (!row.IsNull("Full_Name"))
+                    _customerName = row["Full_Name"].ToString();
+                if (!row.IsNull("Salesman_Name"))
+                    _salesmanName = row["Salesman_Name"].ToString();
+                if (!row.IsNull("Address"))
+                    _address = row["Address"].ToString();
+                if (!row.IsNull("State"))
+                    _state = row["State"].ToString();
+                if (!row.IsNull("Zip"))
+                    _zip = row["Zip"].ToString();
+                if (!row.IsNull("Job_No"))
+                    _jobNo = row["Job_No"].ToString();
+
+                _projectMatTrackings = ProjectMatTrackings.Where(item => item.ProjectID == _projectID).ToList();
+
+                sb_reportJobArch.Add(new ReportJobArchRep
+                {
+                    ProjectID = _projectID,
+                    //ProjectMatID = _projMat,
+                    ProjectName = _projectName,
+                    TargetDate = _targetDate,
+                    Architect = _architect,
+                    ArchRep = _archRep,
+                    CustomerName = _customerName,
+                    SalesmanName = _salesmanName,
+                    Address = _address,
+                    State = _state,
+                    Zip = _zip,
+                    JobNo = _jobNo,
+                    ProjectMatTrackings = _projectMatTrackings
+                });
+            }
+            ReportJobArchReps = sb_reportJobArch;
+        }
+
+        public void LoadOpenJobsData()
+        {
+            string whereProjectClause = GetProjectWhereClasuse();
+            string whereClause1 = " WHERE 1=1";
+            string whereClause2 = " WHERE 1=1";
+
+            if (SelectedManufID != 0)
+            {
+                whereClause1 += $" AND tblManufacturers.Manuf_ID = '{SelectedManufID}'";
+            }
+
+            if (SelectedMatID != 0)
+            {
+                whereClause2 += $" AND tblMaterials.Material_ID = '{SelectedMatID}'";
+            }
+
+            sqlquery = "SELECT SchedShipDate, tblProjMat.* FROM tblProjectMaterialsShip RIGHT JOIN (SELECT tblProjectChangeOrders.CO_ItemNo, tblCOItem.* FROM tblProjectChangeOrders RIGHT JOIN(SELECT tblMaterials.Material_Desc, tblProjects.* FROM tblMaterials RIGHT JOIN(SELECT tblManufacturers.Manuf_Name, tblprojects.* FROM tblManufacturers RIGHT JOIN(SELECT tblProjectMaterialsTrack.MatReqdDate, tblProjectMaterialsTrack.ProjMat_ID, tblProjectMaterialsTrack.ProjMT_ID, CO_ID, Manuf_ID, Mat_Phase, Mat_Type, SOV_Acronym, Material_ID, ReleasedForFab, Complete, tblProjects.Project_ID FROM tblProjectMaterialsTrack INNER JOIN(SELECT tblProjectSOV.CO_ID, tblProjectSOV.SOV_Acronym, tblprojects.* FROM tblProjectSOV RIGHT JOIN(SELECT tblProjectMaterials.ProjMat_ID, tblProjectMaterials.Material_ID, tblProjectMaterials.ProjSOV_ID, tblProjectMaterials.Mat_Only, tblProjectMaterials.Mat_Phase, tblProjectMaterials.Mat_Type, tblProjects.* FROM tblProjectMaterials RIGHT JOIN(SELECT * FROM tblProjects) AS tblProjects ON tblProjectMaterials.Project_ID = tblProjects.Project_ID) AS tblProjects ON tblProjects.ProjSOV_ID = tblProjectSOV.ProjSOV_ID) AS tblProjects ON tblProjectMaterialsTrack.ProjMat_ID = tblProjects.ProjMat_ID) AS tblProjects ON tblProjects.Manuf_ID = tblManufacturers.Manuf_ID) AS tblProjects on tblProjects.Material_ID = tblMaterials.Material_ID) AS tblCOItem ON tblCOItem.CO_ID = tblProjectChangeOrders.CO_ID) AS tblProjMat ON tblProjMat.ProjMT_ID = tblProjectMaterialsShip.ProjMT_ID";
+            cmd = new SqlCommand(sqlquery, dbConnection.Connection);
+            sda = new SqlDataAdapter(cmd);
+            ds = new DataSet();
+            sda.Fill(ds);
+
+            ObservableCollection<ProjectMatTracking> sb_matTrackings = new ObservableCollection<ProjectMatTracking>();
+
+            foreach (DataRow row in ds.Tables[0].Rows)
+            {
+                int _projectID = 0;
+                int _projMat = 0;
+                DateTime _matReqdDate = new DateTime();
+                string _manufName = "";
+                string _orderNo = "";
+                string _matPhase = "";
+                string _matType = "";
+                string _matDesc = "";
+                DateTime _rFF = new DateTime();
+                DateTime _schedShip = new DateTime();
+                bool _orderComplete = false;
+
+                if (!row.IsNull("Project_ID"))
+                    _projectID = int.Parse(row["Project_ID"].ToString());
+                if (!row.IsNull("ProjMat_ID"))
+                    _projMat = int.Parse(row["ProjMat_ID"].ToString());
+                if (!row.IsNull("MatReqdDate"))
+                    _matReqdDate = row.Field<DateTime>("MatReqdDate");
+                if (!row.IsNull("Manuf_Name"))
+                    _manufName = row["Manuf_Name"].ToString();
+                if (!row.IsNull("CO_ItemNo"))
+                    _orderNo = row["CO_ItemNo"].ToString();
+                if (!row.IsNull("Mat_Phase"))
+                    _matPhase = row["Mat_Phase"].ToString();
+                if (!row.IsNull("Mat_Type"))
+                    _matType = row["Mat_Type"].ToString();
+                if (!row.IsNull("Material_Desc"))
+                    _matDesc = row["Material_Desc"].ToString();
+                if (!row.IsNull("ReleasedForFab"))
+                    _rFF = row.Field<DateTime>("ReleasedForFab");
+                if (!row.IsNull("SchedShipDate"))
+                    _schedShip = row.Field<DateTime>("SchedShipDate");
+                if (!row.IsNull("Complete"))
+                    _orderComplete = row.Field<Boolean>("Complete");
+                sb_matTrackings.Add(new ProjectMatTracking
+                {
+                    ProjectID = _projectID,
+                    ProjMat = _projMat,
+                    MatReqdDate = _matReqdDate,
+                    ManufName = _manufName,
+                    ManuOrderNo = _orderNo,
+                    MatPhase = _matPhase,
+                    MatType = _matType,
+                    MatDesc = _matDesc,
+                    RFF = _rFF,
+                    SchedShip = _schedShip,
+                    OrderComplete = _orderComplete
+                });
+            }
+            ProjectMatTrackings = sb_matTrackings;
+
+            sqlquery = "SELECT tblSalesmen.Salesman_Name, tblProjSalesman.* FROM tblSalesmen RIGHT JOIN (SELECT tblCustomers.Full_Name, tblProjCustomer.* FROM tblCustomers RIGHT JOIN(SELECT tblProjects.Project_ID, Project_Name, Customer_ID, Job_No, Salesman_ID FROM tblProjects INNER JOIN(SELECT DISTINCT tblProjectMat.Project_ID FROM tblProjectMaterialsTrack INNER JOIN(SELECT tblProjectMaterials.ProjMat_ID, tblProjectMat.* FROM tblProjectMaterials INNER JOIN(SELECT Project_ID, Project_Name, Customer_ID, Job_No, Salesman_ID FROM tblProjects) AS tblProjectMat ON tblProjectMat.Project_ID = tblProjectMaterials.Project_ID) AS tblProjectMat ON tblProjectMat.ProjMat_ID = tblProjectMaterialsTrack.ProjMat_ID) AS tblProj ON tblProj.Project_ID = tblProjects.Project_ID) AS tblProjCustomer ON tblProjCustomer.Customer_ID = tblCustomers.Customer_ID) AS tblProjSalesman ON tblProjSalesman.Salesman_ID = tblSalesmen.Salesman_ID ORDER BY Project_Name";
+            cmd = new SqlCommand(sqlquery, dbConnection.Connection);
+            sda = new SqlDataAdapter(cmd);
+            ds = new DataSet();
+            sda.Fill(ds);
+
+            ObservableCollection<ReportActiveProject> sb_reportActiveProject = new ObservableCollection<ReportActiveProject>();
+            foreach (DataRow row in ds.Tables[0].Rows)
+            {
+                int _projectID = 0;
+                int _projMat = 0;
+                DateTime _targetDate = new DateTime();
+                string _projectName = "";
+                string _customerName = "";
+                string _salesmanName = "";
+                string _jobNo = "";
+                List<ProjectMatTracking> _projectMatTrackings = new List<ProjectMatTracking>();
+
+                if (!row.IsNull("Project_ID"))
+                    _projectID = int.Parse(row["Project_ID"].ToString());
+                if (!row.IsNull("Project_Name"))
+                    _projectName = row["Project_Name"].ToString();
+                if (!row.IsNull("Full_Name"))
+                    _customerName = row["Full_Name"].ToString();
+                if (!row.IsNull("Salesman_Name"))
+                    _salesmanName = row["Salesman_Name"].ToString();
+                if (!row.IsNull("Job_No"))
+                    _jobNo = row["Job_No"].ToString();
+
+                _projectMatTrackings = ProjectMatTrackings.Where(item => item.ProjectID == _projectID).ToList();
+
+                sb_reportActiveProject.Add(new ReportActiveProject
+                {
+                    ProjectID = _projectID,
+                    ProjectName = _projectName,
+                    CustomerName = _customerName,
+                    SalesmanName = _salesmanName,
+                    JobNo = _jobNo,
+                    ProjectMatTrackings = _projectMatTrackings
+                });
+            }
+            ReportActiveProjects = sb_reportActiveProject;
+        }
+
+        public void LoadPmMeetingData()
+        {
+            string whereProjectClause = GetProjectWhereClasuse();
+            string whereClause1 = " WHERE 1=1";
+            string whereClause2 = " WHERE 1=1";
+
+            if (SelectedManufID != 0)
+            {
+                whereClause1 += $" AND tblManufacturers.Manuf_ID = '{SelectedManufID}'";
+            }
+
+            if (SelectedMatID != 0)
+            {
+                whereClause2 += $" AND tblMaterials.Material_ID = '{SelectedMatID}'";
+            }
+
+            sqlquery = "SELECT tblManufacturers.Manuf_Name, tblManuf.* FROM tblManufacturers RIGHT JOIN (SELECT tblProjectChangeOrders.CO_ItemNo, tblProjCO.* FROM tblProjectChangeOrders RIGHT JOIN(SELECT tblProjectMaterialsShip.SchedShipDate, tblProjectMaterialsShip.EstDelivDate, tblProjectMaterialsShip.Date_Recvd, tblProjShip.* FROM tblProjectMaterialsShip RIGHT JOIN(SELECT tblProjectSOV.CO_ID, tblProjSOV.* FROM tblProjectSOV RIGHT JOIN(Select tblProjectMaterialsTrack.ProjMT_ID, tblProjectMaterialsTrack.MatReqdDate, tblProjectMaterialsTrack.Manuf_ID, tblProjectMaterialsTrack.PO_Number, tblProjectMaterialsTrack.Manuf_LeadTime, tblProjectMaterialsTrack.ShopReqDate, tblProjectMaterialsTrack.ShopRecvdDate, tblProjectMaterialsTrack.SubmitIssue, tblProjectMaterialsTrack.SubmitAppr, tblProjectMaterialsTrack.No_Sub_Needed, tblProjectMaterialsTrack.FM_Needed, tblProjectMaterialsTrack.Field_Dim, tblProjectMaterialsTrack.ReleasedForFab, tblProjectMaterialsTrack.MatComplete, tblProjectMaterialsTrack.LaborComplete, tblMat.Mat_Only, tblMat.Color_Selected, tblMat.ProjSOV_ID, tblMat.Mat_Phase, tblMat.Mat_Type, tblMat.Project_ID from tblProjectMaterialsTrack INNER JOIN(SELECT * FROM tblProjectMaterials) AS tblMat ON tblMat.ProjMat_ID = tblProjectMaterialsTrack.ProjMat_ID) AS tblProjSOV ON tblProjectSOV.ProjSOV_ID = tblProjSOV.ProjSOV_ID) AS tblProjShip ON tblProjShip.ProjMT_ID = tblProjectMaterialsShip.ProjMT_ID) AS tblProjCO ON tblProjCO.CO_ID = tblProjectChangeOrders.CO_ID) AS tblManuf ON tblManuf.Manuf_ID = tblManufacturers.Manuf_ID" + whereClause1;
+            cmd = new SqlCommand(sqlquery, dbConnection.Connection);
+            sda = new SqlDataAdapter(cmd);
+            ds = new DataSet();
+            sda.Fill(ds);
+
+            ObservableCollection<ProjectMatTracking> sb_matTrackings = new ObservableCollection<ProjectMatTracking>();
+
+            foreach (DataRow row in ds.Tables[0].Rows)
+            {
+                int _projectID = 0;
+                DateTime _matReqdDate = new DateTime();
+                bool _matOnly = false;
+                string _manufName = "";
+                string _orderNo = "";
+                string _matPhase = "";
+                string _matType = "";
+                string _poNumber = "";
+                string _leadTime = "";
+                DateTime _shopReq = new DateTime();
+                DateTime _shopRecv = new DateTime();
+                DateTime _submIssue = new DateTime();
+                DateTime _submAppr = new DateTime();
+                bool _noSubm = false;
+                string _color = "";
+                bool _needFM = false;
+                DateTime _fieldDim = new DateTime();
+                DateTime _rFF = new DateTime();
+                DateTime _schedShip = new DateTime();
+                DateTime _estDeliv = new DateTime();
+                DateTime _dateRecv = new DateTime();
+                bool _matComplete = false;
+                bool _orderComplete = false;
+
+                if (!row.IsNull("Project_ID"))
+                    _projectID = int.Parse(row["Project_ID"].ToString());
+                if (!row.IsNull("MatReqdDate"))
+                    _matReqdDate = row.Field<DateTime>("MatReqdDate");
+                if (!row.IsNull("Mat_Only"))
+                    _matOnly = row.Field<Boolean>("Mat_Only");
+                if (!row.IsNull("Manuf_Name"))
+                    _manufName = row["Manuf_Name"].ToString();
+                if (!row.IsNull("CO_ItemNo"))
+                    _orderNo = row["CO_ItemNo"].ToString();
+                if (!row.IsNull("Mat_Phase"))
+                    _matPhase = row["Mat_Phase"].ToString();
+                if (!row.IsNull("Mat_Type"))
+                    _matType = row["Mat_Type"].ToString();
+                if (!row.IsNull("PO_Number"))
+                    _poNumber = row["PO_Number"].ToString();
+                if (!row.IsNull("Manuf_LeadTime"))
+                    _leadTime = row["Manuf_LeadTime"].ToString();
+                if (!row.IsNull("ShopReqDate"))
+                    _shopReq = row.Field<DateTime>("ShopReqDate");
+                if (!row.IsNull("ShopRecvdDate"))
+                    _shopRecv = row.Field<DateTime>("ShopRecvdDate");
+                if (!row.IsNull("SubmitIssue"))
+                    _submIssue = row.Field<DateTime>("SubmitIssue");
+                if (!row.IsNull("SubmitAppr"))
+                    _submAppr = row.Field<DateTime>("SubmitAppr");
+                if (!row.IsNull("No_Sub_Needed"))
+                    _noSubm = row.Field<Boolean>("No_Sub_Needed");
+                if (!row.IsNull("Color_Selected"))
+                    _color = row["Color_Selected"].ToString();
+                if (!row.IsNull("FM_Needed"))
+                    _needFM = row.Field<Boolean>("FM_Needed");
+                if (!row.IsNull("Field_Dim"))
+                    _fieldDim = row.Field<DateTime>("Field_Dim");
+                if (!row.IsNull("ReleasedForFab"))
+                    _rFF = row.Field<DateTime>("ReleasedForFab");
+                if (!row.IsNull("SchedShipDate"))
+                    _schedShip = row.Field<DateTime>("SchedShipDate");
+                if (!row.IsNull("SchedShipDate"))
+                    _schedShip = row.Field<DateTime>("SchedShipDate");
+                if (!row.IsNull("EstDelivDate"))
+                    _estDeliv = row.Field<DateTime>("EstDelivDate");
+                if (!row.IsNull("Date_Recvd"))
+                    _dateRecv = row.Field<DateTime>("Date_Recvd");
+                if (!row.IsNull("MatComplete"))
+                    _matComplete = row.Field<Boolean>("MatComplete");
+                if (!row.IsNull("LaborComplete"))
+                    _orderComplete = row.Field<Boolean>("LaborComplete");
+                sb_matTrackings.Add(new ProjectMatTracking
+                {
+                    ProjectID = _projectID,
+                    MatReqdDate = _matReqdDate,
+                    MatOnly = _matOnly,
+                    ManufName = _manufName,
+                    ManuOrderNo = _orderNo,
+                    MatPhase = _matPhase,
+                    MatType = _matType,
+                    PoNumber = _poNumber,
+                    LeadTime = _leadTime,
+                    ShopReqDate = _shopReq,
+                    ShopRecvdDate = _shopRecv,
+                    SubmIssue = _submIssue,
+                    SubmAppr = _submAppr,
+                    NoSubm = _noSubm,
+                    Color = _color,
+                    NeedFM = _needFM,
+                    FieldDim = _fieldDim,
+                    RFF = _rFF,
+                    SchedShip = _schedShip,
+                    EstDeliv = _estDeliv,
+                    DateRecv = _dateRecv,
+                    OrderComplete = _matComplete,
+                    LaborComplete = _orderComplete
+                });
+            }
+            ProjectMatTrackings = sb_matTrackings;
+
+            sqlquery = "SELECT tblCustomers.Full_Name, tblProjCustomer.* FROM tblCustomers RIGHT JOIN (SELECT Estimator_Name, tblProjEst.*FROM tblEstimators RIGHT JOIN(SELECT tblArchitects.Arch_Company, tblARch.* FROM tblArchitects RIGHT JOIN(SELECT tblProjectManagers.PM_Name, tblProjPM.* FROM tblProjectManagers RIGHT JOIN(SELECT PM_ID, tblProjPM.* FROM tblProjectPMs RIGHT JOIN(SELECT tblProjects.Project_ID, Project_Name, Target_Date, Complete, Architect_ID, Address, State, ZIP, Job_No, Estimator_ID, Customer_ID, Billing_Date, CIP_Project, C3, Contract_Rcvd, CertPay_Reqd, Stored_Materials FROM tblProjects INNER JOIN (SELECT DISTINCT tblProjectMat.Project_ID FROM tblProjectMaterialsTrack INNER JOIN(SELECT tblProjectMaterials.ProjMat_ID, tblProjectMat.* FROM tblProjectMaterials INNER JOIN(SELECT Project_ID, Project_Name, Customer_ID, Job_No, Salesman_ID FROM tblProjects) AS tblProjectMat ON tblProjectMat.Project_ID = tblProjectMaterials.Project_ID) AS tblProjectMat ON tblProjectMat.ProjMat_ID = tblProjectMaterialsTrack.ProjMat_ID) AS tblProj ON tblProj.Project_ID = tblProjects.Project_ID "+ whereProjectClause + ") AS tblProjPM ON tblProjPM.Project_ID = tblProjectPMs.Project_ID) AS tblProjPM ON tblProjPM.PM_ID = tblProjectManagers.PM_ID) AS tblARch ON tblARch.Architect_ID = tblArchitects.Architect_ID) AS tblProjEst ON tblProjEst.Estimator_ID = tblEstimators.Estimator_ID) AS tblProjCustomer ON tblProjCustomer.Customer_ID = tblCustomers.Customer_ID";
+            cmd = new SqlCommand(sqlquery, dbConnection.Connection);
+            sda = new SqlDataAdapter(cmd);
+            ds = new DataSet();
+            sda.Fill(ds);
+
+            ObservableCollection<ReportPmMeeting> sb_reportPmMeetings = new ObservableCollection<ReportPmMeeting>();
+            foreach (DataRow row in ds.Tables[0].Rows)
+            {
+                int _projectID = 0;
+                string _projectName = "";
+                DateTime _targetDate = new DateTime();
+                bool _complete = false;
+                string _architect = "";
+                string _address = "";
+                string _state = "";
+                string _zip = "";
+                string _jobNo = "";
+                string _pmName = "";
+                string _estimatorName = "";
+                string _customerName = "";
+                int _bilingDue = 0;
+                bool _isCip = false;
+                bool _isC3 = false;
+                bool _isCertPayroll = false;
+                bool _isContractRecvd = false;
+                bool _storedMat = false;
+                List<ProjectMatTracking> _projectMatTrackings = new List<ProjectMatTracking>();
+
+                if (!row.IsNull("Project_ID"))
+                    _projectID = int.Parse(row["Project_ID"].ToString());
+                if (!row.IsNull("Project_Name"))
+                    _projectName = row["Project_Name"].ToString();
+                if (!row.IsNull("Target_Date"))
+                    _targetDate = row.Field<DateTime>("Target_Date");
+                if (!row.IsNull("Complete"))
+                    _complete = row.Field<Boolean>("Complete");
+                if (!row.IsNull("Arch_Company"))
+                    _architect = row["Arch_Company"].ToString();
+                if (!row.IsNull("Address"))
+                    _address = row["Address"].ToString();
+                if (!row.IsNull("State"))
+                    _state = row["State"].ToString();
+                if (!row.IsNull("Zip"))
+                    _zip = row["Zip"].ToString();
+                if (!row.IsNull("Job_No"))
+                    _jobNo = row["Job_No"].ToString();
+                if (!row.IsNull("PM_Name"))
+                    _pmName = row["PM_Name"].ToString();
+                if (!row.IsNull("Estimator_Name"))
+                    _estimatorName = row["Estimator_Name"].ToString();
+                if (!row.IsNull("Full_Name"))
+                    _customerName = row["Full_Name"].ToString();
+                if (!row.IsNull("Billing_Date"))
+                    _bilingDue = int.Parse(row["Billing_Date"].ToString());
+                if (!row.IsNull("CIP_Project"))
+                    _isCip = row.Field<Boolean>("CIP_Project");
+                if (!row.IsNull("C3"))
+                    _isC3 = row.Field<Boolean>("C3");
+                if (!row.IsNull("CertPay_Reqd"))
+                    _isCertPayroll = row.Field<Boolean>("CertPay_Reqd");
+                if (!row.IsNull("Contract_Rcvd"))
+                    _isContractRecvd = row.Field<Boolean>("Contract_Rcvd");
+                if (!row.IsNull("Stored_Materials"))
+                    _storedMat = row.Field<Boolean>("Stored_Materials");
+
+                _projectMatTrackings = ProjectMatTrackings.Where(item => item.ProjectID == _projectID).ToList();
+
+                sb_reportPmMeetings.Add(new ReportPmMeeting
+                {
+                    ProjectID = _projectID,
+                    ProjectName = _projectName,
+                    TargetDate = _targetDate,
+                    Complete = _complete,
+                    ArchitectName = _architect,
+                    Address = _address,
+                    State = _state,
+                    Zip = _zip,
+                    JobNo = _jobNo,
+                    PmName = _pmName,
+                    EstimatorName = _estimatorName,
+                    CustomerName = _customerName,
+                    BilingDue = _bilingDue,
+                    IsCip = _isCip,
+                    IsC3 = _isC3,
+                    IsCertPayroll = _isCertPayroll,
+                    IsContractRecvd = _isContractRecvd,
+                    StoredMat = _storedMat,
+                    ProjectMatTrackings = _projectMatTrackings
+                });
+            }
+            ReportPmMeetings = sb_reportPmMeetings;
+        }
+
         private int _projectID;
 
         public int ProjectID
@@ -819,6 +1704,7 @@ namespace WpfApp.ViewModel
         private void ChangeReportID()
         {
             ActiveLaborListVisibility = false;
+            ActiveProjectListVisibility = false;
             ApprovedVisibility = false;
             ChangeOrderVisibility = false;
             CONotRetVisibility = false;
@@ -835,15 +1721,19 @@ namespace WpfApp.ViewModel
             LeedVisibility = false;
             OpenJobVisibility = false;
             PastDueVisibility = false;
-            PmVisibility = false;
             ReleasedVisibility = false;
             ShipVisibility = false;
             ShopRecvVisibility = false;
             SubmitVisibility = false;
             ShopReqVisibility = false;
             VendorVisibility = false;
+            PmMeetingVisibility = false;
             switch (ReportID)
             {
+                case 3:
+                    ActiveProjectListVisibility = true;
+                    LoadActiveProjectData();
+                    break;
                 case 13:
                     ActiveLaborListVisibility = true;
                     LoadActiveLaborData();
@@ -868,6 +1758,10 @@ namespace WpfApp.ViewModel
                     ContractVisibility = true;
                     LoadContractData();
                     break;
+                case 21:
+                    JobManufVisibility = true;
+                    LoadJobByManufacturerData();
+                    break;
                 case 24:
                     ContractNotRetVisibility = true;
                     LoadActiveLaborData();
@@ -890,15 +1784,11 @@ namespace WpfApp.ViewModel
                     break;
                 case 31:
                     JobArchRepVisibility = true;
-                    LoadActiveLaborData();
+                    LoadArchRepData();
                     break;
                 case 30:
                     JobArchitectVisibility = true;
-                    LoadActiveLaborData();
-                    break;
-                case 21:
-                    JobManufVisibility = true;
-                    LoadActiveLaborData();
+                    LoadArchitectData();
                     break;
                 case 17:
                     LeedVisibility = true;
@@ -906,15 +1796,15 @@ namespace WpfApp.ViewModel
                     break;
                 case 14:
                     OpenJobVisibility = true;
-                    LoadActiveLaborData();
+                    LoadOpenJobsData();
                     break;
                 case 32:
                     PastDueVisibility = true;
                     LoadActiveLaborData();
                     break;
                 case 22:
-                    PmVisibility = true;
-                    LoadActiveLaborData();
+                    PmMeetingVisibility = true;
+                    LoadPmMeetingData();
                     break;
                 case 12:
                     ReleasedVisibility = true;
@@ -1341,6 +2231,66 @@ namespace WpfApp.ViewModel
             }
         }
 
+        
+        private ObservableCollection<ReportJobArchRep> _reportJobArchReps;
+
+
+        public ObservableCollection<ReportJobArchRep> ReportJobArchReps
+        {
+            get { return _reportJobArchReps; }
+            set
+            {
+                if (_reportJobArchReps != value)
+                {
+                    _reportJobArchReps = value;
+                    OnPropertyChanged();
+                }
+            }
+        }
+
+        private ObservableCollection<ReportActiveProject> _reportActiveProjects;
+
+        public ObservableCollection<ReportActiveProject> ReportActiveProjects
+        {
+            get { return _reportActiveProjects; }
+            set
+            {
+                if (_reportActiveProjects != value)
+                {
+                    _reportActiveProjects = value;
+                    OnPropertyChanged();
+                }
+            }
+        }
+        
+        private ObservableCollection<ReportPmMeeting> _reportPmMeetings;
+
+        public ObservableCollection<ReportPmMeeting> ReportPmMeetings
+        {
+            get { return _reportPmMeetings; }
+            set
+            {
+                if (_reportPmMeetings != value)
+                {
+                    _reportPmMeetings = value;
+                    OnPropertyChanged();
+                }
+            }
+        }
+
+        private bool _activeProjectListVisibility;
+
+        public bool ActiveProjectListVisibility
+        {
+            get { return _activeProjectListVisibility; }
+            set
+            {
+                if (value == _activeProjectListVisibility) return;
+                _activeProjectListVisibility = value;
+                OnPropertyChanged();
+            }
+        }
+
         private bool _activeLaborListVisibility;
 
         public bool ActiveLaborListVisibility
@@ -1562,15 +2512,15 @@ namespace WpfApp.ViewModel
             }
         }
 
-        private bool _pmVisibility;
+        private bool _pmMeetingVisibility;
 
-        public bool PmVisibility
+        public bool PmMeetingVisibility
         {
-            get { return _pmVisibility; }
+            get { return _pmMeetingVisibility; }
             set
             {
-                if (value == _pmVisibility) return;
-                _pmVisibility = value;
+                if (value == _pmMeetingVisibility) return;
+                _pmMeetingVisibility = value;
                 OnPropertyChanged();
             }
         }

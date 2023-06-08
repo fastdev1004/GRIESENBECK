@@ -101,6 +101,8 @@
     <Compile Include="Model\ReportContract.cs" />
     <Compile Include="Model\ReportCustomerContact.cs" />
     <Compile Include="Model\ReportFieldMeasure.cs" />
+    <Compile Include="Model\ReportJobArchRep.cs" />
+    <Compile Include="Model\ReportPmMeeting.cs" />
     <Compile Include="Model\ReportSelection.cs" />
     <Compile Include="Model\ReturnedVia.cs" />
     <Compile Include="Model\Salesman.cs" />

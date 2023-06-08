@@ -14,8 +14,9 @@ namespace WpfApp.Model
         private string _jobNo;
         private string _customerName;
         private string _salesman;
+        private List<ProjectMatTracking> _projectMatTracking;
 
-        public int ID
+        public int ProjectID
         {
             get => _projectID;
             set
@@ -66,6 +67,17 @@ namespace WpfApp.Model
             {
                 if (value == _salesman) return;
                 _salesman = value;
+                OnPropertyChanged();
+            }
+        }
+
+        public List<ProjectMatTracking> ProjectMatTrackings
+        {
+            get => _projectMatTracking;
+            set
+            {
+                if (value == _projectMatTracking) return;
+                _projectMatTracking = value;
                 OnPropertyChanged();
             }
         }

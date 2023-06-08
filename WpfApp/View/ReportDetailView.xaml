@@ -122,7 +122,7 @@
                                                             </DataGridTemplateColumn.Header>
                                                             <DataGridTemplateColumn.CellTemplate>
                                                                 <DataTemplate>
-                                                                    <TextBox Text="{Binding TargetDate, Mode=TwoWay, Converter={StaticResource DateTimeToDateConverter}}" />
+                                                                    <TextBlock Text="{Binding TargetDate, Mode=TwoWay, Converter={StaticResource DateTimeToDateConverter}}" />
                                                                 </DataTemplate>
                                                             </DataGridTemplateColumn.CellTemplate>
                                                         </DataGridTemplateColumn>
@@ -142,7 +142,7 @@
                                                             </DataGridTemplateColumn.Header>
                                                             <DataGridTemplateColumn.CellTemplate>
                                                                 <DataTemplate>
-                                                                    <TextBox Text="{Binding LaborDesc, Mode=TwoWay}" />
+                                                                    <TextBlock Text="{Binding LaborDesc, Mode=TwoWay}" />
                                                                 </DataTemplate>
                                                             </DataGridTemplateColumn.CellTemplate>
                                                         </DataGridTemplateColumn>
@@ -152,7 +152,7 @@
                                                             </DataGridTemplateColumn.Header>
                                                             <DataGridTemplateColumn.CellTemplate>
                                                                 <DataTemplate>
-                                                                    <TextBox Text="{Binding CoItemNo, Mode=TwoWay}" />
+                                                                    <TextBlock Text="{Binding CoItemNo, Mode=TwoWay}" />
                                                                 </DataTemplate>
                                                             </DataGridTemplateColumn.CellTemplate>
                                                         </DataGridTemplateColumn>
@@ -162,7 +162,7 @@
                                                             </DataGridTemplateColumn.Header>
                                                             <DataGridTemplateColumn.CellTemplate>
                                                                 <DataTemplate>
-                                                                    <TextBox Text="{Binding LabPhase, Mode=TwoWay}" />
+                                                                    <TextBlock Text="{Binding LabPhase, Mode=TwoWay}" />
                                                                 </DataTemplate>
                                                             </DataGridTemplateColumn.CellTemplate>
                                                         </DataGridTemplateColumn>
@@ -188,7 +188,183 @@
                 </DataGrid>
             </Grid>
         </Grid>
-        <Grid Grid.Row="1" Margin="10" Visibility="{Binding ApprovedVisibility, Mode=TwoWay, Converter={StaticResource BoolToVisibleConverter}}">
+     <Grid Grid.Row="1" Margin="10" Visibility="{Binding ActiveProjectListVisibility, Mode=TwoWay, Converter={StaticResource BoolToVisibleConverter}}">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="*" />
+            </Grid.RowDefinitions>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="6*" />
+                <ColumnDefinition Width="4*" />
+            </Grid.ColumnDefinitions>
+            <Grid>
+                <TextBlock Style="{StaticResource ReportViewHeader}" Text="Active Projects List" />
+            </Grid>
+            <Grid Grid.Row="1" >
+                <DataGrid ItemsSource="{Binding ReportActiveProjects, Mode=TwoWay}" GridLinesVisibility="None" AutoGenerateColumns="False" HeadersVisibility="Column" CanUserAddRows="False" BorderThickness="0">
+                    <DataGrid.Resources>
+                        <Style TargetType="DataGridColumnHeader" BasedOn="{StaticResource GridColumnHeaderBase}">
+                            <Setter Property="Background" Value="#C6D9F1" />
+                            <Setter Property="Height" Value="Auto" />
+                        </Style>
+                        <Style TargetType="TextBox">
+                            <Setter Property="BorderThickness" Value="0" />
+                            <Setter Property="IsReadOnly" Value="True" />
+                        </Style>
+                        <Style TargetType="DataGridRow">
+                            <Setter Property="Height" Value="Auto" />
+                            <Setter Property="BorderThickness" Value="0" />
+                        </Style>
+                    </DataGrid.Resources>
+                    <DataGrid.Columns>
+                        <DataGridTemplateColumn Width="*">
+                            <DataGridTemplateColumn.CellTemplate >
+                                <DataTemplate>
+                                    <Border BorderBrush="Black" BorderThickness="0,2,0,0">
+                                        <Grid>
+                                            <Grid.RowDefinitions>
+                                                <RowDefinition Height="Auto"/>
+                                                <RowDefinition Height="Auto" />
+                                            </Grid.RowDefinitions>
+                                            <Border Background="#C6D9F1">
+                                                <Grid>
+                                                    <Grid.RowDefinitions>
+                                                        <RowDefinition Height="Auto" />
+                                                        <RowDefinition Height="Auto" />
+                                                    </Grid.RowDefinitions>
+                                                    <Grid>
+                                                        <Grid.ColumnDefinitions>
+                                                            <ColumnDefinition Width="3*" />
+                                                            <ColumnDefinition Width="2*" />
+                                                        </Grid.ColumnDefinitions>
+                                                        <TextBlock Text="{Binding ProjectName, Mode=TwoWay}" FontSize="16" FontWeight="Bold" />
+                                                        <Button Grid.Column="1" Content="View" Width="40" HorizontalAlignment="Left" />
+                                                    </Grid>
+                                                    <Grid Grid.Row="1">
+                                                        <Grid.ColumnDefinitions>
+                                                            <ColumnDefinition Width="3*" />
+                                                            <ColumnDefinition Width="1*" />
+                                                            <ColumnDefinition Width="1*" />
+                                                        </Grid.ColumnDefinitions>
+                                                        <WrapPanel>
+                                                            <Label Content="Customer:" FontWeight="Bold" />
+                                                            <TextBlock Text="{Binding CustomerName, Mode=TwoWay}" VerticalAlignment="Center" />
+                                                        </WrapPanel>
+                                                        <WrapPanel Grid.Column="1">
+                                                            <Label Content="JobNo:" FontWeight="Bold" />
+                                                            <TextBlock Text="{Binding JobNo, Mode=TwoWay}" VerticalAlignment="Center" />
+                                                        </WrapPanel>
+                                                        <WrapPanel Grid.Column="2">
+                                                            <Label Content="Salesman:" FontWeight="Bold" />
+                                                            <TextBlock Text="{Binding SalesmanName, Mode=TwoWay}" VerticalAlignment="Center" />
+                                                        </WrapPanel>
+                                                    </Grid>
+                                                </Grid>
+                                            </Border>
+                                            <Grid Grid.Row="1">
+                                                <DataGrid ItemsSource="{Binding ProjectMatTrackings, Mode=TwoWay}" GridLinesVisibility="None" AutoGenerateColumns="False" HeadersVisibility="Column" CanUserAddRows="False" BorderThickness="0">
+                                                    <DataGrid.Resources>
+                                                        <Style TargetType="DataGridColumnHeader" BasedOn="{StaticResource GridColumnHeaderBase}">
+                                                            <Setter Property="Background" Value="#C6D9F1" />
+                                                            <Setter Property="Foreground" Value="Black" />
+                                                            <Setter Property="Height" Value="25" />
+                                                        </Style>
+                                                    </DataGrid.Resources>
+                                                    <DataGrid.Columns>
+                                                        <DataGridTemplateColumn IsReadOnly="False" Width="2*">
+                                                            <DataGridTemplateColumn.Header>
+                                                                <TextBlock Text="Matl Reqd" TextWrapping="Wrap" FontWeight="Bold" />
+                                                            </DataGridTemplateColumn.Header>
+                                                            <DataGridTemplateColumn.CellTemplate>
+                                                                <DataTemplate>
+                                                                    <TextBlock Text="{Binding MatReqdDate, Mode=TwoWay, Converter={StaticResource DateTimeToDateConverter}}" />
+                                                                </DataTemplate>
+                                                            </DataGridTemplateColumn.CellTemplate>
+                                                        </DataGridTemplateColumn>
+                                                        <DataGridTemplateColumn IsReadOnly="False" Width="3*">
+                                                            <DataGridTemplateColumn.Header>
+                                                                <TextBlock Text="Manufacturer" TextWrapping="Wrap" FontWeight="Bold" />
+                                                            </DataGridTemplateColumn.Header>
+                                                            <DataGridTemplateColumn.CellTemplate>
+                                                                <DataTemplate>
+                                                                    <TextBlock Text="{Binding ManufName, Mode=TwoWay}" />
+                                                                </DataTemplate>
+                                                            </DataGridTemplateColumn.CellTemplate>
+                                                        </DataGridTemplateColumn>
+                                                        <DataGridTemplateColumn IsReadOnly="False" Width="1*">
+                                                            <DataGridTemplateColumn.Header>
+                                                                <TextBlock Text="CO #" TextWrapping="Wrap" FontWeight="Bold" />
+                                                            </DataGridTemplateColumn.Header>
+                                                            <DataGridTemplateColumn.CellTemplate>
+                                                                <DataTemplate>
+                                                                    <TextBlock Text="{Binding ManuOrderNo, Mode=TwoWay}" />
+                                                                </DataTemplate>
+                                                            </DataGridTemplateColumn.CellTemplate>
+                                                        </DataGridTemplateColumn>
+                                                        <DataGridTemplateColumn IsReadOnly="False" Width="4*">
+                                                            <DataGridTemplateColumn.Header>
+                                                                <TextBlock Text="Phase" TextWrapping="Wrap" FontWeight="Bold" />
+                                                            </DataGridTemplateColumn.Header>
+                                                            <DataGridTemplateColumn.CellTemplate>
+                                                                <DataTemplate>
+                                                                    <TextBlock Text="{Binding MatPhase, Mode=TwoWay}" />
+                                                                </DataTemplate>
+                                                            </DataGridTemplateColumn.CellTemplate>
+                                                        </DataGridTemplateColumn>
+                                                        <DataGridTemplateColumn IsReadOnly="False" Width="4*">
+                                                            <DataGridTemplateColumn.Header>
+                                                                <TextBlock Text="Material" TextWrapping="Wrap" FontWeight="Bold" />
+                                                            </DataGridTemplateColumn.Header>
+                                                            <DataGridTemplateColumn.CellTemplate>
+                                                                <DataTemplate>
+                                                                    <TextBlock Text="{Binding MatType, Mode=TwoWay}" />
+                                                                </DataTemplate>
+                                                            </DataGridTemplateColumn.CellTemplate>
+                                                        </DataGridTemplateColumn>
+                                                        <DataGridTemplateColumn IsReadOnly="False" Width="4*">
+                                                            <DataGridTemplateColumn.Header>
+                                                                <TextBlock Text="R.F.F" TextWrapping="Wrap" FontWeight="Bold" />
+                                                            </DataGridTemplateColumn.Header>
+                                                            <DataGridTemplateColumn.CellTemplate>
+                                                                <DataTemplate>
+                                                                    <TextBlock Text="{Binding RFF, Mode=TwoWay, Converter={StaticResource DateTimeToDateConverter}}" />
+                                                                </DataTemplate>
+                                                            </DataGridTemplateColumn.CellTemplate>
+                                                        </DataGridTemplateColumn>
+                                                        <DataGridTemplateColumn IsReadOnly="False" Width="4*">
+                                                            <DataGridTemplateColumn.Header>
+                                                                <TextBlock Text="Sched.Ship" TextWrapping="Wrap" FontWeight="Bold" />
+                                                            </DataGridTemplateColumn.Header>
+                                                            <DataGridTemplateColumn.CellTemplate>
+                                                                <DataTemplate>
+                                                                    <TextBlock Text="{Binding SchedShip, Mode=TwoWay, Converter={StaticResource DateTimeToDateConverter}}" />
+                                                                </DataTemplate>
+                                                            </DataGridTemplateColumn.CellTemplate>
+                                                        </DataGridTemplateColumn>
+                                                        <DataGridTemplateColumn IsReadOnly="False" Width="1*">
+                                                            <DataGridTemplateColumn.Header>
+                                                                <TextBlock Text="Compl" TextWrapping="Wrap" FontWeight="Bold" />
+                                                            </DataGridTemplateColumn.Header>
+                                                            <DataGridTemplateColumn.CellTemplate>
+                                                                <DataTemplate>
+                                                                    <CheckBox IsChecked="{Binding OrderComplete, Mode=TwoWay}" />
+                                                                </DataTemplate>
+                                                            </DataGridTemplateColumn.CellTemplate>
+                                                        </DataGridTemplateColumn>
+                                                    </DataGrid.Columns>
+                                                </DataGrid>
+                                            </Grid>
+                                        </Grid>
+                                    </Border>
+                                </DataTemplate>
+                            </DataGridTemplateColumn.CellTemplate>
+                        </DataGridTemplateColumn>
+                    </DataGrid.Columns>
+                </DataGrid>
+            </Grid>
+        </Grid>
+
+<Grid Grid.Row="1" Margin="10" Visibility="{Binding ApprovedVisibility, Mode=TwoWay, Converter={StaticResource BoolToVisibleConverter}}">
             <Grid.RowDefinitions>
                 <RowDefinition Height="Auto" />
                 <RowDefinition Height="*" />
@@ -395,7 +571,7 @@
                                                             </DataGridTemplateColumn.Header>
                                                             <DataGridTemplateColumn.CellTemplate>
                                                                 <DataTemplate>
-                                                                    <TextBox Text="{Binding Contract, Mode=TwoWay}" />
+                                                                    <TextBlock Text="{Binding Contract, Mode=TwoWay}" />
                                                                 </DataTemplate>
                                                             </DataGridTemplateColumn.CellTemplate>
                                                         </DataGridTemplateColumn>
@@ -415,7 +591,7 @@
                                                             </DataGridTemplateColumn.Header>
                                                             <DataGridTemplateColumn.CellTemplate>
                                                                 <DataTemplate>
-                                                                    <TextBox Text="{Binding DateOFCO, Mode=TwoWay, Converter={StaticResource DateTimeToDateConverter}}" />
+                                                                    <TextBlock Text="{Binding DateOFCO, Mode=TwoWay, Converter={StaticResource DateTimeToDateConverter}}" />
                                                                 </DataTemplate>
                                                             </DataGridTemplateColumn.CellTemplate>
                                                         </DataGridTemplateColumn>
@@ -425,7 +601,7 @@
                                                             </DataGridTemplateColumn.Header>
                                                             <DataGridTemplateColumn.CellTemplate>
                                                                 <DataTemplate>
-                                                                    <TextBox Text="{Binding AmtOfCO, Mode=TwoWay}" />
+                                                                    <TextBlock Text="{Binding AmtOfCO, Mode=TwoWay}" />
                                                                 </DataTemplate>
                                                             </DataGridTemplateColumn.CellTemplate>
                                                         </DataGridTemplateColumn>
@@ -435,7 +611,7 @@
                                                             </DataGridTemplateColumn.Header>
                                                             <DataGridTemplateColumn.CellTemplate>
                                                                 <DataTemplate>
-                                                                    <TextBox Text="{Binding DateProcessed, Mode=TwoWay, Converter={StaticResource DateTimeToDateConverter}}" />
+                                                                    <TextBlock Text="{Binding DateProcessed, Mode=TwoWay, Converter={StaticResource DateTimeToDateConverter}}" />
                                                                 </DataTemplate>
                                                             </DataGridTemplateColumn.CellTemplate>
                                                         </DataGridTemplateColumn>
@@ -511,6 +687,7 @@
                 </DataGrid>
             </Grid>
         </Grid>
+
         <Grid Grid.Row="1" Margin="10" Visibility="{Binding CipVisibility, Mode=TwoWay, Converter={StaticResource BoolToVisibleConverter}}">
             <Grid.RowDefinitions>
                 <RowDefinition Height="Auto" />
@@ -549,7 +726,7 @@
                                                 <RowDefinition Height="Auto"/>
                                                 <RowDefinition Height="Auto" />
                                             </Grid.RowDefinitions>
-                                            <Border BorderBrush="Black" BorderThickness="0,2,0,1">
+                                            <Border BorderBrush="Black" BorderThickness="0,2,0,1" Background="#C6D9F1" >
                                                 <Grid>
                                                     <Grid.ColumnDefinitions>
                                                         <ColumnDefinition Width="3*" />
@@ -579,7 +756,7 @@
                                                 <DataGrid ItemsSource="{Binding CIPs, Mode=TwoWay}" GridLinesVisibility="None" AutoGenerateColumns="False" HeadersVisibility="Column" CanUserAddRows="False" BorderThickness="0" AlternatingRowBackground="LightGray">
                                                     <DataGrid.Resources>
                                                         <Style TargetType="DataGridColumnHeader" BasedOn="{StaticResource GridColumnHeaderBase}">
-                                                            <Setter Property="Background" Value="White" />
+                                                            <Setter Property="Background" Value="#C6D9F1" />
                                                             <Setter Property="Foreground" Value="Black" />
                                                             <Setter Property="Height" Value="25" />
                                                         </Style>
@@ -668,7 +845,8 @@
             </Grid>
         </Grid>
 
-        <Grid Grid.Row="1" Margin="10" Visibility="{Binding ContractVisibility, Mode=TwoWay, Converter={StaticResource BoolToVisibleConverter}}">
+        
+<Grid Grid.Row="1" Margin="10" Visibility="{Binding ContractVisibility, Mode=TwoWay, Converter={StaticResource BoolToVisibleConverter}}">
             <Grid.RowDefinitions>
                 <RowDefinition Height="Auto" />
                 <RowDefinition Height="*" />
@@ -748,7 +926,7 @@
                                                             </DataGridTemplateColumn.Header>
                                                             <DataGridTemplateColumn.CellTemplate>
                                                                 <DataTemplate>
-                                                                    <TextBox Text="{Binding ContractNumber, Mode=TwoWay}" />
+                                                                    <TextBlock Text="{Binding ContractNumber, Mode=TwoWay}" />
                                                                 </DataTemplate>
                                                             </DataGridTemplateColumn.CellTemplate>
                                                         </DataGridTemplateColumn>
@@ -768,7 +946,7 @@
                                                             </DataGridTemplateColumn.Header>
                                                             <DataGridTemplateColumn.CellTemplate>
                                                                 <DataTemplate>
-                                                                    <TextBox Text="{Binding DateProcessed, Mode=TwoWay, Converter={StaticResource DateTimeToDateConverter}}" />
+                                                                    <TextBlock Text="{Binding DateProcessed, Mode=TwoWay, Converter={StaticResource DateTimeToDateConverter}}" />
                                                                 </DataTemplate>
                                                             </DataGridTemplateColumn.CellTemplate>
                                                         </DataGridTemplateColumn>
@@ -778,7 +956,7 @@
                                                             </DataGridTemplateColumn.Header>
                                                             <DataGridTemplateColumn.CellTemplate>
                                                                 <DataTemplate>
-                                                                    <TextBox Text="{Binding SignedoffbySales, Mode=TwoWay, Converter={StaticResource DateTimeToDateConverter}}" />
+                                                                    <TextBlock Text="{Binding SignedoffbySales, Mode=TwoWay, Converter={StaticResource DateTimeToDateConverter}}" />
                                                                 </DataTemplate>
                                                             </DataGridTemplateColumn.CellTemplate>
                                                         </DataGridTemplateColumn>
@@ -788,7 +966,7 @@
                                                             </DataGridTemplateColumn.Header>
                                                             <DataGridTemplateColumn.CellTemplate>
                                                                 <DataTemplate>
-                                                                    <TextBox Text="OPS" />
+                                                                    <TextBlock Text="OPS" />
                                                                 </DataTemplate>
                                                             </DataGridTemplateColumn.CellTemplate>
                                                         </DataGridTemplateColumn>
@@ -989,6 +1167,7 @@
                 </DataGrid>
             </Grid>
         </Grid>
+
         <Grid Grid.Row="1" Margin="10" Visibility="{Binding FieldMeasureVisibility, Mode=TwoWay, Converter={StaticResource BoolToVisibleConverter}}">
             <Grid.RowDefinitions>
                 <RowDefinition Height="Auto" />
@@ -1276,5 +1455,1119 @@
                 </DataGrid>
             </Grid>
         </Grid>
+        
+        <Grid Grid.Row="1" Margin="10" Visibility="{Binding JobArchRepVisibility, Mode=TwoWay, Converter={StaticResource BoolToVisibleConverter}}">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="*" />
+            </Grid.RowDefinitions>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="6*" />
+                <ColumnDefinition Width="4*" />
+            </Grid.ColumnDefinitions>
+            <Grid>
+                <TextBlock Style="{StaticResource ReportViewHeader}" Text="Jobs by Arch Rep" />
+            </Grid>
+            <Grid Grid.Row="1" >
+                <DataGrid ItemsSource="{Binding ReportJobArchReps, Mode=TwoWay}" GridLinesVisibility="None" AutoGenerateColumns="False" HeadersVisibility="Column" CanUserAddRows="False" BorderThickness="0">
+                    <DataGrid.Resources>
+                        <Style TargetType="DataGridColumnHeader" BasedOn="{StaticResource GridColumnHeaderBase}">
+                            <Setter Property="Background" Value="#C6D9F1" />
+                            <Setter Property="Height" Value="Auto" />
+                        </Style>
+                        <Style TargetType="TextBlock">
+                            <Setter Property="VerticalAlignment" Value="Center" />
+                        </Style>
+                        <Style TargetType="Label">
+                            <Setter Property="FontWeight" Value="Bold" />
+                            <Setter Property="FontStyle" Value="Italic" />
+                        </Style>
+                        <Style TargetType="DataGridRow">
+                            <Setter Property="Height" Value="Auto" />
+                            <Setter Property="BorderThickness" Value="0,0,0,0" />
+                            <Setter Property="BorderBrush" Value="Black" />
+                        </Style>
+                    </DataGrid.Resources>
+                    <DataGrid.Columns>
+                        <DataGridTemplateColumn Width="*">
+                            <DataGridTemplateColumn.CellTemplate >
+                                <DataTemplate>
+                                    <Border >
+                                        <Grid>
+                                            <Grid.RowDefinitions>
+                                                <RowDefinition Height="Auto"/>
+                                                <RowDefinition Height="Auto" />
+                                            </Grid.RowDefinitions>
+                                            <Grid>
+                                                <Grid.RowDefinitions>
+                                                    <RowDefinition Height="Auto" />
+                                                    <RowDefinition Height="Auto" />
+                                                </Grid.RowDefinitions>
+                                                <Border BorderBrush="Black" BorderThickness="0,2,0,0" Background="#C6D9F1">
+                                                    <Grid>
+                                                        <Grid.RowDefinitions>
+                                                            <RowDefinition Height="Auto" />
+                                                            <RowDefinition Height="Auto" />
+                                                        </Grid.RowDefinitions>
+                                                        <Grid>
+                                                            <Grid.ColumnDefinitions>
+                                                                <ColumnDefinition Width="3*" />
+                                                                <ColumnDefinition Width="2*" />
+                                                                <ColumnDefinition Width="3*" />
+                                                                <ColumnDefinition Width="2*" />
+                                                            </Grid.ColumnDefinitions>
+                                                            <WrapPanel>
+                                                                <TextBlock Text="{Binding ProjectName, Mode=TwoWay}" VerticalAlignment="Center" FontSize="16" FontWeight="Bold" />
+                                                            </WrapPanel>
+                                                            <WrapPanel Grid.Column="1">
+                                                                <Label Content="Target Date:" />
+                                                                <TextBlock Text="{Binding TargetDate, Mode=TwoWay, Converter={StaticResource DateTimeToDateConverter}}" VerticalAlignment="Center" />
+                                                            </WrapPanel>
+                                                            <WrapPanel Grid.Column="2">
+                                                                <Label Content="Architect:" />
+                                                                <TextBlock Text="{Binding Architect, Mode=TwoWay}" VerticalAlignment="Center" />
+                                                            </WrapPanel>
+                                                            <WrapPanel Grid.Column="3">
+                                                                <Label Content="Arch Rep:" />
+                                                                <TextBlock Text="{Binding ArchRep, Mode=TwoWay}" VerticalAlignment="Center"/>
+                                                            </WrapPanel>
+                                                        </Grid>
+                                                        <Grid Grid.Row="1">
+                                                            <Grid.ColumnDefinitions>
+                                                                <ColumnDefinition Width="3*" />
+                                                                <ColumnDefinition Width="3*" />
+                                                                <ColumnDefinition Width="2*" />
+                                                                <ColumnDefinition Width="2*" />
+                                                            </Grid.ColumnDefinitions>
+                                                            <WrapPanel>
+                                                                <Label Content="Customer:" />
+                                                                <TextBlock Text="{Binding CustomerName, Mode=TwoWay}" VerticalAlignment="Center" />
+                                                            </WrapPanel>
+                                                            <WrapPanel Grid.Column="1">
+                                                                <Label Content="" />
+                                                                <TextBlock Text="{Binding FullAddress, Mode=OneWay}" VerticalAlignment="Center" />
+                                                            </WrapPanel>
+                                                            <WrapPanel Grid.Column="2">
+                                                                <Label Content="Job No:" />
+                                                                <TextBlock Text="{Binding JobNo, Mode=TwoWay}" VerticalAlignment="Center" />
+                                                            </WrapPanel>
+                                                            <WrapPanel Grid.Column="3">
+                                                                <Label Content="Salesman:" />
+                                                                <TextBlock Text="{Binding SalesmanName, Mode=TwoWay}" VerticalAlignment="Center" />
+                                                            </WrapPanel>
+                                                        </Grid>
+                                                    </Grid>
+                                                </Border>
+                                                <Grid Grid.Row="1">
+                                                    <DataGrid ItemsSource="{Binding ProjectMatTrackings, Mode=TwoWay}" GridLinesVisibility="None" AutoGenerateColumns="False" HeadersVisibility="Column" CanUserAddRows="False" BorderThickness="0">
+                                                        <DataGrid.Resources>
+                                                            <Style TargetType="DataGridColumnHeader" BasedOn="{StaticResource GridColumnHeaderBase}">
+                                                                <Setter Property="Background" Value="#C6D9F1" />
+                                                                <Setter Property="Foreground" Value="Black" />
+                                                                <Setter Property="Height" Value="25" />
+                                                            </Style>
+                                                        </DataGrid.Resources>
+                                                        <DataGrid.Columns>
+                                                            <DataGridTemplateColumn IsReadOnly="False" Width="2*">
+                                                                <DataGridTemplateColumn.Header>
+                                                                    <TextBlock Text="Matl Reqd" TextWrapping="Wrap" FontWeight="Bold" />
+                                                                </DataGridTemplateColumn.Header>
+                                                                <DataGridTemplateColumn.CellTemplate>
+                                                                    <DataTemplate>
+                                                                        <TextBlock Text="{Binding MatReqdDate, Mode=TwoWay, Converter={StaticResource DateTimeToDateConverter}}" />
+                                                                    </DataTemplate>
+                                                                </DataGridTemplateColumn.CellTemplate>
+                                                            </DataGridTemplateColumn>
+                                                            <DataGridTemplateColumn IsReadOnly="False" Width="4*">
+                                                                <DataGridTemplateColumn.Header>
+                                                                    <TextBlock Text="Manufacturer" TextWrapping="Wrap" FontWeight="Bold" />
+                                                                </DataGridTemplateColumn.Header>
+                                                                <DataGridTemplateColumn.CellTemplate>
+                                                                    <DataTemplate>
+                                                                        <TextBlock Text="{Binding ManufName, Mode=TwoWay}" />
+                                                                    </DataTemplate>
+                                                                </DataGridTemplateColumn.CellTemplate>
+                                                            </DataGridTemplateColumn>
+                                                            <DataGridTemplateColumn IsReadOnly="False" Width="1*">
+                                                                <DataGridTemplateColumn.Header>
+                                                                    <TextBlock Text="CO #" TextWrapping="Wrap" FontWeight="Bold" />
+                                                                </DataGridTemplateColumn.Header>
+                                                                <DataGridTemplateColumn.CellTemplate>
+                                                                    <DataTemplate>
+                                                                        <TextBlock Text="{Binding ManuOrderNo, Mode=TwoWay}" />
+                                                                    </DataTemplate>
+                                                                </DataGridTemplateColumn.CellTemplate>
+                                                            </DataGridTemplateColumn>
+                                                            <DataGridTemplateColumn IsReadOnly="False" Width="2*">
+                                                                <DataGridTemplateColumn.Header>
+                                                                    <TextBlock Text="Phase" TextWrapping="Wrap" FontWeight="Bold" />
+                                                                </DataGridTemplateColumn.Header>
+                                                                <DataGridTemplateColumn.CellTemplate>
+                                                                    <DataTemplate>
+                                                                        <TextBlock Text="{Binding MatPhase, Mode=TwoWay}" />
+                                                                    </DataTemplate>
+                                                                </DataGridTemplateColumn.CellTemplate>
+                                                            </DataGridTemplateColumn>
+                                                            <DataGridTemplateColumn IsReadOnly="False" Width="3*">
+                                                                <DataGridTemplateColumn.Header>
+                                                                    <TextBlock Text="Scope" TextWrapping="Wrap" FontWeight="Bold" />
+                                                                </DataGridTemplateColumn.Header>
+                                                                <DataGridTemplateColumn.CellTemplate>
+                                                                    <DataTemplate>
+                                                                        <TextBlock Text="{Binding MatDesc, Mode=TwoWay}" />
+                                                                    </DataTemplate>
+                                                                </DataGridTemplateColumn.CellTemplate>
+                                                            </DataGridTemplateColumn>
+                                                            <DataGridTemplateColumn IsReadOnly="False" Width="3*">
+                                                                <DataGridTemplateColumn.Header>
+                                                                    <TextBlock Text="Material" TextWrapping="Wrap" FontWeight="Bold" />
+                                                                </DataGridTemplateColumn.Header>
+                                                                <DataGridTemplateColumn.CellTemplate>
+                                                                    <DataTemplate>
+                                                                        <TextBlock Text="{Binding MatType, Mode=TwoWay}" />
+                                                                    </DataTemplate>
+                                                                </DataGridTemplateColumn.CellTemplate>
+                                                            </DataGridTemplateColumn>
+                                                            <DataGridTemplateColumn IsReadOnly="False" Width="2*">
+                                                                <DataGridTemplateColumn.Header>
+                                                                    <TextBlock Text="RFF" TextWrapping="Wrap" FontWeight="Bold" />
+                                                                </DataGridTemplateColumn.Header>
+                                                                <DataGridTemplateColumn.CellTemplate>
+                                                                    <DataTemplate>
+                                                                        <TextBlock Text="{Binding RFF, Mode=TwoWay, Converter={StaticResource DateTimeToDateConverter}}" />
+                                                                    </DataTemplate>
+                                                                </DataGridTemplateColumn.CellTemplate>
+                                                            </DataGridTemplateColumn>
+                                                            <DataGridTemplateColumn IsReadOnly="False" Width="2*">
+                                                                <DataGridTemplateColumn.Header>
+                                                                    <TextBlock Text="Compl" TextWrapping="Wrap" FontWeight="Bold" />
+                                                                </DataGridTemplateColumn.Header>
+                                                                <DataGridTemplateColumn.CellTemplate>
+                                                                    <DataTemplate>
+                                                                        <CheckBox IsChecked="{Binding OrderComplete, Mode=TwoWay}" />
+                                                                    </DataTemplate>
+                                                                </DataGridTemplateColumn.CellTemplate>
+                                                            </DataGridTemplateColumn>
+                                                        </DataGrid.Columns>
+                                                    </DataGrid>
+                                                </Grid>
+                                            </Grid>
+
+                                         
+                                        </Grid>
+                                    </Border>
+                                </DataTemplate>
+                            </DataGridTemplateColumn.CellTemplate>
+                        </DataGridTemplateColumn>
+                    </DataGrid.Columns>
+                </DataGrid>
+            </Grid>
+        </Grid>
+
+        <Grid Grid.Row="1" Margin="10" Visibility="{Binding JobArchitectVisibility, Mode=TwoWay, Converter={StaticResource BoolToVisibleConverter}}">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="*" />
+            </Grid.RowDefinitions>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="6*" />
+                <ColumnDefinition Width="4*" />
+            </Grid.ColumnDefinitions>
+            <Grid>
+                <TextBlock Style="{StaticResource ReportViewHeader}" Text="Jobs by Architect" />
+            </Grid>
+            <Grid Grid.Row="1" >
+                <DataGrid ItemsSource="{Binding ReportJobArchReps, Mode=TwoWay}" GridLinesVisibility="None" AutoGenerateColumns="False" HeadersVisibility="Column" CanUserAddRows="False" BorderThickness="0">
+                    <DataGrid.Resources>
+                        <Style TargetType="DataGridColumnHeader" BasedOn="{StaticResource GridColumnHeaderBase}">
+                            <Setter Property="Background" Value="#C6D9F1" />
+                            <Setter Property="Height" Value="Auto" />
+                        </Style>
+                        <Style TargetType="TextBlock">
+                            <Setter Property="VerticalAlignment" Value="Center" />
+                        </Style>
+                        <Style TargetType="Label">
+                            <Setter Property="FontWeight" Value="Bold" />
+                            <Setter Property="FontStyle" Value="Italic" />
+                        </Style>
+                        <Style TargetType="DataGridRow">
+                            <Setter Property="Height" Value="Auto" />
+                            <Setter Property="BorderThickness" Value="0,0,0,0" />
+                            <Setter Property="BorderBrush" Value="Black" />
+                        </Style>
+                    </DataGrid.Resources>
+                    <DataGrid.Columns>
+                        <DataGridTemplateColumn Width="*">
+                            <DataGridTemplateColumn.CellTemplate >
+                                <DataTemplate>
+                                    <Border >
+                                        <Grid>
+                                            <Grid.RowDefinitions>
+                                                <RowDefinition Height="Auto"/>
+                                                <RowDefinition Height="Auto" />
+                                            </Grid.RowDefinitions>
+                                            <Grid>
+                                                <Grid.RowDefinitions>
+                                                    <RowDefinition Height="Auto" />
+                                                    <RowDefinition Height="Auto" />
+                                                </Grid.RowDefinitions>
+                                                <Border BorderBrush="Black" BorderThickness="0,2,0,0" Background="#C6D9F1">
+                                                    <Grid>
+                                                        <Grid.RowDefinitions>
+                                                            <RowDefinition Height="Auto" />
+                                                            <RowDefinition Height="Auto" />
+                                                        </Grid.RowDefinitions>
+                                                        <Grid>
+                                                            <Grid.ColumnDefinitions>
+                                                                <ColumnDefinition Width="4*" />
+                                                                <ColumnDefinition Width="2*" />
+                                                                <ColumnDefinition Width="3*" />
+                                                            </Grid.ColumnDefinitions>
+                                                            <WrapPanel>
+                                                                <TextBlock Text="{Binding ProjectName, Mode=TwoWay}" VerticalAlignment="Center" FontSize="16" FontWeight="Bold" />
+                                                            </WrapPanel>
+                                                            <WrapPanel Grid.Column="1" VerticalAlignment="Center">
+                                                                <Button>View</Button>
+                                                            </WrapPanel>
+                                                            <WrapPanel Grid.Column="2">
+                                                                <Label Content="Architect:" />
+                                                                <TextBlock Text="{Binding Architect, Mode=TwoWay}" VerticalAlignment="Center" />
+                                                            </WrapPanel>
+                                                        </Grid>
+                                                        <Grid Grid.Row="1">
+                                                            <Grid.ColumnDefinitions>
+                                                                <ColumnDefinition Width="4*" />
+                                                                <ColumnDefinition Width="2*" />
+                                                                <ColumnDefinition Width="3*" />
+                                                            </Grid.ColumnDefinitions>
+                                                            <WrapPanel>
+                                                                <Label Content="Customer:" />
+                                                                <TextBlock Text="{Binding CustomerName, Mode=TwoWay}" VerticalAlignment="Center" />
+                                                            </WrapPanel>
+                                                            <WrapPanel Grid.Column="1">
+                                                                <Label Content="Job No:" />
+                                                                <TextBlock Text="{Binding JobNo, Mode=TwoWay}" VerticalAlignment="Center" />
+                                                            </WrapPanel>
+                                                            <WrapPanel Grid.Column="2">
+                                                                <Label Content="Salesman:" />
+                                                                <TextBlock Text="{Binding SalesmanName, Mode=TwoWay}" VerticalAlignment="Center" />
+                                                            </WrapPanel>
+                                                        </Grid>
+                                                    </Grid>
+                                                </Border>
+                                                <Grid Grid.Row="1">
+                                                    <DataGrid ItemsSource="{Binding ProjectMatTrackings, Mode=TwoWay}" GridLinesVisibility="None" AutoGenerateColumns="False" HeadersVisibility="Column" CanUserAddRows="False" BorderThickness="0">
+                                                        <DataGrid.Resources>
+                                                            <Style TargetType="DataGridColumnHeader" BasedOn="{StaticResource GridColumnHeaderBase}">
+                                                                <Setter Property="Background" Value="#C6D9F1" />
+                                                                <Setter Property="Foreground" Value="Black" />
+                                                                <Setter Property="Height" Value="25" />
+                                                            </Style>
+                                                        </DataGrid.Resources>
+                                                        <DataGrid.Columns>
+                                                            <DataGridTemplateColumn IsReadOnly="False" Width="2*">
+                                                                <DataGridTemplateColumn.Header>
+                                                                    <TextBlock Text="Matl Reqd" TextWrapping="Wrap" FontWeight="Bold" />
+                                                                </DataGridTemplateColumn.Header>
+                                                                <DataGridTemplateColumn.CellTemplate>
+                                                                    <DataTemplate>
+                                                                        <TextBlock Text="{Binding MatReqdDate, Mode=TwoWay, Converter={StaticResource DateTimeToDateConverter}}" />
+                                                                    </DataTemplate>
+                                                                </DataGridTemplateColumn.CellTemplate>
+                                                            </DataGridTemplateColumn>
+                                                            <DataGridTemplateColumn IsReadOnly="False" Width="4*">
+                                                                <DataGridTemplateColumn.Header>
+                                                                    <TextBlock Text="Manufacturer" TextWrapping="Wrap" FontWeight="Bold" />
+                                                                </DataGridTemplateColumn.Header>
+                                                                <DataGridTemplateColumn.CellTemplate>
+                                                                    <DataTemplate>
+                                                                        <TextBlock Text="{Binding ManufName, Mode=TwoWay}" />
+                                                                    </DataTemplate>
+                                                                </DataGridTemplateColumn.CellTemplate>
+                                                            </DataGridTemplateColumn>
+                                                            <DataGridTemplateColumn IsReadOnly="False" Width="1*">
+                                                                <DataGridTemplateColumn.Header>
+                                                                    <TextBlock Text="CO #" TextWrapping="Wrap" FontWeight="Bold" />
+                                                                </DataGridTemplateColumn.Header>
+                                                                <DataGridTemplateColumn.CellTemplate>
+                                                                    <DataTemplate>
+                                                                        <TextBlock Text="{Binding ManuOrderNo, Mode=TwoWay}" />
+                                                                    </DataTemplate>
+                                                                </DataGridTemplateColumn.CellTemplate>
+                                                            </DataGridTemplateColumn>
+                                                            <DataGridTemplateColumn IsReadOnly="False" Width="2*">
+                                                                <DataGridTemplateColumn.Header>
+                                                                    <TextBlock Text="Phase" TextWrapping="Wrap" FontWeight="Bold" />
+                                                                </DataGridTemplateColumn.Header>
+                                                                <DataGridTemplateColumn.CellTemplate>
+                                                                    <DataTemplate>
+                                                                        <TextBlock Text="{Binding MatPhase, Mode=TwoWay}" />
+                                                                    </DataTemplate>
+                                                                </DataGridTemplateColumn.CellTemplate>
+                                                            </DataGridTemplateColumn>
+                                                            <DataGridTemplateColumn IsReadOnly="False" Width="3*">
+                                                                <DataGridTemplateColumn.Header>
+                                                                    <TextBlock Text="Material" TextWrapping="Wrap" FontWeight="Bold" />
+                                                                </DataGridTemplateColumn.Header>
+                                                                <DataGridTemplateColumn.CellTemplate>
+                                                                    <DataTemplate>
+                                                                        <TextBlock Text="{Binding MatType, Mode=TwoWay}" />
+                                                                    </DataTemplate>
+                                                                </DataGridTemplateColumn.CellTemplate>
+                                                            </DataGridTemplateColumn>
+                                                            <DataGridTemplateColumn IsReadOnly="False" Width="2*">
+                                                                <DataGridTemplateColumn.Header>
+                                                                    <TextBlock Text="Compl" TextWrapping="Wrap" FontWeight="Bold" />
+                                                                </DataGridTemplateColumn.Header>
+                                                                <DataGridTemplateColumn.CellTemplate>
+                                                                    <DataTemplate>
+                                                                        <CheckBox IsChecked="{Binding OrderComplete, Mode=TwoWay}" />
+                                                                    </DataTemplate>
+                                                                </DataGridTemplateColumn.CellTemplate>
+                                                            </DataGridTemplateColumn>
+                                                        </DataGrid.Columns>
+                                                    </DataGrid>
+                                                </Grid>
+                                            </Grid>
+
+
+                                        </Grid>
+                                    </Border>
+                                </DataTemplate>
+                            </DataGridTemplateColumn.CellTemplate>
+                        </DataGridTemplateColumn>
+                    </DataGrid.Columns>
+                </DataGrid>
+            </Grid>
+        </Grid>
+        <Grid Grid.Row="1" Margin="10" Visibility="{Binding JobManufVisibility, Mode=TwoWay, Converter={StaticResource BoolToVisibleConverter}}">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="*" />
+            </Grid.RowDefinitions>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="6*" />
+                <ColumnDefinition Width="4*" />
+            </Grid.ColumnDefinitions>
+            <Grid>
+                <TextBlock Style="{StaticResource ReportViewHeader}" Text="Jobs by Architect" />
+            </Grid>
+            <Grid Grid.Row="1" >
+                <DataGrid ItemsSource="{Binding ReportJobArchReps, Mode=TwoWay}" GridLinesVisibility="None" AutoGenerateColumns="False" HeadersVisibility="Column" CanUserAddRows="False" BorderThickness="0">
+                    <DataGrid.Resources>
+                        <Style TargetType="DataGridColumnHeader" BasedOn="{StaticResource GridColumnHeaderBase}">
+                            <Setter Property="Background" Value="#C6D9F1" />
+                            <Setter Property="Height" Value="Auto" />
+                        </Style>
+                        <Style TargetType="TextBlock">
+                            <Setter Property="VerticalAlignment" Value="Center" />
+                        </Style>
+                        <Style TargetType="Label">
+                            <Setter Property="FontWeight" Value="Bold" />
+                            <Setter Property="FontStyle" Value="Italic" />
+                        </Style>
+                        <Style TargetType="DataGridRow">
+                            <Setter Property="Height" Value="Auto" />
+                            <Setter Property="BorderThickness" Value="0,0,0,0" />
+                            <Setter Property="BorderBrush" Value="Black" />
+                        </Style>
+                    </DataGrid.Resources>
+                    <DataGrid.Columns>
+                        <DataGridTemplateColumn Width="*">
+                            <DataGridTemplateColumn.CellTemplate >
+                                <DataTemplate>
+                                    <Border >
+                                        <Grid>
+                                            <Grid.RowDefinitions>
+                                                <RowDefinition Height="Auto"/>
+                                                <RowDefinition Height="Auto" />
+                                            </Grid.RowDefinitions>
+                                            <Grid>
+                                                <Grid.RowDefinitions>
+                                                    <RowDefinition Height="Auto" />
+                                                    <RowDefinition Height="Auto" />
+                                                </Grid.RowDefinitions>
+                                                <Border BorderBrush="Black" BorderThickness="0,2,0,0" Background="#C6D9F1">
+                                                    <Grid>
+                                                        <Grid.RowDefinitions>
+                                                            <RowDefinition Height="Auto" />
+                                                            <RowDefinition Height="Auto" />
+                                                        </Grid.RowDefinitions>
+                                                        <Grid>
+                                                            <Grid.ColumnDefinitions>
+                                                                <ColumnDefinition Width="4*" />
+                                                                <ColumnDefinition Width="2*" />
+                                                                <ColumnDefinition Width="3*" />
+                                                            </Grid.ColumnDefinitions>
+                                                            <WrapPanel>
+                                                                <TextBlock Text="{Binding ProjectName, Mode=TwoWay}" VerticalAlignment="Center" FontSize="16" FontWeight="Bold" />
+                                                            </WrapPanel>
+                                                            <WrapPanel Grid.Column="1" VerticalAlignment="Center">
+                                                                <Button>View</Button>
+                                                            </WrapPanel>
+                                                            <WrapPanel Grid.Column="2">
+                                                                <Label Content="Architect:" />
+                                                                <TextBlock Text="{Binding Architect, Mode=TwoWay}" VerticalAlignment="Center" />
+                                                            </WrapPanel>
+                                                        </Grid>
+                                                        <Grid Grid.Row="1">
+                                                            <Grid.ColumnDefinitions>
+                                                                <ColumnDefinition Width="4*" />
+                                                                <ColumnDefinition Width="2*" />
+                                                                <ColumnDefinition Width="3*" />
+                                                            </Grid.ColumnDefinitions>
+                                                            <WrapPanel>
+                                                                <Label Content="Customer:" />
+                                                                <TextBlock Text="{Binding CustomerName, Mode=TwoWay}" VerticalAlignment="Center" />
+                                                            </WrapPanel>
+                                                            <WrapPanel Grid.Column="1">
+                                                                <Label Content="Job No:" />
+                                                                <TextBlock Text="{Binding JobNo, Mode=TwoWay}" VerticalAlignment="Center" />
+                                                            </WrapPanel>
+                                                            <WrapPanel Grid.Column="2">
+                                                                <Label Content="Salesman:" />
+                                                                <TextBlock Text="{Binding SalesmanName, Mode=TwoWay}" VerticalAlignment="Center" />
+                                                            </WrapPanel>
+                                                        </Grid>
+                                                    </Grid>
+                                                </Border>
+                                                <Grid Grid.Row="1">
+                                                    <DataGrid ItemsSource="{Binding ProjectMatTrackings, Mode=TwoWay}" GridLinesVisibility="None" AutoGenerateColumns="False" HeadersVisibility="Column" CanUserAddRows="False" BorderThickness="0">
+                                                        <DataGrid.Resources>
+                                                            <Style TargetType="DataGridColumnHeader" BasedOn="{StaticResource GridColumnHeaderBase}">
+                                                                <Setter Property="Background" Value="#C6D9F1" />
+                                                                <Setter Property="Foreground" Value="Black" />
+                                                                <Setter Property="Height" Value="25" />
+                                                            </Style>
+                                                        </DataGrid.Resources>
+                                                        <DataGrid.Columns>
+                                                            <DataGridTemplateColumn IsReadOnly="False" Width="2*">
+                                                                <DataGridTemplateColumn.Header>
+                                                                    <TextBlock Text="Matl Reqd" TextWrapping="Wrap" FontWeight="Bold" />
+                                                                </DataGridTemplateColumn.Header>
+                                                                <DataGridTemplateColumn.CellTemplate>
+                                                                    <DataTemplate>
+                                                                        <TextBlock Text="{Binding MatReqdDate, Mode=TwoWay, Converter={StaticResource DateTimeToDateConverter}}" />
+                                                                    </DataTemplate>
+                                                                </DataGridTemplateColumn.CellTemplate>
+                                                            </DataGridTemplateColumn>
+                                                            <DataGridTemplateColumn IsReadOnly="False" Width="4*">
+                                                                <DataGridTemplateColumn.Header>
+                                                                    <TextBlock Text="Manufacturer" TextWrapping="Wrap" FontWeight="Bold" />
+                                                                </DataGridTemplateColumn.Header>
+                                                                <DataGridTemplateColumn.CellTemplate>
+                                                                    <DataTemplate>
+                                                                        <TextBlock Text="{Binding ManufName, Mode=TwoWay}" />
+                                                                    </DataTemplate>
+                                                                </DataGridTemplateColumn.CellTemplate>
+                                                            </DataGridTemplateColumn>
+                                                            <DataGridTemplateColumn IsReadOnly="False" Width="1*">
+                                                                <DataGridTemplateColumn.Header>
+                                                                    <TextBlock Text="CO #" TextWrapping="Wrap" FontWeight="Bold" />
+                                                                </DataGridTemplateColumn.Header>
+                                                                <DataGridTemplateColumn.CellTemplate>
+                                                                    <DataTemplate>
+                                                                        <TextBlock Text="{Binding ManuOrderNo, Mode=TwoWay}" />
+                                                                    </DataTemplate>
+                                                                </DataGridTemplateColumn.CellTemplate>
+                                                            </DataGridTemplateColumn>
+                                                            <DataGridTemplateColumn IsReadOnly="False" Width="2*">
+                                                                <DataGridTemplateColumn.Header>
+                                                                    <TextBlock Text="Phase" TextWrapping="Wrap" FontWeight="Bold" />
+                                                                </DataGridTemplateColumn.Header>
+                                                                <DataGridTemplateColumn.CellTemplate>
+                                                                    <DataTemplate>
+                                                                        <TextBlock Text="{Binding MatPhase, Mode=TwoWay}" />
+                                                                    </DataTemplate>
+                                                                </DataGridTemplateColumn.CellTemplate>
+                                                            </DataGridTemplateColumn>
+                                                            <DataGridTemplateColumn IsReadOnly="False" Width="3*">
+                                                                <DataGridTemplateColumn.Header>
+                                                                    <TextBlock Text="Material" TextWrapping="Wrap" FontWeight="Bold" />
+                                                                </DataGridTemplateColumn.Header>
+                                                                <DataGridTemplateColumn.CellTemplate>
+                                                                    <DataTemplate>
+                                                                        <TextBlock Text="{Binding MatType, Mode=TwoWay}" />
+                                                                    </DataTemplate>
+                                                                </DataGridTemplateColumn.CellTemplate>
+                                                            </DataGridTemplateColumn>
+                                                            <DataGridTemplateColumn IsReadOnly="False" Width="2*">
+                                                                <DataGridTemplateColumn.Header>
+                                                                    <TextBlock Text="Compl" TextWrapping="Wrap" FontWeight="Bold" />
+                                                                </DataGridTemplateColumn.Header>
+                                                                <DataGridTemplateColumn.CellTemplate>
+                                                                    <DataTemplate>
+                                                                        <CheckBox IsChecked="{Binding OrderComplete, Mode=TwoWay}" />
+                                                                    </DataTemplate>
+                                                                </DataGridTemplateColumn.CellTemplate>
+                                                            </DataGridTemplateColumn>
+                                                        </DataGrid.Columns>
+                                                    </DataGrid>
+                                                </Grid>
+                                            </Grid>
+
+
+                                        </Grid>
+                                    </Border>
+                                </DataTemplate>
+                            </DataGridTemplateColumn.CellTemplate>
+                        </DataGridTemplateColumn>
+                    </DataGrid.Columns>
+                </DataGrid>
+            </Grid>
+        </Grid>
+        <Grid Grid.Row="1" Margin="10" Visibility="{Binding OpenJobVisibility, Mode=TwoWay, Converter={StaticResource BoolToVisibleConverter}}">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="*" />
+            </Grid.RowDefinitions>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="6*" />
+                <ColumnDefinition Width="4*" />
+            </Grid.ColumnDefinitions>
+            <Grid>
+                <TextBlock Style="{StaticResource ReportViewHeader}" Text="Open Jobs List" />
+            </Grid>
+            <Grid Grid.Row="1" >
+                <DataGrid ItemsSource="{Binding ReportActiveProjects, Mode=TwoWay}" GridLinesVisibility="None" AutoGenerateColumns="False" HeadersVisibility="Column" CanUserAddRows="False" BorderThickness="0">
+                    <DataGrid.Resources>
+                        <Style TargetType="DataGridColumnHeader" BasedOn="{StaticResource GridColumnHeaderBase}">
+                            <Setter Property="Background" Value="#C6D9F1" />
+                            <Setter Property="Height" Value="Auto" />
+                        </Style>
+                        <Style TargetType="TextBox">
+                            <Setter Property="BorderThickness" Value="0" />
+                            <Setter Property="IsReadOnly" Value="True" />
+                        </Style>
+                        <Style TargetType="DataGridRow">
+                            <Setter Property="Height" Value="Auto" />
+                            <Setter Property="BorderThickness" Value="0" />
+                        </Style>
+                    </DataGrid.Resources>
+                    <DataGrid.Columns>
+                        <DataGridTemplateColumn Width="*">
+                            <DataGridTemplateColumn.CellTemplate >
+                                <DataTemplate>
+                                    <Border BorderBrush="Black" BorderThickness="0,2,0,0">
+                                        <Grid>
+                                            <Grid.RowDefinitions>
+                                                <RowDefinition Height="Auto"/>
+                                                <RowDefinition Height="Auto" />
+                                            </Grid.RowDefinitions>
+                                            <Border Background="#C6D9F1">
+                                                <Grid>
+                                                    <Grid.RowDefinitions>
+                                                        <RowDefinition Height="Auto" />
+                                                        <RowDefinition Height="Auto" />
+                                                    </Grid.RowDefinitions>
+                                                    <Grid>
+                                                        <Grid.ColumnDefinitions>
+                                                            <ColumnDefinition Width="3*" />
+                                                            <ColumnDefinition Width="2*" />
+                                                        </Grid.ColumnDefinitions>
+                                                        <TextBlock Text="{Binding ProjectName, Mode=TwoWay}" FontSize="16" FontWeight="Bold" />
+                                                        <Button Grid.Column="1" Content="View" Width="40" HorizontalAlignment="Left" />
+                                                    </Grid>
+                                                    <Grid Grid.Row="1">
+                                                        <Grid.ColumnDefinitions>
+                                                            <ColumnDefinition Width="3*" />
+                                                            <ColumnDefinition Width="1*" />
+                                                            <ColumnDefinition Width="1*" />
+                                                        </Grid.ColumnDefinitions>
+                                                        <WrapPanel>
+                                                            <Label Content="Customer:" FontWeight="Bold" />
+                                                            <TextBlock Text="{Binding CustomerName, Mode=TwoWay}" VerticalAlignment="Center" />
+                                                        </WrapPanel>
+                                                        <WrapPanel Grid.Column="1">
+                                                            <Label Content="JobNo:" FontWeight="Bold" />
+                                                            <TextBlock Text="{Binding JobNo, Mode=TwoWay}" VerticalAlignment="Center" />
+                                                        </WrapPanel>
+                                                        <WrapPanel Grid.Column="2">
+                                                            <Label Content="Salesman:" FontWeight="Bold" />
+                                                            <TextBlock Text="{Binding SalesmanName, Mode=TwoWay}" VerticalAlignment="Center" />
+                                                        </WrapPanel>
+                                                    </Grid>
+                                                </Grid>
+                                            </Border>
+                                            <Grid Grid.Row="1">
+                                                <DataGrid ItemsSource="{Binding ProjectMatTrackings, Mode=TwoWay}" GridLinesVisibility="None" AutoGenerateColumns="False" HeadersVisibility="Column" CanUserAddRows="False" BorderThickness="0">
+                                                    <DataGrid.Resources>
+                                                        <Style TargetType="DataGridColumnHeader" BasedOn="{StaticResource GridColumnHeaderBase}">
+                                                            <Setter Property="Background" Value="#C6D9F1" />
+                                                            <Setter Property="Foreground" Value="Black" />
+                                                            <Setter Property="Height" Value="Auto" />
+                                                        </Style>
+                                                    </DataGrid.Resources>
+                                                    <DataGrid.Columns>
+                                                        <DataGridTemplateColumn IsReadOnly="False" Width="2*">
+                                                            <DataGridTemplateColumn.Header>
+                                                                <TextBlock Text="Matl Reqd" TextWrapping="Wrap" FontWeight="Bold" />
+                                                            </DataGridTemplateColumn.Header>
+                                                            <DataGridTemplateColumn.CellTemplate>
+                                                                <DataTemplate>
+                                                                    <TextBlock Text="{Binding MatReqdDate, Mode=TwoWay, Converter={StaticResource DateTimeToDateConverter}}" />
+                                                                </DataTemplate>
+                                                            </DataGridTemplateColumn.CellTemplate>
+                                                        </DataGridTemplateColumn>
+                                                        <DataGridTemplateColumn IsReadOnly="False" Width="3*">
+                                                            <DataGridTemplateColumn.Header>
+                                                                <TextBlock Text="Manufacturer" TextWrapping="Wrap" FontWeight="Bold" />
+                                                            </DataGridTemplateColumn.Header>
+                                                            <DataGridTemplateColumn.CellTemplate>
+                                                                <DataTemplate>
+                                                                    <TextBlock Text="{Binding ManufName, Mode=TwoWay}" />
+                                                                </DataTemplate>
+                                                            </DataGridTemplateColumn.CellTemplate>
+                                                        </DataGridTemplateColumn>
+                                                        <DataGridTemplateColumn IsReadOnly="False" Width="1*">
+                                                            <DataGridTemplateColumn.Header>
+                                                                <TextBlock Text="CO #" TextWrapping="Wrap" FontWeight="Bold" />
+                                                            </DataGridTemplateColumn.Header>
+                                                            <DataGridTemplateColumn.CellTemplate>
+                                                                <DataTemplate>
+                                                                    <TextBlock Text="{Binding ManuOrderNo, Mode=TwoWay}" />
+                                                                </DataTemplate>
+                                                            </DataGridTemplateColumn.CellTemplate>
+                                                        </DataGridTemplateColumn>
+                                                        <DataGridTemplateColumn IsReadOnly="False" Width="4*">
+                                                            <DataGridTemplateColumn.Header>
+                                                                <TextBlock Text="Phase" TextWrapping="Wrap" FontWeight="Bold" />
+                                                            </DataGridTemplateColumn.Header>
+                                                            <DataGridTemplateColumn.CellTemplate>
+                                                                <DataTemplate>
+                                                                    <TextBlock Text="{Binding MatPhase, Mode=TwoWay}" />
+                                                                </DataTemplate>
+                                                            </DataGridTemplateColumn.CellTemplate>
+                                                        </DataGridTemplateColumn>
+                                                        <DataGridTemplateColumn IsReadOnly="False" Width="4*">
+                                                            <DataGridTemplateColumn.Header>
+                                                                <TextBlock Text="Material" TextWrapping="Wrap" FontWeight="Bold" />
+                                                            </DataGridTemplateColumn.Header>
+                                                            <DataGridTemplateColumn.CellTemplate>
+                                                                <DataTemplate>
+                                                                    <TextBlock Text="{Binding MatType, Mode=TwoWay}" />
+                                                                </DataTemplate>
+                                                            </DataGridTemplateColumn.CellTemplate>
+                                                        </DataGridTemplateColumn>
+                                                        <DataGridTemplateColumn IsReadOnly="False" Width="4*">
+                                                            <DataGridTemplateColumn.Header>
+                                                                <TextBlock Text="R.F.F" TextWrapping="Wrap" FontWeight="Bold" />
+                                                            </DataGridTemplateColumn.Header>
+                                                            <DataGridTemplateColumn.CellTemplate>
+                                                                <DataTemplate>
+                                                                    <TextBlock Text="{Binding RFF, Mode=TwoWay, Converter={StaticResource DateTimeToDateConverter}}" />
+                                                                </DataTemplate>
+                                                            </DataGridTemplateColumn.CellTemplate>
+                                                        </DataGridTemplateColumn>
+                                                        <DataGridTemplateColumn IsReadOnly="False" Width="4*">
+                                                            <DataGridTemplateColumn.Header>
+                                                                <TextBlock Text="Sched.Ship" TextWrapping="Wrap" FontWeight="Bold" />
+                                                            </DataGridTemplateColumn.Header>
+                                                            <DataGridTemplateColumn.CellTemplate>
+                                                                <DataTemplate>
+                                                                    <TextBlock Text="{Binding SchedShip, Mode=TwoWay, Converter={StaticResource DateTimeToDateConverter}}" />
+                                                                </DataTemplate>
+                                                            </DataGridTemplateColumn.CellTemplate>
+                                                        </DataGridTemplateColumn>
+                                                        <DataGridTemplateColumn IsReadOnly="False" Width="1*">
+                                                            <DataGridTemplateColumn.Header>
+                                                                <TextBlock Text="Compl" TextWrapping="Wrap" FontWeight="Bold" />
+                                                            </DataGridTemplateColumn.Header>
+                                                            <DataGridTemplateColumn.CellTemplate>
+                                                                <DataTemplate>
+                                                                    <CheckBox IsChecked="{Binding OrderComplete, Mode=TwoWay}" />
+                                                                </DataTemplate>
+                                                            </DataGridTemplateColumn.CellTemplate>
+                                                        </DataGridTemplateColumn>
+                                                    </DataGrid.Columns>
+                                                </DataGrid>
+                                            </Grid>
+                                        </Grid>
+                                    </Border>
+                                </DataTemplate>
+                            </DataGridTemplateColumn.CellTemplate>
+                        </DataGridTemplateColumn>
+                    </DataGrid.Columns>
+                </DataGrid>
+            </Grid>
+        </Grid>
+
+        <Grid Grid.Row="1" Margin="10" Visibility="{Binding PmMeetingVisibility, Mode=TwoWay, Converter={StaticResource BoolToVisibleConverter}}">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="*" />
+            </Grid.RowDefinitions>
+          
+            <Grid>
+                <TextBlock Style="{StaticResource ReportViewHeader}" Text="Project Manager Meeting Report" />
+            </Grid>
+            <Grid Grid.Row="1" >
+                <DataGrid ItemsSource="{Binding ReportPmMeetings, Mode=TwoWay}" GridLinesVisibility="None" AutoGenerateColumns="False" HeadersVisibility="Column" CanUserAddRows="False" BorderThickness="0">
+                    <DataGrid.Resources>
+                        <Style TargetType="DataGridColumnHeader" BasedOn="{StaticResource GridColumnHeaderBase}">
+                            <Setter Property="Background" Value="#C6D9F1" />
+                            <Setter Property="Height" Value="Auto" />
+                        </Style>
+                        <Style TargetType="TextBlock">
+                            <Setter Property="VerticalAlignment" Value="Center" />
+                        </Style>
+                        <Style TargetType="DataGridRow">
+                            <Setter Property="Height" Value="Auto" />
+                            <Setter Property="BorderThickness" Value="0" />
+                        </Style>
+                        <Style TargetType="Label">
+                            <Setter Property="FontWeight" Value="Bold" />
+                        </Style>
+                    </DataGrid.Resources>
+                    <DataGrid.Columns>
+                        <DataGridTemplateColumn Width="*">
+                            <DataGridTemplateColumn.CellTemplate >
+                                <DataTemplate>
+                                    <Border BorderBrush="Black" BorderThickness="0,2,0,0">
+                                        <Grid>
+                                            <Grid.RowDefinitions>
+                                                <RowDefinition Height="Auto"/>
+                                                <RowDefinition Height="Auto" />
+                                            </Grid.RowDefinitions>
+                                            <Border Background="#C6D9F1">
+                                                <Grid>
+                                                    <Grid.RowDefinitions>
+                                                        <RowDefinition Height="Auto" />
+                                                        <RowDefinition Height="Auto" />
+                                                        <RowDefinition Height="Auto" />
+                                                    </Grid.RowDefinitions>
+                                                    <Grid>
+                                                        <Grid.ColumnDefinitions>
+                                                            <ColumnDefinition Width="4*" />
+                                                            <ColumnDefinition Width="2*" />
+                                                            <ColumnDefinition Width="1*" />
+                                                            <ColumnDefinition Width="1*" />
+                                                            <ColumnDefinition Width="2*" />
+                                                            <ColumnDefinition Width="1*" />
+                                                            <ColumnDefinition Width="1*" />
+                                                        </Grid.ColumnDefinitions>
+                                                        <TextBlock Text="{Binding ProjectName, Mode=TwoWay}" FontSize="16" FontWeight="Bold" VerticalAlignment="Center" />
+                                                        <WrapPanel Grid.Column="1">
+                                                            <Label Content="Target Date:" />
+                                                            <TextBlock Text="{Binding TargetDate, Mode=TwoWay}" VerticalAlignment="Center"  />
+                                                        </WrapPanel>
+                                                        <Button Grid.Column="2" Content="View" Width="40" HorizontalAlignment="Left" />
+                                                        <WrapPanel Grid.Column="3">
+                                                            <Label Content="Completed:" />
+                                                            <TextBlock Text="{Binding Complete, Mode=TwoWay}" VerticalAlignment="Center"  />
+                                                        </WrapPanel>
+                                                        <WrapPanel Grid.Column="4">
+                                                            <Label Content="Architect:" />
+                                                            <TextBlock Text="{Binding ArchitectName, Mode=TwoWay}" VerticalAlignment="Center"  />
+                                                        </WrapPanel>
+                                                        <WrapPanel Grid.Column="5">
+                                                            <Label Content="CIP Project:" />
+                                                            <CheckBox IsChecked="{Binding IsCip, Mode=TwoWay}" VerticalAlignment="Center"  />
+                                                        </WrapPanel>
+                                                    </Grid>
+                                                    <Grid Grid.Row="1">
+                                                        <Grid.ColumnDefinitions>
+                                                            <ColumnDefinition Width="2*" />
+                                                            <ColumnDefinition Width="1*" />
+                                                            <ColumnDefinition Width="3*" />
+                                                            <ColumnDefinition Width="2*" />
+                                                            <ColumnDefinition Width="2*" />
+                                                            <ColumnDefinition Width="1*" />
+                                                            <ColumnDefinition Width="1*" />
+                                                        </Grid.ColumnDefinitions>
+                                                        <WrapPanel>
+                                                            <Label Content="" />
+                                                            <TextBlock Text="{Binding FullAddress, Mode=OneWay}" VerticalAlignment="Center" />
+                                                        </WrapPanel>
+                                                        <WrapPanel Grid.Column="1">
+                                                            <Label Content="JobNo:" />
+                                                            <TextBlock Text="{Binding JobNo, Mode=TwoWay}" VerticalAlignment="Center" />
+                                                        </WrapPanel>
+                                                        <WrapPanel Grid.Column="2">
+                                                            <Label Content="Project Manager:" />
+                                                            <TextBlock Text="{Binding PmName, Mode=TwoWay}" VerticalAlignment="Center" />
+                                                        </WrapPanel>
+                                                        <WrapPanel Grid.Column="3">
+                                                            <Label Content="Estimator:" />
+                                                            <TextBlock Text="{Binding EstimatorName, Mode=TwoWay}" VerticalAlignment="Center" />
+                                                        </WrapPanel>
+                                                        <WrapPanel Grid.Column="4">
+                                                            <Label Content="Customer:" />
+                                                            <TextBlock Text="{Binding CustomerName, Mode=TwoWay}" VerticalAlignment="Center" />
+                                                        </WrapPanel>
+                                                        <WrapPanel Grid.Column="5">
+                                                            <Label Content="C3 Project:" />
+                                                            <CheckBox IsChecked="{Binding IsC3, Mode=TwoWay}" VerticalAlignment="Center" />
+                                                        </WrapPanel>
+                                                        <WrapPanel Grid.Column="6">
+                                                            <Label Content="Contract Recvd:" />
+                                                            <CheckBox IsChecked="{Binding IsContractRecvd, Mode=TwoWay}" VerticalAlignment="Center" />
+                                                        </WrapPanel>
+                                                    </Grid>
+                                                    <Grid Grid.Row="2">
+                                                        <Grid.ColumnDefinitions>
+                                                            <ColumnDefinition Width="8*" />
+                                                            <ColumnDefinition Width="2*" />
+                                                            <ColumnDefinition Width="1*" />
+                                                            <ColumnDefinition Width="1*" />
+                                                        </Grid.ColumnDefinitions>
+                                                        <WrapPanel Grid.Column="1">
+                                                            <Label Content="Billing Due:" />
+                                                            <TextBlock Text="{Binding BilingDue, Mode=TwoWay}" VerticalAlignment="Center" />
+                                                        </WrapPanel>
+                                                        <WrapPanel Grid.Column="2">
+                                                            <Label Content="Cert Payroll:" />
+                                                            <CheckBox IsChecked="{Binding IsC3, Mode=TwoWay}" VerticalAlignment="Center" />
+                                                        </WrapPanel>
+                                                        <WrapPanel Grid.Column="3">
+                                                            <Label Content="Stored Mat:" />
+                                                            <CheckBox IsChecked="{Binding StoredMat, Mode=TwoWay}" VerticalAlignment="Center" />
+                                                        </WrapPanel>
+                                                    </Grid>
+                                                </Grid>
+                                            </Border>
+                                            <Grid Grid.Row="1">
+                                                <DataGrid ItemsSource="{Binding ProjectMatTrackings, Mode=TwoWay}" GridLinesVisibility="None" AutoGenerateColumns="False" HeadersVisibility="Column" CanUserAddRows="False" BorderThickness="0">
+                                                    <DataGrid.Resources>
+                                                        <Style TargetType="DataGridColumnHeader" BasedOn="{StaticResource GridColumnHeaderBase}">
+                                                            <Setter Property="Background" Value="#C6D9F1" />
+                                                            <Setter Property="Foreground" Value="Black" />
+                                                            <Setter Property="Height" Value="Auto" />
+                                                        </Style>
+                                                    </DataGrid.Resources>
+                                                    <DataGrid.Columns>
+                                                        <DataGridTemplateColumn IsReadOnly="False" Width="2*">
+                                                            <DataGridTemplateColumn.Header>
+                                                                <TextBlock Text="Matl Reqd" TextWrapping="Wrap" FontWeight="Bold" />
+                                                            </DataGridTemplateColumn.Header>
+                                                            <DataGridTemplateColumn.CellTemplate>
+                                                                <DataTemplate>
+                                                                    <TextBlock Text="{Binding MatReqdDate, Mode=TwoWay, Converter={StaticResource DateTimeToDateConverter}}" />
+                                                                </DataTemplate>
+                                                            </DataGridTemplateColumn.CellTemplate>
+                                                        </DataGridTemplateColumn>
+                                                        <DataGridTemplateColumn IsReadOnly="False" Width="1*">
+                                                            <DataGridTemplateColumn.Header>
+                                                                <TextBlock Text="Mat Only" TextWrapping="Wrap" FontWeight="Bold" />
+                                                            </DataGridTemplateColumn.Header>
+                                                            <DataGridTemplateColumn.CellTemplate>
+                                                                <DataTemplate>
+                                                                    <CheckBox IsChecked="{Binding MatOnly, Mode=TwoWay}" />
+                                                                </DataTemplate>
+                                                            </DataGridTemplateColumn.CellTemplate>
+                                                        </DataGridTemplateColumn>
+                                                        <DataGridTemplateColumn IsReadOnly="False" Width="2*">
+                                                            <DataGridTemplateColumn.Header>
+                                                                <TextBlock Text="Manufacturer" TextWrapping="Wrap" FontWeight="Bold" />
+                                                            </DataGridTemplateColumn.Header>
+                                                            <DataGridTemplateColumn.CellTemplate>
+                                                                <DataTemplate>
+                                                                    <TextBlock Text="{Binding ManufName, Mode=TwoWay}" />
+                                                                </DataTemplate>
+                                                            </DataGridTemplateColumn.CellTemplate>
+                                                        </DataGridTemplateColumn>
+                                                        <DataGridTemplateColumn IsReadOnly="False" Width="1*">
+                                                            <DataGridTemplateColumn.Header>
+                                                                <TextBlock Text="CO #" TextWrapping="Wrap" FontWeight="Bold" />
+                                                            </DataGridTemplateColumn.Header>
+                                                            <DataGridTemplateColumn.CellTemplate>
+                                                                <DataTemplate>
+                                                                    <TextBlock Text="{Binding ManuOrderNo, Mode=TwoWay}" />
+                                                                </DataTemplate>
+                                                            </DataGridTemplateColumn.CellTemplate>
+                                                        </DataGridTemplateColumn>
+                                                        <DataGridTemplateColumn IsReadOnly="False" Width="2*">
+                                                            <DataGridTemplateColumn.Header>
+                                                                <TextBlock Text="Phase" TextWrapping="Wrap" FontWeight="Bold" />
+                                                            </DataGridTemplateColumn.Header>
+                                                            <DataGridTemplateColumn.CellTemplate>
+                                                                <DataTemplate>
+                                                                    <TextBlock Text="{Binding MatPhase, Mode=TwoWay}" />
+                                                                </DataTemplate>
+                                                            </DataGridTemplateColumn.CellTemplate>
+                                                        </DataGridTemplateColumn>
+                                                        <DataGridTemplateColumn IsReadOnly="False" Width="2*">
+                                                            <DataGridTemplateColumn.Header>
+                                                                <TextBlock Text="Type" TextWrapping="Wrap" FontWeight="Bold" />
+                                                            </DataGridTemplateColumn.Header>
+                                                            <DataGridTemplateColumn.CellTemplate>
+                                                                <DataTemplate>
+                                                                    <TextBlock Text="{Binding MatType, Mode=TwoWay}" />
+                                                                </DataTemplate>
+                                                            </DataGridTemplateColumn.CellTemplate>
+                                                        </DataGridTemplateColumn>
+                                                        <DataGridTemplateColumn IsReadOnly="False" Width="1*">
+                                                            <DataGridTemplateColumn.Header>
+                                                                <TextBlock Text="PO #" TextWrapping="Wrap" FontWeight="Bold" />
+                                                            </DataGridTemplateColumn.Header>
+                                                            <DataGridTemplateColumn.CellTemplate>
+                                                                <DataTemplate>
+                                                                    <TextBlock Text="{Binding PoNumber, Mode=TwoWay}" />
+                                                                </DataTemplate>
+                                                            </DataGridTemplateColumn.CellTemplate>
+                                                        </DataGridTemplateColumn>
+                                                        <DataGridTemplateColumn IsReadOnly="False" Width="2*">
+                                                            <DataGridTemplateColumn.Header>
+                                                                <TextBlock Text="Lead Time" TextWrapping="Wrap" FontWeight="Bold" />
+                                                            </DataGridTemplateColumn.Header>
+                                                            <DataGridTemplateColumn.CellTemplate>
+                                                                <DataTemplate>
+                                                                    <TextBlock Text="{Binding LeadTime, Mode=TwoWay}" />
+                                                                </DataTemplate>
+                                                            </DataGridTemplateColumn.CellTemplate>
+                                                        </DataGridTemplateColumn>
+                                                        <DataGridTemplateColumn IsReadOnly="False" Width="2*">
+                                                            <DataGridTemplateColumn.Header>
+                                                                <TextBlock Text="Shop Req" TextWrapping="Wrap" FontWeight="Bold" />
+                                                            </DataGridTemplateColumn.Header>
+                                                            <DataGridTemplateColumn.CellTemplate>
+                                                                <DataTemplate>
+                                                                    <TextBlock Text="{Binding ShopReqDate, Mode=TwoWay , Converter={StaticResource DateTimeToDateConverter}}" />
+                                                                </DataTemplate>
+                                                            </DataGridTemplateColumn.CellTemplate>
+                                                        </DataGridTemplateColumn>
+                                                        <DataGridTemplateColumn IsReadOnly="False" Width="2*">
+                                                            <DataGridTemplateColumn.Header>
+                                                                <TextBlock Text="Shop Recv" TextWrapping="Wrap" FontWeight="Bold" />
+                                                            </DataGridTemplateColumn.Header>
+                                                            <DataGridTemplateColumn.CellTemplate>
+                                                                <DataTemplate>
+                                                                    <TextBlock Text="{Binding ShopRecvdDate, Mode=TwoWay, Converter={StaticResource DateTimeToDateConverter}}" />
+                                                                </DataTemplate>
+                                                            </DataGridTemplateColumn.CellTemplate>
+                                                        </DataGridTemplateColumn>
+                                                        <DataGridTemplateColumn IsReadOnly="False" Width="2*">
+                                                            <DataGridTemplateColumn.Header>
+                                                                <TextBlock Text="Subm Issue" TextWrapping="Wrap" FontWeight="Bold" />
+                                                            </DataGridTemplateColumn.Header>
+                                                            <DataGridTemplateColumn.CellTemplate>
+                                                                <DataTemplate>
+                                                                    <TextBlock Text="{Binding SubmIssue, Mode=TwoWay, Converter={StaticResource DateTimeToDateConverter}}" />
+                                                                </DataTemplate>
+                                                            </DataGridTemplateColumn.CellTemplate>
+                                                        </DataGridTemplateColumn>
+                                                        <DataGridTemplateColumn IsReadOnly="False" Width="2*">
+                                                            <DataGridTemplateColumn.Header>
+                                                                <TextBlock Text="Subm Appr" TextWrapping="Wrap" FontWeight="Bold" />
+                                                            </DataGridTemplateColumn.Header>
+                                                            <DataGridTemplateColumn.CellTemplate>
+                                                                <DataTemplate>
+                                                                    <TextBlock Text="{Binding SubmAppr, Mode=TwoWay, Converter={StaticResource DateTimeToDateConverter}}" />
+                                                                </DataTemplate>
+                                                            </DataGridTemplateColumn.CellTemplate>
+                                                        </DataGridTemplateColumn>
+                                                        <DataGridTemplateColumn IsReadOnly="False" Width="1*">
+                                                            <DataGridTemplateColumn.Header>
+                                                                <TextBlock Text="No Subm" TextWrapping="Wrap" FontWeight="Bold" />
+                                                            </DataGridTemplateColumn.Header>
+                                                            <DataGridTemplateColumn.CellTemplate>
+                                                                <DataTemplate>
+                                                                    <CheckBox IsChecked="{Binding NoSubm, Mode=TwoWay}" />
+                                                                </DataTemplate>
+                                                            </DataGridTemplateColumn.CellTemplate>
+                                                        </DataGridTemplateColumn>
+                                                        <DataGridTemplateColumn IsReadOnly="False" Width="2*">
+                                                            <DataGridTemplateColumn.Header>
+                                                                <TextBlock Text="Color" TextWrapping="Wrap" FontWeight="Bold" />
+                                                            </DataGridTemplateColumn.Header>
+                                                            <DataGridTemplateColumn.CellTemplate>
+                                                                <DataTemplate>
+                                                                    <TextBlock Text="{Binding Color, Mode=TwoWay}" />
+                                                                </DataTemplate>
+                                                            </DataGridTemplateColumn.CellTemplate>
+                                                        </DataGridTemplateColumn>
+                                                        <DataGridTemplateColumn IsReadOnly="False" Width="1*">
+                                                            <DataGridTemplateColumn.Header>
+                                                                <TextBlock Text="Need FM" TextWrapping="Wrap" FontWeight="Bold" />
+                                                            </DataGridTemplateColumn.Header>
+                                                            <DataGridTemplateColumn.CellTemplate>
+                                                                <DataTemplate>
+                                                                    <TextBlock Text="{Binding NeedFM, Mode=TwoWay}" />
+                                                                </DataTemplate>
+                                                            </DataGridTemplateColumn.CellTemplate>
+                                                        </DataGridTemplateColumn>
+                                                        <DataGridTemplateColumn IsReadOnly="False" Width="2*">
+                                                            <DataGridTemplateColumn.Header>
+                                                                <TextBlock Text="Field Dim" TextWrapping="Wrap" FontWeight="Bold" />
+                                                            </DataGridTemplateColumn.Header>
+                                                            <DataGridTemplateColumn.CellTemplate>
+                                                                <DataTemplate>
+                                                                    <TextBlock Text="{Binding FieldDim, Mode=TwoWay}" />
+                                                                </DataTemplate>
+                                                            </DataGridTemplateColumn.CellTemplate>
+                                                        </DataGridTemplateColumn>
+                                                        <DataGridTemplateColumn IsReadOnly="False" Width="2*">
+                                                            <DataGridTemplateColumn.Header>
+                                                                <TextBlock Text="R.F.F" TextWrapping="Wrap" FontWeight="Bold" />
+                                                            </DataGridTemplateColumn.Header>
+                                                            <DataGridTemplateColumn.CellTemplate>
+                                                                <DataTemplate>
+                                                                    <TextBlock Text="{Binding RFF, Mode=TwoWay, Converter={StaticResource DateTimeToDateConverter}}" />
+                                                                </DataTemplate>
+                                                            </DataGridTemplateColumn.CellTemplate>
+                                                        </DataGridTemplateColumn>
+                                                        <DataGridTemplateColumn IsReadOnly="False" Width="2*">
+                                                            <DataGridTemplateColumn.Header>
+                                                                <TextBlock Text="Sched.Ship" TextWrapping="Wrap" FontWeight="Bold" />
+                                                            </DataGridTemplateColumn.Header>
+                                                            <DataGridTemplateColumn.CellTemplate>
+                                                                <DataTemplate>
+                                                                    <TextBlock Text="{Binding SchedShip, Mode=TwoWay, Converter={StaticResource DateTimeToDateConverter}}" />
+                                                                </DataTemplate>
+                                                            </DataGridTemplateColumn.CellTemplate>
+                                                        </DataGridTemplateColumn>
+                                                        <DataGridTemplateColumn IsReadOnly="False" Width="2*">
+                                                            <DataGridTemplateColumn.Header>
+                                                                <TextBlock Text="Est.Deliv" TextWrapping="Wrap" FontWeight="Bold" />
+                                                            </DataGridTemplateColumn.Header>
+                                                            <DataGridTemplateColumn.CellTemplate>
+                                                                <DataTemplate>
+                                                                    <TextBlock Text="{Binding EstDeliv, Mode=TwoWay, Converter={StaticResource DateTimeToDateConverter}}" />
+                                                                </DataTemplate>
+                                                            </DataGridTemplateColumn.CellTemplate>
+                                                        </DataGridTemplateColumn>
+                                                        <DataGridTemplateColumn IsReadOnly="False" Width="2*">
+                                                            <DataGridTemplateColumn.Header>
+                                                                <TextBlock Text="Recvd" TextWrapping="Wrap" FontWeight="Bold" />
+                                                            </DataGridTemplateColumn.Header>
+                                                            <DataGridTemplateColumn.CellTemplate>
+                                                                <DataTemplate>
+                                                                    <TextBlock Text="{Binding DateRecv, Mode=TwoWay, Converter={StaticResource DateTimeToDateConverter}}" />
+                                                                </DataTemplate>
+                                                            </DataGridTemplateColumn.CellTemplate>
+                                                        </DataGridTemplateColumn>
+                                                        <DataGridTemplateColumn IsReadOnly="False" Width="1*">
+                                                            <DataGridTemplateColumn.Header>
+                                                                <TextBlock Text="Mat Comp" TextWrapping="Wrap" FontWeight="Bold" />
+                                                            </DataGridTemplateColumn.Header>
+                                                            <DataGridTemplateColumn.CellTemplate>
+                                                                <DataTemplate>
+                                                                    <CheckBox IsChecked="{Binding OrderComplete, Mode=TwoWay}" />
+                                                                </DataTemplate>
+                                                            </DataGridTemplateColumn.CellTemplate>
+                                                        </DataGridTemplateColumn>
+                                                        <DataGridTemplateColumn IsReadOnly="False" Width="1*">
+                                                            <DataGridTemplateColumn.Header>
+                                                                <TextBlock Text="Labor Comp" TextWrapping="Wrap" FontWeight="Bold" />
+                                                            </DataGridTemplateColumn.Header>
+                                                            <DataGridTemplateColumn.CellTemplate>
+                                                                <DataTemplate>
+                                                                    <CheckBox IsChecked="{Binding LaborComplete, Mode=TwoWay}" />
+                                                                </DataTemplate>
+                                                            </DataGridTemplateColumn.CellTemplate>
+                                                        </DataGridTemplateColumn>
+                                                    </DataGrid.Columns>
+                                                </DataGrid>
+                                            </Grid>
+                                        </Grid>
+                                    </Border>
+                                </DataTemplate>
+                            </DataGridTemplateColumn.CellTemplate>
+                        </DataGridTemplateColumn>
+                    </DataGrid.Columns>
+                </DataGrid>
+            </Grid>
+        </Grid>
+
     </Grid>
 </Page>

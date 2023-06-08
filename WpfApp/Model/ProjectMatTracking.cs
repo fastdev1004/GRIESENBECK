@@ -20,6 +20,10 @@ namespace WpfApp.Model
         private string _matType;
         private string _qtyOrd;
         private int _manufacturer;
+        private string _matDesc;
+        private string _acronym;
+        private string _color;
+
         private bool _takeFromStock;
         private string _manufLeadTime;
         private string _orderNo;
@@ -36,6 +40,10 @@ namespace WpfApp.Model
         private DateTime _fieldDim;
         private bool _finalsRev;
         private DateTime _rFF;
+        private DateTime _schedShip;
+        private DateTime _estDeliv;
+        private DateTime _dateRecv;
+
         private bool _orderComplete;
         private bool _laborComplete;
 
@@ -83,6 +91,17 @@ namespace WpfApp.Model
             }
         }
 
+        public string MatDesc
+        {
+            get => _matDesc;
+            set
+            {
+                if (value == _matDesc) return;
+                _matDesc = value;
+                OnPropertyChanged();
+            }
+        }
+
         public string ManufName
         {
             get => _manufName;
@@ -90,6 +109,28 @@ namespace WpfApp.Model
             {
                 if (value == _manufName) return;
                 _manufName = value;
+                OnPropertyChanged();
+            }
+        }
+
+        public string Acronym
+        {
+            get => _acronym;
+            set
+            {
+                if (value == _acronym) return;
+                _acronym = value;
+                OnPropertyChanged();
+            }
+        }
+
+        public string Color
+        {
+            get => _color;
+            set
+            {
+                if (value == _acronym) return;
+                _acronym = value;
                 OnPropertyChanged();
             }
         }
@@ -310,6 +351,40 @@ namespace WpfApp.Model
                 OnPropertyChanged();
             }
         }
+
+        public DateTime SchedShip
+        {
+            get => _schedShip;
+            set
+            {
+                if (value == _schedShip) return;
+                _schedShip = value;
+                OnPropertyChanged();
+            }
+        }
+
+        public DateTime EstDeliv
+        {
+            get => _schedShip;
+            set
+            {
+                if (value == _estDeliv) return;
+                _estDeliv = value;
+                OnPropertyChanged();
+            }
+        }
+
+        public DateTime DateRecv
+        {
+            get => _dateRecv;
+            set
+            {
+                if (value == _dateRecv) return;
+                _dateRecv = value;
+                OnPropertyChanged();
+            }
+        }
+
 
         public bool OrderComplete
         {
