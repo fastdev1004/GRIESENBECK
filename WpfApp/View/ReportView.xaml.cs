@@ -67,8 +67,6 @@ namespace WpfApp.View
             ReportDetailView reportDetailPage = new ReportDetailView();
             reportDetailPage.DataContext = ReportDetailVM;
 
-            Console.WriteLine(reportID);
-            Console.WriteLine("Go Report Detail");
             if (reportID != 0)
             {
                 this.NavigationService.Navigate(reportDetailPage);
@@ -77,13 +75,6 @@ namespace WpfApp.View
             {
                 MessageBox.Show("This is not a valid report, please see your administrator");
             }
-            //switch(reportID)
-            //{
-            //    case 13:
-            //        break;
-            //    default:
-            //        break;
-            //}
         }
 
         private void DatePicker_PreviewMouseUp(object sender, MouseButtonEventArgs e)

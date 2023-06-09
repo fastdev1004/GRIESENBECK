@@ -218,7 +218,7 @@ namespace WpfApp.ViewModel
         {
             string whereClause = GetProjectWhereClasuse();
 
-            sqlquery = "SELECT Project_ID, Salesman_ID, Job_No, Customer_ID, Project_Name, Complete, tblCOTracking.COID, tblCOTracking.Contractnumber, tblCOTracking.DateOfCO, tblCOTracking.AmtOfCO, tblCOTracking.ChangeOrderNo, tblCOTracking.SignedoffbySales, tblCOTracking.Givenforfinalsignature, tblCOTracking.ExecutedForReturn, tblCOTracking.ReturnedVia, tblCOTracking.Comments, tblCOTracking.DateProcessed, tblCOTracking.Scope, tblCOTracking.Datereturnedback FROM tblProjects INNER JOIN tblCOTracking ON tblProjects.Project_ID = tblCOTracking.ProjectID AND tblProjects.Complete = 0";
+            sqlquery = "SELECT Project_ID, Salesman_ID, Job_No, Customer_ID, Project_Name, Complete, tblCOTracking.COID, tblCOTracking.Contractnumber, tblCOTracking.DateOfCO, tblCOTracking.AmtOfCO, tblCOTracking.ChangeOrderNo, tblCOTracking.SignedoffbySales, tblCOTracking.Givenforfinalsignature, tblCOTracking.ExecutedForReturn, tblCOTracking.ReturnedVia, tblCOTracking.Comments, tblCOTracking.DateProcessed, tblCOTracking.Scope, tblCOTracking.Datereturnedback FROM tblProjects INNER JOIN tblCOTracking ON tblProjects.Project_ID = tblCOTracking.ProjectID" + whereClause;
             cmd = new SqlCommand(sqlquery, dbConnection.Connection);
             sda = new SqlDataAdapter(cmd);
             ds = new DataSet();
@@ -284,7 +284,7 @@ namespace WpfApp.ViewModel
             ReportCOItems = st_reportCOItems;
 
 
-            sqlquery = "SELECT DISTINCT tblProjects.* FROM tblCOTracking INNER JOIN (SELECT tblCustomers.Full_Name, tblProjects.* FROM tblCustomers INNER JOIN (SELECT tblSalesmen.Salesman_Name, tblProjects.* FROM tblSalesmen RIGHT JOIN(SELECT Project_ID, Project_Name, Job_No, Salesman_ID, Customer_ID FROM tblProjects RIGHT JOIN(SELECT DISTINCT tblCOTracking.ProjectID FROM tblCOTracking) AS tblCOTracking ON tblCOTracking.ProjectID = tblProjects.Project_ID AND tblProjects.Complete = 0) AS tblProjects ON tblProjects.Salesman_ID = tblSalesmen.Salesman_ID) AS tblProjects ON tblProjects.Customer_ID = tblCustomers.Customer_ID) AS tblProjects ON tblCOTracking.ProjectID = tblProjects.Project_ID ORDER BY Project_ID;";
+            sqlquery = "SELECT DISTINCT tblProjects.* FROM tblCOTracking INNER JOIN (SELECT tblCustomers.Full_Name, tblProjects.* FROM tblCustomers INNER JOIN (SELECT tblSalesmen.Salesman_Name, tblProjects.* FROM tblSalesmen RIGHT JOIN(SELECT Project_ID, Project_Name, Job_No, Salesman_ID, Customer_ID FROM tblProjects RIGHT JOIN(SELECT DISTINCT tblCOTracking.ProjectID FROM tblCOTracking) AS tblCOTracking ON tblCOTracking.ProjectID = tblProjects.Project_ID "+ whereClause +") AS tblProjects ON tblProjects.Salesman_ID = tblSalesmen.Salesman_ID) AS tblProjects ON tblProjects.Customer_ID = tblCustomers.Customer_ID) AS tblProjects ON tblCOTracking.ProjectID = tblProjects.Project_ID ORDER BY Project_ID;";
 
             cmd = new SqlCommand(sqlquery, dbConnection.Connection);
             sda = new SqlDataAdapter(cmd);
@@ -1673,6 +1673,427 @@ namespace WpfApp.ViewModel
             }
             ReportPmMeetings = sb_reportPmMeetings;
         }
+        
+        public void LoadShipNotRecvData()
+        {
+            string whereProjectClause = GetProjectWhereClasuse();
+            string whereClause1 = " WHERE 1=1";
+            string whereClause2 = " WHERE 1=1";
+
+            if (SelectedManufID != 0)
+            {
+                whereClause1 += $" AND tblManufacturers.Manuf_ID = '{SelectedManufID}'";
+            }
+
+            if (SelectedMatID != 0)
+            {
+                whereClause2 += $" AND tblMaterials.Material_ID = '{SelectedMatID}'";
+            }
+            
+            sqlquery = "SELECT Manuf_Name, tblProjSales.* FROM tblManufacturers RIGHT JOIN (SELECT Salesman_Name, tblProjSales.*FROM tblSalesmen RIGHT JOIN(SELECT Job_No, Project_Name, Salesman_ID, tblProjMat.* FROM tblProjects RIGHT JOIN(SELECT Project_ID, Material_ID, Mat_Type, Mat_Phase, tblProjTrack.* FROM tblProjectMaterials RIGHT JOIN(SELECT MatReqdDate, ProjMat_ID, Manuf_ID, PO_Number, tblProjShip.* FROM tblProjectMaterialsTrack INNER JOIN(SELECT SchedShipDate, ProjMT_ID, EstDelivDate FROM tblProjectMaterialsShip WHERE Date_Recvd IS NULL) AS tblProjShip ON tblProjectMaterialsTrack.ProjMT_ID = tblProjShip.ProjMT_ID) AS tblProjTrack ON tblProjTrack.ProjMat_ID = tblProjectMaterials.ProjMat_ID) AS tblProjMat ON tblProjMat.Project_ID = tblProjects.Project_ID "+ whereProjectClause +") AS tblProjSales ON tblSalesmen.Salesman_ID = tblProjSales.Salesman_ID) AS tblProjSales ON tblProjSales.Salesman_ID = tblManufacturers.Manuf_ID ORDER BY Job_No";
+            cmd = new SqlCommand(sqlquery, dbConnection.Connection);
+            sda = new SqlDataAdapter(cmd);
+            ds = new DataSet();
+            sda.Fill(ds);
+
+            ObservableCollection<ReportShipNotRecv> sb_reportShipNotRecvs = new ObservableCollection<ReportShipNotRecv>();
+            foreach (DataRow row in ds.Tables[0].Rows)
+            {
+                int _projectID = 0;
+                DateTime _matlReqd = new DateTime();
+                string _jobNo = "";
+                string _projectName = "";
+                string _salesmanName = "";
+                string _matType = "";
+                string _phase = "";
+                string _manufName = "";
+                string _poNumber = "";
+                DateTime _schedShip = new DateTime();
+                DateTime _estDeliv = new DateTime();
+
+                if (!row.IsNull("Project_ID"))
+                    _projectID = int.Parse(row["Project_ID"].ToString());
+                if (!row.IsNull("MatReqdDate"))
+                    _matlReqd = row.Field<DateTime>("MatReqdDate");
+                if (!row.IsNull("Project_Name"))
+                    _projectName = row["Project_Name"].ToString();
+                if (!row.IsNull("Job_No"))
+                    _jobNo = row["Job_No"].ToString();
+                if (!row.IsNull("Salesman_Name"))
+                    _salesmanName = row["Salesman_Name"].ToString();
+                if (!row.IsNull("Mat_Type"))
+                    _matType = row["Mat_Type"].ToString();
+                if (!row.IsNull("Mat_Phase"))
+                    _phase = row["Mat_Phase"].ToString();
+                if (!row.IsNull("Manuf_Name"))
+                    _manufName = row["Manuf_Name"].ToString();
+                if (!row.IsNull("PO_Number"))
+                    _poNumber = row["PO_Number"].ToString();
+                if (!row.IsNull("SchedShipDate"))
+                    _schedShip = row.Field<DateTime>("SchedShipDate");
+                if (!row.IsNull("EstDelivDate"))
+                    _estDeliv = row.Field<DateTime>("EstDelivDate");
+
+                sb_reportShipNotRecvs.Add(new ReportShipNotRecv
+                {
+                    ProjectID = _projectID,
+                    ProjectName = _projectName,
+                    MatlReqd = _matlReqd,
+                    JobNo = _jobNo,
+                    SalesmanName = _salesmanName,
+                    MatType = _matType,
+                    Phase = _phase,
+                    ManufName = _manufName,
+                    PoNumber = _poNumber,
+                    SchedShip = _schedShip,
+                    EstDeliv = _estDeliv
+                });
+            }
+            ReportShipNotRecvs = sb_reportShipNotRecvs;
+        }
+
+        public void LoadShopRecvData()
+        {
+            string whereProjectClause = GetProjectWhereClasuse();
+            string whereClause1 = " WHERE 1=1";
+            string whereClause2 = " WHERE 1=1";
+
+            if (SelectedManufID != 0)
+            {
+                whereClause1 += $" AND tblManufacturers.Manuf_ID = '{SelectedManufID}'";
+            }
+
+            if (SelectedMatID != 0)
+            {
+                whereClause2 += $" AND tblMaterials.Material_ID = '{SelectedMatID}'";
+            }
+
+            sqlquery = "SELECT Manuf_Name, tblProjManuf.* FROM tblManufacturers RIGHT JOIN (SELECT Salesman_Name, tblProjSales.*FROM tblSalesmen RIGHT JOIN(SELECT tblMaterials.Material_Desc, tblProjMat.* FROM tblMaterials RIGHT JOIN(SELECT Job_No, Project_Name, Salesman_ID, tblProj.* FROM tblProjects RIGHT JOIN(SELECT MatReqdDate, ShopRecvdDate, SubmitIssue, Manuf_ID, tblProjectMaterials.Material_ID, tblProjectMaterials.Project_ID FROM tblProjectMaterials RIGHT JOIN(SELECT * FROM tblProjectMaterialsTrack WHERE ShopRecvdDate IS NOT NULL AND SubmitIssue is NULL AND No_Sub_Needed = 0) AS tblProjMat ON tblProjMat.ProjMat_ID = tblProjectMaterials.ProjMat_ID) AS tblProj ON tblProj.Project_ID = tblProjects.Project_ID "+ whereProjectClause +") AS tblProjMat ON tblProjMat.Material_ID = tblMaterials.Material_ID) AS tblProjSales ON tblProjSales.Salesman_ID = tblSalesmen.Salesman_ID) AS tblProjManuf ON tblProjManuf.Manuf_ID = tblManufacturers.Manuf_ID "+ whereClause1 +" ORDER BY MatReqdDate";
+            cmd = new SqlCommand(sqlquery, dbConnection.Connection);
+            sda = new SqlDataAdapter(cmd);
+            ds = new DataSet();
+            sda.Fill(ds);
+
+            ObservableCollection<ReportShopRecv> sb_reportShopRecv = new ObservableCollection<ReportShopRecv>();
+            foreach (DataRow row in ds.Tables[0].Rows)
+            {
+                int _projectID = 0;
+                DateTime _matlReqd = new DateTime();
+                string _jobNo = "";
+                string _projectName = "";
+                string _salesmanName = "";
+                string _materialName = "";
+                string _manufName = "";
+                DateTime _shopRecvd = new DateTime();
+                DateTime _submIssue = new DateTime();
+
+                if (!row.IsNull("Project_ID"))
+                    _projectID = int.Parse(row["Project_ID"].ToString());
+                if (!row.IsNull("MatReqdDate"))
+                    _matlReqd = row.Field<DateTime>("MatReqdDate");
+                if (!row.IsNull("Project_Name"))
+                    _projectName = row["Project_Name"].ToString();
+                if (!row.IsNull("Job_No"))
+                    _jobNo = row["Job_No"].ToString();
+                if (!row.IsNull("Salesman_Name"))
+                    _salesmanName = row["Salesman_Name"].ToString();
+                if (!row.IsNull("Material_Desc"))
+                    _materialName = row["Material_Desc"].ToString();
+                if (!row.IsNull("Manuf_Name"))
+                    _manufName = row["Manuf_Name"].ToString();
+                if (!row.IsNull("ShopRecvdDate"))
+                    _shopRecvd = row.Field<DateTime>("ShopRecvdDate");
+                if (!row.IsNull("SubmitIssue"))
+                    _submIssue = row.Field<DateTime>("SubmitIssue");
+
+                sb_reportShopRecv.Add(new ReportShopRecv
+                {
+                    ProjectID = _projectID,
+                    ProjectName = _projectName,
+                    MatlReqd = _matlReqd,
+                    JobNo = _jobNo,
+                    SalesmanName = _salesmanName,
+                    MaterialName = _materialName,
+                    ManufName = _manufName,
+                    ShopRecvd = _shopRecvd,
+                    SubmIssue = _submIssue
+                });
+            }
+            ReportShopRecvs = sb_reportShopRecv;
+        }
+        
+        public void LoadShopReqData()
+        {
+            string whereProjectClause = GetProjectWhereClasuse();
+            string whereClause1 = " WHERE 1=1";
+            string whereClause2 = " WHERE 1=1";
+
+            if (SelectedManufID != 0)
+            {
+                whereClause1 += $" AND tblManufacturers.Manuf_ID = '{SelectedManufID}'";
+            }
+
+            if (SelectedMatID != 0)
+            {
+                whereClause2 += $" AND tblMaterials.Material_ID = '{SelectedMatID}'";
+            }
+
+            sqlquery = "SELECT Material_Desc, tblProjMat.* FROM tblMaterials RIGHT JOIN (SELECT Manuf_Name, tblProManuf.*FROM tblManufacturers RIGHT JOIN(SELECT Salesman_Name, tblProj.* FROM tblSalesmen RIGHT JOIN(SELECT Job_No, Project_Name, Salesman_ID, tblProj.* FROM tblProjects RIGHT JOIN(SELECT MatReqdDate, ShopRecvdDate, ShopReqDate, SubmitIssue, Manuf_ID, tblProjectMaterials.Material_ID, tblProjectMaterials.Project_ID FROM tblProjectMaterials RIGHT JOIN(SELECT * FROM tblProjectMaterialsTrack WHERE ShopReqDate IS NOT NULL AND No_Sub_Needed = 0 AND SubmitAppr IS NULL AND SubmitIssue IS NULL) AS tblProjMat ON tblProjMat.ProjMat_ID = tblProjectMaterials.ProjMat_ID) AS tblProj ON tblProj.Project_ID = tblProjects.Project_ID) AS tblProj ON tblProj.Salesman_ID = tblSalesmen.Salesman_ID) AS tblProManuf ON tblProManuf.Manuf_ID = tblManufacturers.Manuf_ID "+ whereClause1 +") AS tblProjMat ON tblProjMat.Material_ID = tblMaterials.Material_ID ORDER BY MatReqdDate";
+            cmd = new SqlCommand(sqlquery, dbConnection.Connection);
+            sda = new SqlDataAdapter(cmd);
+            ds = new DataSet();
+            sda.Fill(ds);
+
+            ObservableCollection<ReportShopReq> sb_reportShopReq = new ObservableCollection<ReportShopReq>();
+            foreach (DataRow row in ds.Tables[0].Rows)
+            {
+                int _projectID = 0;
+                DateTime _matlReqd = new DateTime();
+                string _jobNo = "";
+                string _projectName = "";
+                string _salesmanName = "";
+                string _materialName = "";
+                string _manufName = "";
+                DateTime _shopRecvd = new DateTime();
+                DateTime _shopReq = new DateTime();
+
+                if (!row.IsNull("Project_ID"))
+                    _projectID = int.Parse(row["Project_ID"].ToString());
+                if (!row.IsNull("MatReqdDate"))
+                    _matlReqd = row.Field<DateTime>("MatReqdDate");
+                if (!row.IsNull("Project_Name"))
+                    _projectName = row["Project_Name"].ToString();
+                if (!row.IsNull("Job_No"))
+                    _jobNo = row["Job_No"].ToString();
+                if (!row.IsNull("Salesman_Name"))
+                    _salesmanName = row["Salesman_Name"].ToString();
+                if (!row.IsNull("Material_Desc"))
+                    _materialName = row["Material_Desc"].ToString();
+                if (!row.IsNull("Manuf_Name"))
+                    _manufName = row["Manuf_Name"].ToString();
+                if (!row.IsNull("ShopRecvdDate"))
+                    _shopRecvd = row.Field<DateTime>("ShopRecvdDate");
+                if (!row.IsNull("ShopReqDate"))
+                    _shopReq = row.Field<DateTime>("ShopReqDate");
+
+                sb_reportShopReq.Add(new ReportShopReq
+                {
+                    ProjectID = _projectID,
+                    ProjectName = _projectName,
+                    MatlReqd = _matlReqd,
+                    JobNo = _jobNo,
+                    SalesmanName = _salesmanName,
+                    MaterialName = _materialName,
+                    ManufName = _manufName,
+                    ShopRecvd = _shopRecvd,
+                    ShopReq = _shopReq
+                });
+            }
+            ReportShopReqs = sb_reportShopReq;
+        }
+        
+        public void LoadSubmitNotApprData()
+        {
+            string whereProjectClause = GetProjectWhereClasuse();
+            string whereClause1 = " WHERE 1=1";
+            string whereClause2 = " WHERE 1=1";
+
+            if (SelectedManufID != 0)
+            {
+                whereClause1 += $" AND tblManufacturers.Manuf_ID = '{SelectedManufID}'";
+            }
+
+            if (SelectedMatID != 0)
+            {
+                whereClause2 += $" AND tblMaterials.Material_ID = '{SelectedMatID}'";
+            }
+
+            sqlquery = "SELECT Material_Desc, tblProjMat.* FROM tblMaterials RIGHT JOIN (SELECT Manuf_Name, tblProManuf.*FROM tblManufacturers RIGHT JOIN(SELECT Salesman_Name, tblProj.* FROM tblSalesmen RIGHT JOIN(SELECT Job_No, Project_Name, Salesman_ID, tblProj.* FROM tblProjects RIGHT JOIN(SELECT MatReqdDate, ShopRecvdDate, ShopReqDate, SubmitIssue, Resubmit_Date, SubmitAppr, Manuf_ID, tblProjectMaterials.Material_ID, tblProjectMaterials.Project_ID FROM tblProjectMaterials RIGHT JOIN(SELECT * FROM tblProjectMaterialsTrack WHERE ShopReqDate IS NOT NULL AND No_Sub_Needed = 0 AND SubmitAppr IS NULL AND SubmitIssue IS NOT NULL) AS tblProjMat ON tblProjMat.ProjMat_ID = tblProjectMaterials.ProjMat_ID) AS tblProj ON tblProj.Project_ID = tblProjects.Project_ID) AS tblProj ON tblProj.Salesman_ID = tblSalesmen.Salesman_ID) AS tblProManuf ON tblProManuf.Manuf_ID = tblManufacturers.Manuf_ID "+ whereClause1 +") AS tblProjMat ON tblProjMat.Material_ID = tblMaterials.Material_ID";
+            cmd = new SqlCommand(sqlquery, dbConnection.Connection);
+            sda = new SqlDataAdapter(cmd);
+            ds = new DataSet();
+            sda.Fill(ds);
+
+            ObservableCollection<ReportSubmit> sb_reportSubmits = new ObservableCollection<ReportSubmit>();
+            foreach (DataRow row in ds.Tables[0].Rows)
+            {
+                int _projectID = 0;
+                DateTime _matlReqd = new DateTime();
+                string _jobNo = "";
+                string _projectName = "";
+                string _salesmanName = "";
+                string _materialName = "";
+                string _manufName = "";
+                DateTime _submIssue = new DateTime();
+                DateTime _reSubmit = new DateTime();
+                DateTime _submAppr = new DateTime();
+
+                if (!row.IsNull("Project_ID"))
+                    _projectID = int.Parse(row["Project_ID"].ToString());
+                if (!row.IsNull("MatReqdDate"))
+                    _matlReqd = row.Field<DateTime>("MatReqdDate");
+                if (!row.IsNull("Project_Name"))
+                    _projectName = row["Project_Name"].ToString();
+                if (!row.IsNull("Job_No"))
+                    _jobNo = row["Job_No"].ToString();
+                if (!row.IsNull("Salesman_Name"))
+                    _salesmanName = row["Salesman_Name"].ToString();
+                if (!row.IsNull("Material_Desc"))
+                    _materialName = row["Material_Desc"].ToString();
+                if (!row.IsNull("Manuf_Name"))
+                    _manufName = row["Manuf_Name"].ToString();
+                if (!row.IsNull("SubmitIssue"))
+                    _submIssue = row.Field<DateTime>("SubmitIssue");
+                if (!row.IsNull("Resubmit_Date"))
+                    _reSubmit = row.Field<DateTime>("Resubmit_Date");
+                if (!row.IsNull("SubmitAppr"))
+                    _submAppr = row.Field<DateTime>("SubmitAppr");
+
+                sb_reportSubmits.Add(new ReportSubmit
+                {
+                    ProjectID = _projectID,
+                    ProjectName = _projectName,
+                    MatlReqd = _matlReqd,
+                    JobNo = _jobNo,
+                    SalesmanName = _salesmanName,
+                    MaterialName = _materialName,
+                    ManufName = _manufName,
+                    SubmIssue = _submIssue,
+                    ReSubmit = _reSubmit,
+                    SubmAppr = _submAppr
+                });
+            }
+            ReportSubmits = sb_reportSubmits;
+        }
+
+        public void LoadVendorData()
+        {
+            string whereProjectClause = GetProjectWhereClasuse();
+            string whereClause1 = " WHERE 1=1";
+            string whereClause2 = " WHERE 1=1";
+
+            if (SelectedManufID != 0)
+            {
+                whereClause1 += $" AND tblManufacturers.Manuf_ID = '{SelectedManufID}'";
+            }
+
+            if (SelectedMatID != 0)
+            {
+                whereClause2 += $" AND tblMaterials.Material_ID = '{SelectedMatID}'";
+            }
+
+            sqlquery = "SELECT tblManufacturers.Manuf_ID, tblManufacturers.Manuf_Name, tblManufacturers.Contact_Name, tblManufacturers.Contact_Phone, tblManufacturers.Contact_Email FROM tblManufacturers" + whereClause1 + " ORDER BY Manuf_Name";
+            cmd = new SqlCommand(sqlquery, dbConnection.Connection);
+            sda = new SqlDataAdapter(cmd);
+            ds = new DataSet();
+            sda.Fill(ds);
+
+            ObservableCollection<ReportVendor> sb_reportVendors = new ObservableCollection<ReportVendor>();
+            foreach (DataRow row in ds.Tables[0].Rows)
+            {
+                int _manufID = 0;
+                string _manufName = "";
+                string _contactName = "";
+                string _contactPhone = "";
+                string _contactEmail = "";
+
+                if (!row.IsNull("Manuf_ID"))
+                    _manufID = int.Parse(row["Manuf_ID"].ToString());
+                if (!row.IsNull("Manuf_Name"))
+                    _manufName = row["Manuf_Name"].ToString();
+                if (!row.IsNull("Contact_Name"))
+                    _contactName = row["Contact_Name"].ToString();
+                if (!row.IsNull("Contact_Phone"))
+                    _contactPhone = row["Contact_Phone"].ToString();
+                if (!row.IsNull("Contact_Email"))
+                    _contactEmail = row["Contact_Email"].ToString();
+
+
+                sb_reportVendors.Add(new ReportVendor
+                {
+                    ManufID = _manufID,
+                    ManufName = _manufName,
+                    ContactName = _contactName,
+                    ContactPhone = _contactPhone,
+                    ContactEmail = _contactEmail
+                });
+            }
+            ReportVendors = sb_reportVendors;
+        }
+
+        public void LoadReleaseNotShipData()
+        {
+            string whereProjectClause = GetProjectWhereClasuse();
+            string whereClause1 = " WHERE 1=1";
+            string whereClause2 = " WHERE 1=1";
+
+            if (SelectedManufID != 0)
+            {
+                whereClause1 += $" AND tblManufacturers.Manuf_ID = '{SelectedManufID}'";
+            }
+
+            if (SelectedMatID != 0)
+            {
+                whereClause2 += $" AND tblMaterials.Material_ID = '{SelectedMatID}'";
+            }
+
+            sqlquery = "SELECT tblMaterials.Material_Desc, tblProjMat.* FROM tblMaterials RIGHT JOIN (SELECT Salesman_Name, tblProjSales.*FROM tblSalesmen RIGHT JOIN(SELECT Project_Name, Salesman_ID, Job_No, tblProj.* FROM tblProjects RIGHT JOIN(SELECT Manuf_Name, tblProjManuf.* FROM tblManufacturers RIGHT JOIN(SELECT Material_ID, Mat_Phase, Project_ID, tblProjMat.* FROM tblProjectMaterials RIGHT JOIN(SELECT tblProjectMaterialsTrack.ProjMat_ID, tblProjectMaterialsTrack.Manuf_ID, MatReqdDate, ReleasedForFab, PO_Number FROM tblProjectMaterialsTrack LEFT JOIN tblProjectMaterialsShip ON tblProjectMaterialsTrack.ProjMT_ID = tblProjectMaterialsShip.ProjMT_ID WHERE tblProjectMaterialsShip.ProjMT_ID IS NULL AND tblProjectMaterialsTrack.ReleasedForFab IS NOT NULL) AS tblProjMat ON tblProjMat.ProjMat_ID = tblProjectMaterials.ProjMat_ID "+ whereClause2 +") AS tblProjManuf ON tblProjManuf.Manuf_ID = tblManufacturers.Manuf_ID "+ whereClause1  +") AS tblProj ON tblProj.Project_ID = tblProjects.Project_ID "+ whereProjectClause + ") AS tblProjSales ON tblProjSales.Salesman_ID = tblSalesmen.Salesman_ID) AS tblProjMat ON tblProjMat.Material_ID = tblMaterials.Material_ID ORDER BY MatReqdDate";
+            cmd = new SqlCommand(sqlquery, dbConnection.Connection);
+            sda = new SqlDataAdapter(cmd);
+            ds = new DataSet();
+            sda.Fill(ds);
+
+            ObservableCollection<ReportReleaseNotShip> sb_reportReleases = new ObservableCollection<ReportReleaseNotShip>();
+            foreach (DataRow row in ds.Tables[0].Rows)
+            {
+                int _projectID = 0;
+                DateTime _matlReqd = new DateTime();
+                string _jobNo = "";
+                string _projectName = "";
+                string _salesmanName = "";
+                string _materialName = "";
+                string _phase = "";
+                string _manufName = "";
+                string _poNumber = ""; 
+                DateTime _rFF = new DateTime();
+
+                if (!row.IsNull("Project_ID"))
+                    _projectID = int.Parse(row["Project_ID"].ToString());
+                if (!row.IsNull("MatReqdDate"))
+                    _matlReqd = row.Field<DateTime>("MatReqdDate");
+                if (!row.IsNull("Project_Name"))
+                    _projectName = row["Project_Name"].ToString();
+                if (!row.IsNull("Job_No"))
+                    _jobNo = row["Job_No"].ToString();
+                if (!row.IsNull("Salesman_Name"))
+                    _salesmanName = row["Salesman_Name"].ToString();
+                if (!row.IsNull("Material_Desc"))
+                    _materialName = row["Material_Desc"].ToString();
+                if (!row.IsNull("Mat_Phase"))
+                    _phase = row["Mat_Phase"].ToString();
+                if (!row.IsNull("Manuf_Name"))
+                    _manufName = row["Manuf_Name"].ToString();
+                if (!row.IsNull("PO_Number"))
+                    _poNumber = row["PO_Number"].ToString();
+                if (!row.IsNull("ReleasedForFab"))
+                    _rFF = row.Field<DateTime>("ReleasedForFab");
+
+                sb_reportReleases.Add(new ReportReleaseNotShip
+                {
+                    ProjectID = _projectID,
+                    ProjectName = _projectName,
+                    MatlReqd = _matlReqd,
+                    JobNo = _jobNo,
+                    SalesmanName = _salesmanName,
+                    MaterialName = _materialName,
+                    Phase = _phase,
+                    ManufName = _manufName,
+                    PoNumber = _poNumber,
+                    RFF = _rFF
+                });
+            }
+            ReportReleaseNotShips = sb_reportReleases;
+        }
 
         private int _projectID;
 
@@ -1722,7 +2143,7 @@ namespace WpfApp.ViewModel
             OpenJobVisibility = false;
             PastDueVisibility = false;
             ReleasedVisibility = false;
-            ShipVisibility = false;
+            ShipNotRecvVisibility = false;
             ShopRecvVisibility = false;
             SubmitVisibility = false;
             ShopReqVisibility = false;
@@ -1734,100 +2155,100 @@ namespace WpfApp.ViewModel
                     ActiveProjectListVisibility = true;
                     LoadActiveProjectData();
                     break;
-                case 13:
-                    ActiveLaborListVisibility = true;
-                    LoadActiveLaborData();
+                case 7:
+                    ShopReqVisibility = true;
+                    LoadShopReqData();
+                    break;
+                case 8:
+                    ShopRecvVisibility = true;
+                    LoadShopRecvData();
+                    break;
+                case 9:
+                    SubmitVisibility = true;
+                    LoadSubmitNotApprData();
                     break;
                 case 10:
                     ApprovedVisibility = true;
                     LoadApprovedNotReleaseData();
                     break;
-                case 23:
-                    ChangeOrderVisibility = true;
-                    LoadChangeOrders();
+                case 11:
+                    ShipNotRecvVisibility = true;
+                    LoadShipNotRecvData();
                     break;
-                case 25:
-                    CONotRetVisibility = true;
-                    LoadActiveLaborData();
+                case 12:
+                    ReleasedVisibility = true;
+                    LoadReleaseNotShipData();
                     break;
-                case 19:
-                    CipVisibility = true;
-                    LoadCIPData();
-                    break;
-                case 18:
-                    ContractVisibility = true;
-                    LoadContractData();
-                    break;
-                case 21:
-                    JobManufVisibility = true;
-                    LoadJobByManufacturerData();
-                    break;
-                case 24:
-                    ContractNotRetVisibility = true;
-                    LoadActiveLaborData();
-                    break;
-                case 27:
-                    CustomerContactVisibility = true;
-                    LoadCustomerContactData();
-                    break;
-                case 29:
-                    FieldMeasureVisibility = true;
-                    LoadFieldMeasureData();
-                    break;
-                case 20:
-                    FinalFabVisibility = true;
-                    LoadActiveLaborData();
-                    break;
-                case 28:
-                    InstallForecastVisibility = true;
-                    LoadActiveLaborData();
-                    break;
-                case 31:
-                    JobArchRepVisibility = true;
-                    LoadArchRepData();
-                    break;
-                case 30:
-                    JobArchitectVisibility = true;
-                    LoadArchitectData();
-                    break;
-                case 17:
-                    LeedVisibility = true;
+                case 13:
+                    ActiveLaborListVisibility = true;
                     LoadActiveLaborData();
                     break;
                 case 14:
                     OpenJobVisibility = true;
                     LoadOpenJobsData();
                     break;
-                case 32:
-                    PastDueVisibility = true;
+                case 15:
+                    VendorVisibility = true;
+                    LoadVendorData();
+                    break;
+                case 17:
+                    LeedVisibility = true;
                     LoadActiveLaborData();
+                    break;
+                case 18:
+                    ContractVisibility = true;
+                    LoadContractData();
+                    break;
+                case 19:
+                    CipVisibility = true;
+                    LoadCIPData();
+                    break;
+                case 20:
+                    FinalFabVisibility = true;
+                    LoadActiveLaborData();
+                    break;
+                case 21:
+                    JobManufVisibility = true;
+                    LoadJobByManufacturerData();
                     break;
                 case 22:
                     PmMeetingVisibility = true;
                     LoadPmMeetingData();
                     break;
-                case 12:
-                    ReleasedVisibility = true;
+                case 23:
+                    ChangeOrderVisibility = true;
+                    LoadChangeOrders();
+                    break;
+                case 24:
+                    ContractNotRetVisibility = true;
                     LoadActiveLaborData();
                     break;
-                case 11:
-                    ShipVisibility = true;
+                case 25:
+                    CONotRetVisibility = true;
                     LoadActiveLaborData();
                     break;
-                case 8:
-                    ShopRecvVisibility = true;
+                case 27:
+                    CustomerContactVisibility = true;
+                    LoadCustomerContactData();
+                    break;
+                case 28:
+                    InstallForecastVisibility = true;
                     LoadActiveLaborData();
                     break;
-                case 7:
-                    ShopReqVisibility = true;
-                    LoadActiveLaborData();
+                case 29:
+                    FieldMeasureVisibility = true;
+                    LoadFieldMeasureData();
                     break;
-                case 9:
-                    SubmitVisibility = true;
-                    LoadActiveLaborData();
+                case 30:
+                    JobArchitectVisibility = true;
+                    LoadArchitectData();
                     break;
-                case 15:
-                    VendorVisibility = true;
+                case 31:
+                    JobArchRepVisibility = true;
+                    LoadArchRepData();
+                    break;
+                case 32:
+                    PastDueVisibility = true;
                     LoadActiveLaborData();
                     break;
                 default:
@@ -2234,7 +2655,6 @@ namespace WpfApp.ViewModel
         
         private ObservableCollection<ReportJobArchRep> _reportJobArchReps;
 
-
         public ObservableCollection<ReportJobArchRep> ReportJobArchReps
         {
             get { return _reportJobArchReps; }
@@ -2273,6 +2693,96 @@ namespace WpfApp.ViewModel
                 if (_reportPmMeetings != value)
                 {
                     _reportPmMeetings = value;
+                    OnPropertyChanged();
+                }
+            }
+        }
+
+        private ObservableCollection<ReportShipNotRecv> _reportShipNotRecvs;
+
+        public ObservableCollection<ReportShipNotRecv> ReportShipNotRecvs
+        {
+            get { return _reportShipNotRecvs; }
+            set
+            {
+                if (_reportShipNotRecvs != value)
+                {
+                    _reportShipNotRecvs = value;
+                    OnPropertyChanged();
+                }
+            }
+        }
+        
+        private ObservableCollection<ReportShopRecv> _reportShopRecvs;
+
+        public ObservableCollection<ReportShopRecv> ReportShopRecvs
+        {
+            get { return _reportShopRecvs; }
+            set
+            {
+                if (_reportShopRecvs != value)
+                {
+                    _reportShopRecvs = value;
+                    OnPropertyChanged();
+                }
+            }
+        }
+
+        private ObservableCollection<ReportShopReq> _reportShopReqs;
+
+        public ObservableCollection<ReportShopReq> ReportShopReqs
+        {
+            get { return _reportShopReqs; }
+            set
+            {
+                if (_reportShopReqs != value)
+                {
+                    _reportShopReqs = value;
+                    OnPropertyChanged();
+                }
+            }
+        }
+
+        private ObservableCollection<ReportSubmit> _reportSubmits;
+
+        public ObservableCollection<ReportSubmit> ReportSubmits
+        {
+            get { return _reportSubmits; }
+            set
+            {
+                if (_reportSubmits != value)
+                {
+                    _reportSubmits = value;
+                    OnPropertyChanged();
+                }
+            }
+        }
+
+        private ObservableCollection<ReportVendor> _reportVendors;
+
+        public ObservableCollection<ReportVendor> ReportVendors
+        {
+            get { return _reportVendors; }
+            set
+            {
+                if (_reportVendors != value)
+                {
+                    _reportVendors = value;
+                    OnPropertyChanged();
+                }
+            }
+        }
+
+        private ObservableCollection<ReportReleaseNotShip> _reportReleaseNotShips;
+
+        public ObservableCollection<ReportReleaseNotShip> ReportReleaseNotShips
+        {
+            get { return _reportReleaseNotShips; }
+            set
+            {
+                if (_reportReleaseNotShips != value)
+                {
+                    _reportReleaseNotShips = value;
                     OnPropertyChanged();
                 }
             }
@@ -2538,15 +3048,15 @@ namespace WpfApp.ViewModel
             }
         }
 
-        private bool _shipVisibility;
+        private bool _ShipNotRecvVisibility;
 
-        public bool ShipVisibility
+        public bool ShipNotRecvVisibility
         {
-            get { return _shipVisibility; }
+            get { return _ShipNotRecvVisibility; }
             set
             {
-                if (value == _shipVisibility) return;
-                _shipVisibility = value;
+                if (value == _ShipNotRecvVisibility) return;
+                _ShipNotRecvVisibility = value;
                 OnPropertyChanged();
             }
         }

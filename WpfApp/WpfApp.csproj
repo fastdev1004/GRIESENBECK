@@ -103,7 +103,13 @@
     <Compile Include="Model\ReportFieldMeasure.cs" />
     <Compile Include="Model\ReportJobArchRep.cs" />
     <Compile Include="Model\ReportPmMeeting.cs" />
+    <Compile Include="Model\ReportReleaseNotShip.cs" />
     <Compile Include="Model\ReportSelection.cs" />
+    <Compile Include="Model\ReportShipNotRecv.cs" />
+    <Compile Include="Model\ReportShopRecv.cs" />
+    <Compile Include="Model\ReportShopReq.cs" />
+    <Compile Include="Model\ReportSubmit.cs" />
+    <Compile Include="Model\ReportVendor.cs" />
     <Compile Include="Model\ReturnedVia.cs" />
     <Compile Include="Model\Salesman.cs" />
     <Compile Include="Model\SovCO.cs" />

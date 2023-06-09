@@ -1006,7 +1006,7 @@
                                                             </DataGridTemplateColumn.Header>
                                                             <DataGridTemplateColumn.CellTemplate>
                                                                 <DataTemplate>
-                                                                    <TextBlock Text="{Binding ReturnedDate, Mode=TwoWay}" />
+                                                                    <TextBlock Text="{Binding ReturnedDate, Mode=TwoWay, Converter={StaticResource DateTimeToDateConverter}}" />
                                                                 </DataTemplate>
                                                             </DataGridTemplateColumn.CellTemplate>
                                                         </DataGridTemplateColumn>
@@ -1042,7 +1042,6 @@
                 </DataGrid>
             </Grid>
         </Grid>
-
         <Grid Grid.Row="1" Margin="10" Visibility="{Binding CustomerContactVisibility, Mode=TwoWay, Converter={StaticResource BoolToVisibleConverter}}">
             <Grid.RowDefinitions>
                 <RowDefinition Height="Auto" />
@@ -2066,7 +2065,7 @@
                                                             <ColumnDefinition Width="2*" />
                                                         </Grid.ColumnDefinitions>
                                                         <TextBlock Text="{Binding ProjectName, Mode=TwoWay}" FontSize="16" FontWeight="Bold" />
-                                                        <Button Grid.Column="1" Content="View" Width="40" HorizontalAlignment="Left" />
+                                                        <Button Grid.Column="1" Content="View" Width="40" HorizontalAlignment="Left" VerticalAlignment="Center" />
                                                     </Grid>
                                                     <Grid Grid.Row="1">
                                                         <Grid.ColumnDefinitions>
@@ -2564,6 +2563,795 @@
                                 </DataTemplate>
                             </DataGridTemplateColumn.CellTemplate>
                         </DataGridTemplateColumn>
+                    </DataGrid.Columns>
+                </DataGrid>
+            </Grid>
+        </Grid>
+
+        <Grid Grid.Row="1" Margin="10" Visibility="{Binding ShipNotRecvVisibility, Mode=TwoWay, Converter={StaticResource BoolToVisibleConverter}}">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="*" />
+            </Grid.RowDefinitions>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="6*" />
+                <ColumnDefinition Width="4*" />
+            </Grid.ColumnDefinitions>
+            <Grid>
+                <TextBlock Style="{StaticResource ReportViewHeader}" Text="Shipped, Not Received" />
+            </Grid>
+            <Grid Grid.Row="1" >
+                <DataGrid ItemsSource="{Binding ReportShipNotRecvs, Mode=TwoWay}" GridLinesVisibility="None" AutoGenerateColumns="False" HeadersVisibility="Column" CanUserAddRows="False" BorderThickness="0">
+                    <DataGrid.Resources>
+                        <Style TargetType="DataGridColumnHeader" BasedOn="{StaticResource GridColumnHeaderBase}">
+                            <Setter Property="Background" Value="White" />
+                            <Setter Property="Height" Value="25" />
+                            <Setter Property="Foreground" Value="Black" />
+                        </Style>
+                        <Style TargetType="TextBlock">
+                            <Setter Property="VerticalAlignment" Value="Center" />
+                        </Style>
+                        <Style TargetType="DataGridRow">
+                            <Setter Property="Height" Value="25" />
+                            <Setter Property="BorderThickness" Value="0" />
+                        </Style>
+                        <Style TargetType="Label">
+                            <Setter Property="FontWeight" Value="Bold" />
+                        </Style>
+                    </DataGrid.Resources>
+                    <DataGrid.Columns>
+                        <DataGridTemplateColumn IsReadOnly="False" Width="2*">
+                            <DataGridTemplateColumn.Header>
+                                <Border BorderBrush="Black" BorderThickness="0,0,0,1">
+                                    <TextBlock Text="Matl Reqd" TextWrapping="Wrap" FontWeight="Bold" />
+                                </Border>
+                            </DataGridTemplateColumn.Header>
+                            <DataGridTemplateColumn.CellTemplate>
+                                <DataTemplate>
+                                    <TextBlock Text="{Binding MatlReqd, Mode=TwoWay, Converter={StaticResource DateTimeToDateConverter}}" />
+                                </DataTemplate>
+                            </DataGridTemplateColumn.CellTemplate>
+                        </DataGridTemplateColumn>
+                        <DataGridTemplateColumn IsReadOnly="False" Width="1*">
+                            <DataGridTemplateColumn.Header>
+                                <Border BorderBrush="Black" BorderThickness="0,0,0,1">
+                                    <TextBlock Text="Job #" TextWrapping="Wrap" FontWeight="Bold" />
+                                </Border>
+                            </DataGridTemplateColumn.Header>
+                            <DataGridTemplateColumn.CellTemplate>
+                                <DataTemplate>
+                                    <TextBlock Text="{Binding JobNo, Mode=TwoWay}" />
+                                </DataTemplate>
+                            </DataGridTemplateColumn.CellTemplate>
+                        </DataGridTemplateColumn>
+                        <DataGridTemplateColumn IsReadOnly="False" Width="3*">
+                            <DataGridTemplateColumn.Header>
+                                <Border BorderBrush="Black" BorderThickness="0,0,0,1">
+                                    <TextBlock Text="Project" TextWrapping="Wrap" FontWeight="Bold" />
+                                </Border>
+                            </DataGridTemplateColumn.Header>
+                            <DataGridTemplateColumn.CellTemplate>
+                                <DataTemplate>
+                                    <TextBlock Text="{Binding ManufName, Mode=TwoWay}" />
+                                </DataTemplate>
+                            </DataGridTemplateColumn.CellTemplate>
+                        </DataGridTemplateColumn>
+                        <DataGridTemplateColumn IsReadOnly="False" Width="2*">
+                            <DataGridTemplateColumn.Header>
+                                <Border BorderBrush="Black" BorderThickness="0,0,0,1">
+                                    <TextBlock Text="Salesman" TextWrapping="Wrap" FontWeight="Bold" />
+                                </Border>
+                            </DataGridTemplateColumn.Header>
+                            <DataGridTemplateColumn.CellTemplate>
+                                <DataTemplate>
+                                    <TextBlock Text="{Binding SalesmanName, Mode=TwoWay}" />
+                                </DataTemplate>
+                            </DataGridTemplateColumn.CellTemplate>
+                        </DataGridTemplateColumn>
+                        <DataGridTemplateColumn IsReadOnly="False" Width="2*">
+                            <DataGridTemplateColumn.Header>
+                                <Border BorderBrush="Black" BorderThickness="0,0,0,1">
+                                    <TextBlock Text="Material" TextWrapping="Wrap" FontWeight="Bold" />
+                                </Border>
+                            </DataGridTemplateColumn.Header>
+                            <DataGridTemplateColumn.CellTemplate>
+                                <DataTemplate>
+                                    <TextBlock Text="{Binding MatType, Mode=TwoWay}" />
+                                </DataTemplate>
+                            </DataGridTemplateColumn.CellTemplate>
+                        </DataGridTemplateColumn>
+                        <DataGridTemplateColumn IsReadOnly="False" Width="2*">
+                            <DataGridTemplateColumn.Header>
+                                <Border BorderBrush="Black" BorderThickness="0,0,0,1">
+                                    <TextBlock Text="Phase" TextWrapping="Wrap" FontWeight="Bold" />
+                                </Border>
+                            </DataGridTemplateColumn.Header>
+                            <DataGridTemplateColumn.CellTemplate>
+                                <DataTemplate>
+                                    <TextBlock Text="{Binding Phase, Mode=TwoWay}" />
+                                </DataTemplate>
+                            </DataGridTemplateColumn.CellTemplate>
+                        </DataGridTemplateColumn>
+                        <DataGridTemplateColumn IsReadOnly="False" Width="3*">
+                            <DataGridTemplateColumn.Header>
+                                <Border BorderBrush="Black" BorderThickness="0,0,0,1">
+                                    <TextBlock Text="Manufacturer" TextWrapping="Wrap" FontWeight="Bold" />
+                                </Border>
+                            </DataGridTemplateColumn.Header>
+                            <DataGridTemplateColumn.CellTemplate>
+                                <DataTemplate>
+                                    <TextBlock Text="{Binding ManufName, Mode=TwoWay}" />
+                                </DataTemplate>
+                            </DataGridTemplateColumn.CellTemplate>
+                        </DataGridTemplateColumn>
+                        <DataGridTemplateColumn IsReadOnly="False" Width="1*">
+                            <DataGridTemplateColumn.Header>
+                                <Border BorderBrush="Black" BorderThickness="0,0,0,1">
+                                    <TextBlock Text="PO #" TextWrapping="Wrap" FontWeight="Bold" />
+                                </Border>
+                            </DataGridTemplateColumn.Header>
+                            <DataGridTemplateColumn.CellTemplate>
+                                <DataTemplate>
+                                    <TextBlock Text="{Binding PoNumber, Mode=TwoWay}" />
+                                </DataTemplate>
+                            </DataGridTemplateColumn.CellTemplate>
+                        </DataGridTemplateColumn>
+                        <DataGridTemplateColumn IsReadOnly="False" Width="2*">
+                            <DataGridTemplateColumn.Header>
+                                <Border BorderBrush="Black" BorderThickness="0,0,0,1">
+                                    <TextBlock Text="Sched Ship" TextWrapping="Wrap" FontWeight="Bold" />
+                                </Border>
+                            </DataGridTemplateColumn.Header>
+                            <DataGridTemplateColumn.CellTemplate>
+                                <DataTemplate>
+                                    <TextBlock Text="{Binding SchedShip, Mode=TwoWay , Converter={StaticResource DateTimeToDateConverter}}" />
+                                </DataTemplate>
+                            </DataGridTemplateColumn.CellTemplate>
+                        </DataGridTemplateColumn>
+                        <DataGridTemplateColumn IsReadOnly="False" Width="2*">
+                            <DataGridTemplateColumn.Header>
+                                <Border BorderBrush="Black" BorderThickness="0,0,0,1">
+                                    <TextBlock Text="Est Delivery" TextWrapping="Wrap" FontWeight="Bold" />
+                                </Border>
+                            </DataGridTemplateColumn.Header>
+                            <DataGridTemplateColumn.CellTemplate>
+                                <DataTemplate>
+                                    <TextBlock Text="{Binding EstDeliv, Mode=TwoWay, Converter={StaticResource DateTimeToDateConverter}}" />
+                                </DataTemplate>
+                            </DataGridTemplateColumn.CellTemplate>
+                        </DataGridTemplateColumn>
+                    </DataGrid.Columns>
+                </DataGrid>
+            </Grid>
+        </Grid>
+
+        <Grid Grid.Row="1" Margin="10" Visibility="{Binding ShopRecvVisibility, Mode=TwoWay, Converter={StaticResource BoolToVisibleConverter}}">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="*" />
+            </Grid.RowDefinitions>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="6*" />
+                <ColumnDefinition Width="4*" />
+            </Grid.ColumnDefinitions>
+            <Grid>
+                <TextBlock Style="{StaticResource ReportViewHeader}" Text="Shops Received, Not Submitted" />
+            </Grid>
+            <Grid Grid.Row="1" >
+                <DataGrid ItemsSource="{Binding ReportShopRecvs, Mode=TwoWay}" GridLinesVisibility="None" AutoGenerateColumns="False" HeadersVisibility="Column" CanUserAddRows="False" BorderThickness="0">
+                    <DataGrid.Resources>
+                        <Style TargetType="DataGridColumnHeader" BasedOn="{StaticResource GridColumnHeaderBase}">
+                            <Setter Property="Background" Value="White" />
+                            <Setter Property="Height" Value="Auto" />
+                            <Setter Property="Foreground" Value="Black" />
+                        </Style>
+                        <Style TargetType="TextBlock">
+                            <Setter Property="VerticalAlignment" Value="Center" />
+                        </Style>
+                        <Style TargetType="DataGridRow">
+                            <Setter Property="Height" Value="25" />
+                            <Setter Property="BorderThickness" Value="0" />
+                        </Style>
+                        <Style TargetType="Label">
+                            <Setter Property="FontWeight" Value="Bold" />
+                        </Style>
+                    </DataGrid.Resources>
+                    <DataGrid.Columns>
+                        <DataGridTemplateColumn IsReadOnly="False" Width="2*">
+                            <DataGridTemplateColumn.Header>
+                                <Border BorderBrush="Black" BorderThickness="0,0,0,1">
+                                    <TextBlock Text="Matl Reqd" TextWrapping="Wrap" FontWeight="Bold" />
+                                </Border>
+                            </DataGridTemplateColumn.Header>
+                            <DataGridTemplateColumn.CellTemplate>
+                                <DataTemplate>
+                                    <TextBlock Text="{Binding MatlReqd, Mode=TwoWay, Converter={StaticResource DateTimeToDateConverter}}" />
+                                </DataTemplate>
+                            </DataGridTemplateColumn.CellTemplate>
+                        </DataGridTemplateColumn>
+                        <DataGridTemplateColumn IsReadOnly="False" Width="1*">
+                            <DataGridTemplateColumn.Header>
+                                <Border BorderBrush="Black" BorderThickness="0,0,0,1">
+                                    <TextBlock Text="Job Number" TextWrapping="Wrap" FontWeight="Bold" />
+                                </Border>
+                            </DataGridTemplateColumn.Header>
+                            <DataGridTemplateColumn.CellTemplate>
+                                <DataTemplate>
+                                    <TextBlock Text="{Binding JobNo, Mode=TwoWay}" />
+                                </DataTemplate>
+                            </DataGridTemplateColumn.CellTemplate>
+                        </DataGridTemplateColumn>
+                        <DataGridTemplateColumn IsReadOnly="False" Width="3*">
+                            <DataGridTemplateColumn.Header>
+                                <Border BorderBrush="Black" BorderThickness="0,0,0,1">
+                                    <TextBlock Text="Project" TextWrapping="Wrap" FontWeight="Bold" />
+                                </Border>
+                            </DataGridTemplateColumn.Header>
+                            <DataGridTemplateColumn.CellTemplate>
+                                <DataTemplate>
+                                    <TextBlock Text="{Binding ProjectName, Mode=TwoWay}" />
+                                </DataTemplate>
+                            </DataGridTemplateColumn.CellTemplate>
+                        </DataGridTemplateColumn>
+                        <DataGridTemplateColumn IsReadOnly="False" Width="2*">
+                            <DataGridTemplateColumn.Header>
+                                <Border BorderBrush="Black" BorderThickness="0,0,0,1">
+                                    <TextBlock Text="Salesman" TextWrapping="Wrap" FontWeight="Bold" />
+                                </Border>
+                            </DataGridTemplateColumn.Header>
+                            <DataGridTemplateColumn.CellTemplate>
+                                <DataTemplate>
+                                    <TextBlock Text="{Binding SalesmanName, Mode=TwoWay}" />
+                                </DataTemplate>
+                            </DataGridTemplateColumn.CellTemplate>
+                        </DataGridTemplateColumn>
+                        <DataGridTemplateColumn IsReadOnly="False" Width="2*">
+                            <DataGridTemplateColumn.Header>
+                                <Border BorderBrush="Black" BorderThickness="0,0,0,1">
+                                    <TextBlock Text="Material" TextWrapping="Wrap" FontWeight="Bold" />
+                                </Border>
+                            </DataGridTemplateColumn.Header>
+                            <DataGridTemplateColumn.CellTemplate>
+                                <DataTemplate>
+                                    <TextBlock Text="{Binding MaterialName, Mode=TwoWay}" />
+                                </DataTemplate>
+                            </DataGridTemplateColumn.CellTemplate>
+                        </DataGridTemplateColumn>
+                        <DataGridTemplateColumn IsReadOnly="False" Width="3*">
+                            <DataGridTemplateColumn.Header>
+                                <Border BorderBrush="Black" BorderThickness="0,0,0,1">
+                                    <TextBlock Text="Manufacturer" TextWrapping="Wrap" FontWeight="Bold" />
+                                </Border>
+                            </DataGridTemplateColumn.Header>
+                            <DataGridTemplateColumn.CellTemplate>
+                                <DataTemplate>
+                                    <TextBlock Text="{Binding ManufName, Mode=TwoWay}" />
+                                </DataTemplate>
+                            </DataGridTemplateColumn.CellTemplate>
+                        </DataGridTemplateColumn>
+                        <DataGridTemplateColumn IsReadOnly="False" Width="2*">
+                            <DataGridTemplateColumn.Header>
+                                <Border BorderBrush="Black" BorderThickness="0,0,0,1">
+                                    <TextBlock Text="Shops Recvd" TextWrapping="Wrap" FontWeight="Bold" />
+                                </Border>
+                            </DataGridTemplateColumn.Header>
+                            <DataGridTemplateColumn.CellTemplate>
+                                <DataTemplate>
+                                    <TextBlock Text="{Binding ShopRecvd, Mode=TwoWay , Converter={StaticResource DateTimeToDateConverter}}" />
+                                </DataTemplate>
+                            </DataGridTemplateColumn.CellTemplate>
+                        </DataGridTemplateColumn>
+                        <DataGridTemplateColumn IsReadOnly="False" Width="2*">
+                            <DataGridTemplateColumn.Header>
+                                <Border BorderBrush="Black" BorderThickness="0,0,0,1">
+                                    <TextBlock Text="Submitted" TextWrapping="Wrap" FontWeight="Bold" />
+                                </Border>
+                            </DataGridTemplateColumn.Header>
+                            <DataGridTemplateColumn.CellTemplate>
+                                <DataTemplate>
+                                    <TextBlock Text="{Binding SubmIssue, Mode=TwoWay, Converter={StaticResource DateTimeToDateConverter}}" />
+                                </DataTemplate>
+                            </DataGridTemplateColumn.CellTemplate>
+                        </DataGridTemplateColumn>
+                    </DataGrid.Columns>
+                </DataGrid>
+            </Grid>
+        </Grid>
+
+        <Grid Grid.Row="1" Margin="10" Visibility="{Binding ShopReqVisibility, Mode=TwoWay, Converter={StaticResource BoolToVisibleConverter}}">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="*" />
+            </Grid.RowDefinitions>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="6*" />
+                <ColumnDefinition Width="4*" />
+            </Grid.ColumnDefinitions>
+            <Grid>
+                <TextBlock Style="{StaticResource ReportViewHeader}" Text="Shops Requested, Not Received" />
+            </Grid>
+            <Grid Grid.Row="1" >
+                <DataGrid ItemsSource="{Binding ReportShopReqs, Mode=TwoWay}" GridLinesVisibility="None" AutoGenerateColumns="False" HeadersVisibility="Column" CanUserAddRows="False" BorderThickness="0">
+                    <DataGrid.Resources>
+                        <Style TargetType="DataGridColumnHeader" BasedOn="{StaticResource GridColumnHeaderBase}">
+                            <Setter Property="Background" Value="White" />
+                            <Setter Property="Height" Value="Auto" />
+                            <Setter Property="Foreground" Value="Black" />
+                        </Style>
+                        <Style TargetType="TextBlock">
+                            <Setter Property="VerticalAlignment" Value="Center" />
+                        </Style>
+                        <Style TargetType="DataGridRow">
+                            <Setter Property="Height" Value="25" />
+                            <Setter Property="BorderThickness" Value="0" />
+                        </Style>
+                        <Style TargetType="Label">
+                            <Setter Property="FontWeight" Value="Bold" />
+                        </Style>
+                    </DataGrid.Resources>
+                    <DataGrid.Columns>
+                        <DataGridTemplateColumn IsReadOnly="False" Width="2*">
+                            <DataGridTemplateColumn.Header>
+                                <Border BorderBrush="Black" BorderThickness="0,0,0,1">
+                                    <TextBlock Text="Matl Reqd" TextWrapping="Wrap" FontWeight="Bold" />
+                                </Border>
+                            </DataGridTemplateColumn.Header>
+                            <DataGridTemplateColumn.CellTemplate>
+                                <DataTemplate>
+                                    <TextBlock Text="{Binding MatlReqd, Mode=TwoWay, Converter={StaticResource DateTimeToDateConverter}}" />
+                                </DataTemplate>
+                            </DataGridTemplateColumn.CellTemplate>
+                        </DataGridTemplateColumn>
+                        <DataGridTemplateColumn IsReadOnly="False" Width="1*">
+                            <DataGridTemplateColumn.Header>
+                                <Border BorderBrush="Black" BorderThickness="0,0,0,1">
+                                    <TextBlock Text="Job Number" TextWrapping="Wrap" FontWeight="Bold" />
+                                </Border>
+                            </DataGridTemplateColumn.Header>
+                            <DataGridTemplateColumn.CellTemplate>
+                                <DataTemplate>
+                                    <TextBlock Text="{Binding JobNo, Mode=TwoWay}" />
+                                </DataTemplate>
+                            </DataGridTemplateColumn.CellTemplate>
+                        </DataGridTemplateColumn>
+                        <DataGridTemplateColumn IsReadOnly="False" Width="3*">
+                            <DataGridTemplateColumn.Header>
+                                <Border BorderBrush="Black" BorderThickness="0,0,0,1">
+                                    <TextBlock Text="Project" TextWrapping="Wrap" FontWeight="Bold" />
+                                </Border>
+                            </DataGridTemplateColumn.Header>
+                            <DataGridTemplateColumn.CellTemplate>
+                                <DataTemplate>
+                                    <TextBlock Text="{Binding ProjectName, Mode=TwoWay}" />
+                                </DataTemplate>
+                            </DataGridTemplateColumn.CellTemplate>
+                        </DataGridTemplateColumn>
+                        <DataGridTemplateColumn IsReadOnly="False" Width="2*">
+                            <DataGridTemplateColumn.Header>
+                                <Border BorderBrush="Black" BorderThickness="0,0,0,1">
+                                    <TextBlock Text="Salesman" TextWrapping="Wrap" FontWeight="Bold" />
+                                </Border>
+                            </DataGridTemplateColumn.Header>
+                            <DataGridTemplateColumn.CellTemplate>
+                                <DataTemplate>
+                                    <TextBlock Text="{Binding SalesmanName, Mode=TwoWay}" />
+                                </DataTemplate>
+                            </DataGridTemplateColumn.CellTemplate>
+                        </DataGridTemplateColumn>
+                        <DataGridTemplateColumn IsReadOnly="False" Width="2*">
+                            <DataGridTemplateColumn.Header>
+                                <Border BorderBrush="Black" BorderThickness="0,0,0,1">
+                                    <TextBlock Text="Material" TextWrapping="Wrap" FontWeight="Bold" />
+                                </Border>
+                            </DataGridTemplateColumn.Header>
+                            <DataGridTemplateColumn.CellTemplate>
+                                <DataTemplate>
+                                    <TextBlock Text="{Binding MaterialName, Mode=TwoWay}" />
+                                </DataTemplate>
+                            </DataGridTemplateColumn.CellTemplate>
+                        </DataGridTemplateColumn>
+                        <DataGridTemplateColumn IsReadOnly="False" Width="3*">
+                            <DataGridTemplateColumn.Header>
+                                <Border BorderBrush="Black" BorderThickness="0,0,0,1">
+                                    <TextBlock Text="Manufacturer" TextWrapping="Wrap" FontWeight="Bold" />
+                                </Border>
+                            </DataGridTemplateColumn.Header>
+                            <DataGridTemplateColumn.CellTemplate>
+                                <DataTemplate>
+                                    <TextBlock Text="{Binding ManufName, Mode=TwoWay}" />
+                                </DataTemplate>
+                            </DataGridTemplateColumn.CellTemplate>
+                        </DataGridTemplateColumn>
+                        <DataGridTemplateColumn IsReadOnly="False" Width="2*">
+                            <DataGridTemplateColumn.Header>
+                                <Border BorderBrush="Black" BorderThickness="0,0,0,1">
+                                    <TextBlock Text="Shop Reqd" TextWrapping="Wrap" FontWeight="Bold" />
+                                </Border>
+                            </DataGridTemplateColumn.Header>
+                            <DataGridTemplateColumn.CellTemplate>
+                                <DataTemplate>
+                                    <TextBlock Text="{Binding ShopReq, Mode=TwoWay, Converter={StaticResource DateTimeToDateConverter}}" />
+                                </DataTemplate>
+                            </DataGridTemplateColumn.CellTemplate>
+                        </DataGridTemplateColumn>
+                        <DataGridTemplateColumn IsReadOnly="False" Width="2*">
+                            <DataGridTemplateColumn.Header>
+                                <Border BorderBrush="Black" BorderThickness="0,0,0,1">
+                                    <TextBlock Text="Shops Recvd" TextWrapping="Wrap" FontWeight="Bold" />
+                                </Border>
+                            </DataGridTemplateColumn.Header>
+                            <DataGridTemplateColumn.CellTemplate>
+                                <DataTemplate>
+                                    <TextBlock Text="{Binding ShopRecvd, Mode=TwoWay , Converter={StaticResource DateTimeToDateConverter}}" />
+                                </DataTemplate>
+                            </DataGridTemplateColumn.CellTemplate>
+                        </DataGridTemplateColumn>
+                       
+                    </DataGrid.Columns>
+                </DataGrid>
+            </Grid>
+        </Grid>
+
+        <Grid Grid.Row="1" Margin="10" Visibility="{Binding SubmitVisibility, Mode=TwoWay, Converter={StaticResource BoolToVisibleConverter}}">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="*" />
+            </Grid.RowDefinitions>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="6*" />
+                <ColumnDefinition Width="4*" />
+            </Grid.ColumnDefinitions>
+            <Grid>
+                <TextBlock Style="{StaticResource ReportViewHeader}" Text="Submitted, Not Approved" />
+            </Grid>
+            <Grid Grid.Row="1" >
+                <DataGrid ItemsSource="{Binding ReportSubmits, Mode=TwoWay}" GridLinesVisibility="None" AutoGenerateColumns="False" HeadersVisibility="Column" CanUserAddRows="False" BorderThickness="0">
+                    <DataGrid.Resources>
+                        <Style TargetType="DataGridColumnHeader" BasedOn="{StaticResource GridColumnHeaderBase}">
+                            <Setter Property="Background" Value="White" />
+                            <Setter Property="Height" Value="Auto" />
+                            <Setter Property="Foreground" Value="Black" />
+                        </Style>
+                        <Style TargetType="TextBlock">
+                            <Setter Property="VerticalAlignment" Value="Center" />
+                        </Style>
+                        <Style TargetType="DataGridRow">
+                            <Setter Property="Height" Value="25" />
+                            <Setter Property="BorderThickness" Value="0" />
+                        </Style>
+                        <Style TargetType="Label">
+                            <Setter Property="FontWeight" Value="Bold" />
+                        </Style>
+                    </DataGrid.Resources>
+                    <DataGrid.Columns>
+                        <DataGridTemplateColumn IsReadOnly="False" Width="2*">
+                            <DataGridTemplateColumn.Header>
+                                <Border BorderBrush="Black" BorderThickness="0,0,0,1">
+                                    <TextBlock Text="Matl Reqd" TextWrapping="Wrap" FontWeight="Bold" />
+                                </Border>
+                            </DataGridTemplateColumn.Header>
+                            <DataGridTemplateColumn.CellTemplate>
+                                <DataTemplate>
+                                    <TextBlock Text="{Binding MatlReqd, Mode=TwoWay, Converter={StaticResource DateTimeToDateConverter}}" />
+                                </DataTemplate>
+                            </DataGridTemplateColumn.CellTemplate>
+                        </DataGridTemplateColumn>
+                        <DataGridTemplateColumn IsReadOnly="False" Width="1*">
+                            <DataGridTemplateColumn.Header>
+                                <Border BorderBrush="Black" BorderThickness="0,0,0,1">
+                                    <TextBlock Text="Job Number" TextWrapping="Wrap" FontWeight="Bold" />
+                                </Border>
+                            </DataGridTemplateColumn.Header>
+                            <DataGridTemplateColumn.CellTemplate>
+                                <DataTemplate>
+                                    <TextBlock Text="{Binding JobNo, Mode=TwoWay}" />
+                                </DataTemplate>
+                            </DataGridTemplateColumn.CellTemplate>
+                        </DataGridTemplateColumn>
+                        <DataGridTemplateColumn IsReadOnly="False" Width="3*">
+                            <DataGridTemplateColumn.Header>
+                                <Border BorderBrush="Black" BorderThickness="0,0,0,1">
+                                    <TextBlock Text="Project" TextWrapping="Wrap" FontWeight="Bold" />
+                                </Border>
+                            </DataGridTemplateColumn.Header>
+                            <DataGridTemplateColumn.CellTemplate>
+                                <DataTemplate>
+                                    <TextBlock Text="{Binding ProjectName, Mode=TwoWay}" />
+                                </DataTemplate>
+                            </DataGridTemplateColumn.CellTemplate>
+                        </DataGridTemplateColumn>
+                        <DataGridTemplateColumn IsReadOnly="False" Width="2*">
+                            <DataGridTemplateColumn.Header>
+                                <Border BorderBrush="Black" BorderThickness="0,0,0,1">
+                                    <TextBlock Text="Salesman" TextWrapping="Wrap" FontWeight="Bold" />
+                                </Border>
+                            </DataGridTemplateColumn.Header>
+                            <DataGridTemplateColumn.CellTemplate>
+                                <DataTemplate>
+                                    <TextBlock Text="{Binding SalesmanName, Mode=TwoWay}" />
+                                </DataTemplate>
+                            </DataGridTemplateColumn.CellTemplate>
+                        </DataGridTemplateColumn>
+                        <DataGridTemplateColumn IsReadOnly="False" Width="2*">
+                            <DataGridTemplateColumn.Header>
+                                <Border BorderBrush="Black" BorderThickness="0,0,0,1">
+                                    <TextBlock Text="Material" TextWrapping="Wrap" FontWeight="Bold" />
+                                </Border>
+                            </DataGridTemplateColumn.Header>
+                            <DataGridTemplateColumn.CellTemplate>
+                                <DataTemplate>
+                                    <TextBlock Text="{Binding MaterialName, Mode=TwoWay}" />
+                                </DataTemplate>
+                            </DataGridTemplateColumn.CellTemplate>
+                        </DataGridTemplateColumn>
+                        <DataGridTemplateColumn IsReadOnly="False" Width="3*">
+                            <DataGridTemplateColumn.Header>
+                                <Border BorderBrush="Black" BorderThickness="0,0,0,1">
+                                    <TextBlock Text="Manufacturer" TextWrapping="Wrap" FontWeight="Bold" />
+                                </Border>
+                            </DataGridTemplateColumn.Header>
+                            <DataGridTemplateColumn.CellTemplate>
+                                <DataTemplate>
+                                    <TextBlock Text="{Binding ManufName, Mode=TwoWay}" />
+                                </DataTemplate>
+                            </DataGridTemplateColumn.CellTemplate>
+                        </DataGridTemplateColumn>
+                        <DataGridTemplateColumn IsReadOnly="False" Width="2*">
+                            <DataGridTemplateColumn.Header>
+                                <Border BorderBrush="Black" BorderThickness="0,0,0,1">
+                                    <TextBlock Text="Submitted" TextWrapping="Wrap" FontWeight="Bold" />
+                                </Border>
+                            </DataGridTemplateColumn.Header>
+                            <DataGridTemplateColumn.CellTemplate>
+                                <DataTemplate>
+                                    <TextBlock Text="{Binding SubmIssue, Mode=TwoWay, Converter={StaticResource DateTimeToDateConverter}}" />
+                                </DataTemplate>
+                            </DataGridTemplateColumn.CellTemplate>
+                        </DataGridTemplateColumn>
+                        <DataGridTemplateColumn IsReadOnly="False" Width="2*">
+                            <DataGridTemplateColumn.Header>
+                                <Border BorderBrush="Black" BorderThickness="0,0,0,1">
+                                    <TextBlock Text="Resubmit" TextWrapping="Wrap" FontWeight="Bold" />
+                                </Border>
+                            </DataGridTemplateColumn.Header>
+                            <DataGridTemplateColumn.CellTemplate>
+                                <DataTemplate>
+                                    <TextBlock Text="{Binding ReSubmit, Mode=TwoWay , Converter={StaticResource DateTimeToDateConverter}}" />
+                                </DataTemplate>
+                            </DataGridTemplateColumn.CellTemplate>
+                        </DataGridTemplateColumn>
+                        <DataGridTemplateColumn IsReadOnly="False" Width="2*">
+                            <DataGridTemplateColumn.Header>
+                                <Border BorderBrush="Black" BorderThickness="0,0,0,1">
+                                    <TextBlock Text="Subm Appr" TextWrapping="Wrap" FontWeight="Bold" />
+                                </Border>
+                            </DataGridTemplateColumn.Header>
+                            <DataGridTemplateColumn.CellTemplate>
+                                <DataTemplate>
+                                    <TextBlock Text="{Binding SubmAppr, Mode=TwoWay , Converter={StaticResource DateTimeToDateConverter}}" />
+                                </DataTemplate>
+                            </DataGridTemplateColumn.CellTemplate>
+                        </DataGridTemplateColumn>
+
+                    </DataGrid.Columns>
+                </DataGrid>
+            </Grid>
+        </Grid>
+
+        <Grid Grid.Row="1" Margin="10" Visibility="{Binding VendorVisibility, Mode=TwoWay, Converter={StaticResource BoolToVisibleConverter}}">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="*" />
+            </Grid.RowDefinitions>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="6*" />
+                <ColumnDefinition Width="4*" />
+            </Grid.ColumnDefinitions>
+            <Grid>
+                <TextBlock Style="{StaticResource ReportViewHeader}" Text="Vendor Contacts" />
+            </Grid>
+            <Grid Grid.Row="1" >
+                <DataGrid ItemsSource="{Binding ReportVendors, Mode=TwoWay}" GridLinesVisibility="None" AutoGenerateColumns="False" HeadersVisibility="Column" CanUserAddRows="False" BorderThickness="0" AlternatingRowBackground="LightGray">
+                    <DataGrid.Resources>
+                        <Style TargetType="DataGridColumnHeader" BasedOn="{StaticResource GridColumnHeaderBase}">
+                            <Setter Property="Background" Value="White" />
+                            <Setter Property="Height" Value="Auto" />
+                            <Setter Property="Foreground" Value="Black" />
+                        </Style>
+                        <Style TargetType="TextBlock">
+                            <Setter Property="VerticalAlignment" Value="Center" />
+                        </Style>
+                        <Style TargetType="DataGridRow">
+                            <Setter Property="Height" Value="25" />
+                            <Setter Property="BorderThickness" Value="0" />
+                        </Style>
+                        <Style TargetType="Label">
+                            <Setter Property="FontWeight" Value="Bold" />
+                        </Style>
+                    </DataGrid.Resources>
+                    <DataGrid.Columns>
+                        <DataGridTemplateColumn IsReadOnly="False" Width="2*">
+                            <DataGridTemplateColumn.Header>
+                                <Border BorderBrush="Black" BorderThickness="0,0,0,1">
+                                    <TextBlock Text="Vendor" TextWrapping="Wrap" FontWeight="Bold" />
+                                </Border>
+                            </DataGridTemplateColumn.Header>
+                            <DataGridTemplateColumn.CellTemplate>
+                                <DataTemplate>
+                                    <TextBlock Text="{Binding ManufName, Mode=TwoWay}" />
+                                </DataTemplate>
+                            </DataGridTemplateColumn.CellTemplate>
+                        </DataGridTemplateColumn>
+                        <DataGridTemplateColumn IsReadOnly="False" Width="2*">
+                            <DataGridTemplateColumn.Header>
+                                <Border BorderBrush="Black" BorderThickness="0,0,0,1">
+                                    <TextBlock Text="Contact" TextWrapping="Wrap" FontWeight="Bold" />
+                                </Border>
+                            </DataGridTemplateColumn.Header>
+                            <DataGridTemplateColumn.CellTemplate>
+                                <DataTemplate>
+                                    <TextBlock Text="{Binding ContactName, Mode=TwoWay}" />
+                                </DataTemplate>
+                            </DataGridTemplateColumn.CellTemplate>
+                        </DataGridTemplateColumn>
+                        <DataGridTemplateColumn IsReadOnly="False" Width="3*">
+                            <DataGridTemplateColumn.Header>
+                                <Border BorderBrush="Black" BorderThickness="0,0,0,1">
+                                    <TextBlock Text="Phone" TextWrapping="Wrap" FontWeight="Bold" />
+                                </Border>
+                            </DataGridTemplateColumn.Header>
+                            <DataGridTemplateColumn.CellTemplate>
+                                <DataTemplate>
+                                    <TextBlock Text="{Binding ContactPhone, Mode=TwoWay}" />
+                                </DataTemplate>
+                            </DataGridTemplateColumn.CellTemplate>
+                        </DataGridTemplateColumn>
+                        <DataGridTemplateColumn IsReadOnly="False" Width="2*">
+                            <DataGridTemplateColumn.Header>
+                                <Border BorderBrush="Black" BorderThickness="0,0,0,1">
+                                    <TextBlock Text="Contact Email" TextWrapping="Wrap" FontWeight="Bold" />
+                                </Border>
+                            </DataGridTemplateColumn.Header>
+                            <DataGridTemplateColumn.CellTemplate>
+                                <DataTemplate>
+                                    <TextBlock Text="{Binding ContactEmail, Mode=TwoWay}" />
+                                </DataTemplate>
+                            </DataGridTemplateColumn.CellTemplate>
+                        </DataGridTemplateColumn>
+                    </DataGrid.Columns>
+                </DataGrid>
+            </Grid>
+        </Grid>
+
+        <Grid Grid.Row="1" Margin="10" Visibility="{Binding ReleasedVisibility, Mode=TwoWay, Converter={StaticResource BoolToVisibleConverter}}">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="*" />
+            </Grid.RowDefinitions>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="6*" />
+                <ColumnDefinition Width="4*" />
+            </Grid.ColumnDefinitions>
+            <Grid>
+                <TextBlock Style="{StaticResource ReportViewHeader}" Text="Released, Not Shipped" />
+            </Grid>
+            <Grid Grid.Row="1" >
+                <DataGrid ItemsSource="{Binding ReportReleaseNotShips, Mode=TwoWay}" GridLinesVisibility="None" AutoGenerateColumns="False" HeadersVisibility="Column" CanUserAddRows="False" BorderThickness="0" AlternatingRowBackground="LightGray">
+                    <DataGrid.Resources>
+                        <Style TargetType="DataGridColumnHeader" BasedOn="{StaticResource GridColumnHeaderBase}">
+                            <Setter Property="Background" Value="White" />
+                            <Setter Property="Height" Value="Auto" />
+                            <Setter Property="Foreground" Value="Black" />
+                        </Style>
+                        <Style TargetType="TextBlock">
+                            <Setter Property="VerticalAlignment" Value="Center" />
+                        </Style>
+                        <Style TargetType="DataGridRow">
+                            <Setter Property="Height" Value="25" />
+                            <Setter Property="BorderThickness" Value="0" />
+                        </Style>
+                        <Style TargetType="Label">
+                            <Setter Property="FontWeight" Value="Bold" />
+                        </Style>
+                    </DataGrid.Resources>
+                    <DataGrid.Columns>
+                        <DataGridTemplateColumn IsReadOnly="False" Width="2*">
+                            <DataGridTemplateColumn.Header>
+                                <Border BorderBrush="Black" BorderThickness="0,0,0,1">
+                                    <TextBlock Text="Matl Reqd" TextWrapping="Wrap" FontWeight="Bold" />
+                                </Border>
+                            </DataGridTemplateColumn.Header>
+                            <DataGridTemplateColumn.CellTemplate>
+                                <DataTemplate>
+                                    <TextBlock Text="{Binding MatlReqd, Mode=TwoWay, Converter={StaticResource DateTimeToDateConverter}}" />
+                                </DataTemplate>
+                            </DataGridTemplateColumn.CellTemplate>
+                        </DataGridTemplateColumn>
+                        <DataGridTemplateColumn IsReadOnly="False" Width="1*">
+                            <DataGridTemplateColumn.Header>
+                                <Border BorderBrush="Black" BorderThickness="0,0,0,1">
+                                    <TextBlock Text="Job Number" TextWrapping="Wrap" FontWeight="Bold" />
+                                </Border>
+                            </DataGridTemplateColumn.Header>
+                            <DataGridTemplateColumn.CellTemplate>
+                                <DataTemplate>
+                                    <TextBlock Text="{Binding JobNo, Mode=TwoWay}" />
+                                </DataTemplate>
+                            </DataGridTemplateColumn.CellTemplate>
+                        </DataGridTemplateColumn>
+                        <DataGridTemplateColumn IsReadOnly="False" Width="3*">
+                            <DataGridTemplateColumn.Header>
+                                <Border BorderBrush="Black" BorderThickness="0,0,0,1">
+                                    <TextBlock Text="Project" TextWrapping="Wrap" FontWeight="Bold" />
+                                </Border>
+                            </DataGridTemplateColumn.Header>
+                            <DataGridTemplateColumn.CellTemplate>
+                                <DataTemplate>
+                                    <TextBlock Text="{Binding ProjectName, Mode=TwoWay}" />
+                                </DataTemplate>
+                            </DataGridTemplateColumn.CellTemplate>
+                        </DataGridTemplateColumn>
+                        <DataGridTemplateColumn IsReadOnly="False" Width="2*">
+                            <DataGridTemplateColumn.Header>
+                                <Border BorderBrush="Black" BorderThickness="0,0,0,1">
+                                    <TextBlock Text="Salesman" TextWrapping="Wrap" FontWeight="Bold" />
+                                </Border>
+                            </DataGridTemplateColumn.Header>
+                            <DataGridTemplateColumn.CellTemplate>
+                                <DataTemplate>
+                                    <TextBlock Text="{Binding SalesmanName, Mode=TwoWay}" />
+                                </DataTemplate>
+                            </DataGridTemplateColumn.CellTemplate>
+                        </DataGridTemplateColumn>
+                        <DataGridTemplateColumn IsReadOnly="False" Width="2*">
+                            <DataGridTemplateColumn.Header>
+                                <Border BorderBrush="Black" BorderThickness="0,0,0,1">
+                                    <TextBlock Text="Material" TextWrapping="Wrap" FontWeight="Bold" />
+                                </Border>
+                            </DataGridTemplateColumn.Header>
+                            <DataGridTemplateColumn.CellTemplate>
+                                <DataTemplate>
+                                    <TextBlock Text="{Binding MaterialName, Mode=TwoWay}" />
+                                </DataTemplate>
+                            </DataGridTemplateColumn.CellTemplate>
+                        </DataGridTemplateColumn>
+                        <DataGridTemplateColumn IsReadOnly="False" Width="3*">
+                            <DataGridTemplateColumn.Header>
+                                <Border BorderBrush="Black" BorderThickness="0,0,0,1">
+                                    <TextBlock Text="Manufacturer" TextWrapping="Wrap" FontWeight="Bold" />
+                                </Border>
+                            </DataGridTemplateColumn.Header>
+                            <DataGridTemplateColumn.CellTemplate>
+                                <DataTemplate>
+                                    <TextBlock Text="{Binding ManufName, Mode=TwoWay}" />
+                                </DataTemplate>
+                            </DataGridTemplateColumn.CellTemplate>
+                        </DataGridTemplateColumn>
+                        <DataGridTemplateColumn IsReadOnly="False" Width="2*">
+                            <DataGridTemplateColumn.Header>
+                                <Border BorderBrush="Black" BorderThickness="0,0,0,1">
+                                    <TextBlock Text="PO #" TextWrapping="Wrap" FontWeight="Bold" />
+                                </Border>
+                            </DataGridTemplateColumn.Header>
+                            <DataGridTemplateColumn.CellTemplate>
+                                <DataTemplate>
+                                    <TextBlock Text="{Binding PoNumber, Mode=TwoWay}" />
+                                </DataTemplate>
+                            </DataGridTemplateColumn.CellTemplate>
+                        </DataGridTemplateColumn>
+                        <DataGridTemplateColumn IsReadOnly="False" Width="2*">
+                            <DataGridTemplateColumn.Header>
+                                <Border BorderBrush="Black" BorderThickness="0,0,0,1">
+                                    <TextBlock Text="R.F.F" TextWrapping="Wrap" FontWeight="Bold" />
+                                </Border>
+                            </DataGridTemplateColumn.Header>
+                            <DataGridTemplateColumn.CellTemplate>
+                                <DataTemplate>
+                                    <TextBlock Text="{Binding RFF, Mode=TwoWay , Converter={StaticResource DateTimeToDateConverter}}" />
+                                </DataTemplate>
+                            </DataGridTemplateColumn.CellTemplate>
+                        </DataGridTemplateColumn>
+
                     </DataGrid.Columns>
                 </DataGrid>
             </Grid>

@@ -13,8 +13,16 @@ namespace WpfApp.Converter
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {
             DateTime dateTime = (DateTime)value;
-            string dateOnlyString = dateTime.ToString("yyyy-MM-dd");
-            return dateOnlyString;
+            if (dateTime.Equals(DateTime.MinValue))
+            {
+                return "";
+            }
+            else
+            {
+                string dateOnlyString = dateTime.ToString("yyyy-MM-dd");
+                return dateOnlyString;
+            }
+           
         }
 
         public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
