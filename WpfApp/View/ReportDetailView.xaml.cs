@@ -24,6 +24,7 @@ namespace WpfApp.View
 
         private void GoBack(object sender, RoutedEventArgs e)
         {
+
             this.NavigationService.Navigate(new Uri("View/ReportView.xaml", UriKind.Relative));
         }
 

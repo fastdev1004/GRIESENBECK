@@ -37,6 +37,7 @@
             <Grid.RowDefinitions>
                 <RowDefinition Height="Auto" />
                 <RowDefinition Height="*" />
+                <RowDefinition Height="Auto" />
             </Grid.RowDefinitions>
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="6*" />
@@ -46,6 +47,10 @@
                 <TextBlock Style="{StaticResource ReportViewHeader}" Text="Active Labor List" />
             </Grid>
             <Grid Grid.Row="1" >
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="*" />
+                    <RowDefinition Height="Auto" />
+                </Grid.RowDefinitions>
                 <DataGrid ItemsSource="{Binding ReportActiveLabors, Mode=TwoWay}" GridLinesVisibility="None" AutoGenerateColumns="False" HeadersVisibility="Column" CanUserAddRows="False" BorderThickness="0">
                     <DataGrid.Resources>
                         <Style TargetType="DataGridColumnHeader" BasedOn="{StaticResource GridColumnHeaderBase}">
@@ -187,11 +192,28 @@
                     </DataGrid.Columns>
                 </DataGrid>
             </Grid>
+            <StackPanel
+      Grid.Row="2"
+      Orientation="Horizontal"
+      HorizontalAlignment="Center">
+                <Button Margin="4,0" Content="&lt;&lt;" Command="{Binding FirstPageCommand}"/>
+                <Button Margin="4,0" Content="&lt;" Command="{Binding PreivousPageCommand}"/>
+                <StackPanel VerticalAlignment="Center" Orientation="Horizontal">
+                    <TextBlock Text="{Binding Start}"/>
+                    <TextBlock Text=" to "/>
+                    <TextBlock Text="{Binding End}"/>
+                    <TextBlock Text=" of "/>
+                    <TextBlock Text="{Binding TotalItems}"/>
+                </StackPanel>
+                <Button Margin="4,0" Content="&gt;" Command="{Binding NextPageCommand}"/>
+                <Button Margin="4,0" Content="&gt;&gt;" Command="{Binding LastPageCommand}" CommandParameter="{Binding ReportID, Mode=TwoWay}" />
+            </StackPanel>
         </Grid>
-     <Grid Grid.Row="1" Margin="10" Visibility="{Binding ActiveProjectListVisibility, Mode=TwoWay, Converter={StaticResource BoolToVisibleConverter}}">
+    <Grid Grid.Row="1" Margin="10" Visibility="{Binding ActiveProjectListVisibility, Mode=TwoWay, Converter={StaticResource BoolToVisibleConverter}}">
             <Grid.RowDefinitions>
                 <RowDefinition Height="Auto" />
                 <RowDefinition Height="*" />
+                <RowDefinition Height="Auto" />
             </Grid.RowDefinitions>
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="6*" />
@@ -317,7 +339,7 @@
                                                             </DataGridTemplateColumn.Header>
                                                             <DataGridTemplateColumn.CellTemplate>
                                                                 <DataTemplate>
-                                                                    <TextBlock Text="{Binding MatType, Mode=TwoWay}" />
+                                                                    <TextBlock Text="{Binding MatDesc, Mode=TwoWay}" />
                                                                 </DataTemplate>
                                                             </DataGridTemplateColumn.CellTemplate>
                                                         </DataGridTemplateColumn>
@@ -362,12 +384,29 @@
                     </DataGrid.Columns>
                 </DataGrid>
             </Grid>
+            <StackPanel
+      Grid.Row="2"
+      Orientation="Horizontal"
+      HorizontalAlignment="Center">
+                <Button Margin="4,0" Content="&lt;&lt;" Command="{Binding FirstPageCommand}"/>
+                <Button Margin="4,0" Content="&lt;" Command="{Binding PreivousPageCommand}"/>
+                <StackPanel VerticalAlignment="Center" Orientation="Horizontal">
+                    <TextBlock Text="{Binding Start}"/>
+                    <TextBlock Text=" to "/>
+                    <TextBlock Text="{Binding End}"/>
+                    <TextBlock Text=" of "/>
+                    <TextBlock Text="{Binding TotalItems}"/>
+                </StackPanel>
+                <Button Margin="4,0" Content="&gt;" Command="{Binding NextPageCommand}"/>
+                <Button Margin="4,0" Content="&gt;&gt;" Command="{Binding LastPageCommand}" CommandParameter="{Binding ReportID, Mode=TwoWay}" />
+            </StackPanel>
         </Grid>
 
 <Grid Grid.Row="1" Margin="10" Visibility="{Binding ApprovedVisibility, Mode=TwoWay, Converter={StaticResource BoolToVisibleConverter}}">
             <Grid.RowDefinitions>
                 <RowDefinition Height="Auto" />
                 <RowDefinition Height="*" />
+                <RowDefinition Height="Auto" /> 
             </Grid.RowDefinitions>
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="6*" />
@@ -491,11 +530,28 @@
                     </DataGrid.Columns>
                 </DataGrid>
             </Grid>
+            <StackPanel
+      Grid.Row="1"
+      Orientation="Horizontal"
+      HorizontalAlignment="Center">
+                <Button Margin="4,0" Content="&lt;&lt;" Command="{Binding FirstPageCommand}"/>
+                <Button Margin="4,0" Content="&lt;" Command="{Binding PreivousPageCommand}"/>
+                <StackPanel VerticalAlignment="Center" Orientation="Horizontal">
+                    <TextBlock Text="{Binding Start}"/>
+                    <TextBlock Text=" to "/>
+                    <TextBlock Text="{Binding End}"/>
+                    <TextBlock Text=" of "/>
+                    <TextBlock Text="{Binding TotalItems}"/>
+                </StackPanel>
+                <Button Margin="4,0" Content="&gt;" Command="{Binding NextPageCommand}"/>
+                <Button Margin="4,0" Content="&gt;&gt;" Command="{Binding LastPageCommand}" CommandParameter="{Binding ReportID, Mode=TwoWay}" />
+            </StackPanel>
         </Grid>
         <Grid Grid.Row="1" Margin="10" Visibility="{Binding ChangeOrderVisibility, Mode=TwoWay, Converter={StaticResource BoolToVisibleConverter}}">
             <Grid.RowDefinitions>
                 <RowDefinition Height="Auto" />
                 <RowDefinition Height="*" />
+                <RowDefinition Height="Auto" />
             </Grid.RowDefinitions>
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="6*" />
@@ -686,12 +742,29 @@
                     </DataGrid.Columns>
                 </DataGrid>
             </Grid>
+            <StackPanel
+      Grid.Row="2"
+      Orientation="Horizontal"
+      HorizontalAlignment="Center">
+                <Button Margin="4,0" Content="&lt;&lt;" Command="{Binding FirstPageCommand}"/>
+                <Button Margin="4,0" Content="&lt;" Command="{Binding PreivousPageCommand}"/>
+                <StackPanel VerticalAlignment="Center" Orientation="Horizontal">
+                    <TextBlock Text="{Binding Start}"/>
+                    <TextBlock Text=" to "/>
+                    <TextBlock Text="{Binding End}"/>
+                    <TextBlock Text=" of "/>
+                    <TextBlock Text="{Binding TotalItems}"/>
+                </StackPanel>
+                <Button Margin="4,0" Content="&gt;" Command="{Binding NextPageCommand}"/>
+                <Button Margin="4,0" Content="&gt;&gt;" Command="{Binding LastPageCommand}" CommandParameter="{Binding ReportID, Mode=TwoWay}" />
+            </StackPanel>
         </Grid>
 
         <Grid Grid.Row="1" Margin="10" Visibility="{Binding CipVisibility, Mode=TwoWay, Converter={StaticResource BoolToVisibleConverter}}">
             <Grid.RowDefinitions>
                 <RowDefinition Height="Auto" />
                 <RowDefinition Height="*" />
+                <RowDefinition Height="Auto" />
             </Grid.RowDefinitions>
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="6*" />
@@ -843,6 +916,22 @@
                     </DataGrid.Columns>
                 </DataGrid>
             </Grid>
+            <StackPanel
+      Grid.Row="2"
+      Orientation="Horizontal"
+      HorizontalAlignment="Center">
+                <Button Margin="4,0" Content="&lt;&lt;" Command="{Binding FirstPageCommand}"/>
+                <Button Margin="4,0" Content="&lt;" Command="{Binding PreivousPageCommand}"/>
+                <StackPanel VerticalAlignment="Center" Orientation="Horizontal">
+                    <TextBlock Text="{Binding Start}"/>
+                    <TextBlock Text=" to "/>
+                    <TextBlock Text="{Binding End}"/>
+                    <TextBlock Text=" of "/>
+                    <TextBlock Text="{Binding TotalItems}"/>
+                </StackPanel>
+                <Button Margin="4,0" Content="&gt;" Command="{Binding NextPageCommand}"/>
+                <Button Margin="4,0" Content="&gt;&gt;" Command="{Binding LastPageCommand}" CommandParameter="{Binding ReportID, Mode=TwoWay}" />
+            </StackPanel>
         </Grid>
 
         
@@ -850,6 +939,7 @@
             <Grid.RowDefinitions>
                 <RowDefinition Height="Auto" />
                 <RowDefinition Height="*" />
+                <RowDefinition Height="Auto" />
             </Grid.RowDefinitions>
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="6*" />
@@ -1041,11 +1131,28 @@
                     </DataGrid.Columns>
                 </DataGrid>
             </Grid>
+            <StackPanel
+      Grid.Row="2"
+      Orientation="Horizontal"
+      HorizontalAlignment="Center">
+                <Button Margin="4,0" Content="&lt;&lt;" Command="{Binding FirstPageCommand}"/>
+                <Button Margin="4,0" Content="&lt;" Command="{Binding PreivousPageCommand}"/>
+                <StackPanel VerticalAlignment="Center" Orientation="Horizontal">
+                    <TextBlock Text="{Binding Start}"/>
+                    <TextBlock Text=" to "/>
+                    <TextBlock Text="{Binding End}"/>
+                    <TextBlock Text=" of "/>
+                    <TextBlock Text="{Binding TotalItems}"/>
+                </StackPanel>
+                <Button Margin="4,0" Content="&gt;" Command="{Binding NextPageCommand}"/>
+                <Button Margin="4,0" Content="&gt;&gt;" Command="{Binding LastPageCommand}" CommandParameter="{Binding ReportID, Mode=TwoWay}" />
+            </StackPanel>
         </Grid>
         <Grid Grid.Row="1" Margin="10" Visibility="{Binding CustomerContactVisibility, Mode=TwoWay, Converter={StaticResource BoolToVisibleConverter}}">
             <Grid.RowDefinitions>
                 <RowDefinition Height="Auto" />
                 <RowDefinition Height="*" />
+                <RowDefinition Height="Auto" />
             </Grid.RowDefinitions>
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="6*" />
@@ -1165,12 +1272,29 @@
                     </DataGrid.Columns>
                 </DataGrid>
             </Grid>
+            <StackPanel
+      Grid.Row="2"
+      Orientation="Horizontal"
+      HorizontalAlignment="Center">
+                <Button Margin="4,0" Content="&lt;&lt;" Command="{Binding FirstPageCommand}"/>
+                <Button Margin="4,0" Content="&lt;" Command="{Binding PreivousPageCommand}"/>
+                <StackPanel VerticalAlignment="Center" Orientation="Horizontal">
+                    <TextBlock Text="{Binding Start}"/>
+                    <TextBlock Text=" to "/>
+                    <TextBlock Text="{Binding End}"/>
+                    <TextBlock Text=" of "/>
+                    <TextBlock Text="{Binding TotalItems}"/>
+                </StackPanel>
+                <Button Margin="4,0" Content="&gt;" Command="{Binding NextPageCommand}"/>
+                <Button Margin="4,0" Content="&gt;&gt;" Command="{Binding LastPageCommand}" CommandParameter="{Binding ReportID, Mode=TwoWay}" />
+            </StackPanel>
         </Grid>
 
         <Grid Grid.Row="1" Margin="10" Visibility="{Binding FieldMeasureVisibility, Mode=TwoWay, Converter={StaticResource BoolToVisibleConverter}}">
             <Grid.RowDefinitions>
                 <RowDefinition Height="Auto" />
                 <RowDefinition Height="*" />
+                <RowDefinition Height="Auto" />
             </Grid.RowDefinitions>
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="6*" />
@@ -1453,12 +1577,29 @@
                     </DataGrid.Columns>
                 </DataGrid>
             </Grid>
+            <StackPanel
+      Grid.Row="2"
+      Orientation="Horizontal"
+      HorizontalAlignment="Center">
+                <Button Margin="4,0" Content="&lt;&lt;" Command="{Binding FirstPageCommand}"/>
+                <Button Margin="4,0" Content="&lt;" Command="{Binding PreivousPageCommand}"/>
+                <StackPanel VerticalAlignment="Center" Orientation="Horizontal">
+                    <TextBlock Text="{Binding Start}"/>
+                    <TextBlock Text=" to "/>
+                    <TextBlock Text="{Binding End}"/>
+                    <TextBlock Text=" of "/>
+                    <TextBlock Text="{Binding TotalItems}"/>
+                </StackPanel>
+                <Button Margin="4,0" Content="&gt;" Command="{Binding NextPageCommand}"/>
+                <Button Margin="4,0" Content="&gt;&gt;" Command="{Binding LastPageCommand}" CommandParameter="{Binding ReportID, Mode=TwoWay}" />
+            </StackPanel>
         </Grid>
         
         <Grid Grid.Row="1" Margin="10" Visibility="{Binding JobArchRepVisibility, Mode=TwoWay, Converter={StaticResource BoolToVisibleConverter}}">
             <Grid.RowDefinitions>
                 <RowDefinition Height="Auto" />
                 <RowDefinition Height="*" />
+                <RowDefinition Height="Auto" />
             </Grid.RowDefinitions>
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="6*" />
@@ -1661,12 +1802,29 @@
                     </DataGrid.Columns>
                 </DataGrid>
             </Grid>
+            <StackPanel
+      Grid.Row="2"
+      Orientation="Horizontal"
+      HorizontalAlignment="Center">
+                <Button Margin="4,0" Content="&lt;&lt;" Command="{Binding FirstPageCommand}"/>
+                <Button Margin="4,0" Content="&lt;" Command="{Binding PreivousPageCommand}"/>
+                <StackPanel VerticalAlignment="Center" Orientation="Horizontal">
+                    <TextBlock Text="{Binding Start}"/>
+                    <TextBlock Text=" to "/>
+                    <TextBlock Text="{Binding End}"/>
+                    <TextBlock Text=" of "/>
+                    <TextBlock Text="{Binding TotalItems}"/>
+                </StackPanel>
+                <Button Margin="4,0" Content="&gt;" Command="{Binding NextPageCommand}"/>
+                <Button Margin="4,0" Content="&gt;&gt;" Command="{Binding LastPageCommand}" CommandParameter="{Binding ReportID, Mode=TwoWay}" />
+            </StackPanel>
         </Grid>
 
         <Grid Grid.Row="1" Margin="10" Visibility="{Binding JobArchitectVisibility, Mode=TwoWay, Converter={StaticResource BoolToVisibleConverter}}">
             <Grid.RowDefinitions>
                 <RowDefinition Height="Auto" />
                 <RowDefinition Height="*" />
+                <RowDefinition Height="Auto" />
             </Grid.RowDefinitions>
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="6*" />
@@ -1676,7 +1834,7 @@
                 <TextBlock Style="{StaticResource ReportViewHeader}" Text="Jobs by Architect" />
             </Grid>
             <Grid Grid.Row="1" >
-                <DataGrid ItemsSource="{Binding ReportJobArchReps, Mode=TwoWay}" GridLinesVisibility="None" AutoGenerateColumns="False" HeadersVisibility="Column" CanUserAddRows="False" BorderThickness="0">
+                <DataGrid ItemsSource="{Binding ReportJobArchitects, Mode=TwoWay}" GridLinesVisibility="None" AutoGenerateColumns="False" HeadersVisibility="Column" CanUserAddRows="False" BorderThickness="0">
                     <DataGrid.Resources>
                         <Style TargetType="DataGridColumnHeader" BasedOn="{StaticResource GridColumnHeaderBase}">
                             <Setter Property="Background" Value="#C6D9F1" />
@@ -1828,8 +1986,6 @@
                                                     </DataGrid>
                                                 </Grid>
                                             </Grid>
-
-
                                         </Grid>
                                     </Border>
                                 </DataTemplate>
@@ -1838,21 +1994,38 @@
                     </DataGrid.Columns>
                 </DataGrid>
             </Grid>
+            <StackPanel
+      Grid.Row="2"
+      Orientation="Horizontal"
+      HorizontalAlignment="Center">
+                <Button Margin="4,0" Content="&lt;&lt;" Command="{Binding FirstPageCommand}"/>
+                <Button Margin="4,0" Content="&lt;" Command="{Binding PreivousPageCommand}"/>
+                <StackPanel VerticalAlignment="Center" Orientation="Horizontal">
+                    <TextBlock Text="{Binding Start}"/>
+                    <TextBlock Text=" to "/>
+                    <TextBlock Text="{Binding End}"/>
+                    <TextBlock Text=" of "/>
+                    <TextBlock Text="{Binding TotalItems}"/>
+                </StackPanel>
+                <Button Margin="4,0" Content="&gt;" Command="{Binding NextPageCommand}"/>
+                <Button Margin="4,0" Content="&gt;&gt;" Command="{Binding LastPageCommand}" CommandParameter="{Binding ReportID, Mode=TwoWay}" />
+            </StackPanel>
         </Grid>
         <Grid Grid.Row="1" Margin="10" Visibility="{Binding JobManufVisibility, Mode=TwoWay, Converter={StaticResource BoolToVisibleConverter}}">
             <Grid.RowDefinitions>
                 <RowDefinition Height="Auto" />
                 <RowDefinition Height="*" />
+                <RowDefinition Height="Auto" />
             </Grid.RowDefinitions>
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="6*" />
                 <ColumnDefinition Width="4*" />
             </Grid.ColumnDefinitions>
             <Grid>
-                <TextBlock Style="{StaticResource ReportViewHeader}" Text="Jobs by Architect" />
+                <TextBlock Style="{StaticResource ReportViewHeader}" Text="Jobs by Manufacturer" />
             </Grid>
             <Grid Grid.Row="1" >
-                <DataGrid ItemsSource="{Binding ReportJobArchReps, Mode=TwoWay}" GridLinesVisibility="None" AutoGenerateColumns="False" HeadersVisibility="Column" CanUserAddRows="False" BorderThickness="0">
+                <DataGrid ItemsSource="{Binding ReportJobManufs, Mode=TwoWay}" GridLinesVisibility="None" AutoGenerateColumns="False" HeadersVisibility="Column" CanUserAddRows="False" BorderThickness="0">
                     <DataGrid.Resources>
                         <Style TargetType="DataGridColumnHeader" BasedOn="{StaticResource GridColumnHeaderBase}">
                             <Setter Property="Background" Value="#C6D9F1" />
@@ -2014,11 +2187,28 @@
                     </DataGrid.Columns>
                 </DataGrid>
             </Grid>
+            <StackPanel
+      Grid.Row="2"
+      Orientation="Horizontal"
+      HorizontalAlignment="Center">
+                <Button Margin="4,0" Content="&lt;&lt;" Command="{Binding FirstPageCommand}"/>
+                <Button Margin="4,0" Content="&lt;" Command="{Binding PreivousPageCommand}"/>
+                <StackPanel VerticalAlignment="Center" Orientation="Horizontal">
+                    <TextBlock Text="{Binding Start}"/>
+                    <TextBlock Text=" to "/>
+                    <TextBlock Text="{Binding End}"/>
+                    <TextBlock Text=" of "/>
+                    <TextBlock Text="{Binding TotalItems}"/>
+                </StackPanel>
+                <Button Margin="4,0" Content="&gt;" Command="{Binding NextPageCommand}"/>
+                <Button Margin="4,0" Content="&gt;&gt;" Command="{Binding LastPageCommand}" CommandParameter="{Binding ReportID, Mode=TwoWay}" />
+            </StackPanel>
         </Grid>
         <Grid Grid.Row="1" Margin="10" Visibility="{Binding OpenJobVisibility, Mode=TwoWay, Converter={StaticResource BoolToVisibleConverter}}">
             <Grid.RowDefinitions>
                 <RowDefinition Height="Auto" />
                 <RowDefinition Height="*" />
+                <RowDefinition Height="Auto" />
             </Grid.RowDefinitions>
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="6*" />
@@ -2189,14 +2379,29 @@
                     </DataGrid.Columns>
                 </DataGrid>
             </Grid>
+            <StackPanel
+      Grid.Row="2"
+      Orientation="Horizontal"
+      HorizontalAlignment="Center">
+                <Button Margin="4,0" Content="&lt;&lt;" Command="{Binding FirstPageCommand}"/>
+                <Button Margin="4,0" Content="&lt;" Command="{Binding PreivousPageCommand}"/>
+                <StackPanel VerticalAlignment="Center" Orientation="Horizontal">
+                    <TextBlock Text="{Binding Start}"/>
+                    <TextBlock Text=" to "/>
+                    <TextBlock Text="{Binding End}"/>
+                    <TextBlock Text=" of "/>
+                    <TextBlock Text="{Binding TotalItems}"/>
+                </StackPanel>
+                <Button Margin="4,0" Content="&gt;" Command="{Binding NextPageCommand}"/>
+                <Button Margin="4,0" Content="&gt;&gt;" Command="{Binding LastPageCommand}" CommandParameter="{Binding ReportID, Mode=TwoWay}" />
+            </StackPanel>
         </Grid>
-
         <Grid Grid.Row="1" Margin="10" Visibility="{Binding PmMeetingVisibility, Mode=TwoWay, Converter={StaticResource BoolToVisibleConverter}}">
             <Grid.RowDefinitions>
                 <RowDefinition Height="Auto" />
                 <RowDefinition Height="*" />
+                <RowDefinition Height="Auto" />
             </Grid.RowDefinitions>
-          
             <Grid>
                 <TextBlock Style="{StaticResource ReportViewHeader}" Text="Project Manager Meeting Report" />
             </Grid>
@@ -2566,12 +2771,29 @@
                     </DataGrid.Columns>
                 </DataGrid>
             </Grid>
+            <StackPanel
+      Grid.Row="2"
+      Orientation="Horizontal"
+      HorizontalAlignment="Center">
+                <Button Margin="4,0" Content="&lt;&lt;" Command="{Binding FirstPageCommand}"/>
+                <Button Margin="4,0" Content="&lt;" Command="{Binding PreivousPageCommand}"/>
+                <StackPanel VerticalAlignment="Center" Orientation="Horizontal">
+                    <TextBlock Text="{Binding Start}"/>
+                    <TextBlock Text=" to "/>
+                    <TextBlock Text="{Binding End}"/>
+                    <TextBlock Text=" of "/>
+                    <TextBlock Text="{Binding TotalItems}"/>
+                </StackPanel>
+                <Button Margin="4,0" Content="&gt;" Command="{Binding NextPageCommand}"/>
+                <Button Margin="4,0" Content="&gt;&gt;" Command="{Binding LastPageCommand}" CommandParameter="{Binding ReportID, Mode=TwoWay}" />
+            </StackPanel>
         </Grid>
 
         <Grid Grid.Row="1" Margin="10" Visibility="{Binding ShipNotRecvVisibility, Mode=TwoWay, Converter={StaticResource BoolToVisibleConverter}}">
             <Grid.RowDefinitions>
                 <RowDefinition Height="Auto" />
                 <RowDefinition Height="*" />
+                <RowDefinition Height="Auto" />
             </Grid.RowDefinitions>
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="6*" />
@@ -2723,12 +2945,29 @@
                     </DataGrid.Columns>
                 </DataGrid>
             </Grid>
+            <StackPanel
+      Grid.Row="2"
+      Orientation="Horizontal"
+      HorizontalAlignment="Center">
+                <Button Margin="4,0" Content="&lt;&lt;" Command="{Binding FirstPageCommand}"/>
+                <Button Margin="4,0" Content="&lt;" Command="{Binding PreivousPageCommand}"/>
+                <StackPanel VerticalAlignment="Center" Orientation="Horizontal">
+                    <TextBlock Text="{Binding Start}"/>
+                    <TextBlock Text=" to "/>
+                    <TextBlock Text="{Binding End}"/>
+                    <TextBlock Text=" of "/>
+                    <TextBlock Text="{Binding TotalItems}"/>
+                </StackPanel>
+                <Button Margin="4,0" Content="&gt;" Command="{Binding NextPageCommand}"/>
+                <Button Margin="4,0" Content="&gt;&gt;" Command="{Binding LastPageCommand}" CommandParameter="{Binding ReportID, Mode=TwoWay}" />
+            </StackPanel>
         </Grid>
 
         <Grid Grid.Row="1" Margin="10" Visibility="{Binding ShopRecvVisibility, Mode=TwoWay, Converter={StaticResource BoolToVisibleConverter}}">
             <Grid.RowDefinitions>
                 <RowDefinition Height="Auto" />
                 <RowDefinition Height="*" />
+                <RowDefinition Height="Auto" />
             </Grid.RowDefinitions>
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="6*" />
@@ -2856,12 +3095,29 @@
                     </DataGrid.Columns>
                 </DataGrid>
             </Grid>
+            <StackPanel
+      Grid.Row="2"
+      Orientation="Horizontal"
+      HorizontalAlignment="Center">
+                <Button Margin="4,0" Content="&lt;&lt;" Command="{Binding FirstPageCommand}"/>
+                <Button Margin="4,0" Content="&lt;" Command="{Binding PreivousPageCommand}"/>
+                <StackPanel VerticalAlignment="Center" Orientation="Horizontal">
+                    <TextBlock Text="{Binding Start}"/>
+                    <TextBlock Text=" to "/>
+                    <TextBlock Text="{Binding End}"/>
+                    <TextBlock Text=" of "/>
+                    <TextBlock Text="{Binding TotalItems}"/>
+                </StackPanel>
+                <Button Margin="4,0" Content="&gt;" Command="{Binding NextPageCommand}"/>
+                <Button Margin="4,0" Content="&gt;&gt;" Command="{Binding LastPageCommand}" CommandParameter="{Binding ReportID, Mode=TwoWay}" />
+            </StackPanel>
         </Grid>
 
         <Grid Grid.Row="1" Margin="10" Visibility="{Binding ShopReqVisibility, Mode=TwoWay, Converter={StaticResource BoolToVisibleConverter}}">
             <Grid.RowDefinitions>
                 <RowDefinition Height="Auto" />
                 <RowDefinition Height="*" />
+                <RowDefinition Height="Auto" />
             </Grid.RowDefinitions>
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="6*" />
@@ -2990,12 +3246,29 @@
                     </DataGrid.Columns>
                 </DataGrid>
             </Grid>
+            <StackPanel
+      Grid.Row="2"
+      Orientation="Horizontal"
+      HorizontalAlignment="Center">
+                <Button Margin="4,0" Content="&lt;&lt;" Command="{Binding FirstPageCommand}"/>
+                <Button Margin="4,0" Content="&lt;" Command="{Binding PreivousPageCommand}"/>
+                <StackPanel VerticalAlignment="Center" Orientation="Horizontal">
+                    <TextBlock Text="{Binding Start}"/>
+                    <TextBlock Text=" to "/>
+                    <TextBlock Text="{Binding End}"/>
+                    <TextBlock Text=" of "/>
+                    <TextBlock Text="{Binding TotalItems}"/>
+                </StackPanel>
+                <Button Margin="4,0" Content="&gt;" Command="{Binding NextPageCommand}"/>
+                <Button Margin="4,0" Content="&gt;&gt;" Command="{Binding LastPageCommand}" CommandParameter="{Binding ReportID, Mode=TwoWay}" />
+            </StackPanel>
         </Grid>
 
         <Grid Grid.Row="1" Margin="10" Visibility="{Binding SubmitVisibility, Mode=TwoWay, Converter={StaticResource BoolToVisibleConverter}}">
             <Grid.RowDefinitions>
                 <RowDefinition Height="Auto" />
                 <RowDefinition Height="*" />
+                <RowDefinition Height="Auto" />
             </Grid.RowDefinitions>
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="6*" />
@@ -3136,12 +3409,29 @@
                     </DataGrid.Columns>
                 </DataGrid>
             </Grid>
+            <StackPanel
+      Grid.Row="2"
+      Orientation="Horizontal"
+      HorizontalAlignment="Center">
+                <Button Margin="4,0" Content="&lt;&lt;" Command="{Binding FirstPageCommand}"/>
+                <Button Margin="4,0" Content="&lt;" Command="{Binding PreivousPageCommand}"/>
+                <StackPanel VerticalAlignment="Center" Orientation="Horizontal">
+                    <TextBlock Text="{Binding Start}"/>
+                    <TextBlock Text=" to "/>
+                    <TextBlock Text="{Binding End}"/>
+                    <TextBlock Text=" of "/>
+                    <TextBlock Text="{Binding TotalItems}"/>
+                </StackPanel>
+                <Button Margin="4,0" Content="&gt;" Command="{Binding NextPageCommand}"/>
+                <Button Margin="4,0" Content="&gt;&gt;" Command="{Binding LastPageCommand}" CommandParameter="{Binding ReportID, Mode=TwoWay}" />
+            </StackPanel>
         </Grid>
 
         <Grid Grid.Row="1" Margin="10" Visibility="{Binding VendorVisibility, Mode=TwoWay, Converter={StaticResource BoolToVisibleConverter}}">
             <Grid.RowDefinitions>
                 <RowDefinition Height="Auto" />
                 <RowDefinition Height="*" />
+                <RowDefinition Height="Auto" />
             </Grid.RowDefinitions>
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="6*" />
@@ -3221,12 +3511,29 @@
                     </DataGrid.Columns>
                 </DataGrid>
             </Grid>
+            <StackPanel
+      Grid.Row="2"
+      Orientation="Horizontal"
+      HorizontalAlignment="Center">
+                <Button Margin="4,0" Content="&lt;&lt;" Command="{Binding FirstPageCommand}"/>
+                <Button Margin="4,0" Content="&lt;" Command="{Binding PreivousPageCommand}"/>
+                <StackPanel VerticalAlignment="Center" Orientation="Horizontal">
+                    <TextBlock Text="{Binding Start}"/>
+                    <TextBlock Text=" to "/>
+                    <TextBlock Text="{Binding End}"/>
+                    <TextBlock Text=" of "/>
+                    <TextBlock Text="{Binding TotalItems}"/>
+                </StackPanel>
+                <Button Margin="4,0" Content="&gt;" Command="{Binding NextPageCommand}"/>
+                <Button Margin="4,0" Content="&gt;&gt;" Command="{Binding LastPageCommand}" CommandParameter="{Binding ReportID, Mode=TwoWay}" />
+            </StackPanel>
         </Grid>
 
         <Grid Grid.Row="1" Margin="10" Visibility="{Binding ReleasedVisibility, Mode=TwoWay, Converter={StaticResource BoolToVisibleConverter}}">
             <Grid.RowDefinitions>
                 <RowDefinition Height="Auto" />
                 <RowDefinition Height="*" />
+                <RowDefinition Height="Auto" />
             </Grid.RowDefinitions>
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="6*" />
@@ -3355,7 +3662,22 @@
                     </DataGrid.Columns>
                 </DataGrid>
             </Grid>
+            <StackPanel
+      Grid.Row="2"
+      Orientation="Horizontal"
+      HorizontalAlignment="Center">
+                <Button Margin="4,0" Content="&lt;&lt;" Command="{Binding FirstPageCommand}"/>
+                <Button Margin="4,0" Content="&lt;" Command="{Binding PreivousPageCommand}"/>
+                <StackPanel VerticalAlignment="Center" Orientation="Horizontal">
+                    <TextBlock Text="{Binding Start}"/>
+                    <TextBlock Text=" to "/>
+                    <TextBlock Text="{Binding End}"/>
+                    <TextBlock Text=" of "/>
+                    <TextBlock Text="{Binding TotalItems}"/>
+                </StackPanel>
+                <Button Margin="4,0" Content="&gt;" Command="{Binding NextPageCommand}"/>
+                <Button Margin="4,0" Content="&gt;&gt;" Command="{Binding LastPageCommand}" CommandParameter="{Binding ReportID, Mode=TwoWay}" />
+            </StackPanel>
         </Grid>
-
     </Grid>
 </Page>
