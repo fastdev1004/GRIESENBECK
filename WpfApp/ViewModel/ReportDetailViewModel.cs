@@ -176,7 +176,7 @@ namespace WpfApp.ViewModel
 
                 List<TrackLaborReport> _trackLaborReports = TrackLaborReports.Where(item => item.ProjectID == _projectID).ToList();
 
-                st_activeLabors.Add(new ReportActiveLabor { ID = _projectID, ProjectName = _projectName, JobNo = _jobNo, CustomerName = _customerName, SalesmanName = _salesmanName, LaborReports= _trackLaborReports });
+                st_activeLabors.Add(new ReportActiveLabor { ProjectID = _projectID, ProjectName = _projectName, JobNo = _jobNo, CustomerName = _customerName, SalesmanName = _salesmanName, LaborReports= _trackLaborReports });
             }
             ReportActiveLabors = st_activeLabors;
         }
@@ -1852,7 +1852,7 @@ namespace WpfApp.ViewModel
 
             int totalItems = ds.Tables[0].Rows.Count;
             _totalItems = totalItems;
-            _itemCount = 10;
+            _itemCount = 30;
 
             sqlquery = "SELECT * FROM (SELECT ROW_NUMBER() over(ORDER BY Job_No) AS RowIndex, Manuf_Name, tblProjSales.* FROM tblManufacturers RIGHT JOIN (SELECT Salesman_Name, tblProjSales.*FROM tblSalesmen RIGHT JOIN(SELECT Job_No, Project_Name, Salesman_ID, tblProjMat.* FROM tblProjects RIGHT JOIN(SELECT Project_ID, Material_ID, Mat_Type, Mat_Phase, tblProjTrack.* FROM tblProjectMaterials RIGHT JOIN(SELECT MatReqdDate, ProjMat_ID, Manuf_ID, PO_Number, tblProjShip.* FROM tblProjectMaterialsTrack INNER JOIN(SELECT SchedShipDate, ProjMT_ID, EstDelivDate FROM tblProjectMaterialsShip WHERE Date_Recvd IS NULL) AS tblProjShip ON tblProjectMaterialsTrack.ProjMT_ID = tblProjShip.ProjMT_ID) AS tblProjTrack ON tblProjTrack.ProjMat_ID = tblProjectMaterials.ProjMat_ID) AS tblProjMat ON tblProjMat.Project_ID = tblProjects.Project_ID " + whereProjectClause +") AS tblProjSales ON tblSalesmen.Salesman_ID = tblProjSales.Salesman_ID) AS tblProjSales ON tblProjSales.Salesman_ID = tblManufacturers.Manuf_ID) AS tbl WHERE tbl.RowIndex >= " + Start + " and tbl.RowIndex <= " + End;
             cmd = new SqlCommand(sqlquery, dbConnection.Connection);
@@ -1940,7 +1940,7 @@ namespace WpfApp.ViewModel
 
             int totalItems = ds.Tables[0].Rows.Count;
             _totalItems = totalItems;
-            _itemCount = 10;
+            _itemCount = 30;
 
             sqlquery = "SELECT* FROM(SELECT ROW_NUMBER() over(ORDER BY MatReqdDate) AS RowIndex, Manuf_Name, tblProjManuf.* FROM tblManufacturers RIGHT JOIN (SELECT Salesman_Name, tblProjSales.*FROM tblSalesmen RIGHT JOIN(SELECT tblMaterials.Material_Desc, tblProjMat.* FROM tblMaterials RIGHT JOIN(SELECT Job_No, Project_Name, Salesman_ID, tblProj.* FROM tblProjects RIGHT JOIN(SELECT MatReqdDate, ShopRecvdDate, SubmitIssue, Manuf_ID, tblProjectMaterials.Material_ID, tblProjectMaterials.Project_ID FROM tblProjectMaterials RIGHT JOIN(SELECT * FROM tblProjectMaterialsTrack " + whereManufClause + " AND ShopRecvdDate IS NOT NULL AND SubmitIssue is NULL AND No_Sub_Needed = 0 ) AS tblProjMat ON tblProjMat.ProjMat_ID = tblProjectMaterials.ProjMat_ID) AS tblProj ON tblProj.Project_ID = tblProjects.Project_ID " + whereProjectClause +") AS tblProjMat ON tblProjMat.Material_ID = tblMaterials.Material_ID) AS tblProjSales ON tblProjSales.Salesman_ID = tblSalesmen.Salesman_ID) AS tblProjManuf ON tblProjManuf.Manuf_ID = tblManufacturers.Manuf_ID) AS tbl WHERE tbl.RowIndex >= "+ Start +" and tbl.RowIndex <= " + End;
             cmd = new SqlCommand(sqlquery, dbConnection.Connection);
@@ -2021,7 +2021,7 @@ namespace WpfApp.ViewModel
 
             int totalItems = ds.Tables[0].Rows.Count;
             _totalItems = totalItems;
-            _itemCount = 10;
+            _itemCount = 30;
 
             sqlquery = "SELECT * FROM(SELECT ROW_NUMBER() over(ORDER BY MatReqdDate) AS RowIndex, Material_Desc, tblProjMat.* FROM tblMaterials RIGHT JOIN (SELECT Manuf_Name, tblProManuf.*FROM tblManufacturers RIGHT JOIN(SELECT Salesman_Name, tblProj.* FROM tblSalesmen RIGHT JOIN(SELECT Job_No, Project_Name, Salesman_ID, tblProj.* FROM tblProjects RIGHT JOIN(SELECT MatReqdDate, ShopRecvdDate, ShopReqDate, SubmitIssue, Manuf_ID, tblProjectMaterials.Material_ID, tblProjectMaterials.Project_ID FROM tblProjectMaterials RIGHT JOIN(SELECT * FROM tblProjectMaterialsTrack "+ whereManufClause + " AND ShopReqDate IS NOT NULL AND No_Sub_Needed = 0 AND SubmitAppr IS NULL AND SubmitIssue IS NULL) AS tblProjMat ON tblProjMat.ProjMat_ID = tblProjectMaterials.ProjMat_ID) AS tblProj ON tblProj.Project_ID = tblProjects.Project_ID) AS tblProj ON tblProj.Salesman_ID = tblSalesmen.Salesman_ID) AS tblProManuf ON tblProManuf.Manuf_ID = tblManufacturers.Manuf_ID) AS tblProjMat ON tblProjMat.Material_ID = tblMaterials.Material_ID)  AS tbl WHERE tbl.RowIndex >= " + Start + " and tbl.RowIndex <= " + End;
             cmd = new SqlCommand(sqlquery, dbConnection.Connection);
@@ -2252,7 +2252,7 @@ namespace WpfApp.ViewModel
 
             int totalItems = ds.Tables[0].Rows.Count;
             _totalItems = totalItems;
-            _itemCount = 10;
+            _itemCount = 30;
 
             sqlquery = "SELECT * FROM (SELECT ROW_NUMBER() over(ORDER BY MatReqdDate) AS RowIndex, tblMaterials.Material_Desc, tblProjMat.* FROM tblMaterials RIGHT JOIN (SELECT Salesman_Name, tblProjSales.*FROM tblSalesmen RIGHT JOIN(SELECT Project_Name, Salesman_ID, Job_No, tblProj.* FROM tblProjects RIGHT JOIN(SELECT Manuf_Name, tblProjManuf.* FROM tblManufacturers RIGHT JOIN(SELECT Material_ID, Mat_Phase, Project_ID, tblProjMat.* FROM tblProjectMaterials RIGHT JOIN(SELECT tblProjectMaterialsTrack.ProjMat_ID, tblProjectMaterialsTrack.Manuf_ID, MatReqdDate, ReleasedForFab, PO_Number FROM tblProjectMaterialsTrack LEFT JOIN tblProjectMaterialsShip ON tblProjectMaterialsTrack.ProjMT_ID = tblProjectMaterialsShip.ProjMT_ID WHERE tblProjectMaterialsShip.ProjMT_ID IS NULL AND tblProjectMaterialsTrack.ReleasedForFab IS NOT NULL) AS tblProjMat ON tblProjMat.ProjMat_ID = tblProjectMaterials.ProjMat_ID " + whereMatClause +") AS tblProjManuf ON tblProjManuf.Manuf_ID = tblManufacturers.Manuf_ID "+ whereManufClause  +") AS tblProj ON tblProj.Project_ID = tblProjects.Project_ID "+ whereProjectClause + ") AS tblProjSales ON tblProjSales.Salesman_ID = tblSalesmen.Salesman_ID) AS tblProjMat ON tblProjMat.Material_ID = tblMaterials.Material_ID) AS tbl WHERE tbl.RowIndex >= " + Start + " and tbl.RowIndex <= " + End;
             cmd = new SqlCommand(sqlquery, dbConnection.Connection);
@@ -3517,6 +3517,7 @@ namespace WpfApp.ViewModel
 
         // Command
         public RelayCommand NextPageCommand { get; set; }
+
         public RelayCommand PreivousPageCommand { get; set; }
 
         public RelayCommand FirstPageCommand { get; set; }

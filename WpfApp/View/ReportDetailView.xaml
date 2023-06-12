@@ -88,7 +88,7 @@
                                                             <ColumnDefinition Width="2*" />
                                                         </Grid.ColumnDefinitions>
                                                         <TextBlock Text="{Binding ProjectName, Mode=TwoWay}" FontSize="16" FontWeight="Bold" />
-                                                        <Button Grid.Column="1" Content="View" Width="40" HorizontalAlignment="Left" />
+                                                        <Button Grid.Column="1" Content="View" Width="40" HorizontalAlignment="Left" Click="GoProject" CommandParameter="{Binding ProjectID}" />
                                                     </Grid>
                                                     <Grid Grid.Row="1">
                                                         <Grid.ColumnDefinitions>
@@ -260,7 +260,7 @@
                                                             <ColumnDefinition Width="2*" />
                                                         </Grid.ColumnDefinitions>
                                                         <TextBlock Text="{Binding ProjectName, Mode=TwoWay}" FontSize="16" FontWeight="Bold" />
-                                                        <Button Grid.Column="1" Content="View" Width="40" HorizontalAlignment="Left" />
+                                                        <Button Grid.Column="1" Content="View" Width="40" HorizontalAlignment="Left" Click="GoProject" CommandParameter="{Binding ProjectID}" />
                                                     </Grid>
                                                     <Grid Grid.Row="1">
                                                         <Grid.ColumnDefinitions>
@@ -1356,7 +1356,7 @@
                                                             <TextBlock Text="{Binding TargetDate, Mode=TwoWay, Converter={StaticResource DateTimeToDateConverter}}" VerticalAlignment="Center" />
                                                         </WrapPanel>
                                                         <Grid Grid.Column="2">
-                                                            <Button Content="View" VerticalAlignment="Center" Width="40" />
+                                                            <Button Content="View" VerticalAlignment="Center" Width="40" Click="GoProject" CommandParameter="{Binding ProjectID}" />
                                                         </Grid>
                                                         <WrapPanel Grid.Column="3">
                                                             <Label Content="Completed:" />
@@ -2255,7 +2255,7 @@
                                                             <ColumnDefinition Width="2*" />
                                                         </Grid.ColumnDefinitions>
                                                         <TextBlock Text="{Binding ProjectName, Mode=TwoWay}" FontSize="16" FontWeight="Bold" />
-                                                        <Button Grid.Column="1" Content="View" Width="40" HorizontalAlignment="Left" VerticalAlignment="Center" />
+                                                        <Button Grid.Column="1" Content="View" Width="40" HorizontalAlignment="Left" VerticalAlignment="Center" Click="GoProject" CommandParameter="{Binding ProjectID}" />
                                                     </Grid>
                                                     <Grid Grid.Row="1">
                                                         <Grid.ColumnDefinitions>
@@ -2455,7 +2455,7 @@
                                                             <Label Content="Target Date:" />
                                                             <TextBlock Text="{Binding TargetDate, Mode=TwoWay}" VerticalAlignment="Center"  />
                                                         </WrapPanel>
-                                                        <Button Grid.Column="2" Content="View" Width="40" HorizontalAlignment="Left" />
+                                                        <Button Grid.Column="2" Content="View" Width="40" HorizontalAlignment="Left" Click="GoProject" CommandParameter="{Binding ProjectID}" />
                                                         <WrapPanel Grid.Column="3">
                                                             <Label Content="Completed:" />
                                                             <TextBlock Text="{Binding Complete, Mode=TwoWay}" VerticalAlignment="Center"  />
@@ -3405,7 +3405,13 @@
                                 </DataTemplate>
                             </DataGridTemplateColumn.CellTemplate>
                         </DataGridTemplateColumn>
-
+                        <DataGridTemplateColumn IsReadOnly="False" Width="2*">
+                            <DataGridTemplateColumn.CellTemplate>
+                                <DataTemplate>
+                                    <Button Content="View" Width="40" HorizontalAlignment="Left" Click="GoProject" CommandParameter="{Binding ProjectID}" />
+                                </DataTemplate>
+                            </DataGridTemplateColumn.CellTemplate>
+                        </DataGridTemplateColumn>
                     </DataGrid.Columns>
                 </DataGrid>
             </Grid>

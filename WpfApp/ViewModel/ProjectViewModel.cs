@@ -38,9 +38,7 @@ namespace WpfApp.ViewModel
             SovMaterials = new ObservableCollection<SovMaterial>();
             ProjectMatTrackings = new ObservableCollection<ProjectMatTracking>();
             ProjectMtShips = new ObservableCollection<ProjectMatShip>();
-
             ProjectSelectionEnable = true;
-            
 
             this.NewProjectCommand = new RelayCommand((e)=> this.ClearProject());
         }
@@ -2448,6 +2446,19 @@ namespace WpfApp.ViewModel
             {
                 if (_projectSelectionEnable != value)
                     _projectSelectionEnable = value;
+                OnPropertyChanged();
+            }
+        }
+
+        private string _navigationBackName;
+
+        public string NavigationBackName
+        {
+            get { return _navigationBackName; }
+            set
+            {
+                if (value == _navigationBackName) return;
+                _navigationBackName = value;
                 OnPropertyChanged();
             }
         }

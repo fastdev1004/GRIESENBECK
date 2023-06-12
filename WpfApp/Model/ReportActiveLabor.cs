@@ -10,20 +10,20 @@ namespace WpfApp.Model
 {
     class ReportActiveLabor : ViewModelBase
     {
-        private int _laborID;
+        private int _projectID;
         private string _projectName;
         private string _jobNo;
         private string _customerName;
         private string _salesman;
         //private IObservable<string> _labors;
 
-        public int ID
+        public int ProjectID
         {
-            get => _laborID;
+            get => _projectID;
             set
             {
-                if (value == _laborID) return;
-                _laborID = value;
+                if (value == _projectID) return;
+                _projectID = value;
                 OnPropertyChanged();
             }
         }

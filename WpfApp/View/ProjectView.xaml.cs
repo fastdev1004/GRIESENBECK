@@ -28,14 +28,41 @@ namespace WpfApp
         {
             InitializeComponent();
             dbConnection = new DatabaseConnection();
-            dbConnection.Open();
             ProjectVM = new ProjectViewModel();
             this.DataContext = ProjectVM;
+            Loaded += LoadPage;
+        }
+
+        private void LoadPage(object sender, RoutedEventArgs e)
+        {
+            ProjectViewModel loadContext = DataContext as ProjectViewModel;
+
+            if (loadContext != null)
+            {
+                ProjectVM = new ProjectViewModel();
+
+                int projectID = loadContext.ProjectID;
+                string navigationBackName = loadContext.NavigationBackName;
+
+                ProjectVM.ProjectID = projectID;
+                ProjectVM.NavigationBackName = navigationBackName;
+
+                this.DataContext = ProjectVM;
+            }
         }
 
         private void GoBack(object sender, RoutedEventArgs e)
         {
-            dbConnection.Close();
+            //string navigationBackName = ProjectVM.NavigationBackName;
+            //switch (navigationBackName)
+            //{
+            //    case "ReportDetailView":
+            //        this.NavigationService.Navigate(new Uri("View/ReportDetailView.xaml", UriKind.Relative));
+            //        break;
+            //    default:
+            //        this.NavigationService.Navigate(new Uri("View/Start.xaml", UriKind.Relative));
+            //        break;
+            //}
             this.NavigationService.Navigate(new Uri("View/Start.xaml", UriKind.Relative));
         }
 

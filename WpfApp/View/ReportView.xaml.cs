@@ -27,6 +27,7 @@ namespace WpfApp.View
             ReportDetailVM = new ReportDetailViewModel();
             this.DataContext = ReportVM;
         }
+
         private void GoBack(object sender, RoutedEventArgs e)
         {
             this.NavigationService.Navigate(new Uri("View/Start.xaml", UriKind.Relative));
@@ -34,7 +35,6 @@ namespace WpfApp.View
 
         private void GoReportDetail(object sender, RoutedEventArgs e)
         {
-            //dbConnection.Close();
             int reportID = ReportVM.ReportID;
             int projectID = ReportVM.ProjectID;
             string jobNo = ReportVM.JobNo;

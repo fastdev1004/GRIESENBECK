@@ -24,7 +24,6 @@ namespace WpfApp.View
 
         private void GoBack(object sender, RoutedEventArgs e)
         {
-
             this.NavigationService.Navigate(new Uri("View/ReportView.xaml", UriKind.Relative));
         }
 
@@ -68,6 +67,17 @@ namespace WpfApp.View
 
                 this.DataContext = ReportDetailVM;
             }
+        }
+
+        private void GoProject(object sender, RoutedEventArgs e)
+        {
+            int parameterValue = (int)((Button)sender).CommandParameter;
+            ProjectView projectPage = new ProjectView();
+            ProjectViewModel projectVM = new ProjectViewModel();
+            //projectVM.NavigationBackName = "ReportDetailView";
+            projectVM.ProjectID = parameterValue;
+            projectPage.DataContext = projectVM;
+            this.NavigationService.Navigate(projectPage);
         }
     }
 }
