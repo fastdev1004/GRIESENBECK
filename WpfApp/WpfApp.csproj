@@ -62,6 +62,7 @@
     <Compile Include="Converter\ApprDenToValueConverter.cs" />
     <Compile Include="Converter\BoolToVisibleConverter.cs" />
     <Compile Include="Converter\DateTimeToDateConverter.cs" />
+    <Compile Include="Converter\DateTimeToDateTimeConverter.cs" />
     <Compile Include="Converter\SelectedValueToIntConverter.cs" />
     <Compile Include="Converter\YesNoBothConverter.cs" />
     <Compile Include="Converter\ZeroToEmptyStringConverter.cs" />
@@ -124,6 +125,7 @@
     <Compile Include="Model\Warranty.cs" />
     <Compile Include="Model\WorkOrder.cs" />
     <Compile Include="Utils\DatabaseConnection.cs" />
+    <Compile Include="Utils\NoteHelper.cs" />
     <Compile Include="ViewModel\AdminViewModel.cs" />
     <Compile Include="ViewModel\CloseOutViewModel.cs" />
     <Compile Include="ViewModel\ContractViewModel.cs" />

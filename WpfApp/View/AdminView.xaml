@@ -4,12 +4,15 @@
       xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
       xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
       xmlns:local="clr-namespace:WpfApp.View"
+      xmlns:converter="clr-namespace:WpfApp.Converter"
       mc:Ignorable="d" 
       d:DesignHeight="900" d:DesignWidth="1700"
       Title="AdministrationView">
 
     <Page.Resources>
         <ResourceDictionary>
+            <converter:DateTimeToDateConverter x:Key="DateTimeToDateConverter" />
+            <converter:DateTimeToDateTimeConverter x:Key="DateTimeToDateTimeConverter" />
             <ResourceDictionary.MergedDictionaries>
                 <ResourceDictionary Source="../Themes/Generic.xaml" />
             </ResourceDictionary.MergedDictionaries>
@@ -199,10 +202,51 @@
                                     </Grid.ColumnDefinitions>
                                     <Label Content="Notes:" />
                                     <Grid Grid.Column="1" Background="#F5FFAF">
-                                        <Grid.RowDefinitions>
-                                            <RowDefinition Height="Auto" />
-                                        </Grid.RowDefinitions>
-                                        <TextBox Height="40" Margin="10,10,10,0" AcceptsReturn="True" VerticalScrollBarVisibility="Auto" />
+                                        <DataGrid Margin="4,0" Padding="10" Grid.Column="1" ItemsSource="{Binding CustomerNotes, Mode=TwoWay}" GridLinesVisibility="None" AutoGenerateColumns="False" HeadersVisibility="None" BorderThickness="0" Background="#F5FFAF" CanUserAddRows="False">
+                                            <DataGrid.Resources>
+                                                <Style TargetType="DataGridColumnHeader" BasedOn="{StaticResource GridColumnHeaderBase}">
+                                                    <Setter Property="Background" Value="#4BACC6" />
+                                                </Style>
+                                                <Style TargetType="TextBox">
+                                                    <Setter Property="TextWrapping" Value="Wrap" />
+                                                </Style>
+                                                <Style TargetType="Label">
+                                                    <Setter Property="HorizontalAlignment" Value="Right" />
+                                                </Style>
+                                                <Style TargetType="DataGridRow">
+                                                    <Setter Property="Height" Value="Auto" />
+                                                    <Setter Property="BorderThickness" Value="0" />
+                                                    <Setter Property="Margin" Value="0,4" />
+                                                </Style>
+                                            </DataGrid.Resources>
+                                            <DataGrid.Columns>
+                                                <DataGridTemplateColumn Header="Installation Notes" Width="*">
+                                                    <DataGridTemplateColumn.CellTemplate>
+                                                        <DataTemplate>
+                                                            <Grid>
+                                                                <Grid Style="{StaticResource ParentGridStyle}">
+                                                                    <Grid.RowDefinitions>
+                                                                        <RowDefinition Height="Auto" />
+                                                                        <RowDefinition Height="Auto" />
+                                                                    </Grid.RowDefinitions>
+                                                                    <Grid>
+                                                                        <Grid.ColumnDefinitions>
+                                                                            <ColumnDefinition Width="1*" />
+                                                                            <ColumnDefinition Width="1*" />
+                                                                        </Grid.ColumnDefinitions>
+                                                                        <TextBlock Text="{Binding NotesDateAdded , Mode=TwoWay}" />
+                                                                        <TextBlock Grid.Column="1" Text="{Binding NoteUserName, Mode=TwoWay}" HorizontalAlignment="Right" />
+                                                                    </Grid>
+                                                                    <Grid Grid.Row="1">
+                                                                        <TextBox Text="{Binding NotesNote, Mode=TwoWay}" AcceptsReturn="True" ScrollViewer.VerticalScrollBarVisibility="Auto" Height="40" PreviewKeyUp="CustomerNote_PreviewKeyUp"/>
+                                                                    </Grid>
+                                                                </Grid>
+                                                            </Grid>
+                                                        </DataTemplate>
+                                                    </DataGridTemplateColumn.CellTemplate>
+                                                </DataGridTemplateColumn>
+                                            </DataGrid.Columns>
+                                        </DataGrid>
                                     </Grid>
                                 </Grid>
                             </Grid>
@@ -265,10 +309,51 @@
                                                 </Grid.ColumnDefinitions>
                                                 <Label Content="Notes:" />
                                                 <Grid Grid.Column="1" Background="#F5FFAF">
-                                                    <Grid.RowDefinitions>
-                                                        <RowDefinition Height="Auto" />
-                                                    </Grid.RowDefinitions>
-                                                    <TextBox Height="40" Margin="10,10,10,0" AcceptsReturn="True" VerticalScrollBarVisibility="Auto" />
+                                                    <DataGrid Margin="4,0" Padding="10" Grid.Column="1" ItemsSource="{Binding PMNotes, Mode=TwoWay}" GridLinesVisibility="None" AutoGenerateColumns="False" HeadersVisibility="None" BorderThickness="0" Background="#F5FFAF" CanUserAddRows="False">
+                                                        <DataGrid.Resources>
+                                                            <Style TargetType="DataGridColumnHeader" BasedOn="{StaticResource GridColumnHeaderBase}">
+                                                                <Setter Property="Background" Value="#4BACC6" />
+                                                            </Style>
+                                                            <Style TargetType="TextBox">
+                                                                <Setter Property="TextWrapping" Value="Wrap" />
+                                                            </Style>
+                                                            <Style TargetType="Label">
+                                                                <Setter Property="HorizontalAlignment" Value="Right" />
+                                                            </Style>
+                                                            <Style TargetType="DataGridRow">
+                                                                <Setter Property="Height" Value="Auto" />
+                                                                <Setter Property="BorderThickness" Value="0" />
+                                                                <Setter Property="Margin" Value="0,4" />
+                                                            </Style>
+                                                        </DataGrid.Resources>
+                                                        <DataGrid.Columns>
+                                                            <DataGridTemplateColumn Header="Installation Notes" Width="*">
+                                                                <DataGridTemplateColumn.CellTemplate>
+                                                                    <DataTemplate>
+                                                                        <Grid>
+                                                                            <Grid Style="{StaticResource ParentGridStyle}">
+                                                                                <Grid.RowDefinitions>
+                                                                                    <RowDefinition Height="Auto" />
+                                                                                    <RowDefinition Height="Auto" />
+                                                                                </Grid.RowDefinitions>
+                                                                                <Grid>
+                                                                                    <Grid.ColumnDefinitions>
+                                                                                        <ColumnDefinition Width="1*" />
+                                                                                        <ColumnDefinition Width="1*" />
+                                                                                    </Grid.ColumnDefinitions>
+                                                                                    <TextBlock Text="{Binding NotesDateAdded , Mode=TwoWay}" />
+                                                                                    <TextBlock Grid.Column="1" Text="{Binding NoteUserName, Mode=TwoWay}" HorizontalAlignment="Right" />
+                                                                                </Grid>
+                                                                                <Grid Grid.Row="1">
+                                                                                    <TextBox Text="{Binding NotesNote, Mode=TwoWay}" AcceptsReturn="True" ScrollViewer.VerticalScrollBarVisibility="Auto" Height="40" PreviewKeyUp="PMNote_PreviewKeyUp"/>
+                                                                                </Grid>
+                                                                            </Grid>
+                                                                        </Grid>
+                                                                    </DataTemplate>
+                                                                </DataGridTemplateColumn.CellTemplate>
+                                                            </DataGridTemplateColumn>
+                                                        </DataGrid.Columns>
+                                                    </DataGrid>
                                                 </Grid>
                                             </Grid>
                                         </Grid>
@@ -303,10 +388,51 @@
                                                 </Grid.ColumnDefinitions>
                                                 <Label Content="Notes:" />
                                                 <Grid Grid.Column="1" Background="#F5FFAF">
-                                                    <Grid.RowDefinitions>
-                                                        <RowDefinition Height="Auto" />
-                                                    </Grid.RowDefinitions>
-                                                    <TextBox Height="40" Margin="10,10,10,0" AcceptsReturn="True" VerticalScrollBarVisibility="Auto" />
+                                                    <DataGrid Margin="4,0" Padding="10" Grid.Column="1" ItemsSource="{Binding SuptNotes, Mode=TwoWay}" GridLinesVisibility="None" AutoGenerateColumns="False" HeadersVisibility="None" BorderThickness="0" Background="#F5FFAF" CanUserAddRows="False">
+                                                        <DataGrid.Resources>
+                                                            <Style TargetType="DataGridColumnHeader" BasedOn="{StaticResource GridColumnHeaderBase}">
+                                                                <Setter Property="Background" Value="#4BACC6" />
+                                                            </Style>
+                                                            <Style TargetType="TextBox">
+                                                                <Setter Property="TextWrapping" Value="Wrap" />
+                                                            </Style>
+                                                            <Style TargetType="Label">
+                                                                <Setter Property="HorizontalAlignment" Value="Right" />
+                                                            </Style>
+                                                            <Style TargetType="DataGridRow">
+                                                                <Setter Property="Height" Value="Auto" />
+                                                                <Setter Property="BorderThickness" Value="0" />
+                                                                <Setter Property="Margin" Value="0,4" />
+                                                            </Style>
+                                                        </DataGrid.Resources>
+                                                        <DataGrid.Columns>
+                                                            <DataGridTemplateColumn Header="Installation Notes" Width="*">
+                                                                <DataGridTemplateColumn.CellTemplate>
+                                                                    <DataTemplate>
+                                                                        <Grid>
+                                                                            <Grid Style="{StaticResource ParentGridStyle}">
+                                                                                <Grid.RowDefinitions>
+                                                                                    <RowDefinition Height="Auto" />
+                                                                                    <RowDefinition Height="Auto" />
+                                                                                </Grid.RowDefinitions>
+                                                                                <Grid>
+                                                                                    <Grid.ColumnDefinitions>
+                                                                                        <ColumnDefinition Width="1*" />
+                                                                                        <ColumnDefinition Width="1*" />
+                                                                                    </Grid.ColumnDefinitions>
+                                                                                    <TextBlock Text="{Binding NotesDateAdded , Mode=TwoWay}" />
+                                                                                    <TextBlock Grid.Column="1" Text="{Binding NoteUserName, Mode=TwoWay}" HorizontalAlignment="Right" />
+                                                                                </Grid>
+                                                                                <Grid Grid.Row="1">
+                                                                                    <TextBox Text="{Binding NotesNote, Mode=TwoWay}" AcceptsReturn="True" ScrollViewer.VerticalScrollBarVisibility="Auto" Height="40" PreviewKeyUp="SuptNote_PreviewKeyUp"/>
+                                                                                </Grid>
+                                                                            </Grid>
+                                                                        </Grid>
+                                                                    </DataTemplate>
+                                                                </DataGridTemplateColumn.CellTemplate>
+                                                            </DataGridTemplateColumn>
+                                                        </DataGrid.Columns>
+                                                    </DataGrid>
                                                 </Grid>
                                             </Grid>
                                         </Grid>
@@ -341,10 +467,51 @@
                                                 </Grid.ColumnDefinitions>
                                                 <Label Content="Notes:" />
                                                 <Grid Grid.Column="1" Background="#F5FFAF">
-                                                    <Grid.RowDefinitions>
-                                                        <RowDefinition Height="Auto" />
-                                                    </Grid.RowDefinitions>
-                                                    <TextBox Height="40" Margin="10,10,10,0" AcceptsReturn="True" VerticalScrollBarVisibility="Auto" />
+                                                    <DataGrid Margin="4,0" Padding="10" Grid.Column="1" ItemsSource="{Binding SubmNotes, Mode=TwoWay}" GridLinesVisibility="None" AutoGenerateColumns="False" HeadersVisibility="None" BorderThickness="0" Background="#F5FFAF" CanUserAddRows="False">
+                                                        <DataGrid.Resources>
+                                                            <Style TargetType="DataGridColumnHeader" BasedOn="{StaticResource GridColumnHeaderBase}">
+                                                                <Setter Property="Background" Value="#4BACC6" />
+                                                            </Style>
+                                                            <Style TargetType="TextBox">
+                                                                <Setter Property="TextWrapping" Value="Wrap" />
+                                                            </Style>
+                                                            <Style TargetType="Label">
+                                                                <Setter Property="HorizontalAlignment" Value="Right" />
+                                                            </Style>
+                                                            <Style TargetType="DataGridRow">
+                                                                <Setter Property="Height" Value="Auto" />
+                                                                <Setter Property="BorderThickness" Value="0" />
+                                                                <Setter Property="Margin" Value="0,4" />
+                                                            </Style>
+                                                        </DataGrid.Resources>
+                                                        <DataGrid.Columns>
+                                                            <DataGridTemplateColumn Header="Installation Notes" Width="*">
+                                                                <DataGridTemplateColumn.CellTemplate>
+                                                                    <DataTemplate>
+                                                                        <Grid>
+                                                                            <Grid Style="{StaticResource ParentGridStyle}">
+                                                                                <Grid.RowDefinitions>
+                                                                                    <RowDefinition Height="Auto" />
+                                                                                    <RowDefinition Height="Auto" />
+                                                                                </Grid.RowDefinitions>
+                                                                                <Grid>
+                                                                                    <Grid.ColumnDefinitions>
+                                                                                        <ColumnDefinition Width="1*" />
+                                                                                        <ColumnDefinition Width="1*" />
+                                                                                    </Grid.ColumnDefinitions>
+                                                                                    <TextBlock Text="{Binding NotesDateAdded , Mode=TwoWay}" />
+                                                                                    <TextBlock Grid.Column="1" Text="{Binding NoteUserName, Mode=TwoWay}" HorizontalAlignment="Right" />
+                                                                                </Grid>
+                                                                                <Grid Grid.Row="1">
+                                                                                    <TextBox Text="{Binding NotesNote, Mode=TwoWay}" AcceptsReturn="True" ScrollViewer.VerticalScrollBarVisibility="Auto" Height="40" PreviewKeyUp="SubmNote_PreviewKeyUp"/>
+                                                                                </Grid>
+                                                                            </Grid>
+                                                                        </Grid>
+                                                                    </DataTemplate>
+                                                                </DataGridTemplateColumn.CellTemplate>
+                                                            </DataGridTemplateColumn>
+                                                        </DataGrid.Columns>
+                                                    </DataGrid>
                                                 </Grid>
                                             </Grid>
                                         </Grid>
@@ -539,19 +706,51 @@
                                 <Button Width="55">New</Button>
                             </Grid>
                             <Grid Grid.Column="2">
-                                <Grid.RowDefinitions>
-                                    <RowDefinition Height="Auto" />
-                                    <RowDefinition Height="*" />
-                                </Grid.RowDefinitions>
-                                <Label Content="Notes:" />
-                                <Grid Grid.Row="1" Background="#F5FFAF">
-                                    <Grid.RowDefinitions>
-                                        <RowDefinition Height="Auto" />
-                                    </Grid.RowDefinitions>
-                                    <Grid>
-                                        <TextBox Height="40" Margin="10,4" AcceptsReturn="True" VerticalScrollBarVisibility="Auto" />
-                                    </Grid>
-                                </Grid>
+                                <DataGrid Margin="4,0" Padding="10" Grid.Column="1" ItemsSource="{Binding ManufNotes, Mode=TwoWay}" GridLinesVisibility="None" AutoGenerateColumns="False" HeadersVisibility="None" BorderThickness="0" Background="#F5FFAF" CanUserAddRows="False">
+                                    <DataGrid.Resources>
+                                        <Style TargetType="DataGridColumnHeader" BasedOn="{StaticResource GridColumnHeaderBase}">
+                                            <Setter Property="Background" Value="#4BACC6" />
+                                        </Style>
+                                        <Style TargetType="TextBox">
+                                            <Setter Property="TextWrapping" Value="Wrap" />
+                                        </Style>
+                                        <Style TargetType="Label">
+                                            <Setter Property="HorizontalAlignment" Value="Right" />
+                                        </Style>
+                                        <Style TargetType="DataGridRow">
+                                            <Setter Property="Height" Value="Auto" />
+                                            <Setter Property="BorderThickness" Value="0" />
+                                            <Setter Property="Margin" Value="0,4" />
+                                        </Style>
+                                    </DataGrid.Resources>
+                                    <DataGrid.Columns>
+                                        <DataGridTemplateColumn Header="Installation Notes" Width="*">
+                                            <DataGridTemplateColumn.CellTemplate>
+                                                <DataTemplate>
+                                                    <Grid>
+                                                        <Grid Style="{StaticResource ParentGridStyle}">
+                                                            <Grid.RowDefinitions>
+                                                                <RowDefinition Height="Auto" />
+                                                                <RowDefinition Height="Auto" />
+                                                            </Grid.RowDefinitions>
+                                                            <Grid>
+                                                                <Grid.ColumnDefinitions>
+                                                                    <ColumnDefinition Width="1*" />
+                                                                    <ColumnDefinition Width="1*" />
+                                                                </Grid.ColumnDefinitions>
+                                                                <TextBlock Text="{Binding NotesDateAdded , Mode=TwoWay}" />
+                                                                <TextBlock Grid.Column="1" Text="{Binding NoteUserName, Mode=TwoWay}" HorizontalAlignment="Right" />
+                                                            </Grid>
+                                                            <Grid Grid.Row="1">
+                                                                <TextBox Text="{Binding NotesNote, Mode=TwoWay}" AcceptsReturn="True" ScrollViewer.VerticalScrollBarVisibility="Auto" Height="40" PreviewKeyUp="ManufNote_PreviewKeyUp"/>
+                                                            </Grid>
+                                                        </Grid>
+                                                    </Grid>
+                                                </DataTemplate>
+                                            </DataGridTemplateColumn.CellTemplate>
+                                        </DataGridTemplateColumn>
+                                    </DataGrid.Columns>
+                                </DataGrid>
                             </Grid>
                         </Grid>
                         <DataGrid Grid.Row="1" GridLinesVisibility="None" ItemsSource="{Binding Manufacturers}" AutoGenerateColumns="False" CanUserResizeColumns="False" AlternatingRowBackground="LightGray" HeadersVisibility="Column">

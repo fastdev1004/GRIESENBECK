@@ -6,6 +6,7 @@ using System.Data.SqlClient;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows.Input;
 using WpfApp.Model;
 using WpfApp.Utils;
 
@@ -24,6 +25,21 @@ namespace WpfApp.ViewModel
         {
             dbConnection = new DatabaseConnection();
             dbConnection.Open();
+            Note noteItem = new Note();
+            ManufNotes = new ObservableCollection<Note>();
+            ManufNotes.Add(noteItem);
+
+            CustomerNotes = new ObservableCollection<Note>();
+            CustomerNotes.Add(noteItem);
+
+            PMNotes = new ObservableCollection<Note>();
+            PMNotes.Add(noteItem);
+
+            SuptNotes = new ObservableCollection<Note>();
+            SuptNotes.Add(noteItem);
+
+            SubmNotes = new ObservableCollection<Note>();
+            SubmNotes.Add(noteItem);
             LoadAdmin();
         }
 
@@ -496,6 +512,66 @@ namespace WpfApp.ViewModel
             set
             {
                 _superintendents = value;
+                OnPropertyChanged();
+            }
+        }
+
+        private ObservableCollection<Note> _manufNotes;
+
+        public ObservableCollection<Note> ManufNotes
+        {
+            get { return _manufNotes; }
+            set
+            {
+                _manufNotes = value;
+                OnPropertyChanged();
+            }
+        }
+
+        private ObservableCollection<Note> _customerNotes;
+
+        public ObservableCollection<Note> CustomerNotes
+        {
+            get { return _customerNotes; }
+            set
+            {
+                _customerNotes = value;
+                OnPropertyChanged();
+            }
+        }
+        
+        private ObservableCollection<Note> _pmNotes;
+
+        public ObservableCollection<Note> PMNotes
+        {
+            get { return _pmNotes; }
+            set
+            {
+                _pmNotes = value;
+                OnPropertyChanged();
+            }
+        }
+
+        private ObservableCollection<Note> _submNotes;
+
+        public ObservableCollection<Note> SubmNotes
+        {
+            get { return _submNotes; }
+            set
+            {
+                _submNotes = value;
+                OnPropertyChanged();
+            }
+        }
+
+        private ObservableCollection<Note> _suptNotes;
+
+        public ObservableCollection<Note> SuptNotes
+        {
+            get { return _suptNotes; }
+            set
+            {
+                _suptNotes = value;
                 OnPropertyChanged();
             }
         }

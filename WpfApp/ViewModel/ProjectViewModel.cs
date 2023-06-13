@@ -32,13 +32,19 @@ namespace WpfApp.ViewModel
             LoadProjects();
             ProjectManagerList = new ObservableCollection<ProjectManager>();
             SuperintendentList = new ObservableCollection<Superintendent>();
-            ProjectNotes = new ObservableCollection<Note>();
             ProjectLinks = new ObservableCollection<ProjectLink>();
             SovCOs = new ObservableCollection<SovCO>();
             SovMaterials = new ObservableCollection<SovMaterial>();
             ProjectMatTrackings = new ObservableCollection<ProjectMatTracking>();
             ProjectMtShips = new ObservableCollection<ProjectMatShip>();
             ProjectSelectionEnable = true;
+            Note noteItem = new Note();
+            ProjectNotes = new ObservableCollection<Note>();
+            ProjectNotes.Add(noteItem);
+
+            WorkOrderNotes = new ObservableCollection<Note>();
+            WorkOrderNotes.Add(noteItem);
+
 
             this.NewProjectCommand = new RelayCommand((e)=> this.ClearProject());
         }

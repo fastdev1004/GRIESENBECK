@@ -167,7 +167,7 @@
                         </Grid>
                     </Border>
                 </Grid>
-                <DataGrid Grid.Row="2" Margin="4,0" Padding="10" ItemsSource="{Binding WorkOrderNotes}" GridLinesVisibility="None" AutoGenerateColumns="False" HeadersVisibility="None" BorderThickness="0" Background="#F5FFAF">
+                <DataGrid Margin="4,0" Padding="10" Grid.Row="2" ItemsSource="{Binding WorkOrderNotes, Mode=TwoWay}" GridLinesVisibility="None" AutoGenerateColumns="False" HeadersVisibility="None" BorderThickness="0" Background="#F5FFAF" CanUserAddRows="False">
                     <DataGrid.Resources>
                         <Style TargetType="DataGridColumnHeader" BasedOn="{StaticResource GridColumnHeaderBase}">
                             <Setter Property="Background" Value="#4BACC6" />
@@ -200,10 +200,10 @@
                                                     <ColumnDefinition Width="1*" />
                                                 </Grid.ColumnDefinitions>
                                                 <TextBlock Text="{Binding NotesDateAdded , Mode=TwoWay}" />
-                                                <TextBlock Text="{Binding NoteUserName}" HorizontalAlignment="Right" />
+                                                <TextBlock Grid.Column="1" Text="{Binding NoteUserName, Mode=TwoWay}" HorizontalAlignment="Right" />
                                             </Grid>
                                             <Grid Grid.Row="1">
-                                                <TextBox Text="{Binding NotesNote, Mode=TwoWay}" AcceptsReturn="True" ScrollViewer.VerticalScrollBarVisibility="Auto"  Height="40"/>
+                                                <TextBox Text="{Binding NotesNote, Mode=TwoWay}" AcceptsReturn="True" ScrollViewer.VerticalScrollBarVisibility="Auto" Height="40" PreviewKeyUp="WorkOrderNote_PreviewKeyUp"/>
                                             </Grid>
                                         </Grid>
                                     </Grid>
@@ -212,31 +212,6 @@
                         </DataGridTemplateColumn>
                     </DataGrid.Columns>
                 </DataGrid>
-                <!--<ScrollViewer Grid.Row="2" VerticalScrollBarVisibility="Auto">
-                    <Grid x:Name="WorkOrderNoteGrid" Background="#F5FFAF">
-                        <Grid.RowDefinitions>
-                            <RowDefinition Height="Auto" />
-                            <RowDefinition Height="*" />
-                        </Grid.RowDefinitions>
-                        <Grid Margin="10, 10, 10, 2">
-                            <Grid.RowDefinitions>
-                                <RowDefinition Height="Auto" />
-                                <RowDefinition Height="Auto" />
-                            </Grid.RowDefinitions>
-                            <Grid>
-                                <Grid.ColumnDefinitions>
-                                    <ColumnDefinition Width="1*" />
-                                    <ColumnDefinition Width="1*" />
-                                </Grid.ColumnDefinitions>
-                                --><!--<Label Content="5/14//2020 8:43:20" HorizontalAlignment="Left" />
-                                <Label Grid.Column="1" Content="deanille" HorizontalAlignment="Right" />--><!--
-                            </Grid>
-                            <Grid Grid.Row="1">
-                                <TextBox AcceptsReturn="True" ScrollViewer.VerticalScrollBarVisibility="Auto"  Height="40" />
-                            </Grid>
-                        </Grid>
-                    </Grid>
-                </ScrollViewer>-->
             </Grid>
             <Grid Grid.Column="1">
                 <Grid.RowDefinitions>

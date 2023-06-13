@@ -25,6 +25,10 @@ namespace WpfApp.ViewModel
             dbConnection = new DatabaseConnection();
             dbConnection.Open();
             LoadWorkOrders();
+
+            Note noteItem = new Note();
+            WorkOrderNotes = new ObservableCollection<Note>();
+            WorkOrderNotes.Add(noteItem);
         }
 
         private void LoadWorkOrders()
