@@ -13,7 +13,11 @@ namespace WpfApp.Model
     {
         private int _ccID;
         private int _customerID;
-        private string __ccName;
+        private string _ccName;
+        private string _ccPhone;
+        private string _ccCell;
+        private string _ccEmail;
+        private bool _ccActive;
 
         public int ID
         {
@@ -39,11 +43,55 @@ namespace WpfApp.Model
 
         public string CCName
         {
-            get => __ccName;
+            get => _ccName;
             set
             {
-                if (value == __ccName) return;
-                __ccName = value;
+                if (value == _ccName) return;
+                _ccName = value;
+                OnPropertyChanged();
+            }
+        }
+
+        public string CCPhone
+        {
+            get => _ccPhone;
+            set
+            {
+                if (value == _ccPhone) return;
+                _ccPhone = value;
+                OnPropertyChanged();
+            }
+        }
+
+        public string CCCell
+        {
+            get => _ccCell;
+            set
+            {
+                if (value == _ccCell) return;
+                _ccCell = value;
+                OnPropertyChanged();
+            }
+        }
+
+        public string CCEmail
+        {
+            get => _ccEmail;
+            set
+            {
+                if (value == _ccEmail) return;
+                _ccEmail = value;
+                OnPropertyChanged();
+            }
+        }
+
+        public bool CCActive
+        {
+            get => _ccActive;
+            set
+            {
+                if (value == _ccActive) return;
+                _ccActive = value;
                 OnPropertyChanged();
             }
         }

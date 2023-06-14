@@ -149,7 +149,7 @@ namespace WpfApp.ViewModel
             Payments = _paymentItems;
 
             // Customer Address
-            sqlquery = "SELECT Customer_ID, Full_Name, Address FROM tblCustomers Order by Full_Name";
+            sqlquery = "SELECT Customer_ID, Full_Name, Address FROM tblCustomers Order by Short_Name";
             cmd = new SqlCommand(sqlquery, dbConnection.Connection);
             sda = new SqlDataAdapter(cmd);
             ds = new DataSet();
@@ -1384,7 +1384,8 @@ namespace WpfApp.ViewModel
                     NoteUserName = _notesUserName
                 });
             }
-
+            Note noteItem = new Note();
+            sb_projectnotes.Add(noteItem);
             ProjectNotes = sb_projectnotes;
 
             // CIPGrid

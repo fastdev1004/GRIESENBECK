@@ -90,7 +90,7 @@
                                         <ColumnDefinition Width="5*" />
                                     </Grid.ColumnDefinitions>
                                     <Label Content="Full Name:" />
-                                    <TextBox Grid.Column="1" />
+                                    <TextBox Grid.Column="1" Text="{Binding SelectedFullName, Mode=TwoWay}" />
                                 </Grid>
                                 <Grid Grid.Row="1" Margin="0,0,0,4">
                                     <Grid.ColumnDefinitions>
@@ -103,11 +103,11 @@
                                             <ColumnDefinition Width="3*" />
                                             <ColumnDefinition Width="2*" />
                                         </Grid.ColumnDefinitions>
-                                        <TextBox />
+                                        <TextBox Text="{Binding SelectedShortName, Mode=TwoWay}" />
                                         <Grid Grid.Column="1">
                                             <WrapPanel HorizontalAlignment="Right">
                                                 <Label Content="Active?" />
-                                                <CheckBox Grid.Column="1" />
+                                                <CheckBox Grid.Column="1" IsChecked="{Binding SelectedActive, Mode=TwoWay}" />
                                             </WrapPanel>
                                         </Grid>
                                     </Grid>
@@ -119,7 +119,7 @@
                                         <ColumnDefinition Width="4*" />
                                     </Grid.ColumnDefinitions>
                                     <Label Content="PO Box:" />
-                                    <TextBox Grid.Column="1" />
+                                    <TextBox Grid.Column="1" Text="{Binding SelectedPoNumber, Mode=TwoWay}" />
                                 </Grid>
                                 <Grid Grid.Row="3" Margin="0,0,0,4">
                                     <Grid.ColumnDefinitions>
@@ -127,7 +127,7 @@
                                         <ColumnDefinition Width="5*" />
                                     </Grid.ColumnDefinitions>
                                     <Label Content="Address:" />
-                                    <TextBox Grid.Column="1" />
+                                    <TextBox Grid.Column="1" Text="{Binding SelectedAddress, Mode=TwoWay}" />
                                 </Grid>
                                 <Grid Grid.Row="4" Margin="0,0,0,4">
                                     <Grid.ColumnDefinitions>
@@ -140,14 +140,14 @@
                                             <ColumnDefinition Width="1*" />
                                             <ColumnDefinition Width="1*" />
                                         </Grid.ColumnDefinitions>
-                                        <TextBox />
+                                        <TextBox Text="{Binding SelectedCity, Mode=TwoWay}" />
                                         <Grid Grid.Column="1">
                                             <Grid.ColumnDefinitions>
                                                 <ColumnDefinition Width="1*" />
                                                 <ColumnDefinition Width="2*" />
                                             </Grid.ColumnDefinitions>
                                             <Label Content="Phone" />
-                                            <TextBox Grid.Column="1" />
+                                            <TextBox Grid.Column="1" Text="{Binding SelectedPhone, Mode=TwoWay}" />
                                         </Grid>
                                     </Grid>
                                 </Grid>
@@ -167,14 +167,14 @@
                                                 <ColumnDefinition Width="1*" />
                                                 <ColumnDefinition Width="2*" />
                                             </Grid.ColumnDefinitions>
-                                            <TextBox />
+                                            <TextBox Text="{Binding SelectedState, Mode=TwoWay}" />
                                             <Grid Grid.Column="1">
                                                 <Grid.ColumnDefinitions>
                                                     <ColumnDefinition Width="1*" />
                                                     <ColumnDefinition Width="2*" />
                                                 </Grid.ColumnDefinitions>
                                                 <Label Content="Zip:" />
-                                                <TextBox Grid.Column="1" />
+                                                <TextBox Grid.Column="1" Text="{Binding SelectedZip, Mode=TwoWay}" />
                                             </Grid>
                                         </Grid>
                                         <Grid Grid.Column="1">
@@ -183,7 +183,7 @@
                                                 <ColumnDefinition Width="2*" />
                                             </Grid.ColumnDefinitions>
                                             <Label Content="FAX:" />
-                                            <TextBox Grid.Column="1" />
+                                            <TextBox Grid.Column="1" Text="{Binding SelectedFax, Mode=TwoWay}" />
                                         </Grid>
                                     </Grid>
                                 </Grid>
@@ -193,7 +193,7 @@
                                         <ColumnDefinition Width="5*" />
                                     </Grid.ColumnDefinitions>
                                     <Label Content="Email:" />
-                                    <TextBox Grid.Column="1" />
+                                    <TextBox Grid.Column="1" Text="{Binding SelectedEmail, Mode=TwoWay}" />
                                 </Grid>
                                 <Grid Grid.Row="7">
                                     <Grid.ColumnDefinitions>
@@ -202,7 +202,7 @@
                                     </Grid.ColumnDefinitions>
                                     <Label Content="Notes:" />
                                     <Grid Grid.Column="1" Background="#F5FFAF">
-                                        <DataGrid Margin="4,0" Padding="10" Grid.Column="1" ItemsSource="{Binding CustomerNotes, Mode=TwoWay}" GridLinesVisibility="None" AutoGenerateColumns="False" HeadersVisibility="None" BorderThickness="0" Background="#F5FFAF" CanUserAddRows="False">
+                                        <DataGrid Margin="4,0" Padding="10" Grid.Column="1" ItemsSource="{Binding CustomerNotes, Mode=TwoWay}" GridLinesVisibility="None" AutoGenerateColumns="False" HeadersVisibility="None" BorderThickness="0" Background="#F5FFAF" CanUserAddRows="False" SelectedIndex="{Binding SelectedCustNoteRowIndex, Mode=TwoWay}">
                                             <DataGrid.Resources>
                                                 <Style TargetType="DataGridColumnHeader" BasedOn="{StaticResource GridColumnHeaderBase}">
                                                     <Setter Property="Background" Value="#4BACC6" />
@@ -285,31 +285,89 @@
                                                 <RowDefinition Height="1*" />
                                                 <RowDefinition Height="1*" />
                                             </Grid.RowDefinitions>
-                                            <Grid>
-                                                <DataGrid  GridLinesVisibility="None" AutoGenerateColumns="False" CanUserResizeColumns="False" AlternatingRowBackground="LightGray" HeadersVisibility="Column">
+                                            <Grid Margin="10">
+                                                <DataGrid ItemsSource="{Binding CustPMs, Mode=TwoWay}" GridLinesVisibility="None" AutoGenerateColumns="False" HeadersVisibility="Column" BorderThickness="1" Background="White" CanUserAddRows="False" SelectedIndex="{Binding SelectedPMRowIndex, Mode=TwoWay}">
+                                                    <DataGrid.Resources>
+                                                        <Style TargetType="DataGridColumnHeader" BasedOn="{StaticResource GridColumnHeaderBase}">
+                                                            <Setter Property="Background" Value="#5C83B4" />
+                                                            <Setter Property="Height" Value="30" />
+                                                        </Style>
+                                                        <Style TargetType="DataGridCell">
+                                                            <Setter Property="Padding" Value="10,0" />
+                                                            <Setter Property="Margin" Value="10,0" />
+                                                            <!--<Setter Property="BorderThickness" Value="0,0,0,1" />-->
+                                                        </Style>
+                                                        <Style TargetType="TextBox">
+                                                            <Setter Property="BorderThickness" Value="0,0,0,1" />
+                                                        </Style>
+                                                        <Style TargetType="CheckBox">
+                                                            <Setter Property="HorizontalAlignment" Value="Center" />
+                                                            <Setter Property="VerticalAlignment" Value="Center" />
+                                                        </Style>
+                                                    </DataGrid.Resources>
                                                     <DataGrid.Columns>
-                                                        <DataGridTextColumn IsReadOnly="False" Width="3*" Header="Name" />
-                                                        <DataGridTextColumn IsReadOnly="False" Width="2*" Header="Phone" />
-                                                        <DataGridTextColumn IsReadOnly="False" Width="2*" Header="Cell" />
-                                                        <DataGridTextColumn IsReadOnly="False" Width="3*" Header="Email" />
-                                                        <DataGridTemplateColumn Header="Active?" Width="1*">
+                                                        <DataGridTemplateColumn IsReadOnly="False" Width="4*">
+                                                            <DataGridTemplateColumn.Header>
+                                                                <TextBlock Text="Name" TextWrapping="Wrap" />
+                                                            </DataGridTemplateColumn.Header>
                                                             <DataGridTemplateColumn.CellTemplate>
                                                                 <DataTemplate>
-                                                                    <CheckBox BorderThickness="0" />
+                                                                    <TextBox Text="{Binding PMName}" PreviewKeyUp="CustPM_PreviewKeyUp" />
+                                                                </DataTemplate>
+                                                            </DataGridTemplateColumn.CellTemplate>
+                                                        </DataGridTemplateColumn>
+                                                        <DataGridTemplateColumn IsReadOnly="False" Width="2*">
+                                                            <DataGridTemplateColumn.Header>
+                                                                <TextBlock Text="Phone" TextWrapping="Wrap" />
+                                                            </DataGridTemplateColumn.Header>
+                                                            <DataGridTemplateColumn.CellTemplate>
+                                                                <DataTemplate>
+                                                                    <TextBox Text="{Binding PMPhone}" PreviewKeyUp="CustPM_PreviewKeyUp" />
+                                                                </DataTemplate>
+                                                            </DataGridTemplateColumn.CellTemplate>
+                                                        </DataGridTemplateColumn>
+                                                        <DataGridTemplateColumn IsReadOnly="False" Width="2*">
+                                                            <DataGridTemplateColumn.Header>
+                                                                <TextBlock Text="Cell" TextWrapping="Wrap" />
+                                                            </DataGridTemplateColumn.Header>
+                                                            <DataGridTemplateColumn.CellTemplate>
+                                                                <DataTemplate>
+                                                                    <TextBox Text="{Binding PMCellPhone}" PreviewKeyUp="CustPM_PreviewKeyUp" />
+                                                                </DataTemplate>
+                                                            </DataGridTemplateColumn.CellTemplate>
+                                                        </DataGridTemplateColumn>
+                                                        <DataGridTemplateColumn IsReadOnly="False" Width="1*">
+                                                            <DataGridTemplateColumn.Header>
+                                                                <TextBlock Text="Active?" TextWrapping="Wrap" />
+                                                            </DataGridTemplateColumn.Header>
+                                                            <DataGridTemplateColumn.CellTemplate>
+                                                                <DataTemplate>
+                                                                    <CheckBox IsChecked="{Binding Active}" Checked="CustPM_ChkPreviewKeyUp" Unchecked="CustPM_ChkPreviewKeyUp" />
+                                                                </DataTemplate>
+                                                            </DataGridTemplateColumn.CellTemplate>
+                                                        </DataGridTemplateColumn>
+                                                        <DataGridTemplateColumn IsReadOnly="False" Width="4*">
+                                                            <DataGridTemplateColumn.Header>
+                                                                <TextBlock Text="Email" TextWrapping="Wrap" />
+                                                            </DataGridTemplateColumn.Header>
+                                                            <DataGridTemplateColumn.CellTemplate>
+                                                                <DataTemplate>
+                                                                    <TextBox Text="{Binding PMEmail}" PreviewKeyUp="CustPM_PreviewKeyUp" />
                                                                 </DataTemplate>
                                                             </DataGridTemplateColumn.CellTemplate>
                                                         </DataGridTemplateColumn>
                                                     </DataGrid.Columns>
                                                 </DataGrid>
                                             </Grid>
-                                            <Grid Grid.Row="1" Margin="40">
+                                            <Grid Grid.Row="1" Margin="4">
                                                 <Grid.ColumnDefinitions>
                                                     <ColumnDefinition Width="1*" />
                                                     <ColumnDefinition Width="5*" />
+                                                    <ColumnDefinition Width="1*" />
                                                 </Grid.ColumnDefinitions>
                                                 <Label Content="Notes:" />
                                                 <Grid Grid.Column="1" Background="#F5FFAF">
-                                                    <DataGrid Margin="4,0" Padding="10" Grid.Column="1" ItemsSource="{Binding PMNotes, Mode=TwoWay}" GridLinesVisibility="None" AutoGenerateColumns="False" HeadersVisibility="None" BorderThickness="0" Background="#F5FFAF" CanUserAddRows="False">
+                                                    <DataGrid Margin="4,0" Padding="10" Grid.Column="1" ItemsSource="{Binding PMNotes, Mode=TwoWay}" GridLinesVisibility="None" AutoGenerateColumns="False" HeadersVisibility="None" BorderThickness="0" Background="#F5FFAF" CanUserAddRows="False" SelectedIndex="{Binding SelectedPMNoteRowIndex, Mode=TwoWay}">
                                                         <DataGrid.Resources>
                                                             <Style TargetType="DataGridColumnHeader" BasedOn="{StaticResource GridColumnHeaderBase}">
                                                                 <Setter Property="Background" Value="#4BACC6" />
@@ -364,31 +422,89 @@
                                                 <RowDefinition Height="1*" />
                                                 <RowDefinition Height="1*" />
                                             </Grid.RowDefinitions>
-                                            <Grid>
-                                                <DataGrid  GridLinesVisibility="None" AutoGenerateColumns="False" CanUserResizeColumns="False" AlternatingRowBackground="LightGray" HeadersVisibility="Column">
+                                            <Grid Margin="10">
+                                                <DataGrid ItemsSource="{Binding CustSupts, Mode=TwoWay}" GridLinesVisibility="None" AutoGenerateColumns="False" HeadersVisibility="Column" BorderThickness="1" Background="White" CanUserAddRows="False" SelectedIndex="{Binding SelectedSuptRowIndex, Mode=TwoWay}" >
+                                                    <DataGrid.Resources>
+                                                        <Style TargetType="DataGridColumnHeader" BasedOn="{StaticResource GridColumnHeaderBase}">
+                                                            <Setter Property="Background" Value="#5C83B4" />
+                                                            <Setter Property="Height" Value="30" />
+                                                        </Style>
+                                                        <Style TargetType="DataGridCell">
+                                                            <Setter Property="Padding" Value="10,0" />
+                                                            <Setter Property="Margin" Value="10,0" />
+                                                            <!--<Setter Property="BorderThickness" Value="0,0,0,1" />-->
+                                                        </Style>
+                                                        <Style TargetType="TextBox">
+                                                            <Setter Property="BorderThickness" Value="0,0,0,1" />
+                                                        </Style>
+                                                        <Style TargetType="CheckBox">
+                                                            <Setter Property="HorizontalAlignment" Value="Center" />
+                                                            <Setter Property="VerticalAlignment" Value="Center" />
+                                                        </Style>
+                                                    </DataGrid.Resources>
                                                     <DataGrid.Columns>
-                                                        <DataGridTextColumn IsReadOnly="False" Width="3*" Header="Name" />
-                                                        <DataGridTextColumn IsReadOnly="False" Width="2*" Header="Phone" />
-                                                        <DataGridTextColumn IsReadOnly="False" Width="2*" Header="Cell" />
-                                                        <DataGridTextColumn IsReadOnly="False" Width="3*" Header="Email" />
-                                                        <DataGridTemplateColumn Header="Active?" Width="1*">
+                                                        <DataGridTemplateColumn IsReadOnly="False" Width="4*">
+                                                            <DataGridTemplateColumn.Header>
+                                                                <TextBlock Text="Name" TextWrapping="Wrap" />
+                                                            </DataGridTemplateColumn.Header>
                                                             <DataGridTemplateColumn.CellTemplate>
                                                                 <DataTemplate>
-                                                                    <CheckBox BorderThickness="0" />
+                                                                    <TextBox Text="{Binding SupName}" PreviewKeyUp="CustSupt_PreviewKeyUp" />
+                                                                </DataTemplate>
+                                                            </DataGridTemplateColumn.CellTemplate>
+                                                        </DataGridTemplateColumn>
+                                                        <DataGridTemplateColumn IsReadOnly="False" Width="2*">
+                                                            <DataGridTemplateColumn.Header>
+                                                                <TextBlock Text="Phone" TextWrapping="Wrap" />
+                                                            </DataGridTemplateColumn.Header>
+                                                            <DataGridTemplateColumn.CellTemplate>
+                                                                <DataTemplate>
+                                                                    <TextBox Text="{Binding SupPhone}" PreviewKeyUp="CustSupt_PreviewKeyUp" />
+                                                                </DataTemplate>
+                                                            </DataGridTemplateColumn.CellTemplate>
+                                                        </DataGridTemplateColumn>
+                                                        <DataGridTemplateColumn IsReadOnly="False" Width="2*">
+                                                            <DataGridTemplateColumn.Header>
+                                                                <TextBlock Text="Cell" TextWrapping="Wrap" />
+                                                            </DataGridTemplateColumn.Header>
+                                                            <DataGridTemplateColumn.CellTemplate>
+                                                                <DataTemplate>
+                                                                    <TextBox Text="{Binding SupCellPhone}" PreviewKeyUp="CustSupt_PreviewKeyUp" />
+                                                                </DataTemplate>
+                                                            </DataGridTemplateColumn.CellTemplate>
+                                                        </DataGridTemplateColumn>
+                                                        <DataGridTemplateColumn IsReadOnly="False" Width="1*">
+                                                            <DataGridTemplateColumn.Header>
+                                                                <TextBlock Text="Active?" TextWrapping="Wrap" />
+                                                            </DataGridTemplateColumn.Header>
+                                                            <DataGridTemplateColumn.CellTemplate>
+                                                                <DataTemplate>
+                                                                    <CheckBox IsChecked="{Binding Active}" Checked="CustSupt_ChkPreviewKeyUp" Unchecked="CustSupt_ChkPreviewKeyUp" />
+                                                                </DataTemplate>
+                                                            </DataGridTemplateColumn.CellTemplate>
+                                                        </DataGridTemplateColumn>
+                                                        <DataGridTemplateColumn IsReadOnly="False" Width="4*">
+                                                            <DataGridTemplateColumn.Header>
+                                                                <TextBlock Text="Email" TextWrapping="Wrap" />
+                                                            </DataGridTemplateColumn.Header>
+                                                            <DataGridTemplateColumn.CellTemplate>
+                                                                <DataTemplate>
+                                                                    <TextBox Text="{Binding SupEmail}" PreviewKeyUp="CustSupt_PreviewKeyUp" />
                                                                 </DataTemplate>
                                                             </DataGridTemplateColumn.CellTemplate>
                                                         </DataGridTemplateColumn>
                                                     </DataGrid.Columns>
                                                 </DataGrid>
                                             </Grid>
-                                            <Grid Grid.Row="1" Margin="40">
+                                            <Grid Grid.Row="1" Margin="4">
                                                 <Grid.ColumnDefinitions>
                                                     <ColumnDefinition Width="1*" />
                                                     <ColumnDefinition Width="5*" />
+                                                    <ColumnDefinition Width="1*" />
                                                 </Grid.ColumnDefinitions>
                                                 <Label Content="Notes:" />
                                                 <Grid Grid.Column="1" Background="#F5FFAF">
-                                                    <DataGrid Margin="4,0" Padding="10" Grid.Column="1" ItemsSource="{Binding SuptNotes, Mode=TwoWay}" GridLinesVisibility="None" AutoGenerateColumns="False" HeadersVisibility="None" BorderThickness="0" Background="#F5FFAF" CanUserAddRows="False">
+                                                    <DataGrid Margin="4,0" Padding="10" Grid.Column="1" ItemsSource="{Binding SuptNotes, Mode=TwoWay}" GridLinesVisibility="None" AutoGenerateColumns="False" HeadersVisibility="None" BorderThickness="0" Background="#F5FFAF" CanUserAddRows="False" SelectedIndex="{Binding SelectedSuptNoteRowIndex, Mode=TwoWay}">
                                                         <DataGrid.Resources>
                                                             <Style TargetType="DataGridColumnHeader" BasedOn="{StaticResource GridColumnHeaderBase}">
                                                                 <Setter Property="Background" Value="#4BACC6" />
@@ -443,31 +559,89 @@
                                                 <RowDefinition Height="1*" />
                                                 <RowDefinition Height="1*" />
                                             </Grid.RowDefinitions>
-                                            <Grid>
-                                                <DataGrid  GridLinesVisibility="None" AutoGenerateColumns="False" CanUserResizeColumns="False" AlternatingRowBackground="LightGray" HeadersVisibility="Column">
+                                            <Grid Margin="10">
+                                                <DataGrid ItemsSource="{Binding CustContacts, Mode=TwoWay}" GridLinesVisibility="None" AutoGenerateColumns="False" HeadersVisibility="Column" BorderThickness="1" Background="White" CanUserAddRows="False" SelectedIndex="{Binding SelectedSubmRowIndex, Mode=TwoWay}">
+                                                    <DataGrid.Resources>
+                                                        <Style TargetType="DataGridColumnHeader" BasedOn="{StaticResource GridColumnHeaderBase}">
+                                                            <Setter Property="Background" Value="#5C83B4" />
+                                                            <Setter Property="Height" Value="30" />
+                                                        </Style>
+                                                        <Style TargetType="DataGridCell">
+                                                            <Setter Property="Padding" Value="10,0" />
+                                                            <Setter Property="Margin" Value="10,0" />
+                                                            <!--<Setter Property="BorderThickness" Value="0,0,0,1" />-->
+                                                        </Style>
+                                                        <Style TargetType="TextBox">
+                                                            <Setter Property="BorderThickness" Value="0,0,0,1" />
+                                                        </Style>
+                                                        <Style TargetType="CheckBox">
+                                                            <Setter Property="HorizontalAlignment" Value="Center" />
+                                                            <Setter Property="VerticalAlignment" Value="Center" />
+                                                        </Style>
+                                                    </DataGrid.Resources>
                                                     <DataGrid.Columns>
-                                                        <DataGridTextColumn IsReadOnly="False" Width="3*" Header="Name" />
-                                                        <DataGridTextColumn IsReadOnly="False" Width="2*" Header="Phone" />
-                                                        <DataGridTextColumn IsReadOnly="False" Width="2*" Header="Cell" />
-                                                        <DataGridTextColumn IsReadOnly="False" Width="3*" Header="Email" />
-                                                        <DataGridTemplateColumn Header="Active?" Width="1*">
+                                                        <DataGridTemplateColumn IsReadOnly="False" Width="4*">
+                                                            <DataGridTemplateColumn.Header>
+                                                                <TextBlock Text="Name" TextWrapping="Wrap" />
+                                                            </DataGridTemplateColumn.Header>
                                                             <DataGridTemplateColumn.CellTemplate>
                                                                 <DataTemplate>
-                                                                    <CheckBox BorderThickness="0" />
+                                                                    <TextBox Text="{Binding CCName}" PreviewKeyUp="CustContact_PreviewKeyUp" />
+                                                                </DataTemplate>
+                                                            </DataGridTemplateColumn.CellTemplate>
+                                                        </DataGridTemplateColumn>
+                                                        <DataGridTemplateColumn IsReadOnly="False" Width="2*">
+                                                            <DataGridTemplateColumn.Header>
+                                                                <TextBlock Text="Phone" TextWrapping="Wrap" />
+                                                            </DataGridTemplateColumn.Header>
+                                                            <DataGridTemplateColumn.CellTemplate>
+                                                                <DataTemplate>
+                                                                    <TextBox Text="{Binding CCPhone}" PreviewKeyUp="CustContact_PreviewKeyUp" />
+                                                                </DataTemplate>
+                                                            </DataGridTemplateColumn.CellTemplate>
+                                                        </DataGridTemplateColumn>
+                                                        <DataGridTemplateColumn IsReadOnly="False" Width="2*">
+                                                            <DataGridTemplateColumn.Header>
+                                                                <TextBlock Text="Cell" TextWrapping="Wrap" />
+                                                            </DataGridTemplateColumn.Header>
+                                                            <DataGridTemplateColumn.CellTemplate>
+                                                                <DataTemplate>
+                                                                    <TextBox Text="{Binding CCCell}" PreviewKeyUp="CustContact_PreviewKeyUp" />
+                                                                </DataTemplate>
+                                                            </DataGridTemplateColumn.CellTemplate>
+                                                        </DataGridTemplateColumn>
+                                                        <DataGridTemplateColumn IsReadOnly="False" Width="1*">
+                                                            <DataGridTemplateColumn.Header>
+                                                                <TextBlock Text="Active?" TextWrapping="Wrap" />
+                                                            </DataGridTemplateColumn.Header>
+                                                            <DataGridTemplateColumn.CellTemplate>
+                                                                <DataTemplate>
+                                                                    <CheckBox IsChecked="{Binding CCActive}" Checked="CustContact_ChkPreviewKeyUp" Unchecked="CustContact_ChkPreviewKeyUp" />
+                                                                </DataTemplate>
+                                                            </DataGridTemplateColumn.CellTemplate>
+                                                        </DataGridTemplateColumn>
+                                                        <DataGridTemplateColumn IsReadOnly="False" Width="4*">
+                                                            <DataGridTemplateColumn.Header>
+                                                                <TextBlock Text="Email" TextWrapping="Wrap" />
+                                                            </DataGridTemplateColumn.Header>
+                                                            <DataGridTemplateColumn.CellTemplate>
+                                                                <DataTemplate>
+                                                                    <TextBox Text="{Binding CCEmail}" PreviewKeyUp="CustContact_PreviewKeyUp" />
                                                                 </DataTemplate>
                                                             </DataGridTemplateColumn.CellTemplate>
                                                         </DataGridTemplateColumn>
                                                     </DataGrid.Columns>
                                                 </DataGrid>
                                             </Grid>
-                                            <Grid Grid.Row="1" Margin="40">
+                                            <Grid Grid.Row="1" Margin="4">
                                                 <Grid.ColumnDefinitions>
                                                     <ColumnDefinition Width="1*" />
                                                     <ColumnDefinition Width="5*" />
+                                                    <ColumnDefinition Width="1*" />
                                                 </Grid.ColumnDefinitions>
                                                 <Label Content="Notes:" />
                                                 <Grid Grid.Column="1" Background="#F5FFAF">
-                                                    <DataGrid Margin="4,0" Padding="10" Grid.Column="1" ItemsSource="{Binding SubmNotes, Mode=TwoWay}" GridLinesVisibility="None" AutoGenerateColumns="False" HeadersVisibility="None" BorderThickness="0" Background="#F5FFAF" CanUserAddRows="False">
+                                                    <DataGrid Margin="4,0" Padding="10" Grid.Column="1" ItemsSource="{Binding SubmNotes, Mode=TwoWay}" GridLinesVisibility="None" AutoGenerateColumns="False" HeadersVisibility="None" BorderThickness="0" Background="#F5FFAF" CanUserAddRows="False" SelectedIndex="{Binding SelectedSubmNoteRowIndex, Mode=TwoWay}">
                                                         <DataGrid.Resources>
                                                             <Style TargetType="DataGridColumnHeader" BasedOn="{StaticResource GridColumnHeaderBase}">
                                                                 <Setter Property="Background" Value="#4BACC6" />
@@ -534,7 +708,20 @@
                                     </Style>
                                 </DataGrid.Resources>
                                 <DataGrid.Columns>
-                                    <DataGridTextColumn IsReadOnly="False" Width="3*" Binding="{Binding Path=ShortName}" Header="Short Name" />
+                                    <DataGridTemplateColumn IsReadOnly="False" Width="2*">
+                                        <DataGridTemplateColumn.Header>
+                                            <TextBlock Text="Short Name" TextWrapping="Wrap" />
+                                        </DataGridTemplateColumn.Header>
+                                        <DataGridTemplateColumn.CellTemplate>
+                                            <DataTemplate>
+                                                <TextBlock Text="{Binding ShortName}" TextDecorations="Underline" Foreground="Blue" Cursor="Hand">
+                                                    <TextBlock.InputBindings>
+                                                        <MouseBinding MouseAction="LeftClick" Command="{Binding DataContext.ViewCustomerCommand, RelativeSource={RelativeSource AncestorType=local:AdminView}}" CommandParameter="{Binding ID}" />
+                                                    </TextBlock.InputBindings>    
+                                                </TextBlock>
+                                            </DataTemplate>
+                                        </DataGridTemplateColumn.CellTemplate>
+                                    </DataGridTemplateColumn>
                                     <DataGridTextColumn IsReadOnly="False" Width="3*" Binding="{Binding Path=FullName}" Header="Full Name" />
                                     <DataGridTextColumn IsReadOnly="False" Width="1*" Binding="{Binding Path=PoBox}" Header="PO Box" />
                                     <DataGridTextColumn IsReadOnly="False" Width="3*" Binding="{Binding Path=Address}" Header="Address" />
@@ -706,7 +893,7 @@
                                 <Button Width="55">New</Button>
                             </Grid>
                             <Grid Grid.Column="2">
-                                <DataGrid Margin="4,0" Padding="10" Grid.Column="1" ItemsSource="{Binding ManufNotes, Mode=TwoWay}" GridLinesVisibility="None" AutoGenerateColumns="False" HeadersVisibility="None" BorderThickness="0" Background="#F5FFAF" CanUserAddRows="False">
+                                <DataGrid Margin="4,0" Padding="10" Grid.Column="1" ItemsSource="{Binding ManufNotes, Mode=TwoWay}" GridLinesVisibility="None" AutoGenerateColumns="False" HeadersVisibility="None" BorderThickness="0" Background="#F5FFAF" CanUserAddRows="False" SelectedIndex="{Binding SelectedManufNoteRowIndex, Mode=TwoWay}">
                                     <DataGrid.Resources>
                                         <Style TargetType="DataGridColumnHeader" BasedOn="{StaticResource GridColumnHeaderBase}">
                                             <Setter Property="Background" Value="#4BACC6" />

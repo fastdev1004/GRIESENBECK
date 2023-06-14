@@ -680,11 +680,6 @@
                                             <DataTemplate>
                                                 <ComboBox ItemsSource="{Binding DataContext.Acronyms, RelativeSource={RelativeSource AncestorType=local:ProjectView}}"
                 SelectedValuePath="AcronymName" SelectedValue="{Binding SovAcronym, Mode=TwoWay}" DisplayMemberPath="AcronymName">
-                                                    <!--<ComboBox.ItemTemplate>
-                                                        <DataTemplate>
-                                                            <TextBox Text="{Binding AcronymName}" />
-                                                        </DataTemplate>
-                                                    </ComboBox.ItemTemplate>-->
                                                 </ComboBox>
                                             </DataTemplate>
                                         </DataGridTemplateColumn.CellTemplate>
