@@ -33,14 +33,14 @@ namespace WpfApp.ViewModel
             CustomerNotes = new ObservableCollection<Note>();
             CustomerNotes.Add(noteItem);
 
-            PMNotes = new ObservableCollection<Note>();
-            PMNotes.Add(noteItem);
+            CustPMNotes = new ObservableCollection<Note>();
+            CustPMNotes.Add(noteItem);
 
-            SuptNotes = new ObservableCollection<Note>();
-            SuptNotes.Add(noteItem);
+            CustSuptNotes = new ObservableCollection<Note>();
+            CustSuptNotes.Add(noteItem);
 
-            SubmNotes = new ObservableCollection<Note>();
-            SubmNotes.Add(noteItem);
+            CustSubmNotes = new ObservableCollection<Note>();
+            CustSubmNotes.Add(noteItem);
 
             ProjectManager projectManager = new ProjectManager();
             CustPMs = new ObservableCollection<ProjectManager>();
@@ -53,6 +53,8 @@ namespace WpfApp.ViewModel
             Superintendent superintendent = new Superintendent();
             CustSupts = new ObservableCollection<Superintendent>();
             CustSupts.Add(superintendent);
+            //ActionState = "UpdateCustomer";
+            //ActionManufState = "UpdateManuf";
             LoadAdmin();
 
             this.ViewCustomerCommand = new RelayCommand((e) =>
@@ -60,6 +62,706 @@ namespace WpfApp.ViewModel
                 int customerID = int.Parse(e.ToString());
                 this.ViewCustomer(customerID);
             });
+
+            this.ViewManufCommand = new RelayCommand((e) =>
+            {
+                int manufID = int.Parse(e.ToString());
+                this.ViewManuf(manufID);
+            });
+
+            this.NewCustomerCommand = new RelayCommand((e) =>
+            {
+                this.ClearCustomer();
+            });
+
+            this.NewManufCommand = new RelayCommand((e) =>
+            {
+                this.ClearManuf();
+            });
+
+        }
+
+        private void CreateSubm()
+        {
+            if (SelectedCustomerID != 0)
+            {
+                sqlquery = "INSERT INTO tblCustomerContacts(Customer_ID, CC_Name, CC_Phone, CC_CellPhone, CC_Email, Active) OUTPUT INSERTED.CC_ID VALUES (@CustomerID, @CCName, @CCPhone, @CCCell, @CCEmail, @Active)";
+                using (cmd = new SqlCommand(sqlquery, dbConnection.Connection))
+                {
+                    if (SelectedCustomerID != 0)
+                        cmd.Parameters.AddWithValue("@CustomerID", SelectedCustomerID);
+                    else cmd.Parameters.AddWithValue("@CustomerID", DBNull.Value);
+                    if (!string.IsNullOrEmpty(CurrentSubmName))
+                        cmd.Parameters.AddWithValue("@CCName", CurrentSubmName);
+                    else cmd.Parameters.AddWithValue("@CCName", DBNull.Value);
+                    if (!string.IsNullOrEmpty(CurrentSubmPhone))
+                        cmd.Parameters.AddWithValue("@CCPhone", CurrentSubmPhone);
+                    else cmd.Parameters.AddWithValue("@CCPhone", DBNull.Value);
+                    if (!string.IsNullOrEmpty(CurrentSubmCell))
+                        cmd.Parameters.AddWithValue("@CCCell", CurrentSubmCell);
+                    else cmd.Parameters.AddWithValue("@CCCell", DBNull.Value);
+                    if (!string.IsNullOrEmpty(CurrentSubmEmail))
+                        cmd.Parameters.AddWithValue("@CCEmail", CurrentSubmEmail);
+                    else cmd.Parameters.AddWithValue("@CCEmail", DBNull.Value);
+                    cmd.Parameters.AddWithValue("@Active", CurrentPmActive);
+                }
+
+                try
+                {
+                    int insertedNoteId = (int)cmd.ExecuteScalar();
+                    CurrentCCID = insertedNoteId;
+                }
+                catch (SqlException e)
+                {
+                    Console.WriteLine(e);
+                }
+            }
+        }
+
+        private void UpdateSubm()
+        {
+            string sqlquery = "UPDATE tblCustomerContacts SET ";
+            List<string> itemList = new List<string>();
+            if (!string.IsNullOrEmpty(CurrentSubmName))
+            {
+                itemList.Add("CC_Name=@CCName");
+            }
+            if (!string.IsNullOrEmpty(CurrentSubmPhone))
+            {
+                itemList.Add("CC_Phone=@CCPhone");
+            }
+            if (!string.IsNullOrEmpty(CurrentSubmCell))
+            {
+                itemList.Add("CC_CellPhone=@CCCell");
+            }
+            if (!string.IsNullOrEmpty(CurrentSubmEmail))
+            {
+                itemList.Add("CC_Email=@CCEmail");
+            }
+
+            itemList.Add("Active=@CCActive");
+            sqlquery += string.Join(", ", itemList);
+            sqlquery += " WHERE CC_ID=@CCID";
+
+            using (cmd = new SqlCommand(sqlquery, dbConnection.Connection))
+            {
+                if (!string.IsNullOrEmpty(CurrentSubmName))
+                    cmd.Parameters.AddWithValue("@CCName", CurrentSubmName);
+                if (!string.IsNullOrEmpty(CurrentSubmPhone))
+                    cmd.Parameters.AddWithValue("@CCPhone", CurrentSubmPhone);
+                if (!string.IsNullOrEmpty(CurrentSubmCell))
+                    cmd.Parameters.AddWithValue("@CCCell", CurrentSubmCell);
+                if (!string.IsNullOrEmpty(CurrentSubmEmail))
+                    cmd.Parameters.AddWithValue("@CCEmail", CurrentSubmEmail);
+                cmd.Parameters.AddWithValue("@CCID", SelectedCustSubmID);
+                cmd.Parameters.AddWithValue("@CCActive", CurrentSubmActive);
+
+                int rowsAffected = cmd.ExecuteNonQuery();
+            }
+        }
+
+        private void CreateSup()
+        {
+            if (SelectedCustomerID != 0)
+            {
+                sqlquery = "INSERT INTO tblSuperintendents(Customer_ID, Sup_Name, Sup_Phone, Sup_CellPhone, Sup_Email, Active) OUTPUT INSERTED.Sup_ID VALUES (@CustomerID, @SupName, @SupPhone, @SupCell, @SupEmail, @Active)";
+                using (cmd = new SqlCommand(sqlquery, dbConnection.Connection))
+                {
+                    if (SelectedCustomerID != 0)
+                        cmd.Parameters.AddWithValue("@CustomerID", SelectedCustomerID);
+                    else cmd.Parameters.AddWithValue("@CustomerID", DBNull.Value);
+                    if (!string.IsNullOrEmpty(CurrentSupName))
+                        cmd.Parameters.AddWithValue("@SupName", CurrentSupName);
+                    else cmd.Parameters.AddWithValue("@SupName", DBNull.Value);
+                    if (!string.IsNullOrEmpty(CurrentSupPhone))
+                        cmd.Parameters.AddWithValue("@SupPhone", CurrentSupPhone);
+                    else cmd.Parameters.AddWithValue("@SupPhone", DBNull.Value);
+                    if (!string.IsNullOrEmpty(CurrentSupCell))
+                        cmd.Parameters.AddWithValue("@SupCell", CurrentSupCell);
+                    else cmd.Parameters.AddWithValue("@SupCell", DBNull.Value);
+                    if (!string.IsNullOrEmpty(CurrentSupEmail))
+                        cmd.Parameters.AddWithValue("@SupEmail", CurrentSupEmail);
+                    else cmd.Parameters.AddWithValue("@SupEmail", DBNull.Value);
+                    cmd.Parameters.AddWithValue("@Active", CurrentPmActive);
+                }
+
+                try
+                {
+                    int insertedNoteId = (int)cmd.ExecuteScalar();
+                    CurrentSupID = insertedNoteId;
+                }
+                catch (SqlException e)
+                {
+                    Console.WriteLine(e);
+                }
+            }
+        }
+
+        private void UpdateSup()
+        {
+            string sqlquery = "UPDATE tblSuperintendents SET ";
+            List<string> itemList = new List<string>();
+            if (!string.IsNullOrEmpty(CurrentSupName))
+            {
+                itemList.Add("Sup_Name=@SupName");
+            }
+            if (!string.IsNullOrEmpty(CurrentSupPhone))
+            {
+                itemList.Add("Sup_Phone=@SupPhone");
+            }
+            if (!string.IsNullOrEmpty(CurrentSupCell))
+            {
+                itemList.Add("Sup_CellPhone=@SupCell");
+            }
+            if (!string.IsNullOrEmpty(CurrentSupEmail))
+            {
+                itemList.Add("Sup_Email=@SupEmail");
+            }
+
+            itemList.Add("Active=@SupActive");
+            sqlquery += string.Join(", ", itemList);
+            sqlquery += " WHERE Sup_ID=@SupID";
+
+            using (cmd = new SqlCommand(sqlquery, dbConnection.Connection))
+            {
+                if (!string.IsNullOrEmpty(CurrentSupName))
+                    cmd.Parameters.AddWithValue("@SupName", CurrentSupName);
+                if (!string.IsNullOrEmpty(CurrentSupPhone))
+                    cmd.Parameters.AddWithValue("@SupPhone", CurrentSupPhone);
+                if (!string.IsNullOrEmpty(CurrentSupCell))
+                    cmd.Parameters.AddWithValue("@SupCell", CurrentSupCell);
+                if (!string.IsNullOrEmpty(CurrentSupEmail))
+                    cmd.Parameters.AddWithValue("@SupEmail", CurrentSupEmail);
+                cmd.Parameters.AddWithValue("@SupID", SelectedCustSupID);
+                cmd.Parameters.AddWithValue("@SupActive", CurrentSupActive);
+
+                int rowsAffected = cmd.ExecuteNonQuery();
+            }
+        }
+
+        private void CreatePM()
+        {
+            if (SelectedCustomerID != 0)
+            {
+                sqlquery = "INSERT INTO tblProjectManagers(Customer_ID, PM_Name, PM_Phone, PM_CellPhone, PM_Email, Active) OUTPUT INSERTED.PM_ID VALUES (@CustomerID, @PmName, @PmPhone, @PmCell, @PmEmail, @Active)";
+                using (cmd = new SqlCommand(sqlquery, dbConnection.Connection))
+                {
+                    if (SelectedCustomerID != 0)
+                        cmd.Parameters.AddWithValue("@CustomerID", SelectedCustomerID);
+                    else cmd.Parameters.AddWithValue("@CustomerID", DBNull.Value);
+                    if (!string.IsNullOrEmpty(CurrentPmName))
+                        cmd.Parameters.AddWithValue("@PmName", CurrentPmName);
+                    else cmd.Parameters.AddWithValue("@PmName", DBNull.Value);
+                    if (!string.IsNullOrEmpty(CurrentPmPhone))
+                        cmd.Parameters.AddWithValue("@PmPhone", CurrentPmPhone);
+                    else cmd.Parameters.AddWithValue("@PmPhone", DBNull.Value);
+                    if (!string.IsNullOrEmpty(CurrentPmCell))
+                        cmd.Parameters.AddWithValue("@PmCell", CurrentPmCell);
+                    else cmd.Parameters.AddWithValue("@PmCell", DBNull.Value);
+                    if (!string.IsNullOrEmpty(CurrentPmEmail))
+                        cmd.Parameters.AddWithValue("@PmEmail", CurrentPmEmail);
+                    else cmd.Parameters.AddWithValue("@PmEmail", DBNull.Value);
+                    cmd.Parameters.AddWithValue("@Active", CurrentPmActive);
+                }
+
+                try
+                {
+                    int insertedNoteId = (int)cmd.ExecuteScalar();
+                    CurrentPmID = insertedNoteId;
+                    ActionPmState = "UpdatePM";
+                }
+                catch (SqlException e)
+                {
+                    Console.WriteLine(e);
+                }
+            }
+        }
+
+        private void UpdatePM()
+        {
+            string sqlquery = "UPDATE tblProjectManagers SET ";
+
+            List<string> itemList = new List<string>();
+            if (!string.IsNullOrEmpty(CurrentPmName))
+            {
+                itemList.Add("PM_Name=@PmName");
+            }
+            if (!string.IsNullOrEmpty(CurrentPmPhone))
+            {
+                itemList.Add("PM_Phone=@PmPhone");
+            }
+            if (!string.IsNullOrEmpty(CurrentPmCell))
+            {
+                itemList.Add("PM_CellPhone=@PmCell");
+            }
+            if (!string.IsNullOrEmpty(CurrentPmEmail))
+            {
+                itemList.Add("PM_Email=@PmEmail");
+            }
+           
+            itemList.Add("Active=@PmActive");
+
+            sqlquery += string.Join(", ", itemList);
+            sqlquery += " WHERE PM_ID=@PmID";
+            using (cmd = new SqlCommand(sqlquery, dbConnection.Connection))
+            {
+                if (!string.IsNullOrEmpty(CurrentPmName))
+                    cmd.Parameters.AddWithValue("@PmName", CurrentPmName);
+                if (!string.IsNullOrEmpty(CurrentPmPhone))
+                    cmd.Parameters.AddWithValue("@PmPhone", CurrentPmPhone);
+                if (!string.IsNullOrEmpty(CurrentPmCell))
+                    cmd.Parameters.AddWithValue("@PmCell", CurrentPmCell);
+                if (!string.IsNullOrEmpty(CurrentPmEmail))
+                    cmd.Parameters.AddWithValue("@PmEmail", CurrentPmEmail);
+                cmd.Parameters.AddWithValue("@PmID", SelectedCustPmID);
+                cmd.Parameters.AddWithValue("@PmActive", CurrentPmActive);
+
+                int rowsAffected = cmd.ExecuteNonQuery();
+            }
+        }
+
+        private void UpdateManuf()
+        {
+            if (!string.IsNullOrEmpty(SelectedManufName))
+            {
+                sqlquery = "UPDATE tblManufacturers SET Manuf_Name=@ManufName, Address=@Address, Address2=@Address2, City=@City, State=@State, ZIP=@Zip, Phone=@Phone, FAX=@Fax, Contact_Name=@ContactName, Contact_Phone=@ContactPhone, Contact_Email=@ContactEmail, Active=@Active WHERE Manuf_ID=@ManufID";
+                using (cmd = new SqlCommand(sqlquery, dbConnection.Connection))
+                {
+                    if (!string.IsNullOrEmpty(SelectedManufName))
+                        cmd.Parameters.AddWithValue("@ManufName", SelectedManufName);
+                    else cmd.Parameters.AddWithValue("@ManufName", DBNull.Value);
+                    if (!string.IsNullOrEmpty(SelectedManufAddress))
+                        cmd.Parameters.AddWithValue("@Address", SelectedManufAddress);
+                    else cmd.Parameters.AddWithValue("@Address", DBNull.Value);
+                    if (!string.IsNullOrEmpty(SelectedManufAddress2))
+                        cmd.Parameters.AddWithValue("@Address2", SelectedManufAddress2);
+                    else cmd.Parameters.AddWithValue("@Address2", DBNull.Value);
+                    if (!string.IsNullOrEmpty(SelectedManufCity))
+                        cmd.Parameters.AddWithValue("@City", SelectedManufCity);
+                    else cmd.Parameters.AddWithValue("@City", DBNull.Value);
+                    if (!string.IsNullOrEmpty(SelectedManufState))
+                        cmd.Parameters.AddWithValue("@State", SelectedManufState);
+                    else cmd.Parameters.AddWithValue("@State", DBNull.Value);
+                    if (!string.IsNullOrEmpty(SelectedManufZip))
+                        cmd.Parameters.AddWithValue("@Zip", SelectedManufZip);
+                    else cmd.Parameters.AddWithValue("@Zip", DBNull.Value);
+                    if (!string.IsNullOrEmpty(SelectedManufPhone))
+                        cmd.Parameters.AddWithValue("@Phone", SelectedManufPhone);
+                    else cmd.Parameters.AddWithValue("@Phone", DBNull.Value);
+                    if (!string.IsNullOrEmpty(SelectedManufFax))
+                        cmd.Parameters.AddWithValue("@Fax", SelectedManufFax);
+                    else cmd.Parameters.AddWithValue("@Fax", DBNull.Value);
+                    if (!string.IsNullOrEmpty(SelectedManufContactName))
+                        cmd.Parameters.AddWithValue("@ContactName", SelectedManufContactName);
+                    else cmd.Parameters.AddWithValue("@ContactName", DBNull.Value);
+                    if (!string.IsNullOrEmpty(SelectedManufContactPhone))
+                        cmd.Parameters.AddWithValue("@ContactPhone", SelectedManufContactPhone);
+                    else cmd.Parameters.AddWithValue("@ContactPhone", DBNull.Value);
+                    if (!string.IsNullOrEmpty(SelectedManufContactEmail))
+                        cmd.Parameters.AddWithValue("@ContactEmail", SelectedManufContactEmail);
+                    else cmd.Parameters.AddWithValue("@ContactEmail", DBNull.Value);
+                    if (SelectedManufID!=0)
+                        cmd.Parameters.AddWithValue("@ManufID", SelectedManufID);
+                    else cmd.Parameters.AddWithValue("@ManufID", DBNull.Value);
+                    cmd.Parameters.AddWithValue("@Active", SelectedManufActive);
+
+                    try
+                    {
+                        int rowsAffected = cmd.ExecuteNonQuery();
+
+                    }
+                    catch (SqlException e)
+                    {
+                        Console.WriteLine(e);
+                    }
+                }
+            }
+        }
+
+        private void CreateManuf()
+        {
+            if (!string.IsNullOrEmpty(SelectedManufName))
+            {
+                sqlquery = "INSERT INTO tblManufacturers(Manuf_Name, Address, Address2, City, State, ZIP, Phone, FAX, Contact_Name, Contact_Phone, Contact_Email, Active) OUTPUT INSERTED.Manuf_ID VALUES (@ManufName, @Address, @Address2, @City, @State, @Zip, @Phone, @Fax, @ContactName, @ContactPhone, @ContactEmail, @Active)";
+
+                using (cmd = new SqlCommand(sqlquery, dbConnection.Connection))
+                {
+                    if (!string.IsNullOrEmpty(SelectedManufName))
+                        cmd.Parameters.AddWithValue("@ManufName", SelectedManufName);
+                    else cmd.Parameters.AddWithValue("@ManufName", DBNull.Value);
+                    if (!string.IsNullOrEmpty(SelectedManufAddress))
+                        cmd.Parameters.AddWithValue("@Address", SelectedManufAddress);
+                    else cmd.Parameters.AddWithValue("@Address", DBNull.Value);
+                    if (!string.IsNullOrEmpty(SelectedManufAddress2))
+                        cmd.Parameters.AddWithValue("@Address2", SelectedManufAddress2);
+                    else cmd.Parameters.AddWithValue("@Address2", DBNull.Value);
+                    if (!string.IsNullOrEmpty(SelectedManufCity))
+                        cmd.Parameters.AddWithValue("@City", SelectedManufCity);
+                    else cmd.Parameters.AddWithValue("@City", DBNull.Value);
+                    if (!string.IsNullOrEmpty(SelectedManufState))
+                        cmd.Parameters.AddWithValue("@State", SelectedManufState);
+                    else cmd.Parameters.AddWithValue("@State", DBNull.Value);
+                    if (!string.IsNullOrEmpty(SelectedManufZip))
+                        cmd.Parameters.AddWithValue("@Zip", SelectedManufZip);
+                    else cmd.Parameters.AddWithValue("@Zip", DBNull.Value);
+                    if (!string.IsNullOrEmpty(SelectedManufPhone))
+                        cmd.Parameters.AddWithValue("@Phone", SelectedManufPhone);
+                    else cmd.Parameters.AddWithValue("@Phone", DBNull.Value);
+                    if (!string.IsNullOrEmpty(SelectedManufFax))
+                        cmd.Parameters.AddWithValue("@Fax", SelectedManufFax);
+                    else cmd.Parameters.AddWithValue("@Fax", DBNull.Value);
+                    if (!string.IsNullOrEmpty(SelectedManufContactName))
+                        cmd.Parameters.AddWithValue("@ContactName", SelectedManufContactName);
+                    else cmd.Parameters.AddWithValue("@ContactName", DBNull.Value);
+                    if (!string.IsNullOrEmpty(SelectedManufContactPhone))
+                        cmd.Parameters.AddWithValue("@ContactPhone", SelectedManufContactPhone);
+                    else cmd.Parameters.AddWithValue("@ContactPhone", DBNull.Value);
+                    if (!string.IsNullOrEmpty(SelectedManufContactEmail))
+                        cmd.Parameters.AddWithValue("@ContactEmail", SelectedManufContactEmail);
+                    else cmd.Parameters.AddWithValue("@ContactEmail", DBNull.Value);
+                    cmd.Parameters.AddWithValue("@Active", SelectedManufActive);
+
+                    try
+                    {
+                        int insertedCustomerId = (int)cmd.ExecuteScalar();
+                        SelectedManufID = insertedCustomerId;
+                        ActionManufState = "UpdateManuf";
+                    }
+                    catch (SqlException e)
+                    {
+                        Console.WriteLine(e);
+                    }
+                }
+            }
+        }
+
+        private void UpdateNote()
+        {
+            sqlquery = "UPDATE tblNotes SET Notes_Note=@NotesNote, Notes_DateAdded=@NotesDateAdded, Notes_User=@NotesUser WHERE Notes_ID=@NotesID";
+
+            using (cmd = new SqlCommand(sqlquery, dbConnection.Connection))
+            {
+                if (!string.IsNullOrEmpty(CurrentNotesNote))
+                    cmd.Parameters.AddWithValue("@NotesNote", CurrentNotesNote);
+                else cmd.Parameters.AddWithValue("@NotesNote", DBNull.Value);
+                if (!CurrentNotesDateAdded.Equals(DateTime.MinValue))
+                    cmd.Parameters.AddWithValue("@NotesDateAdded", CurrentNotesDateAdded);
+                else cmd.Parameters.AddWithValue("@NotesDateAdded", DBNull.Value);
+                if (!string.IsNullOrEmpty(CurrnetNoteUser))
+                    cmd.Parameters.AddWithValue("@NotesUser", CurrnetNoteUser);
+                else cmd.Parameters.AddWithValue("@NotesUser", DBNull.Value);
+                if (CurrentNoteID != 0)
+                    cmd.Parameters.AddWithValue("@NotesID", CurrentNoteID);
+                else cmd.Parameters.AddWithValue("@NotesID", DBNull.Value);
+            }
+            int rowsAffected = cmd.ExecuteNonQuery();
+        }
+
+        private void CreateNote()
+        {
+            sqlquery = "INSERT INTO tblNotes(Notes_PK, Notes_PK_Desc, Notes_Note, Notes_DateAdded, Notes_User) OUTPUT INSERTED.Notes_ID VALUES (@NotesPK, @NotesDesc, @NotesNote, @NotesDateAdded, @NotesUser)";
+            string notesDesc = "";
+            int notesPK = 0;
+            switch (CurrentNotesDesc)
+            {
+                case "Customer":
+                    notesDesc = "Customer";
+                    notesPK = SelectedCustomerID;
+                    break;
+                case "ProjectManager":
+                    notesDesc = "ProjectManager";
+                    notesPK = SelectedCustPmID;
+                    break;
+                case "Superintendent":
+                    notesDesc = "Superintendent";
+                    notesPK = SelectedCustSupID;
+                    break;
+                case "CustomerContact":
+                    notesDesc = "CustomerContact";
+                    notesPK = SelectedCustSubmID;
+                    break;
+                case "Manuf":
+                    notesDesc = "Manuf";
+                    notesPK = SelectedManufID;
+                    break;
+
+            }
+            using (cmd = new SqlCommand(sqlquery, dbConnection.Connection))
+            {
+                if (notesPK != 0)
+                    cmd.Parameters.AddWithValue("@NotesPK", notesPK);
+                else cmd.Parameters.AddWithValue("@NotesPK", DBNull.Value);
+                if (!string.IsNullOrEmpty(CurrentNotesDesc))
+                    cmd.Parameters.AddWithValue("@NotesDesc", notesDesc);
+                else cmd.Parameters.AddWithValue("@NotesDesc", DBNull.Value);
+                if (!string.IsNullOrEmpty(CurrentNotesNote))
+                    cmd.Parameters.AddWithValue("@NotesNote", CurrentNotesNote);
+                else cmd.Parameters.AddWithValue("@NotesNote", DBNull.Value);
+                if (!CurrentNotesDateAdded.Equals(DateTime.MinValue))
+                    cmd.Parameters.AddWithValue("@NotesDateAdded", CurrentNotesDateAdded);
+                else cmd.Parameters.AddWithValue("@NotesDateAdded", DBNull.Value);
+                if (!string.IsNullOrEmpty(CurrnetNoteUser))
+                    cmd.Parameters.AddWithValue("@NotesUser", CurrnetNoteUser);
+                else cmd.Parameters.AddWithValue("@NotesUser", DBNull.Value);
+
+                try
+                {
+                    int insertedNoteId = (int)cmd.ExecuteScalar();
+                    CurrentNoteID = insertedNoteId;
+                    ActionNoteState = "UpdateNote";
+                }
+                catch (SqlException e)
+                {
+                    Console.WriteLine(e);
+                }
+            }
+        }
+
+        private void UpdateCustomer()
+        {
+            if (!string.IsNullOrEmpty(SelectedCustFullName))
+            {
+                sqlquery = "UPDATE tblCustomers SET Short_Name=@ShortName, Full_Name=@FullName, PO_Box=@PoNumber, Address=@Address, City=@City, State=@State, ZIP=@Zip, Phone=@Phone, FAX=@Fax, Email=@Email, Active=@Active WHERE Customer_ID=@CustomerID";
+
+                using (cmd = new SqlCommand(sqlquery, dbConnection.Connection))
+                {
+                    if (!string.IsNullOrEmpty(SelectedCustFullName))
+                        cmd.Parameters.AddWithValue("@FullName", SelectedCustFullName);
+                    else cmd.Parameters.AddWithValue("@FullName", DBNull.Value);
+                    if (!string.IsNullOrEmpty(SelectedCustShortName))
+                        cmd.Parameters.AddWithValue("@ShortName", SelectedCustShortName);
+                    else cmd.Parameters.AddWithValue("@ShortName", DBNull.Value);
+                    if (!string.IsNullOrEmpty(SelectedCustPoNumber))
+                        cmd.Parameters.AddWithValue("@PoNumber", SelectedCustPoNumber);
+                    else cmd.Parameters.AddWithValue("@PoNumber", DBNull.Value);
+                    if (!string.IsNullOrEmpty(SelectedCustAddress))
+                        cmd.Parameters.AddWithValue("@Address", SelectedCustAddress);
+                    else cmd.Parameters.AddWithValue("@Address", DBNull.Value);
+                    if (!string.IsNullOrEmpty(SelectedCustCity))
+                        cmd.Parameters.AddWithValue("@City", SelectedCustCity);
+                    else cmd.Parameters.AddWithValue("@City", DBNull.Value);
+                    if (!string.IsNullOrEmpty(SelectedCustState))
+                        cmd.Parameters.AddWithValue("@State", SelectedCustState);
+                    else cmd.Parameters.AddWithValue("@State", DBNull.Value);
+                    if (!string.IsNullOrEmpty(SelectedCustZip))
+                        cmd.Parameters.AddWithValue("@Zip", SelectedCustZip);
+                    else cmd.Parameters.AddWithValue("@Zip", DBNull.Value);
+                    if (!string.IsNullOrEmpty(SelectedCustPhone))
+                        cmd.Parameters.AddWithValue("@Phone", SelectedCustPhone);
+                    else cmd.Parameters.AddWithValue("@Phone", DBNull.Value);
+                    if (!string.IsNullOrEmpty(SelectedCustFax))
+                        cmd.Parameters.AddWithValue("@Fax", SelectedCustFax);
+                    else cmd.Parameters.AddWithValue("@Fax", DBNull.Value);
+                    if (!string.IsNullOrEmpty(SelectedCustEmail))
+                        cmd.Parameters.AddWithValue("@Email", SelectedCustEmail);
+                    else cmd.Parameters.AddWithValue("@Email", DBNull.Value);
+                    cmd.Parameters.AddWithValue("@Active", SelectedCustActive);
+                    cmd.Parameters.AddWithValue("@CustomerID", SelectedCustomerID);
+                   
+                    int rowsAffected = cmd.ExecuteNonQuery();
+                }
+            }
+        }
+
+        private void CreateCustomer()
+        {
+            if (!string.IsNullOrEmpty(SelectedCustFullName))
+            {
+                sqlquery = "INSERT INTO tblCustomers(Short_Name, Full_Name, PO_Box, Address, City, State, ZIP, Phone, FAX, Email, Active) OUTPUT INSERTED.Customer_ID VALUES (@ShortName, @FullName, @PoNumber, @Address, @City, @State, @Zip, @Phone, @Fax, @Email, @Active)";
+
+                using (cmd = new SqlCommand(sqlquery, dbConnection.Connection))
+                {
+                    if (!string.IsNullOrEmpty(SelectedCustFullName))
+                        cmd.Parameters.AddWithValue("@FullName", SelectedCustFullName);
+                    else cmd.Parameters.AddWithValue("@FullName", DBNull.Value);
+                    if (!string.IsNullOrEmpty(SelectedCustShortName))
+                        cmd.Parameters.AddWithValue("@ShortName", SelectedCustShortName);
+                    else cmd.Parameters.AddWithValue("@ShortName", DBNull.Value);
+                    if (!string.IsNullOrEmpty(SelectedCustPoNumber))
+                        cmd.Parameters.AddWithValue("@PoNumber", SelectedCustPoNumber);
+                    else cmd.Parameters.AddWithValue("@PoNumber", DBNull.Value);
+                    if (!string.IsNullOrEmpty(SelectedCustAddress))
+                        cmd.Parameters.AddWithValue("@Address", SelectedCustAddress);
+                    else cmd.Parameters.AddWithValue("@Address", DBNull.Value);
+                    if (!string.IsNullOrEmpty(SelectedCustCity))
+                        cmd.Parameters.AddWithValue("@City", SelectedCustCity);
+                    else cmd.Parameters.AddWithValue("@City", DBNull.Value);
+                    if (!string.IsNullOrEmpty(SelectedCustState))
+                        cmd.Parameters.AddWithValue("@State", SelectedCustState);
+                    else cmd.Parameters.AddWithValue("@State", DBNull.Value);
+                    if (!string.IsNullOrEmpty(SelectedCustZip))
+                        cmd.Parameters.AddWithValue("@Zip", SelectedCustZip);
+                    else cmd.Parameters.AddWithValue("@Zip", DBNull.Value);
+                    if (!string.IsNullOrEmpty(SelectedCustPhone))
+                        cmd.Parameters.AddWithValue("@Phone", SelectedCustPhone);
+                    else cmd.Parameters.AddWithValue("@Phone", DBNull.Value);
+                    if (!string.IsNullOrEmpty(SelectedCustFax))
+                        cmd.Parameters.AddWithValue("@Fax", SelectedCustFax);
+                    else cmd.Parameters.AddWithValue("@Fax", DBNull.Value);
+                    if (!string.IsNullOrEmpty(SelectedCustEmail))
+                        cmd.Parameters.AddWithValue("@Email", SelectedCustEmail);
+                    else cmd.Parameters.AddWithValue("@Email", DBNull.Value);
+                    cmd.Parameters.AddWithValue("@Active", SelectedCustActive);
+
+                    try
+                    {
+                        int insertedCustomerId = (int)cmd.ExecuteScalar();
+                        SelectedCustomerID = insertedCustomerId;
+                        ActionState = "UpdateCustomer";
+                    }
+                    catch(SqlException e)
+                    {
+                        Console.WriteLine(e);
+                    }
+                }
+            }
+        }
+
+        public void ClearManuf()
+        {
+            SelectedManufName = "";
+            SelectedManufAddress = "";
+            SelectedManufAddress2 = "";
+            SelectedManufCity = "";
+            SelectedManufState = "";
+            SelectedManufZip = "";
+            SelectedManufPhone = "";
+            SelectedManufFax = "";
+            SelectedManufContactName = "";
+            SelectedManufContactPhone = "";
+            SelectedManufContactEmail = "";
+            SelectedManufActive = false;
+            
+            Note noteItem = new Note();
+            ManufNotes = new ObservableCollection<Note>();
+            ManufNotes.Add(noteItem);
+
+            ActionManufState = "CreateManuf";
+        }
+
+        public void ClearCustomer()
+        {
+            SelectedCustomerID = 0;
+            SelectedCustFullName = "";
+            SelectedCustShortName = "";
+            SelectedCustPoNumber = "";
+            SelectedCustAddress = "";
+            SelectedCustCity = "";
+            SelectedCustState = "";
+            SelectedCustZip = "";
+            SelectedCustPhone = "";
+            SelectedCustFax = "";
+            SelectedCustEmail = "";
+            SelectedCustActive = false;
+
+            Note noteItem = new Note();
+            CustomerNotes = new ObservableCollection<Note>();
+            CustomerNotes.Add(noteItem);
+
+            CustPMNotes = new ObservableCollection<Note>();
+            CustPMNotes.Add(noteItem);
+
+            CustSuptNotes = new ObservableCollection<Note>();
+            CustSuptNotes.Add(noteItem);
+
+            CustSubmNotes = new ObservableCollection<Note>();
+            CustSubmNotes.Add(noteItem);
+
+            ProjectManager projectManager = new ProjectManager();
+            CustPMs = new ObservableCollection<ProjectManager>();
+            CustPMs.Add(projectManager);
+
+            CustomerContact customerContact = new CustomerContact();
+            CustContacts = new ObservableCollection<CustomerContact>();
+            CustContacts.Add(customerContact);
+
+            Superintendent superintendent = new Superintendent();
+            CustSupts = new ObservableCollection<Superintendent>();
+            CustSupts.Add(superintendent);
+
+            ActionState = "CreateCustomer";
+        }
+
+        public void ViewManuf(int manufID)
+        {
+            sqlquery = "SELECT * FROM tblManufacturers WHERE Manuf_ID=" + manufID;
+            cmd = new SqlCommand(sqlquery, dbConnection.Connection);
+            sda = new SqlDataAdapter(cmd);
+            ds = new DataSet();
+            sda.Fill(ds);
+            DataRow firstRow = ds.Tables[0].Rows[0];
+            SelectedManufID = int.Parse(firstRow["Manuf_ID"].ToString());
+
+            if (!firstRow.IsNull("Manuf_Name"))
+                SelectedManufName = firstRow["Manuf_Name"].ToString();
+            if (!firstRow.IsNull("Address"))
+                SelectedManufAddress = firstRow["Address"].ToString();
+            if (!firstRow.IsNull("Address2"))
+                SelectedManufAddress2 = firstRow["Address2"].ToString();
+            if (!firstRow.IsNull("City"))
+                SelectedManufCity = firstRow["City"].ToString();
+            if (!firstRow.IsNull("State"))
+                SelectedManufState = firstRow["State"].ToString();
+            if (!firstRow.IsNull("ZIP"))
+                SelectedManufZip = firstRow["ZIP"].ToString();
+            if (!firstRow.IsNull("Phone"))
+                SelectedManufPhone = firstRow["Phone"].ToString();
+            if (!firstRow.IsNull("FAX"))
+                SelectedManufFax = firstRow["FAX"].ToString();
+            if (!firstRow.IsNull("Contact_Name"))
+                SelectedManufContactName = firstRow["Contact_Name"].ToString();
+            if (!firstRow.IsNull("Contact_Phone"))
+                SelectedManufContactPhone = firstRow["Contact_Phone"].ToString();
+            if (!firstRow.IsNull("Contact_Email"))
+                SelectedManufContactEmail = firstRow["Contact_Email"].ToString();
+            if (!firstRow.IsNull("Active"))
+                SelectedManufActive = firstRow.Field<Boolean>("Active");
+
+            sqlquery = "SELECT * FROM tblNotes WHERE Notes_PK_Desc='Manuf' AND Notes_PK=" + manufID;
+            cmd = new SqlCommand(sqlquery, dbConnection.Connection);
+            sda = new SqlDataAdapter(cmd);
+            ds = new DataSet();
+            sda.Fill(ds);
+
+            ObservableCollection<Note> st_manufNotes = new ObservableCollection<Note>();
+            foreach (DataRow row in ds.Tables[0].Rows)
+            {
+                int _notesID = 0;
+                int _notesPK = 0;
+                string _notesPKDesc = "";
+                string _notesNote = "";
+                DateTime _notesDateAdded = new DateTime();
+                string _notesUser = "";
+                string _notesUserName = "";
+
+                if (!row.IsNull("Notes_ID"))
+                    _notesID = int.Parse(row["Notes_ID"].ToString());
+                if (!row.IsNull("Notes_PK"))
+                    _notesPK = int.Parse(row["Notes_PK"].ToString());
+                if (!row.IsNull("Notes_PK_Desc"))
+                    _notesPKDesc = row["Notes_PK_Desc"].ToString();
+                if (!row.IsNull("Notes_Note"))
+                    _notesNote = row["Notes_Note"].ToString();
+                if (!row.IsNull("Notes_DateAdded"))
+                    _notesDateAdded = row.Field<DateTime>("Notes_DateAdded");
+                if (!row.IsNull("Notes_User"))
+                    _notesUser = row["Notes_User"].ToString();
+                if (!row.IsNull("Notes_UserName"))
+                    _notesUserName = row["Notes_UserName"].ToString();
+                st_manufNotes.Add(new Note
+                {
+                    NoteID = _notesID,
+                    NotePK = _notesPK,
+                    NotesPKDesc = _notesPKDesc,
+                    NotesNote = _notesNote,
+                    NotesDateAdded = _notesDateAdded,
+                    NoteUser = _notesUser,
+                    NoteUserName = _notesUserName
+                });
+            }
+            st_manufNotes.Add(new Note());
+            ManufNotes = st_manufNotes;
+            ActionManufState = "UpdateManuf";
         }
 
         public void ViewCustomer(int customerID)
@@ -71,29 +773,30 @@ namespace WpfApp.ViewModel
             sda.Fill(ds);
 
             DataRow firstRow = ds.Tables[0].Rows[0];
+            ActionState = "UpdateCustomer";
             SelectedCustomerID = customerID;
             if (!firstRow.IsNull("Full_Name"))
-                SelectedFullName = firstRow["Full_Name"].ToString();
+                SelectedCustFullName = firstRow["Full_Name"].ToString();
             if (!firstRow.IsNull("Short_Name"))
-                SelectedShortName = firstRow["Short_Name"].ToString();
+                SelectedCustShortName = firstRow["Short_Name"].ToString();
             if (!firstRow.IsNull("PO_Box"))
-                SelectedPoNumber = firstRow["PO_Box"].ToString();
+                SelectedCustPoNumber = firstRow["PO_Box"].ToString();
             if (!firstRow.IsNull("Address"))
-                SelectedAddress = firstRow["Address"].ToString();
+                SelectedCustAddress = firstRow["Address"].ToString();
             if (!firstRow.IsNull("City"))
-                SelectedCity = firstRow["City"].ToString();
+                SelectedCustCity = firstRow["City"].ToString();
             if (!firstRow.IsNull("State"))
-                SelectedState = firstRow["State"].ToString();
+                SelectedCustState = firstRow["State"].ToString();
             if (!firstRow.IsNull("ZIP"))
-                SelectedZip = firstRow["ZIP"].ToString();
+                SelectedCustZip = firstRow["ZIP"].ToString();
             if (!firstRow.IsNull("Phone"))
-                SelectedPhone = firstRow["Phone"].ToString();
+                SelectedCustPhone = firstRow["Phone"].ToString();
             if (!firstRow.IsNull("FAX"))
-                SelectedFax = firstRow["FAX"].ToString();
+                SelectedCustFax = firstRow["FAX"].ToString();
             if (!firstRow.IsNull("Email"))
-                SelectedEmail = firstRow["Email"].ToString();
+                SelectedCustEmail = firstRow["Email"].ToString();
             if (!firstRow.IsNull("Active"))
-                SelectedActive = firstRow.Field<Boolean>("Active");
+                SelectedCustActive = firstRow.Field<Boolean>("Active");
 
             sqlquery = "SELECT * FROM tblNotes WHERE Notes_PK_Desc='Customer' AND Notes_PK=" + customerID;
             cmd = new SqlCommand(sqlquery, dbConnection.Connection);
@@ -184,10 +887,10 @@ namespace WpfApp.ViewModel
                 });
             }
             st_pmNotes.Add(new Note());
-            PMNotes = st_pmNotes;
+            CustPMNotes = st_pmNotes;
 
             // Superintendents Notes
-            sqlquery = "SELECT * FROM tblNotes INNER JOIN (SELECT * FROM tblSuperintendents WHERE Customer_ID = "+ customerID +") AS tblSupt ON tblNotes.Notes_PK = tblSupt.Sup_ID WHERE Notes_PK_Desc = 'Superintendents'";
+            sqlquery = "SELECT * FROM tblNotes INNER JOIN (SELECT * FROM tblSuperintendents WHERE Customer_ID = "+ customerID +") AS tblSupt ON tblNotes.Notes_PK = tblSupt.Sup_ID WHERE Notes_PK_Desc = 'Superintendent'";
             cmd = new SqlCommand(sqlquery, dbConnection.Connection);
             sda = new SqlDataAdapter(cmd);
             ds = new DataSet();
@@ -230,7 +933,7 @@ namespace WpfApp.ViewModel
                 });
             }
             st_suptNotes.Add(new Note());
-            SuptNotes = st_pmNotes;
+            CustSuptNotes = st_suptNotes;
 
             // CustomerContacts Notes
             sqlquery = "SELECT * FROM tblNotes INNER JOIN (SELECT * FROM tblCustomerContacts WHERE Customer_ID = " + customerID + ") AS tblSupt ON tblNotes.Notes_PK = tblSupt.CC_ID WHERE Notes_PK_Desc = 'CustomerContact'";
@@ -276,7 +979,7 @@ namespace WpfApp.ViewModel
                 });
             }
             st_ccNotes.Add(new Note());
-            SubmNotes = st_ccNotes;
+            CustSubmNotes = st_ccNotes;
 
             // Project Managers for customers
             sqlquery = "select * from tblProjectManagers WHERE Customer_ID="+ customerID;
@@ -284,6 +987,12 @@ namespace WpfApp.ViewModel
             sda = new SqlDataAdapter(cmd);
             ds = new DataSet();
             sda.Fill(ds);
+
+            if (ds.Tables[0].Rows.Count > 0)
+            {
+                firstRow = ds.Tables[0].Rows[0];
+                SelectedCustPmID = int.Parse(firstRow["PM_ID"].ToString());
+            }
             ObservableCollection<ProjectManager> st_pm = new ObservableCollection<ProjectManager>();
             foreach (DataRow row in ds.Tables[0].Rows)
             {
@@ -319,7 +1028,6 @@ namespace WpfApp.ViewModel
                     Active = _active
                 });
             }
-
             st_pm.Add(new ProjectManager());
             CustPMs = st_pm;
 
@@ -328,6 +1036,12 @@ namespace WpfApp.ViewModel
             sda = new SqlDataAdapter(cmd);
             ds = new DataSet();
             sda.Fill(ds);
+
+            if (ds.Tables[0].Rows.Count > 0)
+            {
+                firstRow = ds.Tables[0].Rows[0];
+                SelectedCustSupID = int.Parse(firstRow["Sup_ID"].ToString());
+            }
             ObservableCollection<Superintendent> st_supt = new ObservableCollection<Superintendent>();
             foreach (DataRow row in ds.Tables[0].Rows)
             {
@@ -372,6 +1086,12 @@ namespace WpfApp.ViewModel
             sda = new SqlDataAdapter(cmd);
             ds = new DataSet();
             sda.Fill(ds);
+
+            if (ds.Tables[0].Rows.Count > 0)
+            {
+                firstRow = ds.Tables[0].Rows[0];
+                SelectedCustSubmID = int.Parse(firstRow["CC_ID"].ToString());
+            }
             ObservableCollection<CustomerContact> st_customerContacts = new ObservableCollection<CustomerContact>();
             foreach (DataRow row in ds.Tables[0].Rows)
             {
@@ -726,7 +1446,7 @@ namespace WpfApp.ViewModel
             Superintendents = st_superintendents;
 
             cmd.Dispose();
-            dbConnection.Close();
+            //dbConnection.Close();
         }
 
         private ObservableCollection<Acronym> _acronyms;
@@ -909,38 +1629,38 @@ namespace WpfApp.ViewModel
             }
         }
 
-        private ObservableCollection<Note> _pmNotes;
+        private ObservableCollection<Note> _custPmNotes;
 
-        public ObservableCollection<Note> PMNotes
+        public ObservableCollection<Note> CustPMNotes
         {
-            get { return _pmNotes; }
+            get { return _custPmNotes; }
             set
             {
-                _pmNotes = value;
+                _custPmNotes = value;
                 OnPropertyChanged();
             }
         }
 
-        private ObservableCollection<Note> _submNotes;
+        private ObservableCollection<Note> _custSubmNotes;
 
-        public ObservableCollection<Note> SubmNotes
+        public ObservableCollection<Note> CustSubmNotes
         {
-            get { return _submNotes; }
+            get { return _custSubmNotes; }
             set
             {
-                _submNotes = value;
+                _custSubmNotes = value;
                 OnPropertyChanged();
             }
         }
 
-        private ObservableCollection<Note> _suptNotes;
+        private ObservableCollection<Note> _custSuptNotes;
 
-        public ObservableCollection<Note> SuptNotes
+        public ObservableCollection<Note> CustSuptNotes
         {
-            get { return _suptNotes; }
+            get { return _custSuptNotes; }
             set
             {
-                _suptNotes = value;
+                _custSuptNotes = value;
                 OnPropertyChanged();
             }
         }
@@ -999,6 +1719,25 @@ namespace WpfApp.ViewModel
 
         public RelayCommand ViewCustomerCommand { get; set; }
 
+        public RelayCommand ViewManufCommand { get; set; }
+
+        public RelayCommand NewCustomerCommand { get; set; }
+
+        public RelayCommand NewManufCommand { get; set; }
+
+        private int _selectedManufID;
+
+        public int SelectedManufID
+        {
+            get { return _selectedManufID; }
+            set
+            {
+                _selectedManufID = value;
+                OnPropertyChanged();
+
+            }
+        }
+
         private int _selectedCustomerID;
 
         public int SelectedCustomerID
@@ -1012,147 +1751,1033 @@ namespace WpfApp.ViewModel
             }
         }
 
-        private string _selectedFullName;
+        private int _selectedCustPmID;
 
-        public string SelectedFullName
+        public int SelectedCustPmID
         {
-            get { return _selectedFullName; }
+            get { return _selectedCustPmID; }
             set
             {
-                _selectedFullName = value;
+                _selectedCustPmID = value;
                 OnPropertyChanged();
 
             }
         }
 
-        private string _selectedShortName;
+        private int _selectedCustSuptID;
 
-        public string SelectedShortName
+        public int SelectedCustSupID
         {
-            get { return _selectedShortName; }
+            get { return _selectedCustSuptID; }
             set
             {
-                _selectedShortName = value;
+                _selectedCustSuptID = value;
                 OnPropertyChanged();
 
             }
         }
 
-        private bool _selectedActive;
+        private int _selectedCustSubmID;
 
-        public bool SelectedActive
+        public int SelectedCustSubmID
         {
-            get { return _selectedActive; }
+            get { return _selectedCustSubmID; }
             set
             {
-                _selectedActive = value;
+                _selectedCustSubmID = value;
                 OnPropertyChanged();
 
             }
         }
 
-        private string _selectedPoNumber;
+        private string _selectedCustFullName;
 
-        public string SelectedPoNumber
+        public string SelectedCustFullName
         {
-            get { return _selectedPoNumber; }
+            get { return _selectedCustFullName; }
             set
             {
-                _selectedPoNumber = value;
+                _selectedCustFullName = value;
+                OnPropertyChanged();
+                switch (ActionState)
+                {
+                    case "CreateCustomer":
+                        CreateCustomer();
+                        break;
+                    case "UpdateCustomer":
+                        UpdateCustomer();
+                        break;
+                }
+            }
+        }
+
+        private string _selectedCustShortName;
+
+        public string SelectedCustShortName
+        {
+            get { return _selectedCustShortName; }
+            set
+            {
+                _selectedCustShortName = value;
+                OnPropertyChanged();
+                switch (ActionState)
+                {
+                    case "CreateCustomer":
+                        CreateCustomer();
+                        break;
+                    case "UpdateCustomer":
+                        UpdateCustomer();
+                        break;
+                }
+            }
+        }
+
+        private bool _selectedCustActive;
+
+        public bool SelectedCustActive
+        {
+            get { return _selectedCustActive; }
+            set
+            {
+                _selectedCustActive = value;
+                OnPropertyChanged();
+                switch (ActionState)
+                {
+                    case "CreateCustomer":
+                        CreateCustomer();
+                        break;
+                    case "UpdateCustomer":
+                        UpdateCustomer();
+                        break;
+                }
+            }
+        }
+
+        private string _selectedCustPoNumber;
+
+        public string SelectedCustPoNumber
+        {
+            get { return _selectedCustPoNumber; }
+            set
+            {
+                _selectedCustPoNumber = value;
+                OnPropertyChanged();
+                switch (ActionState)
+                {
+                    case "CreateCustomer":
+                        CreateCustomer();
+                        break;
+                    case "UpdateCustomer":
+                        UpdateCustomer();
+                        break;
+                }
+            }
+        }
+
+        private string _selectedCustAddress;
+
+        public string SelectedCustAddress
+        {
+            get { return _selectedCustAddress; }
+            set
+            {
+                _selectedCustAddress = value;
+                OnPropertyChanged();
+                switch (ActionState)
+                {
+                    case "CreateCustomer":
+                        CreateCustomer();
+                        break;
+                    case "UpdateCustomer":
+                        UpdateCustomer();
+                        break;
+                }
+            }
+        }
+
+        private string _selectedCustCity;
+
+        public string SelectedCustCity
+        {
+            get { return _selectedCustCity; }
+            set
+            {
+                _selectedCustCity = value;
+                OnPropertyChanged();
+                switch (ActionState)
+                {
+                    case "CreateCustomer":
+                        CreateCustomer();
+                        break;
+                    case "UpdateCustomer":
+                        UpdateCustomer();
+                        break;
+                }
+            }
+        }
+
+        private string _selectedCustPhone;
+
+        public string SelectedCustPhone
+        {
+            get { return _selectedCustPhone; }
+            set
+            {
+                _selectedCustPhone = value;
+                OnPropertyChanged();
+                switch (ActionState)
+                {
+                    case "CreateCustomer":
+                        CreateCustomer();
+                        break;
+                    case "UpdateCustomer":
+                        UpdateCustomer();
+                        break;
+                }
+            }
+        }
+
+        private string _selectedCustState;
+
+        public string SelectedCustState
+        {
+            get { return _selectedCustState; }
+            set
+            {
+                _selectedCustState = value;
+                OnPropertyChanged();
+                switch (ActionState)
+                {
+                    case "CreateCustomer":
+                        CreateCustomer();
+                        break;
+                    case "UpdateCustomer":
+                        UpdateCustomer();
+                        break;
+                }
+            }
+        }
+
+        private string _selectedCustZip;
+
+        public string SelectedCustZip
+        {
+            get { return _selectedCustZip; }
+            set
+            {
+                _selectedCustZip = value;
+                OnPropertyChanged();
+                switch (ActionState)
+                {
+                    case "CreateCustomer":
+                        CreateCustomer();
+                        break;
+                    case "UpdateCustomer":
+                        UpdateCustomer();
+                        break;
+                }
+            }
+        }
+
+        private string _selectedCustFax;
+
+        public string SelectedCustFax
+        {
+            get { return _selectedCustFax; }
+            set
+            {
+                _selectedCustFax = value;
+                OnPropertyChanged();
+                switch (ActionState)
+                {
+                    case "CreateCustomer":
+                        CreateCustomer();
+                        break;
+                    case "UpdateCustomer":
+                        UpdateCustomer();
+                        break;
+                }
+            }
+        }
+
+        private string _selectedCustEmail;
+
+        public string SelectedCustEmail
+        {
+            get { return _selectedCustEmail; }
+            set
+            {
+                _selectedCustEmail = value;
+                OnPropertyChanged();
+                switch (ActionState)
+                {
+                    case "CreateCustomer":
+                        CreateCustomer();
+                        break;
+                    case "UpdateCustomer":
+                        UpdateCustomer();
+                        break;
+                }
+            }
+        }
+
+        private bool _selectedManufActive;
+
+        public bool SelectedManufActive
+        {
+            get { return _selectedManufActive; }
+            set
+            {
+                _selectedManufActive = value;
+                OnPropertyChanged();
+                switch (ActionState)
+                {
+                    case "CreateCustomer":
+                        CreateCustomer();
+                        break;
+                    case "UpdateCustomer":
+                        UpdateCustomer();
+                        break;
+                }
+            }
+        }
+
+        private string _selectedManufName;
+
+        public string SelectedManufName
+        {
+            get { return _selectedManufName; }
+            set
+            {
+                _selectedManufName = value;
+                OnPropertyChanged();
+                switch (ActionManufState)
+                {
+                    case "CreateManuf":
+                        CreateManuf();
+                        break;
+                    case "UpdateManuf":
+                        UpdateManuf();
+                        break;
+                }
+            }
+        }
+
+        private string _selectedManufAddress;
+
+        public string SelectedManufAddress
+        {
+            get { return _selectedManufAddress; }
+            set
+            {
+                _selectedManufAddress = value;
+                OnPropertyChanged();
+                switch (ActionManufState)
+                {
+                    case "CreateManuf":
+                        CreateManuf();
+                        break;
+                    case "UpdateManuf":
+                        UpdateManuf();
+                        break;
+                }
+            }
+        }
+
+        private string _selectedManufAddress2;
+
+        public string SelectedManufAddress2
+        {
+            get { return _selectedManufAddress2; }
+            set
+            {
+                _selectedManufAddress2 = value;
+                OnPropertyChanged();
+                switch (ActionManufState)
+                {
+                    case "CreateManuf":
+                        CreateManuf();
+                        break;
+                    case "UpdateManuf":
+                        UpdateManuf();
+                        break;
+                }
+            }
+        }
+
+        private string _selectedManufCity;
+
+        public string SelectedManufCity
+        {
+            get { return _selectedManufCity; }
+            set
+            {
+                _selectedManufCity = value;
+                OnPropertyChanged();
+                switch (ActionManufState)
+                {
+                    case "CreateManuf":
+                        CreateManuf();
+                        break;
+                    case "UpdateManuf":
+                        UpdateManuf();
+                        break;
+                }
+            }
+        }
+
+        private string _selectedManufState;
+
+        public string SelectedManufState
+        {
+            get { return _selectedManufState; }
+            set
+            {
+                _selectedManufState = value;
+                OnPropertyChanged();
+                switch (ActionManufState)
+                {
+                    case "CreateManuf":
+                        CreateManuf();
+                        break;
+                    case "UpdateManuf":
+                        UpdateManuf();
+                        break;
+                }
+            }
+        }
+
+        private string _selectedManufZip;
+
+        public string SelectedManufZip
+        {
+            get { return _selectedManufZip; }
+            set
+            {
+                _selectedManufZip = value;
+                OnPropertyChanged();
+                switch (ActionManufState)
+                {
+                    case "CreateManuf":
+                        CreateManuf();
+                        break;
+                    case "UpdateManuf":
+                        UpdateManuf();
+                        break;
+                }
+            }
+        }
+
+        private string _selectedManufPhone;
+
+        public string SelectedManufPhone
+        {
+            get { return _selectedManufPhone; }
+            set
+            {
+                _selectedManufPhone = value;
+                OnPropertyChanged();
+                switch (ActionManufState)
+                {
+                    case "CreateManuf":
+                        CreateManuf();
+                        break;
+                    case "UpdateManuf":
+                        UpdateManuf();
+                        break;
+                }
+            }
+        }
+
+        private string _selectedManufFax;
+
+        public string SelectedManufFax
+        {
+            get { return _selectedManufFax; }
+            set
+            {
+                _selectedManufFax = value;
+                OnPropertyChanged();
+                switch (ActionManufState)
+                {
+                    case "CreateManuf":
+                        CreateManuf();
+                        break;
+                    case "UpdateManuf":
+                        UpdateManuf();
+                        break;
+                }
+            }
+        }
+
+        private string _selectedManufContactName;
+
+        public string SelectedManufContactName
+        {
+            get { return _selectedManufContactName; }
+            set
+            {
+                _selectedManufContactName = value;
+                OnPropertyChanged();
+                switch (ActionManufState)
+                {
+                    case "CreateManuf":
+                        CreateManuf();
+                        break;
+                    case "UpdateManuf":
+                        UpdateManuf();
+                        break;
+                }
+            }
+        }
+
+        private string _selectedManufContactPhone;
+
+        public string SelectedManufContactPhone
+        {
+            get { return _selectedManufContactPhone; }
+            set
+            {
+                _selectedManufContactPhone = value;
+                OnPropertyChanged();
+                switch (ActionManufState)
+                {
+                    case "CreateManuf":
+                        CreateManuf();
+                        break;
+                    case "UpdateManuf":
+                        UpdateManuf();
+                        break;
+                }
+            }
+        }
+
+        private string _selectedManufContactEmail;
+
+        public string SelectedManufContactEmail
+        {
+            get { return _selectedManufContactEmail; }
+            set
+            {
+                _selectedManufContactEmail = value;
+                OnPropertyChanged();
+                switch (ActionManufState)
+                {
+                    case "CreateManuf":
+                        CreateManuf();
+                        break;
+                    case "UpdateManuf":
+                        UpdateManuf();
+                        break;
+                }
+            }
+        }
+
+        private string _actionState;
+
+        public string ActionState
+        {
+            get { return _actionState; }
+            set
+            {
+                _actionState = value;
                 OnPropertyChanged();
 
             }
         }
 
-        private string _selectedAddress;
+        private string _actionManufState;
 
-        public string SelectedAddress
+        public string ActionManufState
         {
-            get { return _selectedAddress; }
+            get { return _actionManufState; }
             set
             {
-                _selectedAddress = value;
+                _actionManufState = value;
+                OnPropertyChanged();
+            }
+        }
+
+        private string _actionPmState;
+
+        public string ActionPmState
+        {
+            get { return _actionPmState; }
+            set
+            {
+                _actionPmState = value;
+                OnPropertyChanged();
+            }
+        }
+        
+        private string _actionSupState;
+
+        public string ActionSupState
+        {
+            get { return _actionSupState; }
+            set
+            {
+                _actionSupState = value;
+                OnPropertyChanged();
+            }
+        }
+        
+        private string _actionSubmState;
+
+        public string ActionSubmState
+        {
+            get { return _actionSubmState; }
+            set
+            {
+                _actionSubmState = value;
+                OnPropertyChanged();
+            }
+        }
+
+        private string _actionNoteState;
+
+        public string ActionNoteState
+        {
+            get { return _actionNoteState; }
+            set
+            {
+                _actionNoteState = value;
                 OnPropertyChanged();
 
             }
         }
 
-        private string _selectedCity;
+        private string _currentNotesDesc;
 
-        public string SelectedCity
+        public string CurrentNotesDesc
         {
-            get { return _selectedCity; }
+            get { return _currentNotesDesc; }
             set
             {
-                _selectedCity = value;
+                _currentNotesDesc = value;
+                OnPropertyChanged();
+            }
+        }
+
+        private int _currentNoteID;
+
+        public int CurrentNoteID
+        {
+            get { return _currentNoteID; }
+            set
+            {
+                _currentNoteID = value;
+                OnPropertyChanged();
+            }
+        }
+
+        private string _currentNotesNote;
+
+        public string CurrentNotesNote
+        {
+            get { return _currentNotesNote; }
+            set
+            {
+                _currentNotesNote = value;
+                OnPropertyChanged();
+                switch (ActionNoteState)
+                {
+                    case "CreateNote":
+                        CreateNote();
+                        break;
+                    case "UpdateNote":
+                        UpdateNote();
+                        break;
+                }
+            }
+        }
+
+        private DateTime _currentNotesDateAdded;
+
+        public DateTime CurrentNotesDateAdded
+        {
+            get { return _currentNotesDateAdded; }
+            set
+            {
+                _currentNotesDateAdded = value;
                 OnPropertyChanged();
 
             }
         }
 
-        private string _selectedPhone;
+        private string _currnetNoteUser;
 
-        public string SelectedPhone
+        public string CurrnetNoteUser
         {
-            get { return _selectedPhone; }
+            get { return _currnetNoteUser; }
             set
             {
-                _selectedPhone = value;
+                _currnetNoteUser = value;
                 OnPropertyChanged();
-
             }
         }
 
-        private string _selectedState;
+        private int _currnetNoteID;
 
-        public string SelectedState
+        public int CurrnetNoteID
         {
-            get { return _selectedState; }
+            get { return _currnetNoteID; }
             set
             {
-                _selectedState = value;
+                _currnetNoteID = value;
                 OnPropertyChanged();
-
             }
         }
 
-        private string _selectedZip;
+        private string _currentPmName;
 
-        public string SelectedZip
+        public string CurrentPmName
         {
-            get { return _selectedZip; }
+            get { return _currentPmName; }
             set
             {
-                _selectedZip = value;
+                _currentPmName = value;
                 OnPropertyChanged();
-
+                switch (ActionPmState)
+                {
+                    case "CreatePM":
+                        CreatePM();
+                        break;
+                    case "UpdatePM":
+                        UpdatePM();
+                        break;
+                }
             }
         }
 
-        private string _selectedFax;
+        private string _currentPmPhone;
 
-        public string SelectedFax
+        public string CurrentPmPhone
         {
-            get { return _selectedFax; }
+            get { return _currentPmPhone; }
             set
             {
-                _selectedFax = value;
+                _currentPmPhone = value;
                 OnPropertyChanged();
-
+                switch (ActionPmState)
+                {
+                    case "CreatePM":
+                        CreatePM();
+                        break;
+                    case "UpdatePM":
+                        UpdatePM();
+                        break;
+                }
             }
         }
 
-        private string _selectedEmail;
+        private int _currentPmID;
 
-        public string SelectedEmail
+        public int CurrentPmID
         {
-            get { return _selectedEmail; }
+            get { return _currentPmID; }
             set
             {
-                _selectedEmail = value;
+                _currentPmID = value;
                 OnPropertyChanged();
-
             }
         }
+
+        private string _currentPmCell;
+
+        public string CurrentPmCell
+        {
+            get { return _currentPmCell; }
+            set
+            {
+                _currentPmCell = value;
+                OnPropertyChanged();
+                switch (ActionPmState)
+                {
+                    case "CreatePM":
+                        CreatePM();
+                        break;
+                    case "UpdatePM":
+                        UpdatePM();
+                        break;
+                }
+            }
+        }
+
+        private bool _currentPmActive;
+
+        public bool CurrentPmActive
+        {
+            get { return _currentPmActive; }
+            set
+            {
+                _currentPmActive = value;
+                OnPropertyChanged();
+                switch (ActionPmState)
+                {
+                    case "CreatePM":
+                        CreatePM();
+                        break;
+                    case "UpdatePM":
+                        UpdatePM();
+                        break;
+                }
+            }
+        }
+
+        private string _currentPmEmail;
+
+        public string CurrentPmEmail
+        {
+            get { return _currentPmEmail; }
+            set
+            {
+                _currentPmEmail = value;
+                OnPropertyChanged();
+                switch (ActionPmState)
+                {
+                    case "CreatePM":
+                        CreatePM();
+                        break;
+                    case "UpdatePM":
+                        UpdatePM();
+                        break;
+                }
+            }
+        }
+
+        private string _currentSupName;
+
+        public string CurrentSupName
+        {
+            get { return _currentSupName; }
+            set
+            {
+                _currentSupName = value;
+                OnPropertyChanged();
+                switch (ActionSupState)
+                {
+                    case "CreateSup":
+                        CreateSup();
+                        break;
+                    case "UpdateSup":
+                        UpdateSup();
+                        break;
+                }
+            }
+        }
+
+        private string _currentSupPhone;
+
+        public string CurrentSupPhone
+        {
+            get { return _currentSupPhone; }
+            set
+            {
+                _currentSupPhone = value;
+                OnPropertyChanged();
+                switch (ActionSupState)
+                {
+                    case "CreateSup":
+                        CreateSup();
+                        break;
+                    case "UpdateSup":
+                        UpdateSup();
+                        break;
+                }
+            }
+        }
+
+        private string _currentSupCell;
+
+        public string CurrentSupCell
+        {
+            get { return _currentSupCell; }
+            set
+            {
+                _currentSupCell = value;
+                OnPropertyChanged();
+                switch (ActionSupState)
+                {
+                    case "CreateSup":
+                        CreateSup();
+                        break;
+                    case "UpdateSup":
+                        UpdateSup();
+                        break;
+                }
+            }
+        }
+
+        private string _currentSupEmail;
+
+        public string CurrentSupEmail
+        {
+            get { return _currentSupEmail; }
+            set
+            {
+                _currentSupEmail = value;
+                OnPropertyChanged();
+                switch (ActionSupState)
+                {
+                    case "CreateSup":
+                        CreateSup();
+                        break;
+                    case "UpdateSup":
+                        UpdateSup();
+                        break;
+                }
+            }
+        }
+
+        private bool _currentSupActive;
+
+        public bool CurrentSupActive
+        {
+            get { return _currentSupActive; }
+            set
+            {
+                _currentSupActive = value;
+                OnPropertyChanged();
+                switch (ActionSupState)
+                {
+                    case "CreateSup":
+                        CreateSup();
+                        break;
+                    case "UpdateSup":
+                        UpdateSup();
+                        break;
+                }
+            }
+        }
+
+        private int _currentSupID;
+
+        public int CurrentSupID
+        {
+            get { return _currentSupID; }
+            set
+            {
+                _currentSupID = value;
+                OnPropertyChanged();
+            }
+        }
+
+        private string _currentSubmName;
+
+        public string CurrentSubmName
+        {
+            get { return _currentSubmName; }
+            set
+            {
+                _currentSubmName = value;
+                OnPropertyChanged();
+                switch (ActionSubmState)
+                {
+                    case "CreateSubm":
+                        CreateSubm();
+                        break;
+                    case "UpdateSubm":
+                        UpdateSubm();
+                        break;
+                }
+            }
+        }
+
+        private string _currentSubmPhone;
+
+        public string CurrentSubmPhone
+        {
+            get { return _currentSubmPhone; }
+            set
+            {
+                _currentSubmPhone = value;
+                OnPropertyChanged();
+                switch (ActionSubmState)
+                {
+                    case "CreateSubm":
+                        CreateSubm();
+                        break;
+                    case "UpdateSubm":
+                        UpdateSubm();
+                        break;
+                }
+            }
+        }
+
+        private string _currentSubmCell;
+
+        public string CurrentSubmCell
+        {
+            get { return _currentSubmCell; }
+            set
+            {
+                _currentSubmCell = value;
+                OnPropertyChanged();
+                switch (ActionSubmState)
+                {
+                    case "CreateSubm":
+                        CreateSubm();
+                        break;
+                    case "UpdateSubm":
+                        UpdateSubm();
+                        break;
+                }
+            }
+        }
+
+        private string _currentSubmEmail;
+
+        public string CurrentSubmEmail
+        {
+            get { return _currentSubmEmail; }
+            set
+            {
+                _currentSubmEmail = value;
+                OnPropertyChanged();
+                switch (ActionSubmState)
+                {
+                    case "CreateSubm":
+                        CreateSubm();
+                        break;
+                    case "UpdateSubm":
+                        UpdateSubm();
+                        break;
+                }
+            }
+        }
+        
+        private int _currentCCID;
+
+        public int CurrentCCID
+        {
+            get { return _currentCCID; }
+            set
+            {
+                _currentCCID = value;
+                OnPropertyChanged();
+            }
+        }
+        private bool _currentSubmActive;
+
+        public bool CurrentSubmActive
+        {
+            get { return _currentSubmActive; }
+            set
+            {
+                _currentSubmActive = value;
+                OnPropertyChanged();
+                switch (ActionSubmState)
+                {
+                    case "CreateSubm":
+                        CreateSubm();
+                        break;
+                    case "UpdateSubm":
+                        UpdateSubm();
+                        break;
+                }
+            }
+        }
+        
     }
 }
