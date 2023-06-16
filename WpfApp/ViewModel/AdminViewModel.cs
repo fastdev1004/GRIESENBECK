@@ -6,6 +6,7 @@ using System.Data.SqlClient;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows;
 using System.Windows.Input;
 using WpfApp.Command;
 using WpfApp.Model;
@@ -53,9 +54,15 @@ namespace WpfApp.ViewModel
             Superintendent superintendent = new Superintendent();
             CustSupts = new ObservableCollection<Superintendent>();
             CustSupts.Add(superintendent);
-            ActionCustName = "";
-            ActionManufState = "";
+
+            TempCustomer = new Customer();
+            SelectedTempCustIndex = -1;
+            ActionCustState = "Clear";
+            ActionManufState = "ClearManuf";
+            ActionCustName = "CreateCustomer";
+            ActionManufName = "CreateManuf";
             ActionPmName = "";
+            UpdateComponent = "";
             LoadAdmin();
 
             this.ViewCustomerCommand = new RelayCommand((e) =>
@@ -119,62 +126,75 @@ namespace WpfApp.ViewModel
                     Console.WriteLine(e);
                 }
             }
+            else
+            {
+                if (!ActionCustState.Equals("Clear"))
+                    MessageBox.Show("Customer Full Name is Required");
+            }
         }
 
         private void UpdateSubm()
         {
-            string sqlquery = "UPDATE tblCustomerContacts SET ";
-            List<string> itemList = new List<string>();
-            if (!string.IsNullOrEmpty(CurrentSubmName))
+            if (SelectedCustomerID != 0)
             {
-                itemList.Add("CC_Name=@CCName");
-            }
-            if (!string.IsNullOrEmpty(CurrentSubmPhone))
-            {
-                itemList.Add("CC_Phone=@CCPhone");
-            }
-            if (!string.IsNullOrEmpty(CurrentSubmCell))
-            {
-                itemList.Add("CC_CellPhone=@CCCell");
-            }
-            if (!string.IsNullOrEmpty(CurrentSubmEmail))
-            {
-                itemList.Add("CC_Email=@CCEmail");
-            }
-
-            itemList.Add("Active=@CCActive");
-            sqlquery += string.Join(", ", itemList);
-            sqlquery += " WHERE CC_ID=@CCID";
-
-            using (cmd = new SqlCommand(sqlquery, dbConnection.Connection))
-            {
+                string sqlquery = "UPDATE tblCustomerContacts SET ";
+                List<string> itemList = new List<string>();
                 if (!string.IsNullOrEmpty(CurrentSubmName))
-                    cmd.Parameters.AddWithValue("@CCName", CurrentSubmName);
-                if (!string.IsNullOrEmpty(CurrentSubmPhone))
-                    cmd.Parameters.AddWithValue("@CCPhone", CurrentSubmPhone);
-                if (!string.IsNullOrEmpty(CurrentSubmCell))
-                    cmd.Parameters.AddWithValue("@CCCell", CurrentSubmCell);
-                if (!string.IsNullOrEmpty(CurrentSubmEmail))
-                    cmd.Parameters.AddWithValue("@CCEmail", CurrentSubmEmail);
-
-                int submID = 0;
-
-                switch (ActionState)
                 {
-                    case "AddRow":
-                        submID = CurrentCCID;
-                        SelectedCustSubmID = CurrentCCID;
-                        break;
-                    case "UpdateRow":
-                        submID = SelectedCustSubmID;
-                        break;
+                    itemList.Add("CC_Name=@CCName");
+                }
+                if (!string.IsNullOrEmpty(CurrentSubmPhone))
+                {
+                    itemList.Add("CC_Phone=@CCPhone");
+                }
+                if (!string.IsNullOrEmpty(CurrentSubmCell))
+                {
+                    itemList.Add("CC_CellPhone=@CCCell");
+                }
+                if (!string.IsNullOrEmpty(CurrentSubmEmail))
+                {
+                    itemList.Add("CC_Email=@CCEmail");
                 }
 
-                cmd.Parameters.AddWithValue("@CCID", submID);
-                cmd.Parameters.AddWithValue("@CCActive", CurrentSubmActive);
+                itemList.Add("Active=@CCActive");
+                sqlquery += string.Join(", ", itemList);
+                sqlquery += " WHERE CC_ID=@CCID";
+
+                using (cmd = new SqlCommand(sqlquery, dbConnection.Connection))
+                {
+                    if (!string.IsNullOrEmpty(CurrentSubmName))
+                        cmd.Parameters.AddWithValue("@CCName", CurrentSubmName);
+                    if (!string.IsNullOrEmpty(CurrentSubmPhone))
+                        cmd.Parameters.AddWithValue("@CCPhone", CurrentSubmPhone);
+                    if (!string.IsNullOrEmpty(CurrentSubmCell))
+                        cmd.Parameters.AddWithValue("@CCCell", CurrentSubmCell);
+                    if (!string.IsNullOrEmpty(CurrentSubmEmail))
+                        cmd.Parameters.AddWithValue("@CCEmail", CurrentSubmEmail);
+
+                    int submID = 0;
+
+                    switch (ActionState)
+                    {
+                        case "AddRow":
+                            submID = CurrentCCID;
+                            SelectedCustSubmID = CurrentCCID;
+                            break;
+                        case "UpdateRow":
+                            submID = SelectedCustSubmID;
+                            break;
+                    }
+
+                    cmd.Parameters.AddWithValue("@CCID", submID);
+                    cmd.Parameters.AddWithValue("@CCActive", CurrentSubmActive);
 
 
-                int rowsAffected = cmd.ExecuteNonQuery();
+                    int rowsAffected = cmd.ExecuteNonQuery();
+                }
+            }
+            else
+            {
+                if (!ActionCustState.Equals("Clear"))
+                    MessageBox.Show("Customer Full Name is Required");
             }
         }
 
@@ -215,60 +235,73 @@ namespace WpfApp.ViewModel
                     Console.WriteLine(e);
                 }
             }
+            else
+            {
+                if (!ActionCustState.Equals("Clear"))
+                    MessageBox.Show("Customer Full Name is Required");
+            }
         }
 
         private void UpdateSup()
         {
-            string sqlquery = "UPDATE tblSuperintendents SET ";
-            List<string> itemList = new List<string>();
-            if (!string.IsNullOrEmpty(CurrentSupName))
+            if (SelectedCustomerID != 0)
             {
-                itemList.Add("Sup_Name=@SupName");
-            }
-            if (!string.IsNullOrEmpty(CurrentSupPhone))
-            {
-                itemList.Add("Sup_Phone=@SupPhone");
-            }
-            if (!string.IsNullOrEmpty(CurrentSupCell))
-            {
-                itemList.Add("Sup_CellPhone=@SupCell");
-            }
-            if (!string.IsNullOrEmpty(CurrentSupEmail))
-            {
-                itemList.Add("Sup_Email=@SupEmail");
-            }
-
-            itemList.Add("Active=@SupActive");
-            sqlquery += string.Join(", ", itemList);
-            sqlquery += " WHERE Sup_ID=@SupID";
-
-            using (cmd = new SqlCommand(sqlquery, dbConnection.Connection))
-            {
+                string sqlquery = "UPDATE tblSuperintendents SET ";
+                List<string> itemList = new List<string>();
                 if (!string.IsNullOrEmpty(CurrentSupName))
-                    cmd.Parameters.AddWithValue("@SupName", CurrentSupName);
-                if (!string.IsNullOrEmpty(CurrentSupPhone))
-                    cmd.Parameters.AddWithValue("@SupPhone", CurrentSupPhone);
-                if (!string.IsNullOrEmpty(CurrentSupCell))
-                    cmd.Parameters.AddWithValue("@SupCell", CurrentSupCell);
-                if (!string.IsNullOrEmpty(CurrentSupEmail))
-                    cmd.Parameters.AddWithValue("@SupEmail", CurrentSupEmail);
-                int supID = 0;
-               
-                switch (ActionState)
                 {
-                    case "AddRow":
-                        supID = CurrentSupID;
-                        SelectedCustSupID = CurrentPmID;
-                        break;
-                    case "UpdateRow":
-                        supID = SelectedCustSupID;
-                        break;
+                    itemList.Add("Sup_Name=@SupName");
                 }
-              
-                cmd.Parameters.AddWithValue("@SupID", supID);
-                cmd.Parameters.AddWithValue("@SupActive", CurrentSupActive);
+                if (!string.IsNullOrEmpty(CurrentSupPhone))
+                {
+                    itemList.Add("Sup_Phone=@SupPhone");
+                }
+                if (!string.IsNullOrEmpty(CurrentSupCell))
+                {
+                    itemList.Add("Sup_CellPhone=@SupCell");
+                }
+                if (!string.IsNullOrEmpty(CurrentSupEmail))
+                {
+                    itemList.Add("Sup_Email=@SupEmail");
+                }
 
-                int rowsAffected = cmd.ExecuteNonQuery();
+                itemList.Add("Active=@SupActive");
+                sqlquery += string.Join(", ", itemList);
+                sqlquery += " WHERE Sup_ID=@SupID";
+
+                using (cmd = new SqlCommand(sqlquery, dbConnection.Connection))
+                {
+                    if (!string.IsNullOrEmpty(CurrentSupName))
+                        cmd.Parameters.AddWithValue("@SupName", CurrentSupName);
+                    if (!string.IsNullOrEmpty(CurrentSupPhone))
+                        cmd.Parameters.AddWithValue("@SupPhone", CurrentSupPhone);
+                    if (!string.IsNullOrEmpty(CurrentSupCell))
+                        cmd.Parameters.AddWithValue("@SupCell", CurrentSupCell);
+                    if (!string.IsNullOrEmpty(CurrentSupEmail))
+                        cmd.Parameters.AddWithValue("@SupEmail", CurrentSupEmail);
+                    int supID = 0;
+
+                    switch (ActionState)
+                    {
+                        case "AddRow":
+                            supID = CurrentSupID;
+                            SelectedCustSupID = CurrentSupID;
+                            break;
+                        case "UpdateRow":
+                            supID = SelectedCustSupID;
+                            break;
+                    }
+
+                    cmd.Parameters.AddWithValue("@SupID", supID);
+                    cmd.Parameters.AddWithValue("@SupActive", CurrentSupActive);
+
+                    int rowsAffected = cmd.ExecuteNonQuery();
+                }
+            }
+            else
+            {
+                if (!ActionCustState.Equals("Clear"))
+                    MessageBox.Show("Customer Full Name is Required");
             }
         }
 
@@ -309,6 +342,11 @@ namespace WpfApp.ViewModel
                     Console.WriteLine(e);
                 }
             }
+            else
+            {
+                if (!ActionCustState.Equals("Clear"))
+                    MessageBox.Show("Customer Full Name is Required");
+            }
         }
 
         private void UpdatePM()
@@ -332,7 +370,7 @@ namespace WpfApp.ViewModel
             {
                 itemList.Add("PM_Email=@PmEmail");
             }
-           
+
             itemList.Add("Active=@PmActive");
 
             sqlquery += string.Join(", ", itemList);
@@ -405,7 +443,7 @@ namespace WpfApp.ViewModel
                     if (!string.IsNullOrEmpty(SelectedManufContactEmail))
                         cmd.Parameters.AddWithValue("@ContactEmail", SelectedManufContactEmail);
                     else cmd.Parameters.AddWithValue("@ContactEmail", DBNull.Value);
-                    if (SelectedManufID!=0)
+                    if (SelectedManufID != 0)
                         cmd.Parameters.AddWithValue("@ManufID", SelectedManufID);
                     else cmd.Parameters.AddWithValue("@ManufID", DBNull.Value);
                     cmd.Parameters.AddWithValue("@Active", SelectedManufActive);
@@ -419,7 +457,12 @@ namespace WpfApp.ViewModel
                     {
                         Console.WriteLine(e);
                     }
+                    ActionManufState = "";
                 }
+            } else
+            {
+                if (!ActionManufState.Equals("ClearManuf"))
+                    MessageBox.Show("Manufacturer Name is required.");
             }
         }
 
@@ -470,13 +513,18 @@ namespace WpfApp.ViewModel
                     {
                         int insertedCustomerId = (int)cmd.ExecuteScalar();
                         SelectedManufID = insertedCustomerId;
-                        ActionManufState = "UpdateManuf";
+                        ActionManufName = "UpdateManuf";
                     }
                     catch (SqlException e)
                     {
                         Console.WriteLine(e);
                     }
+                    ActionManufState = "";
                 }
+            } else
+            {
+                if(!ActionManufState.Equals("ClearManuf"))
+                    MessageBox.Show("Manufacturer Name is required.");
             }
         }
 
@@ -562,49 +610,68 @@ namespace WpfApp.ViewModel
             }
         }
 
-        private void UpdateCustomer()
+        public void UpdateCustomer()
         {
-            if (!string.IsNullOrEmpty(SelectedCustFullName))
+            int customerID = (UpdateComponent.Equals("Table")) ? TempCustomer.ID : SelectedCustomerID;
+            string fullName = (UpdateComponent.Equals("Table")) ? TempCustomer.FullName : SelectedCustFullName;
+            string shortName = (UpdateComponent.Equals("Table")) ? TempCustomer.ShortName : SelectedCustShortName;
+            string poNumber = (UpdateComponent.Equals("Table")) ? TempCustomer.PoBox : SelectedCustPoNumber;
+            string address = (UpdateComponent.Equals("Table")) ? TempCustomer.Address : SelectedCustAddress;
+            string city = (UpdateComponent.Equals("Table")) ? TempCustomer.City : SelectedCustCity;
+            string state = (UpdateComponent.Equals("Table")) ? TempCustomer.State : SelectedCustState;
+            string zip = (UpdateComponent.Equals("Table")) ? TempCustomer.Zip : SelectedCustZip;
+            string phone = (UpdateComponent.Equals("Table")) ? TempCustomer.Phone : SelectedCustPhone;
+            string fax = (UpdateComponent.Equals("Table")) ? TempCustomer.Fax : SelectedCustFax;
+            string email = (UpdateComponent.Equals("Table")) ? TempCustomer.Email : SelectedCustEmail;
+            bool active = (UpdateComponent.Equals("Table")) ? TempCustomer.Active : SelectedCustActive;
+            
+            if (!string.IsNullOrEmpty(fullName))
             {
                 sqlquery = "UPDATE tblCustomers SET Short_Name=@ShortName, Full_Name=@FullName, PO_Box=@PoNumber, Address=@Address, City=@City, State=@State, ZIP=@Zip, Phone=@Phone, FAX=@Fax, Email=@Email, Active=@Active WHERE Customer_ID=@CustomerID";
 
                 using (cmd = new SqlCommand(sqlquery, dbConnection.Connection))
                 {
-                    if (!string.IsNullOrEmpty(SelectedCustFullName))
-                        cmd.Parameters.AddWithValue("@FullName", SelectedCustFullName);
-                    else cmd.Parameters.AddWithValue("@FullName", DBNull.Value);
-                    if (!string.IsNullOrEmpty(SelectedCustShortName))
-                        cmd.Parameters.AddWithValue("@ShortName", SelectedCustShortName);
+                    if (!string.IsNullOrEmpty(fullName))
+                        cmd.Parameters.AddWithValue("@FullName", fullName);
+                    if (!string.IsNullOrEmpty(shortName))
+                        cmd.Parameters.AddWithValue("@ShortName", shortName);
                     else cmd.Parameters.AddWithValue("@ShortName", DBNull.Value);
-                    if (!string.IsNullOrEmpty(SelectedCustPoNumber))
-                        cmd.Parameters.AddWithValue("@PoNumber", SelectedCustPoNumber);
+                    if (!string.IsNullOrEmpty(poNumber))
+                        cmd.Parameters.AddWithValue("@PoNumber", poNumber);
                     else cmd.Parameters.AddWithValue("@PoNumber", DBNull.Value);
-                    if (!string.IsNullOrEmpty(SelectedCustAddress))
-                        cmd.Parameters.AddWithValue("@Address", SelectedCustAddress);
+                    if (!string.IsNullOrEmpty(address))
+                        cmd.Parameters.AddWithValue("@Address", address);
                     else cmd.Parameters.AddWithValue("@Address", DBNull.Value);
-                    if (!string.IsNullOrEmpty(SelectedCustCity))
-                        cmd.Parameters.AddWithValue("@City", SelectedCustCity);
+                    if (!string.IsNullOrEmpty(city))
+                        cmd.Parameters.AddWithValue("@City", city);
                     else cmd.Parameters.AddWithValue("@City", DBNull.Value);
-                    if (!string.IsNullOrEmpty(SelectedCustState))
-                        cmd.Parameters.AddWithValue("@State", SelectedCustState);
+                    if (!string.IsNullOrEmpty(state))
+                        cmd.Parameters.AddWithValue("@State", state);
                     else cmd.Parameters.AddWithValue("@State", DBNull.Value);
-                    if (!string.IsNullOrEmpty(SelectedCustZip))
-                        cmd.Parameters.AddWithValue("@Zip", SelectedCustZip);
+                    if (!string.IsNullOrEmpty(zip))
+                        cmd.Parameters.AddWithValue("@Zip", zip);
                     else cmd.Parameters.AddWithValue("@Zip", DBNull.Value);
-                    if (!string.IsNullOrEmpty(SelectedCustPhone))
-                        cmd.Parameters.AddWithValue("@Phone", SelectedCustPhone);
+                    if (!string.IsNullOrEmpty(phone))
+                        cmd.Parameters.AddWithValue("@Phone", phone);
                     else cmd.Parameters.AddWithValue("@Phone", DBNull.Value);
-                    if (!string.IsNullOrEmpty(SelectedCustFax))
-                        cmd.Parameters.AddWithValue("@Fax", SelectedCustFax);
+                    if (!string.IsNullOrEmpty(fax))
+                        cmd.Parameters.AddWithValue("@Fax", fax);
                     else cmd.Parameters.AddWithValue("@Fax", DBNull.Value);
-                    if (!string.IsNullOrEmpty(SelectedCustEmail))
-                        cmd.Parameters.AddWithValue("@Email", SelectedCustEmail);
+                    if (!string.IsNullOrEmpty(email))
+                        cmd.Parameters.AddWithValue("@Email", email);
                     else cmd.Parameters.AddWithValue("@Email", DBNull.Value);
-                    cmd.Parameters.AddWithValue("@Active", SelectedCustActive);
-                    cmd.Parameters.AddWithValue("@CustomerID", SelectedCustomerID);
-                   
+                    cmd.Parameters.AddWithValue("@Active", active);
+                    cmd.Parameters.AddWithValue("@CustomerID", customerID);
+
                     int rowsAffected = cmd.ExecuteNonQuery();
+                    ActionCustName = "UpdateCustomer";
                 }
+                ActionCustState = "";
+            }
+            else
+            {
+                if (!ActionCustState.Equals("Clear"))
+                    MessageBox.Show("Customer Full Name is required");
             }
         }
 
@@ -648,22 +715,31 @@ namespace WpfApp.ViewModel
                     else cmd.Parameters.AddWithValue("@Email", DBNull.Value);
                     cmd.Parameters.AddWithValue("@Active", SelectedCustActive);
 
+                        
                     try
                     {
                         int insertedCustomerId = (int)cmd.ExecuteScalar();
                         SelectedCustomerID = insertedCustomerId;
                         ActionCustName = "UpdateCustomer";
                     }
-                    catch(SqlException e)
+                    catch (SqlException e)
                     {
                         Console.WriteLine(e);
                     }
                 }
+                ActionCustState = "";
+            }
+            else
+            {
+                if(!ActionCustState.Equals("Clear"))
+                    MessageBox.Show("Customer Full Name is required");
             }
         }
 
         public void ClearManuf()
         {
+            ActionManufName = "CreateManuf";
+            ActionManufState = "ClearManuf";
             SelectedManufName = "";
             SelectedManufAddress = "";
             SelectedManufAddress2 = "";
@@ -676,16 +752,16 @@ namespace WpfApp.ViewModel
             SelectedManufContactPhone = "";
             SelectedManufContactEmail = "";
             SelectedManufActive = false;
-            
+
             Note noteItem = new Note();
             ManufNotes = new ObservableCollection<Note>();
             ManufNotes.Add(noteItem);
-
-            ActionManufState = "CreateManuf";
         }
 
         public void ClearCustomer()
         {
+            ActionCustState = "Clear";
+            ActionCustName = "CreateCustomer";
             SelectedCustomerID = 0;
             SelectedCustFullName = "";
             SelectedCustShortName = "";
@@ -723,8 +799,6 @@ namespace WpfApp.ViewModel
             Superintendent superintendent = new Superintendent();
             CustSupts = new ObservableCollection<Superintendent>();
             CustSupts.Add(superintendent);
-
-            ActionCustName = "CreateCustomer";
         }
 
         public void ViewManuf(int manufID)
@@ -734,9 +808,10 @@ namespace WpfApp.ViewModel
             sda = new SqlDataAdapter(cmd);
             ds = new DataSet();
             sda.Fill(ds);
+           
             DataRow firstRow = ds.Tables[0].Rows[0];
             SelectedManufID = int.Parse(firstRow["Manuf_ID"].ToString());
-
+            ActionManufName = "UpdateManuf";
             if (!firstRow.IsNull("Manuf_Name"))
                 SelectedManufName = firstRow["Manuf_Name"].ToString();
             if (!firstRow.IsNull("Address"))
@@ -805,8 +880,7 @@ namespace WpfApp.ViewModel
                 });
             }
             st_manufNotes.Add(new Note());
-            ManufNotes = st_manufNotes;
-            ActionManufState = "UpdateManuf";
+            ManufNotes = st_manufNotes;         
         }
 
         public void ViewCustomer(int customerID)
@@ -816,20 +890,11 @@ namespace WpfApp.ViewModel
             sda = new SqlDataAdapter(cmd);
             ds = new DataSet();
             sda.Fill(ds);
+            UpdateComponent = "";
 
             DataRow firstRow = ds.Tables[0].Rows[0];
             ActionCustName = "UpdateCustomer";
             SelectedCustomerID = customerID;
-            SelectedCustFullName = "";
-            SelectedCustShortName = "";
-            SelectedCustPoNumber = "";
-            SelectedCustAddress = "";
-            SelectedCustCity = "";
-            SelectedCustState = "";
-            SelectedCustZip = "";
-            SelectedCustPhone = "";
-            SelectedCustFax = "";
-            SelectedCustEmail = "";
             ActionState = "UpdateRow";
 
             if (!firstRow.IsNull("Full_Name"))
@@ -900,7 +965,7 @@ namespace WpfApp.ViewModel
             CustomerNotes = st_customerNotes;
 
             // Project Manager Notes
-            sqlquery = "SELECT * FROM tblNotes INNER JOIN (SELECT * FROM tblProjectManagers WHERE Customer_ID = "+ customerID +") AS tblProjManager ON tblNotes.Notes_PK = tblProjManager.PM_ID WHERE Notes_PK_Desc = 'ProjectManager'";
+            sqlquery = "SELECT * FROM tblNotes INNER JOIN (SELECT * FROM tblProjectManagers WHERE Customer_ID = " + customerID + ") AS tblProjManager ON tblNotes.Notes_PK = tblProjManager.PM_ID WHERE Notes_PK_Desc = 'ProjectManager'";
             cmd = new SqlCommand(sqlquery, dbConnection.Connection);
             sda = new SqlDataAdapter(cmd);
             ds = new DataSet();
@@ -946,7 +1011,7 @@ namespace WpfApp.ViewModel
             CustPMNotes = st_pmNotes;
 
             // Superintendents Notes
-            sqlquery = "SELECT * FROM tblNotes INNER JOIN (SELECT * FROM tblSuperintendents WHERE Customer_ID = "+ customerID +") AS tblSupt ON tblNotes.Notes_PK = tblSupt.Sup_ID WHERE Notes_PK_Desc = 'Superintendent'";
+            sqlquery = "SELECT * FROM tblNotes INNER JOIN (SELECT * FROM tblSuperintendents WHERE Customer_ID = " + customerID + ") AS tblSupt ON tblNotes.Notes_PK = tblSupt.Sup_ID WHERE Notes_PK_Desc = 'Superintendent'";
             cmd = new SqlCommand(sqlquery, dbConnection.Connection);
             sda = new SqlDataAdapter(cmd);
             ds = new DataSet();
@@ -1038,7 +1103,7 @@ namespace WpfApp.ViewModel
             CustSubmNotes = st_ccNotes;
 
             // Project Managers for customers
-            sqlquery = "select * from tblProjectManagers WHERE Customer_ID="+ customerID;
+            sqlquery = "select * from tblProjectManagers WHERE Customer_ID=" + customerID;
             cmd = new SqlCommand(sqlquery, dbConnection.Connection);
             sda = new SqlDataAdapter(cmd);
             ds = new DataSet();
@@ -2107,7 +2172,7 @@ namespace WpfApp.ViewModel
             {
                 _selectedManufName = value;
                 OnPropertyChanged();
-                switch (ActionManufState)
+                switch (ActionManufName)
                 {
                     case "CreateManuf":
                         CreateManuf();
@@ -2128,7 +2193,7 @@ namespace WpfApp.ViewModel
             {
                 _selectedManufAddress = value;
                 OnPropertyChanged();
-                switch (ActionManufState)
+                switch (ActionManufName)
                 {
                     case "CreateManuf":
                         CreateManuf();
@@ -2149,7 +2214,7 @@ namespace WpfApp.ViewModel
             {
                 _selectedManufAddress2 = value;
                 OnPropertyChanged();
-                switch (ActionManufState)
+                switch (ActionManufName)
                 {
                     case "CreateManuf":
                         CreateManuf();
@@ -2170,7 +2235,7 @@ namespace WpfApp.ViewModel
             {
                 _selectedManufCity = value;
                 OnPropertyChanged();
-                switch (ActionManufState)
+                switch (ActionManufName)
                 {
                     case "CreateManuf":
                         CreateManuf();
@@ -2191,7 +2256,7 @@ namespace WpfApp.ViewModel
             {
                 _selectedManufState = value;
                 OnPropertyChanged();
-                switch (ActionManufState)
+                switch (ActionManufName)
                 {
                     case "CreateManuf":
                         CreateManuf();
@@ -2212,7 +2277,7 @@ namespace WpfApp.ViewModel
             {
                 _selectedManufZip = value;
                 OnPropertyChanged();
-                switch (ActionManufState)
+                switch (ActionManufName)
                 {
                     case "CreateManuf":
                         CreateManuf();
@@ -2233,7 +2298,7 @@ namespace WpfApp.ViewModel
             {
                 _selectedManufPhone = value;
                 OnPropertyChanged();
-                switch (ActionManufState)
+                switch (ActionManufName)
                 {
                     case "CreateManuf":
                         CreateManuf();
@@ -2254,7 +2319,7 @@ namespace WpfApp.ViewModel
             {
                 _selectedManufFax = value;
                 OnPropertyChanged();
-                switch (ActionManufState)
+                switch (ActionManufName)
                 {
                     case "CreateManuf":
                         CreateManuf();
@@ -2275,7 +2340,7 @@ namespace WpfApp.ViewModel
             {
                 _selectedManufContactName = value;
                 OnPropertyChanged();
-                switch (ActionManufState)
+                switch (ActionManufName)
                 {
                     case "CreateManuf":
                         CreateManuf();
@@ -2296,7 +2361,7 @@ namespace WpfApp.ViewModel
             {
                 _selectedManufContactPhone = value;
                 OnPropertyChanged();
-                switch (ActionManufState)
+                switch (ActionManufName)
                 {
                     case "CreateManuf":
                         CreateManuf();
@@ -2317,7 +2382,7 @@ namespace WpfApp.ViewModel
             {
                 _selectedManufContactEmail = value;
                 OnPropertyChanged();
-                switch (ActionManufState)
+                switch (ActionManufName)
                 {
                     case "CreateManuf":
                         CreateManuf();
@@ -2355,14 +2420,14 @@ namespace WpfApp.ViewModel
             }
         }
 
-        private string _actionManufState;
+        private string _ActionManufName;
 
-        public string ActionManufState
+        public string ActionManufName
         {
-            get { return _actionManufState; }
+            get { return _ActionManufName; }
             set
             {
-                _actionManufState = value;
+                _ActionManufName = value;
                 OnPropertyChanged();
             }
         }
@@ -2390,7 +2455,7 @@ namespace WpfApp.ViewModel
                 OnPropertyChanged();
             }
         }
-        
+
         private string _ActionSubmName;
 
         public string ActionSubmName
@@ -2815,7 +2880,7 @@ namespace WpfApp.ViewModel
                 }
             }
         }
-        
+
         private int _currentCCID;
 
         public int CurrentCCID
@@ -2848,6 +2913,18 @@ namespace WpfApp.ViewModel
             }
         }
 
+        private int _selectedCustRowIndex;
+
+        public int SelectedCustRowIndex
+        {
+            get { return _selectedCustRowIndex; }
+            set
+            {
+                _selectedCustRowIndex = value;
+                OnPropertyChanged();
+            }
+        }
+
         private int _selectedCustListID;
 
         public int SelectedCustListID
@@ -2860,5 +2937,169 @@ namespace WpfApp.ViewModel
             }
         }
 
+        public int UpdateCustID { get; set; }
+
+        private string _updateCustFullName;
+
+        public string UpdateCustFullName
+        {
+            get { return _updateCustFullName; }
+            set
+            {
+                _updateCustFullName = value;
+                OnPropertyChanged();
+            }
+        }
+
+        private string _updateCustShortName;
+
+        public string UpdateCustShortName
+        {
+            get { return _updateCustShortName; }
+            set
+            {
+                _updateCustShortName = value;
+                OnPropertyChanged();
+            }
+        }
+
+        private string _updateCustPoNumber;
+
+        public string UpdateCustPoNumber
+        {
+            get { return _updateCustPoNumber; }
+            set
+            {
+                _updateCustPoNumber = value;
+                OnPropertyChanged();
+                //LoadAdmin();
+            }
+        }
+
+        private string _updateCustAddress;
+
+        public string UpdateCustAddress
+        {
+            get { return _updateCustAddress; }
+            set
+            {
+                _updateCustAddress = value;
+                OnPropertyChanged();
+            }
+        }
+
+        private string _updateCustCity;
+
+        public string UpdateCustCity
+        {
+            get { return _updateCustCity; }
+            set
+            {
+                _updateCustCity = value;
+                OnPropertyChanged();
+            }
+        }
+
+        private string _updateCustPhone;
+
+        public string UpdateCustPhone
+        {
+            get { return _updateCustPhone; }
+            set
+            {
+                _updateCustPhone = value;
+                OnPropertyChanged();
+            }
+        }
+
+        private string _updateCustState;
+
+        public string UpdateCustState
+        {
+            get { return _updateCustState; }
+            set
+            {
+                _updateCustState = value;
+                OnPropertyChanged();
+            }
+        }
+
+        private string _updateCustZip;
+
+        public string UpdateCustZip
+        {
+            get { return _updateCustZip; }
+            set
+            {
+                _updateCustZip = value;
+                OnPropertyChanged();
+            }
+        }
+
+        private string _updateCustFax;
+
+        public string UpdateCustFax
+        {
+            get { return _updateCustFax; }
+            set
+            {
+                _updateCustFax = value;
+                OnPropertyChanged();
+            }
+        }
+
+        private string _updateCustEmail;
+
+        public string UpdateCustEmail
+        {
+            get { return _updateCustEmail; }
+            set
+            {
+                _updateCustEmail = value;
+                OnPropertyChanged();
+            }
+        }
+
+        private bool _updateCustActive;
+
+        public bool UpdateCustActive
+        {
+            get { return _updateCustActive; }
+            set
+            {
+                _updateCustActive = value;
+                OnPropertyChanged();
+            }
+        }
+
+        private string _updateComponent;
+
+        public string UpdateComponent
+        {
+            get { return _updateComponent; }
+            set
+            {
+                _updateComponent = value;
+                OnPropertyChanged();
+            }
+        }
+
+        private string ActionCustState { get; set; }
+
+        private string ActionManufState { get; set; }
+
+        private Customer _tempCustomer;
+
+        public Customer TempCustomer
+        {
+            get { return _tempCustomer; }
+            set
+            {
+                _tempCustomer = value;
+                OnPropertyChanged();
+            }
+        }
+
+        public int SelectedTempCustIndex { get; set; }
     }
 }

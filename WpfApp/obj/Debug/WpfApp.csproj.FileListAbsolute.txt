@@ -72,4 +72,3 @@ G:\GRIESENBECK\WpfApp\obj\Debug\WpfApp.csproj.GenerateResource.cache
 G:\GRIESENBECK\WpfApp\obj\Debug\WpfApp.csproj.CoreCompileInputs.cache
 G:\GRIESENBECK\WpfApp\obj\Debug\WpfApp.exe
 G:\GRIESENBECK\WpfApp\obj\Debug\WpfApp.pdb
-G:\GRIESENBECK\WpfApp\obj\Debug\WpfApp.csprojAssemblyReference.cache
