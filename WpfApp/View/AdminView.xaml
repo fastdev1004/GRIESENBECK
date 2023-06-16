@@ -772,8 +772,18 @@
                                             </DataTemplate>
                                         </DataGridTemplateColumn.CellTemplate>
                                     </DataGridTemplateColumn>
-                                    <DataGridTextColumn IsReadOnly="False" Width="3*" Binding="{Binding Path=FullName}" Header="Full Name" />
-                                    <DataGridTextColumn IsReadOnly="False" Width="1*" Binding="{Binding Path=PoBox}" Header="PO Box" />
+                                    <DataGridTemplateColumn IsReadOnly="False" Width="1*">
+                                        <DataGridTemplateColumn.Header>
+                                            <TextBlock Text="PO Box" TextWrapping="Wrap" />
+                                        </DataGridTemplateColumn.Header>
+                                        <DataGridTemplateColumn.CellTemplate>
+                                            <DataTemplate>
+                                                <TextBox Text="{Binding PoBox, Mode=TwoWay}" PreviewKeyUp="CustomerTab_PreviewKeyUp" Tag="{Binding ID}" />
+                                            </DataTemplate>
+                                        </DataGridTemplateColumn.CellTemplate>
+                                    </DataGridTemplateColumn>
+                                    <!--<DataGridTextColumn Visibility="Hidden" Binding="{Binding ID}" />-->
+                                    <!--<DataGridTextColumn IsReadOnly="False" Width="1*" Binding="{Binding Path=PoBox}" Header="PO Box" />-->
                                     <DataGridTextColumn IsReadOnly="False" Width="3*" Binding="{Binding Path=Address}" Header="Address" />
                                     <DataGridTextColumn IsReadOnly="False" Width="2*" Binding="{Binding Path=City}" Header="City" />
                                     <DataGridTextColumn IsReadOnly="False" Width="1*" Binding="{Binding Path=State}" Header="State" />

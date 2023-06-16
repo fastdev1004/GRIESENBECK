@@ -32,8 +32,6 @@ namespace WpfApp.View
             this.DataContext = AdminVM;
         }
 
-
-
         private void GoBack(object sender, RoutedEventArgs e)
         {
             this.NavigationService.Navigate(new Uri("View/Start.xaml", UriKind.Relative));
@@ -41,253 +39,350 @@ namespace WpfApp.View
 
         private void CustSupt_PreviewKeyUp(object sender, RoutedEventArgs e)
         {
-            TextBox textBox = sender as TextBox;
-            if (textBox != null)
+            if (AdminVM.SelectedCustomerID != 0)
             {
-                DataGrid dataGrid = noteHelper.FindDataGrid(textBox);
-                int selectedRowIndex = AdminVM.SelectedSuptRowIndex;
-
-                Grid parentGrid = textBox.Parent as Grid;
-                TextBlock supID = parentGrid.Children[1] as TextBlock;
-                AdminVM.SelectedCustSupID = int.Parse(supID.Text);
-
-                if (dataGrid != null)
+                TextBox textBox = sender as TextBox;
+                if (textBox != null)
                 {
-                    if (selectedRowIndex == dataGrid.Items.Count - 1)
-                    {
-                        AdminVM.ActionSupState = "CreateSup";
-                        ObservableCollection<Superintendent> custSupts = AdminVM.CustSupts;
-                        Superintendent item = new Superintendent();
-                        custSupts.Add(item);
-                        e.Handled = true;
-                    }
-                    else
-                    {
-                        AdminVM.ActionSupState = "UpdateSup";
-                    }
+                    DataGrid dataGrid = noteHelper.FindDataGrid(textBox);
+                    int selectedRowIndex = AdminVM.SelectedSuptRowIndex;
 
-                    string itemName = textBox.Tag as string;
-                    AdminVM.CurrentSupName = "";
-                    AdminVM.CurrentSupPhone = "";
-                    AdminVM.CurrentSupCell = "";
-                    AdminVM.CurrentSupEmail = "";
-                    switch (itemName)
+                    Grid parentGrid = textBox.Parent as Grid;
+                    TextBlock supID = parentGrid.Children[1] as TextBlock;
+                    AdminVM.SelectedCustSupID = int.Parse(supID.Text);
+
+                    if (dataGrid != null)
                     {
-                        case "SupName":
-                            AdminVM.CurrentSupName = textBox.Text;
-                            break;
-                        case "SupPhone":
-                            AdminVM.CurrentSupPhone = textBox.Text;
-                            break;
-                        case "SupCell":
-                            AdminVM.CurrentSupCell = textBox.Text;
-                            break;
-                        case "SupEmail":
-                            AdminVM.CurrentSupEmail = textBox.Text;
-                            break;
+                        if (selectedRowIndex == dataGrid.Items.Count - 1)
+                        {
+                            AdminVM.CurrentSupName = "";
+                            AdminVM.CurrentSupPhone = "";
+                            AdminVM.CurrentSupCell = "";
+                            AdminVM.CurrentSupEmail = "";
+                            ObservableCollection<Superintendent> custSupts = AdminVM.CustSupts;
+                            Superintendent item = new Superintendent();
+                            custSupts.Add(item);
+
+                            AdminVM.ActionSupName = "CreateSup";
+                            AdminVM.ActionState = "AddRow";
+                        }
+                        else if (AdminVM.ActionState.Equals("AddRow"))
+                        {
+                            AdminVM.SelectedCustSupID = int.Parse(supID.Text);
+                            AdminVM.ActionState = "AddRow";
+                            AdminVM.ActionSupName = "UpdateSup";
+                        }
+                        else if(AdminVM.ActionState.Equals("UpdateRow"))
+                        {
+                            AdminVM.SelectedCustSupID = int.Parse(supID.Text);
+                            AdminVM.ActionState = "UpdateRow";
+                            AdminVM.ActionSupName = "UpdateSup";
+                        }
+
+                        string itemName = textBox.Tag as string;
+                        switch (itemName)
+                        {
+                            case "SupName":
+                                AdminVM.CurrentSupName = textBox.Text;
+                                break;
+                            case "SupPhone":
+                                AdminVM.CurrentSupPhone = textBox.Text;
+                                break;
+                            case "SupCell":
+                                AdminVM.CurrentSupCell = textBox.Text;
+                                break;
+                            case "SupEmail":
+                                AdminVM.CurrentSupEmail = textBox.Text;
+                                break;
+                        }
+                        e.Handled = false;
                     }
                 }
+            }
+            else
+            {
+                MessageBox.Show("Please make your selection first");
             }
         }
 
         private void CustSupt_ChkPreviewKeyUp(object sender, RoutedEventArgs e)
         {
-            CheckBox activeCheckBox = sender as CheckBox;
-            DataGrid dataGrid = noteHelper.FindDataGrid(activeCheckBox);
-            int selectedRowIndex = AdminVM.SelectedSuptRowIndex;
-
-            Grid parentGrid = activeCheckBox.Parent as Grid;
-            TextBlock supID = parentGrid.Children[1] as TextBlock;
-            if (dataGrid != null)
+            if (AdminVM.SelectedCustomerID != 0)
             {
-                if (!string.IsNullOrEmpty(supID.Text))
-                    AdminVM.SelectedCustSupID = int.Parse(supID.Text);
-                if (selectedRowIndex == dataGrid.Items.Count - 1)
-                {
-                    AdminVM.ActionSupState = "CreateSup";
-                    if (activeCheckBox.IsChecked == true)
-                        AdminVM.CurrentSupActive = true;
-                    else AdminVM.CurrentSupActive = false;
+                CheckBox activeCheckBox = sender as CheckBox;
+                DataGrid dataGrid = noteHelper.FindDataGrid(activeCheckBox);
+                int selectedRowIndex = AdminVM.SelectedSuptRowIndex;
 
-                    ObservableCollection<Superintendent> custSupts = AdminVM.CustSupts;
-                    Superintendent item = new Superintendent();
-                    custSupts.Add(item);
-                    e.Handled = true;
-                }
-                else
+                Grid parentGrid = activeCheckBox.Parent as Grid;
+                TextBlock supID = parentGrid.Children[1] as TextBlock;
+                if (dataGrid != null)
                 {
-                    AdminVM.ActionSupState = "UpdateSup";
+                    if (!string.IsNullOrEmpty(supID.Text))
+                        AdminVM.SelectedCustSupID = int.Parse(supID.Text);
+                    if (selectedRowIndex == dataGrid.Items.Count - 1)
+                    {
+                        AdminVM.ActionSupName = "CreateSup";
+
+                        AdminVM.CurrentSupName = "";
+                        AdminVM.CurrentSupPhone = "";
+                        AdminVM.CurrentSupCell = "";
+                        AdminVM.CurrentSupEmail = "";
+
+                        ObservableCollection<Superintendent> custSupts = AdminVM.CustSupts;
+                        Superintendent item = new Superintendent();
+                        custSupts.Add(item);
+                        AdminVM.ActionSupName = "CreateSup";
+                        AdminVM.ActionState = "AddRow";
+                    }
+                    else if (AdminVM.ActionState.Equals("AddRow"))
+                    {
+                        AdminVM.ActionState = "AddRow";
+                        AdminVM.ActionSupName = "UpdateSup";
+                    }
+                    else if (AdminVM.ActionState.Equals("UpdateRow"))
+                    {
+                        AdminVM.ActionState = "UpdateRow";
+                        AdminVM.ActionSupName = "UpdateSup";
+                    }
+
                     if (activeCheckBox.IsChecked == true)
                         AdminVM.CurrentSupActive = true;
                     else AdminVM.CurrentSupActive = false;
+                    e.Handled = false;
                 }
+            }
+            else
+            {
+                MessageBox.Show("Please make your selection first");
             }
         }
 
         private void CustContact_PreviewKeyUp(object sender, RoutedEventArgs e)
         {
-            TextBox textBox = sender as TextBox;
-            if (textBox != null)
+            if (AdminVM.SelectedCustomerID != 0)
             {
-                DataGrid dataGrid = noteHelper.FindDataGrid(textBox);
-                int selectedRowIndex = AdminVM.SelectedSubmRowIndex;
-
-                Grid parentGrid = textBox.Parent as Grid;
-                TextBlock submID = parentGrid.Children[1] as TextBlock;
-                AdminVM.SelectedCustSubmID = int.Parse(submID.Text);
-
-                if (dataGrid != null)
+                TextBox textBox = sender as TextBox;
+                if (textBox != null)
                 {
-                    if (selectedRowIndex == dataGrid.Items.Count - 1)
-                    {
-                        AdminVM.ActionSubmState = "CreateSubm";
-                        // add new row
-                        ObservableCollection<CustomerContact> custPMs = AdminVM.CustContacts;
-                        CustomerContact item = new CustomerContact();
-                        custPMs.Add(item);
-                        e.Handled = true;
-                    }
-                    else
-                    {
-                        AdminVM.ActionSubmState = "UpdateSubm";
-                    }
+                    DataGrid dataGrid = noteHelper.FindDataGrid(textBox);
+                    int selectedRowIndex = AdminVM.SelectedSubmRowIndex;
 
-                    string itemName = textBox.Tag as string;
+                    Grid parentGrid = textBox.Parent as Grid;
+                    TextBlock submID = parentGrid.Children[1] as TextBlock;
 
-                    switch (itemName)
+                    if (dataGrid != null)
                     {
-                        case "SubmName":
-                            AdminVM.CurrentSubmName = textBox.Text;
-                            break;
-                        case "SubmPhone":
-                            AdminVM.CurrentSubmPhone = textBox.Text;
-                            break;
-                        case "SubmCell":
-                            AdminVM.CurrentSubmCell = textBox.Text;
-                            break;
-                        case "SubmEmail":
-                            AdminVM.CurrentSubmEmail = textBox.Text;
-                            break;
+                        if (selectedRowIndex == dataGrid.Items.Count - 1)
+                        {
+                            AdminVM.CurrentSubmName = "";
+                            AdminVM.CurrentSubmPhone = "";
+                            AdminVM.CurrentSubmCell = "";
+                            AdminVM.CurrentSubmEmail = "";
+
+                            // add new row
+                            ObservableCollection<CustomerContact> custPMs = AdminVM.CustContacts;
+                            CustomerContact item = new CustomerContact();
+                            custPMs.Add(item);
+                            AdminVM.ActionSubmName = "CreateSubm";
+                            AdminVM.ActionState = "AddRow";
+                        }
+                        else if (AdminVM.ActionState.Equals("AddRow"))
+                        {
+
+                            AdminVM.SelectedCustSubmID = int.Parse(submID.Text);
+                            AdminVM.ActionState = "AddRow";
+                            AdminVM.ActionPmName = "UpdateSubm";
+                        }
+                        else if (AdminVM.ActionState.Equals("UpdateRow"))
+                        {
+                            AdminVM.SelectedCustSubmID = int.Parse(submID.Text);
+                            AdminVM.ActionState = "UpdateRow";
+                            AdminVM.ActionSubmName = "UpdateSubm";
+                        }
+
+                        string itemName = textBox.Tag as string;
+                        switch (itemName)
+                        {
+                            case "SubmName":
+                                AdminVM.CurrentSubmName = textBox.Text;
+                                break;
+                            case "SubmPhone":
+                                AdminVM.CurrentSubmPhone = textBox.Text;
+                                break;
+                            case "SubmCell":
+                                AdminVM.CurrentSubmCell = textBox.Text;
+                                break;
+                            case "SubmEmail":
+                                AdminVM.CurrentSubmEmail = textBox.Text;
+                                break;
+                        }
+                        e.Handled = false;
                     }
                 }
+            }
+            else
+            {
+                MessageBox.Show("Please make your selection first");
             }
         }
 
         private void CustContact_ChkPreviewKeyUp(object sender, RoutedEventArgs e)
         {
-            CheckBox activeCheckBox = sender as CheckBox;
-            DataGrid dataGrid = noteHelper.FindDataGrid(activeCheckBox);
-            int selectedRowIndex = AdminVM.SelectedSubmRowIndex;
-
-            Grid parentGrid = activeCheckBox.Parent as Grid;
-            TextBlock ccID = parentGrid.Children[1] as TextBlock;
-
-            if (dataGrid != null)
+            if (AdminVM.SelectedCustomerID != 0)
             {
-                if (!string.IsNullOrEmpty(ccID.Text))
-                    AdminVM.SelectedCustSubmID = int.Parse(ccID.Text);
-                if (selectedRowIndex == dataGrid.Items.Count - 1)
+                CheckBox activeCheckBox = sender as CheckBox;
+                DataGrid dataGrid = noteHelper.FindDataGrid(activeCheckBox);
+                int selectedRowIndex = AdminVM.SelectedSubmRowIndex;
+
+                Grid parentGrid = activeCheckBox.Parent as Grid;
+                TextBlock ccID = parentGrid.Children[1] as TextBlock;
+
+                if (dataGrid != null)
                 {
-                    AdminVM.ActionSubmState = "CreateSubm";
+                    if (!string.IsNullOrEmpty(ccID.Text))
+                        AdminVM.SelectedCustSubmID = int.Parse(ccID.Text);
+                    if (selectedRowIndex == dataGrid.Items.Count - 1)
+                    {
+                        AdminVM.CurrentSubmName = "";
+                        AdminVM.CurrentSubmPhone = "";
+                        AdminVM.CurrentSubmCell = "";
+                        AdminVM.CurrentSubmEmail = "";
+
+                        ObservableCollection<CustomerContact> custPMs = AdminVM.CustContacts;
+                        CustomerContact item = new CustomerContact();
+                        custPMs.Add(item);
+
+                        AdminVM.ActionSubmName = "CreateSubm";
+                        AdminVM.ActionState = "AddRow";
+                        e.Handled = true;
+                    }
+                    else if (AdminVM.ActionState.Equals("AddRow"))
+                    {
+                        AdminVM.ActionState = "AddRow";
+                        AdminVM.ActionPmName = "UpdateSubm";
+                    }
+                    else if (AdminVM.ActionState.Equals("UpdateRow"))
+                    {
+                        AdminVM.ActionState = "UpdateRow";
+                        AdminVM.ActionSubmName = "UpdateSubm";
+                    }
 
                     if (activeCheckBox.IsChecked == true)
                         AdminVM.CurrentSubmActive = true;
                     else AdminVM.CurrentSubmActive = false;
-
-                    ObservableCollection<CustomerContact> custPMs = AdminVM.CustContacts;
-                    CustomerContact item = new CustomerContact();
-                    custPMs.Add(item);
-                    e.Handled = true;
                 }
-                else
-                {
-                    AdminVM.ActionSubmState = "UpdateSubm";
-                    if (activeCheckBox.IsChecked == true)
-                        AdminVM.CurrentSubmActive = true;
-                    else AdminVM.CurrentSubmActive = false;
-                }
+            }
+            else
+            {
+                MessageBox.Show("Please make your selection first");
             }
         }
 
         private void CustPM_PreviewKeyUp(object sender, RoutedEventArgs e)
         {
-            TextBox textBox = sender as TextBox;
-            if (textBox != null)
+            if (AdminVM.SelectedCustomerID != 0)
             {
-                DataGrid dataGrid = noteHelper.FindDataGrid(textBox);
-                int selectedRowIndex = AdminVM.SelectedPMRowIndex;
-                Grid parentGrid = textBox.Parent as Grid;
-                TextBlock pmID = parentGrid.Children[1] as TextBlock;
-               
-                AdminVM.SelectedCustPmID = int.Parse(pmID.Text);
-                if (dataGrid != null)
+                TextBox textBox = sender as TextBox;
+                if (textBox != null)
                 {
-                    if (selectedRowIndex == dataGrid.Items.Count - 1)
+                    DataGrid dataGrid = noteHelper.FindDataGrid(textBox);
+                    int selectedRowIndex = AdminVM.SelectedPMRowIndex;
+                    Grid parentGrid = textBox.Parent as Grid;
+                    TextBlock pmID = parentGrid.Children[1] as TextBlock;
+                    
+                    if (dataGrid != null)
                     {
-                        AdminVM.ActionPmState = "CreatePM";
-                        // add new row
-                        ObservableCollection<ProjectManager> custPMs = AdminVM.CustPMs;
-                        ProjectManager item = new ProjectManager();
-                        custPMs.Add(item);
-                        e.Handled = true;
-                    }
-                    else
-                    {
-                        AdminVM.ActionPmState = "UpdatePM";
-                    }
-                    string itemName = textBox.Tag as string;
-
-                    switch (itemName)
-                    {
-                        case "PmName":
-                            AdminVM.CurrentPmName = textBox.Text;
-                            break;
-                        case "PmPhone":
-                            AdminVM.CurrentPmPhone = textBox.Text;
-                            break;
-                        case "PmCell":
-                            AdminVM.CurrentPmCell = textBox.Text;
-                            break;
-                        case "PmEmail":
-                            AdminVM.CurrentPmEmail = textBox.Text;
-                            break;
+                        if (selectedRowIndex == dataGrid.Items.Count - 1)
+                        {
+                            // add new row
+                            AdminVM.CurrentPmName = "";
+                            AdminVM.CurrentPmPhone = "";
+                            AdminVM.CurrentPmCell = "";
+                            AdminVM.CurrentPmEmail = "";
+                            ObservableCollection<ProjectManager> custPMs = AdminVM.CustPMs;
+                            ProjectManager item = new ProjectManager();
+                            custPMs.Add(item);
+                            AdminVM.ActionPmName = "CreatePM";
+                            AdminVM.ActionState = "AddRow";
+                        }
+                        else if (AdminVM.ActionState.Equals("AddRow"))
+                        {
+                           
+                            AdminVM.SelectedCustPmID = int.Parse(pmID.Text);
+                            AdminVM.ActionState = "AddRow";
+                            AdminVM.ActionPmName = "UpdatePM";
+                        }
+                        else if(AdminVM.ActionState.Equals("UpdateRow"))
+                        {
+                            AdminVM.SelectedCustPmID = int.Parse(pmID.Text);
+                            AdminVM.ActionState = "UpdateRow";
+                            AdminVM.ActionPmName = "UpdatePM";
+                        }
+                        string itemName = textBox.Tag as string;
+                        switch (itemName)
+                        {
+                            case "PmName":
+                                AdminVM.CurrentPmName = textBox.Text;
+                                break;
+                            case "PmPhone":
+                                AdminVM.CurrentPmPhone = textBox.Text;
+                                break;
+                            case "PmCell":
+                                AdminVM.CurrentPmCell = textBox.Text;
+                                break;
+                            case "PmEmail":
+                                AdminVM.CurrentPmEmail = textBox.Text;
+                                break;
+                        }
+                        e.Handled = false;
                     }
                 }
+            }
+            else
+            {
+                MessageBox.Show("Please make your selection first");
             }
         }
 
         private void CustPM_ChkPreviewKeyUp(object sender, RoutedEventArgs e)
         {
-            CheckBox activeCheckBox = sender as CheckBox;
-            DataGrid dataGrid = noteHelper.FindDataGrid(activeCheckBox);
-            int selectedRowIndex = AdminVM.SelectedPMRowIndex;
-
-            Grid parentGrid = activeCheckBox.Parent as Grid;
-            TextBlock pmID = parentGrid.Children[1] as TextBlock;
-
-            if (dataGrid != null)
+            if (AdminVM.SelectedCustomerID != 0)
             {
-                if(!string.IsNullOrEmpty(pmID.Text))
-                    AdminVM.SelectedCustPmID = int.Parse(pmID.Text);
-                if (selectedRowIndex == dataGrid.Items.Count - 1)
-                {
-                    AdminVM.ActionPmState = "CreatePM";
-                    if (activeCheckBox.IsChecked == true)
-                        AdminVM.CurrentPmActive = true;
-                    else AdminVM.CurrentPmActive = false;
+                CheckBox activeCheckBox = sender as CheckBox;
+                DataGrid dataGrid = noteHelper.FindDataGrid(activeCheckBox);
+                int selectedRowIndex = AdminVM.SelectedPMRowIndex;
 
-                    ObservableCollection<ProjectManager> custPMs = AdminVM.CustPMs;
-                    ProjectManager item = new ProjectManager();
-                    custPMs.Add(item);
-                    e.Handled = true;
-                }
-                else
+                Grid parentGrid = activeCheckBox.Parent as Grid;
+                TextBlock pmID = parentGrid.Children[1] as TextBlock;
+
+                if (dataGrid != null)
                 {
-                    AdminVM.ActionPmState = "UpdatePM";
-                    if (activeCheckBox.IsChecked == true)
-                        AdminVM.CurrentPmActive = true;
-                    else AdminVM.CurrentPmActive = false;
+                    if (!string.IsNullOrEmpty(pmID.Text))
+                        AdminVM.SelectedCustPmID = int.Parse(pmID.Text);
+                    if ((selectedRowIndex == dataGrid.Items.Count - 1) && AdminVM.ActionPmName.CompareTo("UpdatePM") != 0)
+                    {
+                        AdminVM.ActionPmName = "CreatePM";
+                        if (activeCheckBox.IsChecked == true)
+                            AdminVM.CurrentPmActive = true;
+                        else AdminVM.CurrentPmActive = false;
+
+                        ObservableCollection<ProjectManager> custPMs = AdminVM.CustPMs;
+                        ProjectManager item = new ProjectManager();
+                        custPMs.Add(item);
+                    }
+                    else
+                    {
+                        AdminVM.ActionPmName = "UpdatePM";
+                        if (activeCheckBox.IsChecked == true)
+                            AdminVM.CurrentPmActive = true;
+                        else AdminVM.CurrentPmActive = false;
+                    }
+                    e.Handled = false;
                 }
+            }
+            else
+            {
+                MessageBox.Show("Please make your selection first");
             }
         }
 
@@ -567,6 +662,23 @@ namespace WpfApp.View
             else
             {
                 MessageBox.Show("Please make your selection first");
+            }
+        }
+
+        private void CustomerTab_PreviewKeyUp(object sender, KeyEventArgs e)
+        {
+            TextBox textBox = sender as TextBox;
+            if (textBox != null)
+            {
+                DataGrid dataGrid = noteHelper.FindDataGrid(textBox);
+                int selectedRowIndex = AdminVM.SelectedPMRowIndex;
+                if (dataGrid != null)
+                {
+                    string itemName = textBox.Tag as string;
+                    AdminVM.SelectedCustListID = 123;
+                    //AdminVM.SelectedCustListID = int.Parse(itemName);
+                    Console.WriteLine("Tag ->", itemName);
+                }
             }
         }
     }

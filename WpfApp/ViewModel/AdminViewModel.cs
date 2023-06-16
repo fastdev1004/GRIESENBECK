@@ -53,8 +53,9 @@ namespace WpfApp.ViewModel
             Superintendent superintendent = new Superintendent();
             CustSupts = new ObservableCollection<Superintendent>();
             CustSupts.Add(superintendent);
-            //ActionState = "UpdateCustomer";
-            //ActionManufState = "UpdateManuf";
+            ActionCustName = "";
+            ActionManufState = "";
+            ActionPmName = "";
             LoadAdmin();
 
             this.ViewCustomerCommand = new RelayCommand((e) =>
@@ -110,6 +111,8 @@ namespace WpfApp.ViewModel
                 {
                     int insertedNoteId = (int)cmd.ExecuteScalar();
                     CurrentCCID = insertedNoteId;
+                    SelectedCustPmID = CurrentCCID;
+                    ActionSubmName = "UpdateSubm";
                 }
                 catch (SqlException e)
                 {
@@ -153,8 +156,23 @@ namespace WpfApp.ViewModel
                     cmd.Parameters.AddWithValue("@CCCell", CurrentSubmCell);
                 if (!string.IsNullOrEmpty(CurrentSubmEmail))
                     cmd.Parameters.AddWithValue("@CCEmail", CurrentSubmEmail);
-                cmd.Parameters.AddWithValue("@CCID", SelectedCustSubmID);
+
+                int submID = 0;
+
+                switch (ActionState)
+                {
+                    case "AddRow":
+                        submID = CurrentCCID;
+                        SelectedCustSubmID = CurrentCCID;
+                        break;
+                    case "UpdateRow":
+                        submID = SelectedCustSubmID;
+                        break;
+                }
+
+                cmd.Parameters.AddWithValue("@CCID", submID);
                 cmd.Parameters.AddWithValue("@CCActive", CurrentSubmActive);
+
 
                 int rowsAffected = cmd.ExecuteNonQuery();
             }
@@ -189,6 +207,8 @@ namespace WpfApp.ViewModel
                 {
                     int insertedNoteId = (int)cmd.ExecuteScalar();
                     CurrentSupID = insertedNoteId;
+                    SelectedCustSupID = CurrentSupID;
+                    ActionPmName = "UpdatePM";
                 }
                 catch (SqlException e)
                 {
@@ -232,7 +252,20 @@ namespace WpfApp.ViewModel
                     cmd.Parameters.AddWithValue("@SupCell", CurrentSupCell);
                 if (!string.IsNullOrEmpty(CurrentSupEmail))
                     cmd.Parameters.AddWithValue("@SupEmail", CurrentSupEmail);
-                cmd.Parameters.AddWithValue("@SupID", SelectedCustSupID);
+                int supID = 0;
+               
+                switch (ActionState)
+                {
+                    case "AddRow":
+                        supID = CurrentSupID;
+                        SelectedCustSupID = CurrentPmID;
+                        break;
+                    case "UpdateRow":
+                        supID = SelectedCustSupID;
+                        break;
+                }
+              
+                cmd.Parameters.AddWithValue("@SupID", supID);
                 cmd.Parameters.AddWithValue("@SupActive", CurrentSupActive);
 
                 int rowsAffected = cmd.ExecuteNonQuery();
@@ -266,9 +299,10 @@ namespace WpfApp.ViewModel
 
                 try
                 {
-                    int insertedNoteId = (int)cmd.ExecuteScalar();
-                    CurrentPmID = insertedNoteId;
-                    ActionPmState = "UpdatePM";
+                    int insertedPmId = (int)cmd.ExecuteScalar();
+                    CurrentPmID = insertedPmId;
+                    SelectedCustPmID = CurrentPmID;
+                    ActionPmName = "UpdatePM";
                 }
                 catch (SqlException e)
                 {
@@ -313,7 +347,18 @@ namespace WpfApp.ViewModel
                     cmd.Parameters.AddWithValue("@PmCell", CurrentPmCell);
                 if (!string.IsNullOrEmpty(CurrentPmEmail))
                     cmd.Parameters.AddWithValue("@PmEmail", CurrentPmEmail);
-                cmd.Parameters.AddWithValue("@PmID", SelectedCustPmID);
+                int pmID = 0;
+                switch (ActionState)
+                {
+                    case "AddRow":
+                        pmID = CurrentPmID;
+                        SelectedCustPmID = CurrentPmID;
+                        break;
+                    case "UpdateRow":
+                        pmID = SelectedCustPmID;
+                        break;
+                }
+                cmd.Parameters.AddWithValue("@PmID", pmID);
                 cmd.Parameters.AddWithValue("@PmActive", CurrentPmActive);
 
                 int rowsAffected = cmd.ExecuteNonQuery();
@@ -607,7 +652,7 @@ namespace WpfApp.ViewModel
                     {
                         int insertedCustomerId = (int)cmd.ExecuteScalar();
                         SelectedCustomerID = insertedCustomerId;
-                        ActionState = "UpdateCustomer";
+                        ActionCustName = "UpdateCustomer";
                     }
                     catch(SqlException e)
                     {
@@ -679,7 +724,7 @@ namespace WpfApp.ViewModel
             CustSupts = new ObservableCollection<Superintendent>();
             CustSupts.Add(superintendent);
 
-            ActionState = "CreateCustomer";
+            ActionCustName = "CreateCustomer";
         }
 
         public void ViewManuf(int manufID)
@@ -773,8 +818,20 @@ namespace WpfApp.ViewModel
             sda.Fill(ds);
 
             DataRow firstRow = ds.Tables[0].Rows[0];
-            ActionState = "UpdateCustomer";
+            ActionCustName = "UpdateCustomer";
             SelectedCustomerID = customerID;
+            SelectedCustFullName = "";
+            SelectedCustShortName = "";
+            SelectedCustPoNumber = "";
+            SelectedCustAddress = "";
+            SelectedCustCity = "";
+            SelectedCustState = "";
+            SelectedCustZip = "";
+            SelectedCustPhone = "";
+            SelectedCustFax = "";
+            SelectedCustEmail = "";
+            ActionState = "UpdateRow";
+
             if (!firstRow.IsNull("Full_Name"))
                 SelectedCustFullName = firstRow["Full_Name"].ToString();
             if (!firstRow.IsNull("Short_Name"))
@@ -795,8 +852,7 @@ namespace WpfApp.ViewModel
                 SelectedCustFax = firstRow["FAX"].ToString();
             if (!firstRow.IsNull("Email"))
                 SelectedCustEmail = firstRow["Email"].ToString();
-            if (!firstRow.IsNull("Active"))
-                SelectedCustActive = firstRow.Field<Boolean>("Active");
+            SelectedCustActive = firstRow.Field<Boolean>("Active");
 
             sqlquery = "SELECT * FROM tblNotes WHERE Notes_PK_Desc='Customer' AND Notes_PK=" + customerID;
             cmd = new SqlCommand(sqlquery, dbConnection.Connection);
@@ -1799,7 +1855,7 @@ namespace WpfApp.ViewModel
             {
                 _selectedCustFullName = value;
                 OnPropertyChanged();
-                switch (ActionState)
+                switch (ActionCustName)
                 {
                     case "CreateCustomer":
                         CreateCustomer();
@@ -1820,7 +1876,7 @@ namespace WpfApp.ViewModel
             {
                 _selectedCustShortName = value;
                 OnPropertyChanged();
-                switch (ActionState)
+                switch (ActionCustName)
                 {
                     case "CreateCustomer":
                         CreateCustomer();
@@ -1841,7 +1897,7 @@ namespace WpfApp.ViewModel
             {
                 _selectedCustActive = value;
                 OnPropertyChanged();
-                switch (ActionState)
+                switch (ActionCustName)
                 {
                     case "CreateCustomer":
                         CreateCustomer();
@@ -1862,7 +1918,7 @@ namespace WpfApp.ViewModel
             {
                 _selectedCustPoNumber = value;
                 OnPropertyChanged();
-                switch (ActionState)
+                switch (ActionCustName)
                 {
                     case "CreateCustomer":
                         CreateCustomer();
@@ -1883,7 +1939,7 @@ namespace WpfApp.ViewModel
             {
                 _selectedCustAddress = value;
                 OnPropertyChanged();
-                switch (ActionState)
+                switch (ActionCustName)
                 {
                     case "CreateCustomer":
                         CreateCustomer();
@@ -1904,7 +1960,7 @@ namespace WpfApp.ViewModel
             {
                 _selectedCustCity = value;
                 OnPropertyChanged();
-                switch (ActionState)
+                switch (ActionCustName)
                 {
                     case "CreateCustomer":
                         CreateCustomer();
@@ -1925,7 +1981,7 @@ namespace WpfApp.ViewModel
             {
                 _selectedCustPhone = value;
                 OnPropertyChanged();
-                switch (ActionState)
+                switch (ActionCustName)
                 {
                     case "CreateCustomer":
                         CreateCustomer();
@@ -1946,7 +2002,7 @@ namespace WpfApp.ViewModel
             {
                 _selectedCustState = value;
                 OnPropertyChanged();
-                switch (ActionState)
+                switch (ActionCustName)
                 {
                     case "CreateCustomer":
                         CreateCustomer();
@@ -1967,7 +2023,7 @@ namespace WpfApp.ViewModel
             {
                 _selectedCustZip = value;
                 OnPropertyChanged();
-                switch (ActionState)
+                switch (ActionCustName)
                 {
                     case "CreateCustomer":
                         CreateCustomer();
@@ -1988,7 +2044,7 @@ namespace WpfApp.ViewModel
             {
                 _selectedCustFax = value;
                 OnPropertyChanged();
-                switch (ActionState)
+                switch (ActionCustName)
                 {
                     case "CreateCustomer":
                         CreateCustomer();
@@ -2009,7 +2065,7 @@ namespace WpfApp.ViewModel
             {
                 _selectedCustEmail = value;
                 OnPropertyChanged();
-                switch (ActionState)
+                switch (ActionCustName)
                 {
                     case "CreateCustomer":
                         CreateCustomer();
@@ -2030,7 +2086,7 @@ namespace WpfApp.ViewModel
             {
                 _selectedManufActive = value;
                 OnPropertyChanged();
-                switch (ActionState)
+                switch (ActionCustName)
                 {
                     case "CreateCustomer":
                         CreateCustomer();
@@ -2273,6 +2329,19 @@ namespace WpfApp.ViewModel
             }
         }
 
+        private string _ActionCustName;
+
+        public string ActionCustName
+        {
+            get { return _ActionCustName; }
+            set
+            {
+                _ActionCustName = value;
+                OnPropertyChanged();
+
+            }
+        }
+
         private string _actionState;
 
         public string ActionState
@@ -2298,38 +2367,38 @@ namespace WpfApp.ViewModel
             }
         }
 
-        private string _actionPmState;
+        private string _ActionPmName;
 
-        public string ActionPmState
+        public string ActionPmName
         {
-            get { return _actionPmState; }
+            get { return _ActionPmName; }
             set
             {
-                _actionPmState = value;
+                _ActionPmName = value;
+                OnPropertyChanged();
+            }
+        }
+
+        private string _ActionSupName;
+
+        public string ActionSupName
+        {
+            get { return _ActionSupName; }
+            set
+            {
+                _ActionSupName = value;
                 OnPropertyChanged();
             }
         }
         
-        private string _actionSupState;
+        private string _ActionSubmName;
 
-        public string ActionSupState
+        public string ActionSubmName
         {
-            get { return _actionSupState; }
+            get { return _ActionSubmName; }
             set
             {
-                _actionSupState = value;
-                OnPropertyChanged();
-            }
-        }
-        
-        private string _actionSubmState;
-
-        public string ActionSubmState
-        {
-            get { return _actionSubmState; }
-            set
-            {
-                _actionSubmState = value;
+                _ActionSubmName = value;
                 OnPropertyChanged();
             }
         }
@@ -2438,7 +2507,7 @@ namespace WpfApp.ViewModel
             {
                 _currentPmName = value;
                 OnPropertyChanged();
-                switch (ActionPmState)
+                switch (ActionPmName)
                 {
                     case "CreatePM":
                         CreatePM();
@@ -2459,7 +2528,7 @@ namespace WpfApp.ViewModel
             {
                 _currentPmPhone = value;
                 OnPropertyChanged();
-                switch (ActionPmState)
+                switch (ActionPmName)
                 {
                     case "CreatePM":
                         CreatePM();
@@ -2492,7 +2561,7 @@ namespace WpfApp.ViewModel
             {
                 _currentPmCell = value;
                 OnPropertyChanged();
-                switch (ActionPmState)
+                switch (ActionPmName)
                 {
                     case "CreatePM":
                         CreatePM();
@@ -2513,7 +2582,7 @@ namespace WpfApp.ViewModel
             {
                 _currentPmActive = value;
                 OnPropertyChanged();
-                switch (ActionPmState)
+                switch (ActionPmName)
                 {
                     case "CreatePM":
                         CreatePM();
@@ -2534,7 +2603,7 @@ namespace WpfApp.ViewModel
             {
                 _currentPmEmail = value;
                 OnPropertyChanged();
-                switch (ActionPmState)
+                switch (ActionPmName)
                 {
                     case "CreatePM":
                         CreatePM();
@@ -2555,7 +2624,7 @@ namespace WpfApp.ViewModel
             {
                 _currentSupName = value;
                 OnPropertyChanged();
-                switch (ActionSupState)
+                switch (ActionSupName)
                 {
                     case "CreateSup":
                         CreateSup();
@@ -2576,7 +2645,7 @@ namespace WpfApp.ViewModel
             {
                 _currentSupPhone = value;
                 OnPropertyChanged();
-                switch (ActionSupState)
+                switch (ActionSupName)
                 {
                     case "CreateSup":
                         CreateSup();
@@ -2597,7 +2666,7 @@ namespace WpfApp.ViewModel
             {
                 _currentSupCell = value;
                 OnPropertyChanged();
-                switch (ActionSupState)
+                switch (ActionSupName)
                 {
                     case "CreateSup":
                         CreateSup();
@@ -2618,7 +2687,7 @@ namespace WpfApp.ViewModel
             {
                 _currentSupEmail = value;
                 OnPropertyChanged();
-                switch (ActionSupState)
+                switch (ActionSupName)
                 {
                     case "CreateSup":
                         CreateSup();
@@ -2639,7 +2708,7 @@ namespace WpfApp.ViewModel
             {
                 _currentSupActive = value;
                 OnPropertyChanged();
-                switch (ActionSupState)
+                switch (ActionSupName)
                 {
                     case "CreateSup":
                         CreateSup();
@@ -2672,7 +2741,7 @@ namespace WpfApp.ViewModel
             {
                 _currentSubmName = value;
                 OnPropertyChanged();
-                switch (ActionSubmState)
+                switch (ActionSubmName)
                 {
                     case "CreateSubm":
                         CreateSubm();
@@ -2693,7 +2762,7 @@ namespace WpfApp.ViewModel
             {
                 _currentSubmPhone = value;
                 OnPropertyChanged();
-                switch (ActionSubmState)
+                switch (ActionSubmName)
                 {
                     case "CreateSubm":
                         CreateSubm();
@@ -2714,7 +2783,7 @@ namespace WpfApp.ViewModel
             {
                 _currentSubmCell = value;
                 OnPropertyChanged();
-                switch (ActionSubmState)
+                switch (ActionSubmName)
                 {
                     case "CreateSubm":
                         CreateSubm();
@@ -2735,7 +2804,7 @@ namespace WpfApp.ViewModel
             {
                 _currentSubmEmail = value;
                 OnPropertyChanged();
-                switch (ActionSubmState)
+                switch (ActionSubmName)
                 {
                     case "CreateSubm":
                         CreateSubm();
@@ -2767,7 +2836,7 @@ namespace WpfApp.ViewModel
             {
                 _currentSubmActive = value;
                 OnPropertyChanged();
-                switch (ActionSubmState)
+                switch (ActionSubmName)
                 {
                     case "CreateSubm":
                         CreateSubm();
@@ -2778,6 +2847,18 @@ namespace WpfApp.ViewModel
                 }
             }
         }
-        
+
+        private int _selectedCustListID;
+
+        public int SelectedCustListID
+        {
+            get { return _selectedCustListID; }
+            set
+            {
+                _selectedCustListID = value;
+                OnPropertyChanged();
+            }
+        }
+
     }
 }
