@@ -762,9 +762,9 @@
                                         <DataGridTemplateColumn.CellTemplate>
                                             <DataTemplate>
                                                 <TextBlock Text="{Binding ShortName, Mode=TwoWay}" TextDecorations="Underline" Foreground="Blue" Cursor="Hand">
-                                                    <TextBlock.InputBindings>
+                                                <TextBlock.InputBindings>
                                                         <MouseBinding MouseAction="LeftClick" Command="{Binding DataContext.ViewCustomerCommand, RelativeSource={RelativeSource AncestorType=local:AdminView}}" CommandParameter="{Binding ID}" />
-                                                    </TextBlock.InputBindings>    
+                                                    </TextBlock.InputBindings>
                                                 </TextBlock>
                                             </DataTemplate>
                                         </DataGridTemplateColumn.CellTemplate>

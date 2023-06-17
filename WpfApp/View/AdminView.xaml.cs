@@ -668,85 +668,85 @@ namespace WpfApp.View
 
         private void CustomerTab_PreviewKeyUp(object sender, KeyEventArgs e)
         {
-           
-                TextBox textBox = sender as TextBox;
-                if (textBox != null)
+            TextBox textBox = sender as TextBox;
+            if (textBox != null)
+            {
+                DataGrid dataGrid = noteHelper.FindDataGrid(textBox);
+
+                if (dataGrid != null)
                 {
-                    DataGrid dataGrid = noteHelper.FindDataGrid(textBox);
+                    string itemName = textBox.Tag as string;
+                    AdminVM.UpdateComponent = "Table";
 
-                    if (dataGrid != null)
+                    int selectedRowIndex = AdminVM.SelectedCustRowIndex;
+                    int selectedIndex = dataGrid.SelectedIndex;
+                    if (AdminVM.SelectedTempCustIndex == -1)
                     {
-                        string itemName = textBox.Tag as string;
-                        AdminVM.UpdateComponent = "Table";
-
-                        int selectedRowIndex = AdminVM.SelectedCustRowIndex;
-                        if (AdminVM.SelectedTempCustIndex == -1)
-                        {
-                            AdminVM.SelectedTempCustIndex = selectedRowIndex;
-                        }
-                        else if (AdminVM.SelectedTempCustIndex != selectedRowIndex)
-                        {
-                            AdminVM.TempCustomer = new Customer();
-                            AdminVM.SelectedTempCustIndex = selectedRowIndex;
-                        }
-
-                        Customer item = dataGrid.Items[selectedRowIndex] as Customer;
-
-                        if (string.IsNullOrEmpty(AdminVM.TempCustomer.FullName))
-                        {
-                            AdminVM.TempCustomer.ID = item.ID;
-                            AdminVM.TempCustomer.FullName = item.FullName;
-                            AdminVM.TempCustomer.ShortName = item.ShortName;
-                            AdminVM.TempCustomer.PoBox = item.PoBox;
-                            AdminVM.TempCustomer.Address = item.Address;
-                            AdminVM.TempCustomer.City = item.City;
-                            AdminVM.TempCustomer.State = item.State;
-                            AdminVM.TempCustomer.Zip = item.Zip;
-                            AdminVM.TempCustomer.Phone = item.Phone;
-                            AdminVM.TempCustomer.Fax = item.Fax;
-                            AdminVM.TempCustomer.Active = item.Active;
-                        }
-
-                        switch (itemName)
-                        {
-                            case "ShortName":
-                                AdminVM.TempCustomer.ShortName = textBox.Text;
-                                break;
-                            case "FullName":
-                                AdminVM.TempCustomer.FullName = textBox.Text;
-                                break;
-                            case "PoNumber":
-                                AdminVM.TempCustomer.PoBox = textBox.Text;
-                                break;
-                            case "Address":
-                                AdminVM.TempCustomer.Address = textBox.Text;
-                                break;
-                            case "City":
-                                AdminVM.TempCustomer.City = textBox.Text;
-                                break;
-                            case "State":
-                                AdminVM.TempCustomer.State = textBox.Text;
-                                break;
-                            case "Zip":
-                                AdminVM.TempCustomer.Zip = textBox.Text;
-                                break;
-                            case "Phone":
-                                AdminVM.TempCustomer.Phone = textBox.Text;
-                                break;
-                            case "Fax":
-                                AdminVM.TempCustomer.Fax = textBox.Text;
-                                break;
-                        }
-
-                        AdminVM.UpdateCustomer();
+                        AdminVM.SelectedTempCustIndex = selectedRowIndex;
                     }
+                    else if (AdminVM.SelectedTempCustIndex != selectedRowIndex)
+                    {
+                        AdminVM.TempCustomer = new Customer();
+                        AdminVM.SelectedTempCustIndex = selectedRowIndex;
+                    }
+                    Customer item = dataGrid.Items[selectedRowIndex] as Customer;
+                        
+                    if (string.IsNullOrEmpty(AdminVM.TempCustomer.FullName))
+                    {
+                        AdminVM.TempCustomer.ID = item.ID;
+                        AdminVM.TempCustomer.FullName = item.FullName;
+                        AdminVM.TempCustomer.ShortName = item.ShortName;
+                        AdminVM.TempCustomer.PoBox = item.PoBox;
+                        AdminVM.TempCustomer.Address = item.Address;
+                        AdminVM.TempCustomer.City = item.City;
+                        AdminVM.TempCustomer.State = item.State;
+                        AdminVM.TempCustomer.Zip = item.Zip;
+                        AdminVM.TempCustomer.Phone = item.Phone;
+                        AdminVM.TempCustomer.Fax = item.Fax;
+                        AdminVM.TempCustomer.Active = item.Active;
+                    }
+                    //AdminVM.Customers[selectedRowIndex] = AdminVM.TempCustomer;
+                    switch (itemName)
+                    {
+                        case "ShortName":
+                            AdminVM.TempCustomer.ShortName = textBox.Text;
+                            break;
+                        case "FullName":
+                            AdminVM.TempCustomer.FullName = textBox.Text;
+                            break;
+                        case "PoNumber":
+                            AdminVM.TempCustomer.PoBox = textBox.Text;
+                            break;
+                        case "Address":
+                            AdminVM.TempCustomer.Address = textBox.Text;
+                            break;
+                        case "City":
+                            AdminVM.TempCustomer.City = textBox.Text;
+                            break;
+                        case "State":
+                            AdminVM.TempCustomer.State = textBox.Text;
+                            break;
+                        case "Zip":
+                            AdminVM.TempCustomer.Zip = textBox.Text;
+                            break;
+                        case "Phone":
+                            AdminVM.TempCustomer.Phone = textBox.Text;
+                            break;
+                        case "Fax":
+                            AdminVM.TempCustomer.Fax = textBox.Text;
+                            break;
+                    }
+
+                    AdminVM.UpdateCustomer();
                 }
+            }
                 e.Handled = true;
           
         }
 
         private void CustomerTab_ChkPreviewKeyUp(object sender, RoutedEventArgs e)
         {
+            if(AdminVM.IsInitialLoad)
             {
                 CheckBox activeCheckBox = sender as CheckBox;
                 DataGrid dataGrid = noteHelper.FindDataGrid(activeCheckBox);
@@ -780,7 +780,7 @@ namespace WpfApp.View
                         AdminVM.TempCustomer.Fax = item.Fax;
                         AdminVM.TempCustomer.Active = item.Active;
                     }
-
+                    AdminVM.Customers[selectedRowIndex] = AdminVM.TempCustomer;
                     if (activeCheckBox.IsChecked == true)
                         AdminVM.TempCustomer.Active = true;
                     else AdminVM.TempCustomer.Active = false;
@@ -788,7 +788,7 @@ namespace WpfApp.View
                     AdminVM.UpdateCustomer();
                 }
                 e.Handled = true;
-                }
+            }
         }
     }
 }
