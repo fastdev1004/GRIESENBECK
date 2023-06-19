@@ -92,7 +92,7 @@
                                         <ColumnDefinition Width="5*" />
                                     </Grid.ColumnDefinitions>
                                     <Label Content="Full Name:" />
-                                    <TextBox Grid.Column="1" Text="{Binding SelectedCustFullName, Mode=TwoWay}" />
+                                    <TextBox Grid.Column="1" Text="{Binding TempDetailCustomer.FullName, Mode=TwoWay}" KeyUp="CustomerDetail_KeyUp" Tag="FullName" />
                                 </Grid>
                                 <Grid Grid.Row="1" Margin="0,0,0,4">
                                     <Grid.ColumnDefinitions>
@@ -105,11 +105,11 @@
                                             <ColumnDefinition Width="3*" />
                                             <ColumnDefinition Width="2*" />
                                         </Grid.ColumnDefinitions>
-                                        <TextBox Text="{Binding SelectedCustShortName, Mode=TwoWay}" />
+                                        <TextBox Text="{Binding TempDetailCustomer.ShortName , Mode=TwoWay}" KeyUp="CustomerDetail_KeyUp" Tag="ShortName" />
                                         <Grid Grid.Column="1">
                                             <WrapPanel HorizontalAlignment="Right">
                                                 <Label Content="Active?" />
-                                                <CheckBox Grid.Column="1" IsChecked="{Binding SelectedCustActive, Mode=TwoWay}" />
+                                                <CheckBox Grid.Column="1" IsChecked="{Binding TempDetailCustomer.Active, Mode=TwoWay}" Checked="CustomerDetail_CheckBox" Unchecked="CustomerDetail_CheckBox" />
                                             </WrapPanel>
                                         </Grid>
                                     </Grid>
@@ -121,7 +121,7 @@
                                         <ColumnDefinition Width="4*" />
                                     </Grid.ColumnDefinitions>
                                     <Label Content="PO Box:" />
-                                    <TextBox Grid.Column="1" Text="{Binding SelectedCustPoNumber, Mode=TwoWay}" />
+                                    <TextBox Grid.Column="1" Text="{Binding TempDetailCustomer.PoBox, Mode=TwoWay}" KeyUp="CustomerDetail_KeyUp" Tag="PoBox" />
                                 </Grid>
                                 <Grid Grid.Row="3" Margin="0,0,0,4">
                                     <Grid.ColumnDefinitions>
@@ -129,7 +129,7 @@
                                         <ColumnDefinition Width="5*" />
                                     </Grid.ColumnDefinitions>
                                     <Label Content="Address:" />
-                                    <TextBox Grid.Column="1" Text="{Binding SelectedCustAddress, Mode=TwoWay}" />
+                                    <TextBox Grid.Column="1" Text="{Binding TempDetailCustomer.Address, Mode=TwoWay}" KeyUp="CustomerDetail_KeyUp" Tag="Address" />
                                 </Grid>
                                 <Grid Grid.Row="4" Margin="0,0,0,4">
                                     <Grid.ColumnDefinitions>
@@ -142,14 +142,14 @@
                                             <ColumnDefinition Width="1*" />
                                             <ColumnDefinition Width="1*" />
                                         </Grid.ColumnDefinitions>
-                                        <TextBox Text="{Binding SelectedCustCity, Mode=TwoWay}" />
+                                        <TextBox Text="{Binding TempDetailCustomer.City , Mode=TwoWay}" KeyUp="CustomerDetail_KeyUp" Tag="City" />
                                         <Grid Grid.Column="1">
                                             <Grid.ColumnDefinitions>
                                                 <ColumnDefinition Width="1*" />
                                                 <ColumnDefinition Width="2*" />
                                             </Grid.ColumnDefinitions>
                                             <Label Content="Phone" />
-                                            <TextBox Grid.Column="1" Text="{Binding SelectedCustPhone, Mode=TwoWay}" />
+                                            <TextBox Grid.Column="1" Text="{Binding TempDetailCustomer.Phone, Mode=TwoWay}" KeyUp="CustomerDetail_KeyUp" Tag="Phone" />
                                         </Grid>
                                     </Grid>
                                 </Grid>
@@ -169,14 +169,14 @@
                                                 <ColumnDefinition Width="1*" />
                                                 <ColumnDefinition Width="2*" />
                                             </Grid.ColumnDefinitions>
-                                            <TextBox MaxLength="2" Text="{Binding SelectedCustState, Mode=TwoWay}" />
+                                            <TextBox MaxLength="2" Text="{Binding TempDetailCustomer.State, Mode=TwoWay}" KeyUp="CustomerDetail_KeyUp" Tag="State" />
                                             <Grid Grid.Column="1">
                                                 <Grid.ColumnDefinitions>
                                                     <ColumnDefinition Width="1*" />
                                                     <ColumnDefinition Width="2*" />
                                                 </Grid.ColumnDefinitions>
                                                 <Label Content="Zip:" />
-                                                <TextBox Grid.Column="1" Text="{Binding SelectedCustZip, Mode=TwoWay}" />
+                                                <TextBox Grid.Column="1" Text="{Binding TempDetailCustomer.Zip, Mode=TwoWay}" KeyUp="CustomerDetail_KeyUp" Tag="Zip" />
                                             </Grid>
                                         </Grid>
                                         <Grid Grid.Column="1">
@@ -185,7 +185,7 @@
                                                 <ColumnDefinition Width="2*" />
                                             </Grid.ColumnDefinitions>
                                             <Label Content="FAX:" />
-                                            <TextBox Grid.Column="1" Text="{Binding SelectedCustFax, Mode=TwoWay}" />
+                                            <TextBox Grid.Column="1" Text="{Binding TempDetailCustomer.Fax, Mode=TwoWay}" KeyUp="CustomerDetail_KeyUp" Tag="Fax" />
                                         </Grid>
                                     </Grid>
                                 </Grid>
@@ -195,7 +195,7 @@
                                         <ColumnDefinition Width="5*" />
                                     </Grid.ColumnDefinitions>
                                     <Label Content="Email:" />
-                                    <TextBox Grid.Column="1" Text="{Binding SelectedCustEmail, Mode=TwoWay}" />
+                                    <TextBox Grid.Column="1" Text="{Binding TempDetailCustomer.Email, Mode=TwoWay}" KeyUp="CustomerDetail_KeyUp" Tag="Email" />
                                 </Grid>
                                 <Grid Grid.Row="7">
                                     <Grid.ColumnDefinitions>
@@ -1519,7 +1519,7 @@
                                 <DataGridTemplateColumn Width="1*" Header="State">
                                     <DataGridTemplateColumn.CellTemplate>
                                         <DataTemplate>
-                                            <TextBox Text="{Binding State, Mode=TwoWay}" KeyUp="ArchTab_PreviewKeyUp" Tag="State" />
+                                            <TextBox Text="{Binding State, Mode=TwoWay}" KeyUp="ArchTab_PreviewKeyUp" Tag="State" MaxLength="2" />
                                         </DataTemplate>
                                     </DataGridTemplateColumn.CellTemplate>
                                 </DataGridTemplateColumn>

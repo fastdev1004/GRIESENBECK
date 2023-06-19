@@ -56,11 +56,13 @@ namespace WpfApp.ViewModel
             CustSupts.Add(superintendent);
 
             TempCustomer = new Customer();
+            TempDetailCustomer = new Customer();
             TempManuf = new Manufacturer();
             TempDetailManuf = new Manufacturer();
             TempAcronym = new Acronym();
             TempMaterial = new Material();
             TempInstaller = new InHouseInstaller();
+            TempCreateCustomer = new Customer();
             SelectedTempCustIndex = 0;
             SelectedCustRowIndex = -1;
             ActionCustState = "Clear";
@@ -72,6 +74,7 @@ namespace WpfApp.ViewModel
             ActionState = "";
 
             SelectedManufID = -1;
+            SelectedCustomerID = -1;
             LoadAdmin();
             //IsInitialLoad = true;
             this.ViewCustomerCommand = new RelayCommand((e) =>
@@ -583,7 +586,7 @@ namespace WpfApp.ViewModel
                     if (!string.IsNullOrEmpty(salesCell))
                         cmd.Parameters.AddWithValue("@Cell", salesCell);
                     else cmd.Parameters.AddWithValue("@Cell", DBNull.Value);
-                    if (!string.IsNullOrEmpty(salesName))
+                    if (!string.IsNullOrEmpty(salesEmail))
                         cmd.Parameters.AddWithValue("@Email", salesEmail);
                     else cmd.Parameters.AddWithValue("@Email", DBNull.Value);
                     cmd.Parameters.AddWithValue("@Active", active);
@@ -1368,18 +1371,18 @@ namespace WpfApp.ViewModel
 
         public void UpdateCustomer()
         {
-            int customerID = (UpdateComponent.Equals("Table")) ? TempCustomer.ID : SelectedCustomerID;
-            string fullName = (UpdateComponent.Equals("Table")) ? TempCustomer.FullName : SelectedCustFullName;
-            string shortName = (UpdateComponent.Equals("Table")) ? TempCustomer.ShortName : SelectedCustShortName;
-            string poNumber = (UpdateComponent.Equals("Table")) ? TempCustomer.PoBox : SelectedCustPoNumber;
-            string address = (UpdateComponent.Equals("Table")) ? TempCustomer.Address : SelectedCustAddress;
-            string city = (UpdateComponent.Equals("Table")) ? TempCustomer.City : SelectedCustCity;
-            string state = (UpdateComponent.Equals("Table")) ? TempCustomer.State : SelectedCustState;
-            string zip = (UpdateComponent.Equals("Table")) ? TempCustomer.Zip : SelectedCustZip;
-            string phone = (UpdateComponent.Equals("Table")) ? TempCustomer.Phone : SelectedCustPhone;
-            string fax = (UpdateComponent.Equals("Table")) ? TempCustomer.Fax : SelectedCustFax;
-            string email = (UpdateComponent.Equals("Table")) ? TempCustomer.Email : SelectedCustEmail;
-            bool active = (UpdateComponent.Equals("Table")) ? TempCustomer.Active : SelectedCustActive;
+            int customerID = (UpdateComponent.Equals("Table")) ? TempCustomer.ID : TempDetailCustomer.ID;
+            string fullName = (UpdateComponent.Equals("Table")) ? TempCustomer.FullName : TempDetailCustomer.FullName;
+            string shortName = (UpdateComponent.Equals("Table")) ? TempCustomer.ShortName : TempDetailCustomer.ShortName;
+            string poNumber = (UpdateComponent.Equals("Table")) ? TempCustomer.PoBox : TempDetailCustomer.PoBox;
+            string address = (UpdateComponent.Equals("Table")) ? TempCustomer.Address : TempDetailCustomer.Address;
+            string city = (UpdateComponent.Equals("Table")) ? TempCustomer.City : TempDetailCustomer.City;
+            string state = (UpdateComponent.Equals("Table")) ? TempCustomer.State : TempDetailCustomer.State;
+            string zip = (UpdateComponent.Equals("Table")) ? TempCustomer.Zip : TempDetailCustomer.Zip;
+            string phone = (UpdateComponent.Equals("Table")) ? TempCustomer.Phone : TempDetailCustomer.Phone;
+            string fax = (UpdateComponent.Equals("Table")) ? TempCustomer.Fax : TempDetailCustomer.Fax;
+            string email = (UpdateComponent.Equals("Table")) ? TempCustomer.Email : TempDetailCustomer.Email;
+            bool active = (UpdateComponent.Equals("Table")) ? TempCustomer.Active : TempDetailCustomer.Active;
             
             if (!string.IsNullOrEmpty(fullName))
             {
@@ -1446,59 +1449,57 @@ namespace WpfApp.ViewModel
             }
         }
 
-        private void CreateCustomer()
+        public void CreateCustomer()
         {
-            if (!string.IsNullOrEmpty(SelectedCustFullName))
+            if (!string.IsNullOrEmpty(TempCreateCustomer.FullName))
             {
                 sqlquery = "INSERT INTO tblCustomers(Short_Name, Full_Name, PO_Box, Address, City, State, ZIP, Phone, FAX, Email, Active) OUTPUT INSERTED.Customer_ID VALUES (@ShortName, @FullName, @PoNumber, @Address, @City, @State, @Zip, @Phone, @Fax, @Email, @Active)";
                
                 using (cmd = new SqlCommand(sqlquery, dbConnection.Connection))
                 {
-                    if (!string.IsNullOrEmpty(SelectedCustFullName))
-                        cmd.Parameters.AddWithValue("@FullName", SelectedCustFullName);
+                    if (!string.IsNullOrEmpty(TempCreateCustomer.FullName))
+                        cmd.Parameters.AddWithValue("@FullName", TempCreateCustomer.FullName);
                     else cmd.Parameters.AddWithValue("@FullName", DBNull.Value);
-                    if (!string.IsNullOrEmpty(SelectedCustShortName))
-                        cmd.Parameters.AddWithValue("@ShortName", SelectedCustShortName);
+                    if (!string.IsNullOrEmpty(TempCreateCustomer.ShortName))
+                        cmd.Parameters.AddWithValue("@ShortName", TempCreateCustomer.ShortName);
                     else cmd.Parameters.AddWithValue("@ShortName", DBNull.Value);
-                    if (!string.IsNullOrEmpty(SelectedCustPoNumber))
-                        cmd.Parameters.AddWithValue("@PoNumber", SelectedCustPoNumber);
+                    if (!string.IsNullOrEmpty(TempCreateCustomer.PoBox))
+                        cmd.Parameters.AddWithValue("@PoNumber", TempCreateCustomer.PoBox);
                     else cmd.Parameters.AddWithValue("@PoNumber", DBNull.Value);
-                    if (!string.IsNullOrEmpty(SelectedCustAddress))
-                        cmd.Parameters.AddWithValue("@Address", SelectedCustAddress);
+                    if (!string.IsNullOrEmpty(TempCreateCustomer.Address))
+                        cmd.Parameters.AddWithValue("@Address", TempCreateCustomer.Address);
                     else cmd.Parameters.AddWithValue("@Address", DBNull.Value);
-                    if (!string.IsNullOrEmpty(SelectedCustCity))
-                        cmd.Parameters.AddWithValue("@City", SelectedCustCity);
+                    if (!string.IsNullOrEmpty(TempCreateCustomer.City))
+                        cmd.Parameters.AddWithValue("@City", TempCreateCustomer.City);
                     else cmd.Parameters.AddWithValue("@City", DBNull.Value);
-                    if (!string.IsNullOrEmpty(SelectedCustState))
-                        cmd.Parameters.AddWithValue("@State", SelectedCustState);
+                    if (!string.IsNullOrEmpty(TempCreateCustomer.State))
+                        cmd.Parameters.AddWithValue("@State", TempCreateCustomer.State);
                     else cmd.Parameters.AddWithValue("@State", DBNull.Value);
-                    if (!string.IsNullOrEmpty(SelectedCustZip))
-                        cmd.Parameters.AddWithValue("@Zip", SelectedCustZip);
+                    if (!string.IsNullOrEmpty(TempCreateCustomer.Zip))
+                        cmd.Parameters.AddWithValue("@Zip", TempCreateCustomer.Zip);
                     else cmd.Parameters.AddWithValue("@Zip", DBNull.Value);
-                    if (!string.IsNullOrEmpty(SelectedCustPhone))
-                        cmd.Parameters.AddWithValue("@Phone", SelectedCustPhone);
+                    if (!string.IsNullOrEmpty(TempCreateCustomer.Phone))
+                        cmd.Parameters.AddWithValue("@Phone", TempCreateCustomer.Phone);
                     else cmd.Parameters.AddWithValue("@Phone", DBNull.Value);
-                    if (!string.IsNullOrEmpty(SelectedCustFax))
-                        cmd.Parameters.AddWithValue("@Fax", SelectedCustFax);
+                    if (!string.IsNullOrEmpty(TempCreateCustomer.Fax))
+                        cmd.Parameters.AddWithValue("@Fax", TempCreateCustomer.Fax);
                     else cmd.Parameters.AddWithValue("@Fax", DBNull.Value);
-                    if (!string.IsNullOrEmpty(SelectedCustEmail))
-                        cmd.Parameters.AddWithValue("@Email", SelectedCustEmail);
+                    if (!string.IsNullOrEmpty(TempCreateCustomer.Email))
+                        cmd.Parameters.AddWithValue("@Email", TempCreateCustomer.Email);
                     else cmd.Parameters.AddWithValue("@Email", DBNull.Value);
-                    cmd.Parameters.AddWithValue("@Active", SelectedCustActive);
+                    cmd.Parameters.AddWithValue("@Active", TempCreateCustomer.Active);
 
-                        
                     try
                     {
                         int insertedCustomerId = (int)cmd.ExecuteScalar();
                         SelectedCustomerID = insertedCustomerId;
-                        ActionCustName = "UpdateCustomer";
+                        TempDetailCustomer.ID = SelectedCustomerID;
                     }
                     catch (SqlException e)
                     {
                         Console.WriteLine(e);
                     }
                 }
-                ActionCustState = "";
             }
             else
             {
@@ -1666,40 +1667,40 @@ namespace WpfApp.ViewModel
             UpdateComponent = "Detail";
 
             DataRow firstRow = ds.Tables[0].Rows[0];
-            ActionCustName = "UpdateCustomer";
             SelectedCustomerID = customerID;
             ActionState = "UpdateRow";
 
             if (!firstRow.IsNull("Full_Name"))
-                SelectedCustFullName = firstRow["Full_Name"].ToString();
+                TempDetailCustomer.FullName = firstRow["Full_Name"].ToString();
             if (!firstRow.IsNull("Short_Name"))
-                SelectedCustShortName = firstRow["Short_Name"].ToString();
-            else SelectedCustShortName = "";
+                TempDetailCustomer.ShortName = firstRow["Short_Name"].ToString();
+            else TempDetailCustomer.ShortName = "";
             if (!firstRow.IsNull("PO_Box"))
-                SelectedCustPoNumber = firstRow["PO_Box"].ToString();
-            else SelectedCustPoNumber = "";
+                TempDetailCustomer.PoBox = firstRow["PO_Box"].ToString();
+            else TempDetailCustomer.PoBox = "";
             if (!firstRow.IsNull("Address"))
-                SelectedCustAddress = firstRow["Address"].ToString();
-            else SelectedCustAddress = "";
+                TempDetailCustomer.Address = firstRow["Address"].ToString();
+            else TempDetailCustomer.Address = "";
             if (!firstRow.IsNull("City"))
-                SelectedCustCity = firstRow["City"].ToString();
-            else SelectedCustAddress = "";
+                TempDetailCustomer.City = firstRow["City"].ToString();
+            else TempDetailCustomer.City = "";
             if (!firstRow.IsNull("State"))
-                SelectedCustState = firstRow["State"].ToString();
-            else SelectedCustState = "";
+                TempDetailCustomer.State = firstRow["State"].ToString();
+            else TempDetailCustomer.State = "";
             if (!firstRow.IsNull("ZIP"))
-                SelectedCustZip = firstRow["ZIP"].ToString();
-            else SelectedCustZip = "";
+                TempDetailCustomer.Zip = firstRow["ZIP"].ToString();
+            else TempDetailCustomer.Zip = "";
             if (!firstRow.IsNull("Phone"))
-                SelectedCustPhone = firstRow["Phone"].ToString();
-            else SelectedCustPhone = "";
+                TempDetailCustomer.Phone = firstRow["Phone"].ToString();
+            else TempDetailCustomer.Phone = "";
             if (!firstRow.IsNull("FAX"))
-                SelectedCustFax = firstRow["FAX"].ToString();
-            else SelectedCustFax = "";
+                TempDetailCustomer.Fax = firstRow["FAX"].ToString();
+            else TempDetailCustomer.Fax = "";
             if (!firstRow.IsNull("Email"))
-                SelectedCustEmail = firstRow["Email"].ToString();
-            else SelectedCustEmail = "";
-            SelectedCustActive = firstRow.Field<Boolean>("Active");
+                TempDetailCustomer.Email = firstRow["Email"].ToString();
+            else TempDetailCustomer.Email = "";
+            TempDetailCustomer.Active = firstRow.Field<Boolean>("Active");
+            TempDetailCustomer.ID = int.Parse(firstRow["Customer_ID"].ToString());
 
             sqlquery = "SELECT * FROM tblNotes WHERE Notes_PK_Desc='Customer' AND Notes_PK=" + customerID;
             cmd = new SqlCommand(sqlquery, dbConnection.Connection);
@@ -3854,6 +3855,30 @@ namespace WpfApp.ViewModel
             set
             {
                 _tempCustomer = value;
+                OnPropertyChanged();
+            }
+        }
+
+        private Customer _tempDetailCustomer;
+
+        public Customer TempDetailCustomer
+        {
+            get { return _tempDetailCustomer; }
+            set
+            {
+                _tempDetailCustomer = value;
+                OnPropertyChanged();
+            }
+        }
+
+        private Customer _tempCreateCustomer;
+
+        public Customer TempCreateCustomer
+        {
+            get { return _tempCreateCustomer; }
+            set
+            {
+                _tempCreateCustomer = value;
                 OnPropertyChanged();
             }
         }

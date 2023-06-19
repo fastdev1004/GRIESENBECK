@@ -731,36 +731,36 @@ namespace WpfApp.View
 
         private void CustomerTab_ChkPreviewKeyUp(object sender, RoutedEventArgs e)
         {
-           
-            //CheckBox activeCheckBox = sender as CheckBox;
-            //DataGrid dataGrid = noteHelper.FindDataGrid(activeCheckBox);
-            //if (dataGrid != null)
-            //{
-            //    AdminVM.UpdateComponent = "Table";
-            //    int selectedRowIndex = AdminVM.SelectedCustRowIndex;
-            //    if (AdminVM.SelectedTempCustIndex == -1)
-            //    {
-            //        AdminVM.SelectedTempCustIndex = selectedRowIndex;
-            //    }
-            //    else if (AdminVM.SelectedTempCustIndex != selectedRowIndex)
-            //    {
-            //        AdminVM.TempCustomer = new Customer();
-            //        AdminVM.SelectedTempCustIndex = selectedRowIndex;
-            //    }
 
-            //    if(selectedRowIndex >= 0)
-            //    {
-            //        Customer item = dataGrid.Items[selectedRowIndex] as Customer;
+            CheckBox activeCheckBox = sender as CheckBox;
+            DataGrid dataGrid = noteHelper.FindDataGrid(activeCheckBox);
+            if (dataGrid != null)
+            {
+                AdminVM.UpdateComponent = "Table";
+                int selectedRowIndex = AdminVM.SelectedCustRowIndex;
+                if (AdminVM.SelectedTempCustIndex == -1)
+                {
+                    AdminVM.SelectedTempCustIndex = selectedRowIndex;
+                }
+                else if (AdminVM.SelectedTempCustIndex != selectedRowIndex)
+                {
+                    AdminVM.TempCustomer = new Customer();
+                    AdminVM.SelectedTempCustIndex = selectedRowIndex;
+                }
 
-            //        AdminVM.TempCustomer = item;
-            //        AdminVM.Customers[selectedRowIndex] = AdminVM.TempCustomer;
-            //        if (activeCheckBox.IsChecked == true)
-            //            AdminVM.TempCustomer.Active = true;
-            //        else AdminVM.TempCustomer.Active = false;
+                if (selectedRowIndex >= 0)
+                {
+                    Customer item = dataGrid.Items[selectedRowIndex] as Customer;
 
-            //        AdminVM.UpdateCustomer();
-            //    }
-            //}
+                    AdminVM.TempCustomer = item;
+                    AdminVM.Customers[selectedRowIndex] = AdminVM.TempCustomer;
+                    if (activeCheckBox.IsChecked == true)
+                        AdminVM.TempCustomer.Active = true;
+                    else AdminVM.TempCustomer.Active = false;
+
+                    AdminVM.UpdateCustomer();
+                }
+            }
         }
 
         private void AcronymTab_PreviewKeyUp(object sender, KeyEventArgs e)
@@ -859,61 +859,61 @@ namespace WpfApp.View
             
             DataGrid dataGrid = noteHelper.FindDataGrid(chkBox);
             int selectedRowIndex = dataGrid.SelectedIndex;
-            int rowIndex = selectedRowIndex;
+            //int rowIndex = selectedRowIndex;
 
-            if (AdminVM.ActionState.Equals("AddRow") || (AdminVM.ActionState.Equals("UpdateRow") && selectedRowIndex == -1))
-            {
-                rowIndex = AdminVM.CurrentIndex;
-            }
-            else
-            {
-                rowIndex = selectedRowIndex;
-            }
-            
-            if(rowIndex >= 0)
-            {
-                Acronym newRow = dataGrid.Items[rowIndex] as Acronym;
-                if (dataGrid != null)
-                {
-                    if (selectedRowIndex == dataGrid.Items.Count - 1)
-                    {
-                        if (!string.IsNullOrEmpty(newRow.AcronymName))
-                        {
-                            ObservableCollection<Acronym> acronyms = AdminVM.Acronyms;
-                            Acronym item = new Acronym();
-                            acronyms.Add(item);
-                            AdminVM.ActionState = "AddRow";
-                            AdminVM.TempAcronym = new Acronym();
-                            
-                        if (chkBox.IsChecked == true)
-                            AdminVM.TempAcronym.Active = true;
-                        else AdminVM.TempAcronym.Active = false;
+            //if (AdminVM.ActionState.Equals("AddRow") || (AdminVM.ActionState.Equals("UpdateRow") && selectedRowIndex == -1))
+            //{
+            //    rowIndex = AdminVM.CurrentIndex;
+            //}
+            //else
+            //{
+            //    rowIndex = selectedRowIndex;
+            //}
 
-                        AdminVM.CreateAcronym();
-                        }
-                        else
-                        {
-                            newRow.Active = false;
-                            MessageBox.Show("Acronym Name is required.");
-                        }
-                    }
-                    else
-                    {
-                        Acronym _acronym = dataGrid.Items[rowIndex] as Acronym;
-                        AdminVM.SelectedSovName = _acronym.AcronymName;
-                        AdminVM.TempAcronym = _acronym;
+            //if (rowIndex >= 0)
+            //{
+            //    Acronym newRow = dataGrid.Items[rowIndex] as Acronym;
+            //    if (dataGrid != null)
+            //    {
+            //        if (selectedRowIndex == dataGrid.Items.Count - 1)
+            //        {
+            //            if (!string.IsNullOrEmpty(newRow.AcronymName))
+            //            {
+            //                ObservableCollection<Acronym> acronyms = AdminVM.Acronyms;
+            //                Acronym item = new Acronym();
+            //                acronyms.Add(item);
+            //                AdminVM.ActionState = "AddRow";
+            //                AdminVM.TempAcronym = new Acronym();
 
-                        if (chkBox.IsChecked == true)
-                            AdminVM.TempAcronym.Active = true;
-                        else AdminVM.TempAcronym.Active = false;
-                        AdminVM.ActionState = "UpdateRow";
+            //                if (chkBox.IsChecked == true)
+            //                    AdminVM.TempAcronym.Active = true;
+            //                else AdminVM.TempAcronym.Active = false;
 
-                        AdminVM.UpdateAcronym();
-                    }
+            //                AdminVM.CreateAcronym();
+            //            }
+            //            else
+            //            {
+            //                newRow.Active = false;
+            //                MessageBox.Show("Acronym Name is required.");
+            //            }
+            //        }
+            //        else
+            //        {
+            //            Acronym _acronym = dataGrid.Items[rowIndex] as Acronym;
+            //            AdminVM.SelectedSovName = _acronym.AcronymName;
+            //            AdminVM.TempAcronym = _acronym;
 
-                    e.Handled = true;
-                }
-            }
+            //            if (chkBox.IsChecked == true)
+            //                AdminVM.TempAcronym.Active = true;
+            //            else AdminVM.TempAcronym.Active = false;
+            //            AdminVM.ActionState = "UpdateRow";
+
+            //            AdminVM.UpdateAcronym();
+            //        }
+
+            //        e.Handled = true;
+            //    }
+            //}
         }
 
         private void MaterialTab_PreviewKeyUp(object sender, KeyEventArgs e)
@@ -1278,6 +1278,8 @@ namespace WpfApp.View
                     {
                         Salesman _salesman = dataGrid.Items[rowIndex] as Salesman;
                         AdminVM.TempSalesman = _salesman;
+                        Console.WriteLine(_salesman.ID);
+
                         switch (itemName)
                         {
                             case "Init":
@@ -2467,6 +2469,101 @@ namespace WpfApp.View
 
             AdminVM.UpdateComponent = "Detail";
             AdminVM.UpdateManuf();
+        }
+
+        private void CustomerDetail_KeyUp(object sender, KeyEventArgs e)
+        {
+            TextBox textBox = sender as TextBox;
+
+            string itemName = textBox.Tag as string;
+            if (AdminVM.SelectedCustomerID == -1)
+            {
+                // Create Manuf
+                AdminVM.TempCreateCustomer = new Customer();
+                switch (itemName)
+                {
+                    case "FullName":
+                        AdminVM.TempCreateCustomer.FullName = textBox.Text;
+                        break;
+                    case "ShortName":
+                        AdminVM.TempCreateCustomer.ShortName = textBox.Text;
+                        break;
+                    case "PoBox":
+                        AdminVM.TempCreateCustomer.PoBox = textBox.Text;
+                        break;
+                    case "Address":
+                        AdminVM.TempCreateCustomer.Address = textBox.Text;
+                        break;
+                    case "City":
+                        AdminVM.TempCreateCustomer.City = textBox.Text;
+                        break;
+                    case "State":
+                        AdminVM.TempCreateCustomer.State = textBox.Text;
+                        break;
+                    case "Zip":
+                        AdminVM.TempCreateCustomer.Zip = textBox.Text;
+                        break;
+                    case "Phone":
+                        AdminVM.TempCreateCustomer.Phone = textBox.Text;
+                        break;
+                    case "Fax":
+                        AdminVM.TempCreateCustomer.Fax = textBox.Text;
+                        break;
+                    case "Email":
+                        AdminVM.TempCreateCustomer.Email = textBox.Text;
+                        break;
+                }
+                AdminVM.CreateCustomer();
+            }
+            else
+            {
+                switch (itemName)
+                {
+                    case "FullName":
+                        AdminVM.TempDetailCustomer.FullName = textBox.Text;
+                        break;
+                    case "ShortName":
+                        AdminVM.TempDetailCustomer.ShortName = textBox.Text;
+                        break;
+                    case "PoBox":
+                        AdminVM.TempDetailCustomer.PoBox = textBox.Text;
+                        break;
+                    case "Address":
+                        AdminVM.TempDetailCustomer.Address = textBox.Text;
+                        break;
+                    case "City":
+                        AdminVM.TempDetailCustomer.City = textBox.Text;
+                        break;
+                    case "State":
+                        AdminVM.TempDetailCustomer.State = textBox.Text;
+                        break;
+                    case "Zip":
+                        AdminVM.TempDetailCustomer.Zip = textBox.Text;
+                        break;
+                    case "Phone":
+                        AdminVM.TempDetailCustomer.Phone = textBox.Text;
+                        break;
+                    case "Fax":
+                        AdminVM.TempDetailCustomer.Fax = textBox.Text;
+                        break;
+                    case "Email":
+                        AdminVM.TempDetailCustomer.Email = textBox.Text;
+                        break;
+                }
+                AdminVM.UpdateCustomer();
+            }
+        }
+
+        private void CustomerDetail_CheckBox(object sender, RoutedEventArgs e)
+        {
+            CheckBox chkBox = sender as CheckBox;
+
+            if (chkBox.IsChecked == true)
+                AdminVM.TempDetailCustomer.Active = true;
+            else AdminVM.TempDetailCustomer.Active = false;
+
+            AdminVM.UpdateComponent = "Detail";
+            AdminVM.UpdateCustomer();
         }
     }
 }
