@@ -518,40 +518,40 @@ namespace WpfApp.ViewModel
         {
             //if (!string.IsNullOrEmpty(TempCrew.CrewName))
             //{
-                int crewID = TempCrew.ID;
-                string crewName = TempCrew.CrewName;
-                string crewPhone = TempCrew.Phone;
-                string crewCell = TempCrew.Cell;
-                string crewEmail = TempCrew.Email;
-                bool active = TempCrew.Active;
+            int crewID = TempCrew.ID;
+            string crewName = TempCrew.CrewName;
+            string crewPhone = TempCrew.Phone;
+            string crewCell = TempCrew.Cell;
+            string crewEmail = TempCrew.Email;
+            bool active = TempCrew.Active;
 
-                sqlquery = "UPDATE tblInstallCrew SET Crew_Name=@Name, Crew_Phone=@Phone, Crew_Cell=@Cell, Crew_Email=@Email, Active=@Active WHERE Crew_ID=@CrewID";
-                using (cmd = new SqlCommand(sqlquery, dbConnection.Connection))
+            sqlquery = "UPDATE tblInstallCrew SET Crew_Name=@Name, Crew_Phone=@Phone, Crew_Cell=@Cell, Crew_Email=@Email, Active=@Active WHERE Crew_ID=@CrewID";
+            using (cmd = new SqlCommand(sqlquery, dbConnection.Connection))
+            {
+                if (!string.IsNullOrEmpty(crewName))
+                    cmd.Parameters.AddWithValue("@Name", crewName);
+                else cmd.Parameters.AddWithValue("@Name", DBNull.Value);
+                if (!string.IsNullOrEmpty(crewPhone))
+                    cmd.Parameters.AddWithValue("@Phone", crewPhone);
+                else cmd.Parameters.AddWithValue("@Phone", DBNull.Value);
+                if (!string.IsNullOrEmpty(crewCell))
+                    cmd.Parameters.AddWithValue("@Cell", crewCell);
+                else cmd.Parameters.AddWithValue("@Cell", DBNull.Value);
+                if (!string.IsNullOrEmpty(crewName))
+                    cmd.Parameters.AddWithValue("@Email", crewEmail);
+                else cmd.Parameters.AddWithValue("@Email", DBNull.Value);
+                cmd.Parameters.AddWithValue("@Active", active);
+                cmd.Parameters.AddWithValue("@CrewID", crewID);
+
+                try
                 {
-                    if (!string.IsNullOrEmpty(crewName))
-                        cmd.Parameters.AddWithValue("@Name", crewName);
-                    else cmd.Parameters.AddWithValue("@Name", DBNull.Value);
-                    if (!string.IsNullOrEmpty(crewPhone))
-                        cmd.Parameters.AddWithValue("@Phone", crewPhone);
-                    else cmd.Parameters.AddWithValue("@Phone", DBNull.Value);
-                    if (!string.IsNullOrEmpty(crewCell))
-                        cmd.Parameters.AddWithValue("@Cell", crewCell);
-                    else cmd.Parameters.AddWithValue("@Cell", DBNull.Value);
-                    if (!string.IsNullOrEmpty(crewName))
-                        cmd.Parameters.AddWithValue("@Email", crewEmail);
-                    else cmd.Parameters.AddWithValue("@Email", DBNull.Value);
-                    cmd.Parameters.AddWithValue("@Active", active);
-                    cmd.Parameters.AddWithValue("@CrewID", crewID);
-
-                    try
-                    {
-                        int rowsAffected = cmd.ExecuteNonQuery();
-                    }
-                    catch (SqlException e)
-                    {
-                        Console.WriteLine(e);
-                    }
+                    int rowsAffected = cmd.ExecuteNonQuery();
                 }
+                catch (SqlException e)
+                {
+                    Console.WriteLine(e);
+                }
+            }
             //}
             //else
             //{
@@ -570,7 +570,7 @@ namespace WpfApp.ViewModel
                 string salesCell = TempSalesman.Cell;
                 string salesEmail = TempSalesman.Email;
                 bool active = TempSalesman.Active;
-                
+
                 sqlquery = "UPDATE tblSalesmen SET Salesman_Init=@Init, Salesman_Name=@Name, Phone=@Phone, Cell=@Cell, Salesman_Email=@Email, Active=@Active WHERE Salesman_ID=@SalesID";
                 using (cmd = new SqlCommand(sqlquery, dbConnection.Connection))
                 {
@@ -772,7 +772,7 @@ namespace WpfApp.ViewModel
 
         public void CreateAcronym()
         {
-            if(!string.IsNullOrEmpty(SelectedSovName) || (SelectedAcronymRowIndex == Acronyms.Count-2))
+            if (!string.IsNullOrEmpty(SelectedSovName) || (SelectedAcronymRowIndex == Acronyms.Count - 2))
             {
                 sqlquery = "INSERT INTO tblScheduleOfValues(SOV_Acronym, SOV_Desc, Active) OUTPUT INSERTED.SOV_Acronym VALUES (@SovAcronym, @SovDesc , @Active)";
                 using (cmd = new SqlCommand(sqlquery, dbConnection.Connection))
@@ -797,7 +797,8 @@ namespace WpfApp.ViewModel
                         Console.WriteLine(e);
                     }
                 }
-            } else
+            }
+            else
             {
                 MessageBox.Show("Sov Name is required.");
             }
@@ -810,7 +811,7 @@ namespace WpfApp.ViewModel
                 string sovName = TempAcronym.AcronymName;
                 string sovDesc = TempAcronym.AcronymDesc;
                 bool active = TempAcronym.Active;
-                
+
                 sqlquery = "UPDATE tblScheduleOfValues SET SOV_Acronym=@Name, SOV_Desc=@Desc, Active=@Active WHERE SOV_Acronym=@OriginName";
                 using (cmd = new SqlCommand(sqlquery, dbConnection.Connection))
                 {
@@ -835,7 +836,8 @@ namespace WpfApp.ViewModel
                         Console.WriteLine(e);
                     }
                 }
-            } else
+            }
+            else
             {
                 MessageBox.Show("Sov Name is required.");
             }
@@ -1170,7 +1172,7 @@ namespace WpfApp.ViewModel
             string contactPhone = (UpdateComponent.Equals("Table")) ? TempManuf.ContactPhone : TempDetailManuf.ContactPhone;
             string contactEmail = (UpdateComponent.Equals("Table")) ? TempManuf.ContactEmail : TempDetailManuf.ContactEmail;
             bool active = (UpdateComponent.Equals("Table")) ? TempManuf.Active : TempDetailManuf.Active;
-            
+
             sqlquery = "UPDATE tblManufacturers SET Manuf_Name=@ManufName, Address=@Address, Address2=@Address2, City=@City, State=@State, ZIP=@Zip, Phone=@Phone, FAX=@Fax, Contact_Name=@ContactName, Contact_Phone=@ContactPhone, Contact_Email=@ContactEmail, Active=@Active WHERE Manuf_ID=@ManufID";
             using (cmd = new SqlCommand(sqlquery, dbConnection.Connection))
             {
@@ -1281,9 +1283,10 @@ namespace WpfApp.ViewModel
                     }
                     ActionManufState = "";
                 }
-            } else
+            }
+            else
             {
-                if(!ActionManufState.Equals("ClearManuf"))
+                if (!ActionManufState.Equals("ClearManuf"))
                     MessageBox.Show("Manufacturer Name is required.");
             }
         }
@@ -1384,26 +1387,21 @@ namespace WpfApp.ViewModel
             string fax = (UpdateComponent.Equals("Table")) ? TempCustomer.Fax : TempDetailCustomer.Fax;
             string email = (UpdateComponent.Equals("Table")) ? TempCustomer.Email : TempDetailCustomer.Email;
             bool active = (UpdateComponent.Equals("Table")) ? TempCustomer.Active : TempDetailCustomer.Active;
-            
+
             if (!string.IsNullOrEmpty(fullName))
             {
                 sqlquery = "UPDATE tblCustomers SET Short_Name=@ShortName, Full_Name=@FullName, PO_Box=@PoNumber, Address=@Address, City=@City, State=@State, ZIP=@Zip, Phone=@Phone, FAX=@Fax, Email=@Email, Active=@Active WHERE Customer_ID=@CustomerID";
-                // Update datatable for Customers
-                //if (SelectedCustRowIndex >= 0)
-                //{
-                //    Customers[SelectedCustRowIndex].FullName = SelectedCustFullName;
-                //    Customers[SelectedCustRowIndex].ShortName = SelectedCustShortName;
-                //    Customers[SelectedCustRowIndex].PoBox = SelectedCustPoNumber;
-                //    Customers[SelectedCustRowIndex].Address = SelectedCustAddress;
-                //    Customers[SelectedCustRowIndex].City = SelectedCustCity;
-                //    Customers[SelectedCustRowIndex].State = SelectedCustState;
-                //    Customers[SelectedCustRowIndex].Zip = SelectedCustZip;
-                //    Customers[SelectedCustRowIndex].Phone = SelectedCustPhone;
-                //    Customers[SelectedCustRowIndex].Fax = SelectedCustFax;
-                //    Customers[SelectedCustRowIndex].Email = SelectedCustEmail;
-                //    Customers[SelectedCustRowIndex].Active = SelectedCustActive;
-                //}
-                //Console.WriteLine(Customers[SelectedCustRowIndex].FullName);
+               
+                for (int i = 0; i < Customers.Count - 1; i++)
+                {
+                    Customer _customer = Customers[i];
+                    if (_customer.ID == customerID)
+                    {
+                        Console.WriteLine("customerID->" + customerID);
+                        Customers[i] = _customer;
+                    }
+                }
+
                 using (cmd = new SqlCommand(sqlquery, dbConnection.Connection))
                 {
                     if (!string.IsNullOrEmpty(fullName))
@@ -1455,7 +1453,7 @@ namespace WpfApp.ViewModel
             if (!string.IsNullOrEmpty(TempCreateCustomer.FullName))
             {
                 sqlquery = "INSERT INTO tblCustomers(Short_Name, Full_Name, PO_Box, Address, City, State, ZIP, Phone, FAX, Email, Active) OUTPUT INSERTED.Customer_ID VALUES (@ShortName, @FullName, @PoNumber, @Address, @City, @State, @Zip, @Phone, @Fax, @Email, @Active)";
-               
+
                 using (cmd = new SqlCommand(sqlquery, dbConnection.Connection))
                 {
                     if (!string.IsNullOrEmpty(TempCreateCustomer.FullName))
@@ -1494,7 +1492,9 @@ namespace WpfApp.ViewModel
                     {
                         int insertedCustomerId = (int)cmd.ExecuteScalar();
                         SelectedCustomerID = insertedCustomerId;
+                        TempDetailCustomer = TempCreateCustomer;
                         TempDetailCustomer.ID = SelectedCustomerID;
+                        UpdateComponent = "Detail";
                     }
                     catch (SqlException e)
                     {
@@ -1504,7 +1504,7 @@ namespace WpfApp.ViewModel
             }
             else
             {
-                if(!ActionCustState.Equals("Clear"))
+                if (!ActionCustState.Equals("Clear"))
                     MessageBox.Show("Customer Full Name is required");
             }
         }
@@ -1524,23 +1524,13 @@ namespace WpfApp.ViewModel
         public void ClearCustomer()
         {
             ActionCustState = "Clear";
-            ActionCustName = "CreateCustomer";
             SelectedCustomerID = 0;
-            SelectedCustFullName = "";
-            SelectedCustShortName = "";
-            SelectedCustPoNumber = "";
-            SelectedCustAddress = "";
-            SelectedCustCity = "";
-            SelectedCustState = "";
-            SelectedCustZip = "";
-            SelectedCustPhone = "";
-            SelectedCustFax = "";
-            SelectedCustEmail = "";
-            SelectedCustActive = false;
             UpdateComponent = "Detail";
             Note noteItem = new Note();
             CustomerNotes = new ObservableCollection<Note>();
             CustomerNotes.Add(noteItem);
+            SelectedCustomerID = -1;
+            TempDetailCustomer = new Customer();
 
             CustPMNotes = new ObservableCollection<Note>();
             CustPMNotes.Add(noteItem);
@@ -1571,7 +1561,7 @@ namespace WpfApp.ViewModel
             sda = new SqlDataAdapter(cmd);
             ds = new DataSet();
             sda.Fill(ds);
-           
+
             DataRow firstRow = ds.Tables[0].Rows[0];
             SelectedManufID = int.Parse(firstRow["Manuf_ID"].ToString());
             ActionManufName = "UpdateManuf";
@@ -1655,7 +1645,7 @@ namespace WpfApp.ViewModel
                 });
             }
             st_manufNotes.Add(new Note());
-            ManufNotes = st_manufNotes;         
+            ManufNotes = st_manufNotes;
         }
 
         public void ViewCustomer(int customerID)
@@ -1935,7 +1925,7 @@ namespace WpfApp.ViewModel
             }
             st_pm.Add(new ProjectManager());
             CustPMs = st_pm;
-            
+
             // Superintendents
             sqlquery = "SELECT * FROM tblSuperintendents WHERE Customer_ID=" + customerID;
             cmd = new SqlCommand(sqlquery, dbConnection.Connection);
@@ -2166,9 +2156,9 @@ namespace WpfApp.ViewModel
                 int id = int.Parse(row["User_ID"].ToString());
                 string name = row["User_Name"].ToString();
                 string personName = row["User_PersonName"].ToString();
-                if(!row.IsNull("User_Level"))
+                if (!row.IsNull("User_Level"))
                     level = int.Parse(row["User_Level"].ToString());
-                if(!row.IsNull("User_FormOnOpen"))
+                if (!row.IsNull("User_FormOnOpen"))
                     formOnOpen = int.Parse(row["User_FormOnOpen"].ToString());
                 string email = row["User_Email"].ToString();
                 bool active = row.Field<Boolean>("Active");
@@ -2900,382 +2890,6 @@ namespace WpfApp.ViewModel
             }
         }
 
-        private string _selectedCustFullName;
-
-        public string SelectedCustFullName
-        {
-            get { return _selectedCustFullName; }
-            set
-            {
-                _selectedCustFullName = value;
-                OnPropertyChanged();
-                switch (ActionCustName)
-                {
-                    case "CreateCustomer":
-                        CreateCustomer();
-                        break;
-                    case "UpdateCustomer":
-                        UpdateCustomer();
-                        break;
-                }
-            }
-        }
-
-        private string _selectedCustShortName;
-
-        public string SelectedCustShortName
-        {
-            get { return _selectedCustShortName; }
-            set
-            {
-                _selectedCustShortName = value;
-                OnPropertyChanged();
-                switch (ActionCustName)
-                {
-                    case "CreateCustomer":
-                        CreateCustomer();
-                        break;
-                    case "UpdateCustomer":
-                        UpdateCustomer();
-                        break;
-                }
-            }
-        }
-
-        private bool _selectedCustActive;
-
-        public bool SelectedCustActive
-        {
-            get { return _selectedCustActive; }
-            set
-            {
-                _selectedCustActive = value;
-                OnPropertyChanged();
-                switch (ActionCustName)
-                {
-                    case "CreateCustomer":
-                        CreateCustomer();
-                        break;
-                    case "UpdateCustomer":
-                        UpdateCustomer();
-                        break;
-                }
-            }
-        }
-
-        private string _selectedCustPoNumber;
-
-        public string SelectedCustPoNumber
-        {
-            get { return _selectedCustPoNumber; }
-            set
-            {
-                _selectedCustPoNumber = value;
-                OnPropertyChanged();
-                switch (ActionCustName)
-                {
-                    case "CreateCustomer":
-                        CreateCustomer();
-                        break;
-                    case "UpdateCustomer":
-                        UpdateCustomer();
-                        break;
-                }
-            }
-        }
-
-        private string _selectedCustAddress;
-
-        public string SelectedCustAddress
-        {
-            get { return _selectedCustAddress; }
-            set
-            {
-                _selectedCustAddress = value;
-                OnPropertyChanged();
-                switch (ActionCustName)
-                {
-                    case "CreateCustomer":
-                        CreateCustomer();
-                        break;
-                    case "UpdateCustomer":
-                        UpdateCustomer();
-                        break;
-                }
-            }
-        }
-
-        private string _selectedCustCity;
-
-        public string SelectedCustCity
-        {
-            get { return _selectedCustCity; }
-            set
-            {
-                _selectedCustCity = value;
-                OnPropertyChanged();
-                switch (ActionCustName)
-                {
-                    case "CreateCustomer":
-                        CreateCustomer();
-                        break;
-                    case "UpdateCustomer":
-                        UpdateCustomer();
-                        break;
-                }
-            }
-        }
-
-        private string _selectedCustPhone;
-
-        public string SelectedCustPhone
-        {
-            get { return _selectedCustPhone; }
-            set
-            {
-                _selectedCustPhone = value;
-                OnPropertyChanged();
-                switch (ActionCustName)
-                {
-                    case "CreateCustomer":
-                        CreateCustomer();
-                        break;
-                    case "UpdateCustomer":
-                        UpdateCustomer();
-                        break;
-                }
-            }
-        }
-
-        private string _selectedCustState;
-
-        public string SelectedCustState
-        {
-            get { return _selectedCustState; }
-            set
-            {
-                _selectedCustState = value;
-                OnPropertyChanged();
-                switch (ActionCustName)
-                {
-                    case "CreateCustomer":
-                        CreateCustomer();
-                        break;
-                    case "UpdateCustomer":
-                        UpdateCustomer();
-                        break;
-                }
-            }
-        }
-
-        private string _selectedCustZip;
-
-        public string SelectedCustZip
-        {
-            get { return _selectedCustZip; }
-            set
-            {
-                _selectedCustZip = value;
-                OnPropertyChanged();
-                switch (ActionCustName)
-                {
-                    case "CreateCustomer":
-                        CreateCustomer();
-                        break;
-                    case "UpdateCustomer":
-                        UpdateCustomer();
-                        break;
-                }
-            }
-        }
-
-        private string _selectedCustFax;
-
-        public string SelectedCustFax
-        {
-            get { return _selectedCustFax; }
-            set
-            {
-                _selectedCustFax = value;
-                OnPropertyChanged();
-                switch (ActionCustName)
-                {
-                    case "CreateCustomer":
-                        CreateCustomer();
-                        break;
-                    case "UpdateCustomer":
-                        UpdateCustomer();
-                        break;
-                }
-            }
-        }
-
-        private string _selectedCustEmail;
-
-        public string SelectedCustEmail
-        {
-            get { return _selectedCustEmail; }
-            set
-            {
-                _selectedCustEmail = value;
-                OnPropertyChanged();
-                switch (ActionCustName)
-                {
-                    case "CreateCustomer":
-                        CreateCustomer();
-                        break;
-                    case "UpdateCustomer":
-                        UpdateCustomer();
-                        break;
-                }
-            }
-        }
-
-        private bool _selectedManufActive;
-
-        public bool SelectedManufActive
-        {
-            get { return _selectedManufActive; }
-            set
-            {
-                _selectedManufActive = value;
-                OnPropertyChanged();
-            }
-        }
-
-        private string _selectedManufName;
-
-        public string SelectedManufName
-        {
-            get { return _selectedManufName; }
-            set
-            {
-                _selectedManufName = value;
-                OnPropertyChanged();
-            }
-        }
-
-        private string _selectedManufAddress;
-
-        public string SelectedManufAddress
-        {
-            get { return _selectedManufAddress; }
-            set
-            {
-                _selectedManufAddress = value;
-                Console.WriteLine("selected manuf address->"+value);
-                OnPropertyChanged();
-            }
-        }
-
-        private string _selectedManufAddress2;
-
-        public string SelectedManufAddress2
-        {
-            get { return _selectedManufAddress2; }
-            set
-            {
-                _selectedManufAddress2 = value;
-                OnPropertyChanged();
-            }
-        }
-
-        private string _selectedManufCity;
-
-        public string SelectedManufCity
-        {
-            get { return _selectedManufCity; }
-            set
-            {
-                _selectedManufCity = value;
-                OnPropertyChanged();
-            }
-        }
-
-        private string _selectedManufState;
-
-        public string SelectedManufState
-        {
-            get { return _selectedManufState; }
-            set
-            {
-                _selectedManufState = value;
-                OnPropertyChanged();
-            }
-        }
-
-        private string _selectedManufZip;
-
-        public string SelectedManufZip
-        {
-            get { return _selectedManufZip; }
-            set
-            {
-                _selectedManufZip = value;
-                OnPropertyChanged();
-            }
-        }
-
-        private string _selectedManufPhone;
-
-        public string SelectedManufPhone
-        {
-            get { return _selectedManufPhone; }
-            set
-            {
-                _selectedManufPhone = value;
-                OnPropertyChanged();
-            }
-        }
-
-        private string _selectedManufFax;
-
-        public string SelectedManufFax
-        {
-            get { return _selectedManufFax; }
-            set
-            {
-                _selectedManufFax = value;
-                OnPropertyChanged();
-            }
-        }
-
-        private string _selectedManufContactName;
-
-        public string SelectedManufContactName
-        {
-            get { return _selectedManufContactName; }
-            set
-            {
-                _selectedManufContactName = value;
-                OnPropertyChanged();
-            }
-        }
-
-        private string _selectedManufContactPhone;
-
-        public string SelectedManufContactPhone
-        {
-            get { return _selectedManufContactPhone; }
-            set
-            {
-                _selectedManufContactPhone = value;
-                OnPropertyChanged();
-            }
-        }
-
-        private string _selectedManufContactEmail;
-
-        public string SelectedManufContactEmail
-        {
-            get { return _selectedManufContactEmail; }
-            set
-            {
-                _selectedManufContactEmail = value;
-                OnPropertyChanged();
-            }
-        }
-
         private string _ActionCustName;
 
         public string ActionCustName
@@ -3816,7 +3430,7 @@ namespace WpfApp.ViewModel
             {
                 _selectedCustRowIndex = value;
                 OnPropertyChanged();
-                
+
             }
         }
 

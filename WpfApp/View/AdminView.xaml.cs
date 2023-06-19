@@ -2479,7 +2479,6 @@ namespace WpfApp.View
             string itemName = textBox.Tag as string;
             if (AdminVM.SelectedCustomerID == -1)
             {
-                // Create Manuf
                 AdminVM.TempCreateCustomer = new Customer();
                 switch (itemName)
                 {
