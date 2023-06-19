@@ -755,6 +755,7 @@ namespace WpfApp.ViewModel
 
                     try
                     {
+                        Console.WriteLine("init render material");
                         int rowsAffected = cmd.ExecuteNonQuery();
                     }
                     catch (SqlException e)
@@ -809,7 +810,7 @@ namespace WpfApp.ViewModel
                 string sovName = TempAcronym.AcronymName;
                 string sovDesc = TempAcronym.AcronymDesc;
                 bool active = TempAcronym.Active;
-
+                
                 sqlquery = "UPDATE tblScheduleOfValues SET SOV_Acronym=@Name, SOV_Desc=@Desc, Active=@Active WHERE SOV_Acronym=@OriginName";
                 using (cmd = new SqlCommand(sqlquery, dbConnection.Connection))
                 {
@@ -827,7 +828,7 @@ namespace WpfApp.ViewModel
                     try
                     {
                         int rowsAffected = cmd.ExecuteNonQuery();
-
+                        Console.WriteLine("SelectedSovName->" + SelectedSovName);
                     }
                     catch (SqlException e)
                     {

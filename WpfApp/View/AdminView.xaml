@@ -1117,7 +1117,7 @@
                             <ColumnDefinition Width="1*" />
                             <ColumnDefinition Width="1*" />
                         </Grid.ColumnDefinitions>
-                        <DataGrid  GridLinesVisibility="None" ItemsSource="{Binding Acronyms}" AutoGenerateColumns="False" CanUserResizeColumns="False" HeadersVisibility="Column" CanUserAddRows="False" SelectedIndex="{Binding SelectedAcronymRowIndex, Mode=TwoWay}">
+                        <DataGrid  GridLinesVisibility="None" ItemsSource="{Binding Acronyms}" AutoGenerateColumns="False" CanUserResizeColumns="False" HeadersVisibility="Column" CanUserAddRows="False">
                             <DataGrid.Resources>
                                 <Style TargetType="DataGridColumnHeader" BasedOn="{StaticResource GridColumnHeaderBase}">
                                     <Setter Property="Background" Value="#648278" />
@@ -1148,7 +1148,7 @@
                                 <DataGridTemplateColumn Header="Active?" Width="1*">
                                     <DataGridTemplateColumn.CellTemplate>
                                         <DataTemplate>
-                                            <CheckBox IsChecked="{Binding Active}" Unchecked="AcronymTab_CheckBox" Checked="AcronymTab_CheckBox" />
+                                            <CheckBox IsChecked="{Binding Active, Mode=TwoWay}" Unchecked="AcronymTab_CheckBox" Checked="AcronymTab_CheckBox" />
                                         </DataTemplate>
                                     </DataGridTemplateColumn.CellTemplate>
                                 </DataGridTemplateColumn>

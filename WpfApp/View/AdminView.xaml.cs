@@ -856,64 +856,65 @@ namespace WpfApp.View
         private void AcronymTab_CheckBox(object sender, RoutedEventArgs e)
         {
             CheckBox chkBox = sender as CheckBox;
-            
+
             DataGrid dataGrid = noteHelper.FindDataGrid(chkBox);
             int selectedRowIndex = dataGrid.SelectedIndex;
-            //int rowIndex = selectedRowIndex;
+            int rowIndex = selectedRowIndex;
 
-            //if (AdminVM.ActionState.Equals("AddRow") || (AdminVM.ActionState.Equals("UpdateRow") && selectedRowIndex == -1))
-            //{
-            //    rowIndex = AdminVM.CurrentIndex;
-            //}
-            //else
-            //{
-            //    rowIndex = selectedRowIndex;
-            //}
+            if (AdminVM.ActionState.Equals("AddRow") || (AdminVM.ActionState.Equals("UpdateRow") && selectedRowIndex == -1))
+            {
+                rowIndex = AdminVM.CurrentIndex;
+            }
+            else
+            {
+                rowIndex = selectedRowIndex;
+            }
+         
+            if (rowIndex >= 0)
+            {
+                Acronym newRow = dataGrid.Items[rowIndex] as Acronym;
+                if (dataGrid != null)
+                {
+                    if (selectedRowIndex == dataGrid.Items.Count - 1)
+                    {
+                        if (!string.IsNullOrEmpty(newRow.AcronymName))
+                        {
+                            ObservableCollection<Acronym> acronyms = AdminVM.Acronyms;
+                            Acronym item = new Acronym();
+                            acronyms.Add(item);
+                            AdminVM.ActionState = "AddRow";
+                            AdminVM.TempAcronym = new Acronym();
 
-            //if (rowIndex >= 0)
-            //{
-            //    Acronym newRow = dataGrid.Items[rowIndex] as Acronym;
-            //    if (dataGrid != null)
-            //    {
-            //        if (selectedRowIndex == dataGrid.Items.Count - 1)
-            //        {
-            //            if (!string.IsNullOrEmpty(newRow.AcronymName))
-            //            {
-            //                ObservableCollection<Acronym> acronyms = AdminVM.Acronyms;
-            //                Acronym item = new Acronym();
-            //                acronyms.Add(item);
-            //                AdminVM.ActionState = "AddRow";
-            //                AdminVM.TempAcronym = new Acronym();
+                            if (chkBox.IsChecked == true)
+                                AdminVM.TempAcronym.Active = true;
+                            else AdminVM.TempAcronym.Active = false;
 
-            //                if (chkBox.IsChecked == true)
-            //                    AdminVM.TempAcronym.Active = true;
-            //                else AdminVM.TempAcronym.Active = false;
+                            AdminVM.CreateAcronym();
+                        }
+                        else
+                        {
+                            newRow.Active = false;
+                            MessageBox.Show("Acronym Name is required.");
+                        }
+                    }
+                    else
+                    {
+                        Acronym _acronym = dataGrid.Items[rowIndex] as Acronym;
+                        Console.WriteLine(_acronym.AcronymName);
+                        AdminVM.SelectedSovName = _acronym.AcronymName;
+                        AdminVM.TempAcronym = _acronym;
 
-            //                AdminVM.CreateAcronym();
-            //            }
-            //            else
-            //            {
-            //                newRow.Active = false;
-            //                MessageBox.Show("Acronym Name is required.");
-            //            }
-            //        }
-            //        else
-            //        {
-            //            Acronym _acronym = dataGrid.Items[rowIndex] as Acronym;
-            //            AdminVM.SelectedSovName = _acronym.AcronymName;
-            //            AdminVM.TempAcronym = _acronym;
+                        if (chkBox.IsChecked == true)
+                            AdminVM.TempAcronym.Active = true;
+                        else AdminVM.TempAcronym.Active = false;
+                        AdminVM.ActionState = "UpdateRow";
 
-            //            if (chkBox.IsChecked == true)
-            //                AdminVM.TempAcronym.Active = true;
-            //            else AdminVM.TempAcronym.Active = false;
-            //            AdminVM.ActionState = "UpdateRow";
+                        AdminVM.UpdateAcronym();
+                    }
 
-            //            AdminVM.UpdateAcronym();
-            //        }
-
-            //        e.Handled = true;
-            //    }
-            //}
+                    e.Handled = true;
+                }
+            }
         }
 
         private void MaterialTab_PreviewKeyUp(object sender, KeyEventArgs e)
