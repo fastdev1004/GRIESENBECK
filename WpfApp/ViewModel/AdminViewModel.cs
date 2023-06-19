@@ -755,7 +755,6 @@ namespace WpfApp.ViewModel
 
                     try
                     {
-                        Console.WriteLine("init render material");
                         int rowsAffected = cmd.ExecuteNonQuery();
                     }
                     catch (SqlException e)
@@ -772,7 +771,7 @@ namespace WpfApp.ViewModel
 
         public void CreateAcronym()
         {
-            if (!string.IsNullOrEmpty(SelectedSovName) || (SelectedAcronymRowIndex == Acronyms.Count - 2))
+            if (!string.IsNullOrEmpty(TempAcronym.AcronymName))
             {
                 sqlquery = "INSERT INTO tblScheduleOfValues(SOV_Acronym, SOV_Desc, Active) OUTPUT INSERTED.SOV_Acronym VALUES (@SovAcronym, @SovDesc , @Active)";
                 using (cmd = new SqlCommand(sqlquery, dbConnection.Connection))
@@ -829,7 +828,6 @@ namespace WpfApp.ViewModel
                     try
                     {
                         int rowsAffected = cmd.ExecuteNonQuery();
-                        Console.WriteLine("SelectedSovName->" + SelectedSovName);
                     }
                     catch (SqlException e)
                     {

@@ -1018,6 +1018,8 @@ namespace WpfApp.View
             {
                 rowIndex = selectedRowIndex;
             }
+            Console.WriteLine(selectedRowIndex);
+            Console.WriteLine(AdminVM.CurrentIndex);
             if (rowIndex >= 0)
             {
                 Material newRow = dataGrid.Items[rowIndex] as Material;
