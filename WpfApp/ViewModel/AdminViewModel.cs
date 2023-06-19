@@ -57,6 +57,7 @@ namespace WpfApp.ViewModel
 
             TempCustomer = new Customer();
             TempManuf = new Manufacturer();
+            TempDetailManuf = new Manufacturer();
             TempAcronym = new Acronym();
             TempMaterial = new Material();
             TempInstaller = new InHouseInstaller();
@@ -69,6 +70,8 @@ namespace WpfApp.ViewModel
             ActionPmName = "";
             UpdateComponent = "Detail";
             ActionState = "";
+
+            SelectedManufID = -1;
             LoadAdmin();
             //IsInitialLoad = true;
             this.ViewCustomerCommand = new RelayCommand((e) =>
@@ -1150,19 +1153,19 @@ namespace WpfApp.ViewModel
 
         public void UpdateManuf()
         {
-            int manufID = (UpdateComponent.Equals("Table")) ? TempManuf.ID : SelectedManufID;
-            string manufName = (UpdateComponent.Equals("Table")) ? TempManuf.ManufacturerName : SelectedManufName;
-            string address = (UpdateComponent.Equals("Table")) ? TempManuf.Address : SelectedManufAddress;
-            string address2 = (UpdateComponent.Equals("Table")) ? TempManuf.Address2 : SelectedManufAddress2;
-            string city = (UpdateComponent.Equals("Table")) ? TempManuf.City : SelectedManufCity;
-            string state = (UpdateComponent.Equals("Table")) ? TempManuf.State : SelectedManufState;
-            string zip = (UpdateComponent.Equals("Table")) ? TempManuf.Zip : SelectedManufZip;
-            string phone = (UpdateComponent.Equals("Table")) ? TempManuf.Phone : SelectedManufPhone;
-            string fax = (UpdateComponent.Equals("Table")) ? TempManuf.Fax : SelectedManufFax;
-            string contactName = (UpdateComponent.Equals("Table")) ? TempManuf.ContactName : SelectedManufContactName;
-            string contactPhone = (UpdateComponent.Equals("Table")) ? TempManuf.ContactPhone : SelectedManufContactPhone;
-            string contactEmail = (UpdateComponent.Equals("Table")) ? TempManuf.ContactEmail : SelectedManufContactEmail;
-            bool active = (UpdateComponent.Equals("Table")) ? TempManuf.Active : SelectedManufActive;
+            int manufID = (UpdateComponent.Equals("Table")) ? TempManuf.ID : TempDetailManuf.ID;
+            string manufName = (UpdateComponent.Equals("Table")) ? TempManuf.ManufacturerName : TempDetailManuf.ManufacturerName;
+            string address = (UpdateComponent.Equals("Table")) ? TempManuf.Address : TempDetailManuf.Address;
+            string address2 = (UpdateComponent.Equals("Table")) ? TempManuf.Address2 : TempDetailManuf.Address2;
+            string city = (UpdateComponent.Equals("Table")) ? TempManuf.City : TempDetailManuf.City;
+            string state = (UpdateComponent.Equals("Table")) ? TempManuf.State : TempDetailManuf.State;
+            string zip = (UpdateComponent.Equals("Table")) ? TempManuf.Zip : TempDetailManuf.Zip;
+            string phone = (UpdateComponent.Equals("Table")) ? TempManuf.Phone : TempDetailManuf.Phone;
+            string fax = (UpdateComponent.Equals("Table")) ? TempManuf.Fax : TempDetailManuf.Fax;
+            string contactName = (UpdateComponent.Equals("Table")) ? TempManuf.ContactName : TempDetailManuf.ContactName;
+            string contactPhone = (UpdateComponent.Equals("Table")) ? TempManuf.ContactPhone : TempDetailManuf.ContactPhone;
+            string contactEmail = (UpdateComponent.Equals("Table")) ? TempManuf.ContactEmail : TempDetailManuf.ContactEmail;
+            bool active = (UpdateComponent.Equals("Table")) ? TempManuf.Active : TempDetailManuf.Active;
             
             sqlquery = "UPDATE tblManufacturers SET Manuf_Name=@ManufName, Address=@Address, Address2=@Address2, City=@City, State=@State, ZIP=@Zip, Phone=@Phone, FAX=@Fax, Contact_Name=@ContactName, Contact_Phone=@ContactPhone, Contact_Email=@ContactEmail, Active=@Active WHERE Manuf_ID=@ManufID";
             using (cmd = new SqlCommand(sqlquery, dbConnection.Connection))
@@ -1218,54 +1221,55 @@ namespace WpfApp.ViewModel
             }
         }
 
-        private void CreateManuf()
+        public void CreateManuf()
         {
-            if (!string.IsNullOrEmpty(SelectedManufName))
+            if (!string.IsNullOrEmpty(TempCreateManuf.ManufacturerName))
             {
                 sqlquery = "INSERT INTO tblManufacturers(Manuf_Name, Address, Address2, City, State, ZIP, Phone, FAX, Contact_Name, Contact_Phone, Contact_Email, Active) OUTPUT INSERTED.Manuf_ID VALUES (@ManufName, @Address, @Address2, @City, @State, @Zip, @Phone, @Fax, @ContactName, @ContactPhone, @ContactEmail, @Active)";
 
                 using (cmd = new SqlCommand(sqlquery, dbConnection.Connection))
                 {
-                    if (!string.IsNullOrEmpty(SelectedManufName))
-                        cmd.Parameters.AddWithValue("@ManufName", SelectedManufName);
+                    if (!string.IsNullOrEmpty(TempCreateManuf.ManufacturerName))
+                        cmd.Parameters.AddWithValue("@ManufName", TempCreateManuf.ManufacturerName);
                     else cmd.Parameters.AddWithValue("@ManufName", DBNull.Value);
-                    if (!string.IsNullOrEmpty(SelectedManufAddress))
-                        cmd.Parameters.AddWithValue("@Address", SelectedManufAddress);
+                    if (!string.IsNullOrEmpty(TempCreateManuf.Address))
+                        cmd.Parameters.AddWithValue("@Address", TempCreateManuf.Address);
                     else cmd.Parameters.AddWithValue("@Address", DBNull.Value);
-                    if (!string.IsNullOrEmpty(SelectedManufAddress2))
-                        cmd.Parameters.AddWithValue("@Address2", SelectedManufAddress2);
+                    if (!string.IsNullOrEmpty(TempCreateManuf.Address2))
+                        cmd.Parameters.AddWithValue("@Address2", TempCreateManuf.Address2);
                     else cmd.Parameters.AddWithValue("@Address2", DBNull.Value);
-                    if (!string.IsNullOrEmpty(SelectedManufCity))
-                        cmd.Parameters.AddWithValue("@City", SelectedManufCity);
+                    if (!string.IsNullOrEmpty(TempCreateManuf.City))
+                        cmd.Parameters.AddWithValue("@City", TempCreateManuf.City);
                     else cmd.Parameters.AddWithValue("@City", DBNull.Value);
-                    if (!string.IsNullOrEmpty(SelectedManufState))
-                        cmd.Parameters.AddWithValue("@State", SelectedManufState);
+                    if (!string.IsNullOrEmpty(TempCreateManuf.State))
+                        cmd.Parameters.AddWithValue("@State", TempCreateManuf.State);
                     else cmd.Parameters.AddWithValue("@State", DBNull.Value);
-                    if (!string.IsNullOrEmpty(SelectedManufZip))
-                        cmd.Parameters.AddWithValue("@Zip", SelectedManufZip);
+                    if (!string.IsNullOrEmpty(TempCreateManuf.Zip))
+                        cmd.Parameters.AddWithValue("@Zip", TempCreateManuf.Zip);
                     else cmd.Parameters.AddWithValue("@Zip", DBNull.Value);
-                    if (!string.IsNullOrEmpty(SelectedManufPhone))
-                        cmd.Parameters.AddWithValue("@Phone", SelectedManufPhone);
+                    if (!string.IsNullOrEmpty(TempCreateManuf.Phone))
+                        cmd.Parameters.AddWithValue("@Phone", TempCreateManuf.Phone);
                     else cmd.Parameters.AddWithValue("@Phone", DBNull.Value);
-                    if (!string.IsNullOrEmpty(SelectedManufFax))
-                        cmd.Parameters.AddWithValue("@Fax", SelectedManufFax);
+                    if (!string.IsNullOrEmpty(TempCreateManuf.Fax))
+                        cmd.Parameters.AddWithValue("@Fax", TempCreateManuf.Fax);
                     else cmd.Parameters.AddWithValue("@Fax", DBNull.Value);
-                    if (!string.IsNullOrEmpty(SelectedManufContactName))
-                        cmd.Parameters.AddWithValue("@ContactName", SelectedManufContactName);
+                    if (!string.IsNullOrEmpty(TempCreateManuf.ContactName))
+                        cmd.Parameters.AddWithValue("@ContactName", TempCreateManuf.ContactName);
                     else cmd.Parameters.AddWithValue("@ContactName", DBNull.Value);
-                    if (!string.IsNullOrEmpty(SelectedManufContactPhone))
-                        cmd.Parameters.AddWithValue("@ContactPhone", SelectedManufContactPhone);
+                    if (!string.IsNullOrEmpty(TempCreateManuf.ContactPhone))
+                        cmd.Parameters.AddWithValue("@ContactPhone", TempCreateManuf.ContactPhone);
                     else cmd.Parameters.AddWithValue("@ContactPhone", DBNull.Value);
-                    if (!string.IsNullOrEmpty(SelectedManufContactEmail))
-                        cmd.Parameters.AddWithValue("@ContactEmail", SelectedManufContactEmail);
+                    if (!string.IsNullOrEmpty(TempCreateManuf.ContactEmail))
+                        cmd.Parameters.AddWithValue("@ContactEmail", TempCreateManuf.ContactEmail);
                     else cmd.Parameters.AddWithValue("@ContactEmail", DBNull.Value);
-                    cmd.Parameters.AddWithValue("@Active", SelectedManufActive);
+                    cmd.Parameters.AddWithValue("@Active", TempCreateManuf.Active);
 
                     try
                     {
-                        int insertedCustomerId = (int)cmd.ExecuteScalar();
-                        SelectedManufID = insertedCustomerId;
-                        ActionManufName = "UpdateManuf";
+                        int insertedManufId = (int)cmd.ExecuteScalar();
+                        SelectedManufID = insertedManufId;
+                        TempDetailManuf.ID = insertedManufId;
+                        UpdateComponent = "Detail";
                     }
                     catch (SqlException e)
                     {
@@ -1507,19 +1511,9 @@ namespace WpfApp.ViewModel
         {
             ActionManufName = "CreateManuf";
             ActionManufState = "ClearManuf";
-            SelectedManufName = "";
-            SelectedManufAddress = "";
-            SelectedManufAddress2 = "";
-            SelectedManufCity = "";
-            SelectedManufState = "";
-            SelectedManufZip = "";
-            SelectedManufPhone = "";
-            SelectedManufFax = "";
-            SelectedManufContactName = "";
-            SelectedManufContactPhone = "";
-            SelectedManufContactEmail = "";
-            SelectedManufActive = false;
-
+            UpdateComponent = "Detail";
+            TempDetailManuf = new Manufacturer();
+            SelectedManufID = -1;
             Note noteItem = new Note();
             ManufNotes = new ObservableCollection<Note>();
             ManufNotes.Add(noteItem);
@@ -1580,39 +1574,41 @@ namespace WpfApp.ViewModel
             SelectedManufID = int.Parse(firstRow["Manuf_ID"].ToString());
             ActionManufName = "UpdateManuf";
             if (!firstRow.IsNull("Manuf_Name"))
-                SelectedManufName = firstRow["Manuf_Name"].ToString();
-            else SelectedManufName = "";
+                TempDetailManuf.ManufacturerName = firstRow["Manuf_Name"].ToString();
+            else TempDetailManuf.ManufacturerName = "";
             if (!firstRow.IsNull("Address"))
-                SelectedManufAddress = firstRow["Address"].ToString();
-            else SelectedManufAddress = "";
+                TempDetailManuf.Address = firstRow["Address"].ToString();
+            else TempDetailManuf.Address = "";
             if (!firstRow.IsNull("Address2"))
-                SelectedManufAddress2 = firstRow["Address2"].ToString();
-            else SelectedManufAddress2 = "";
+                TempDetailManuf.Address2 = firstRow["Address2"].ToString();
+            else TempDetailManuf.Address2 = "";
             if (!firstRow.IsNull("City"))
-                SelectedManufCity = firstRow["City"].ToString();
-            else SelectedManufCity = "";
+                TempDetailManuf.City = firstRow["City"].ToString();
+            else TempDetailManuf.City = "";
             if (!firstRow.IsNull("State"))
-                SelectedManufState = firstRow["State"].ToString();
-            else SelectedManufState = "";
+                TempDetailManuf.State = firstRow["State"].ToString();
+            else TempDetailManuf.State = "";
             if (!firstRow.IsNull("ZIP"))
-                SelectedManufZip = firstRow["ZIP"].ToString();
-            else SelectedManufZip = "";
+                TempDetailManuf.Zip = firstRow["ZIP"].ToString();
+            else TempDetailManuf.Zip = "";
             if (!firstRow.IsNull("Phone"))
-                SelectedManufPhone = firstRow["Phone"].ToString();
-            else SelectedManufPhone = "";
+                TempDetailManuf.Phone = firstRow["Phone"].ToString();
+            else TempDetailManuf.Phone = "";
             if (!firstRow.IsNull("FAX"))
-                SelectedManufFax = firstRow["FAX"].ToString();
-            else SelectedManufFax = "";
+                TempDetailManuf.Fax = firstRow["FAX"].ToString();
+            else TempDetailManuf.Fax = "";
             if (!firstRow.IsNull("Contact_Name"))
-                SelectedManufContactName = firstRow["Contact_Name"].ToString();
-            else SelectedManufContactName = "";
+                TempDetailManuf.ContactName = firstRow["Contact_Name"].ToString();
+            else TempDetailManuf.ContactName = "";
             if (!firstRow.IsNull("Contact_Phone"))
-                SelectedManufContactPhone = firstRow["Contact_Phone"].ToString();
-            else SelectedManufContactPhone = "";
+                TempDetailManuf.ContactPhone = firstRow["Contact_Phone"].ToString();
+            else TempDetailManuf.ContactPhone = "";
             if (!firstRow.IsNull("Contact_Email"))
-                SelectedManufContactEmail = firstRow["Contact_Email"].ToString();
-            else SelectedManufContactEmail = "";
-            SelectedManufActive = firstRow.Field<Boolean>("Active");
+                TempDetailManuf.ContactEmail = firstRow["Contact_Email"].ToString();
+            else TempDetailManuf.ContactEmail = "";
+            TempDetailManuf.Active = firstRow.Field<Boolean>("Active");
+
+            TempDetailManuf.ID = manufID;
 
             sqlquery = "SELECT * FROM tblNotes WHERE Notes_PK_Desc='Manuf' AND Notes_PK=" + manufID;
             cmd = new SqlCommand(sqlquery, dbConnection.Connection);
@@ -3142,15 +3138,6 @@ namespace WpfApp.ViewModel
             {
                 _selectedManufActive = value;
                 OnPropertyChanged();
-                switch (ActionManufName)
-                {
-                    case "CreateManuf":
-                        CreateManuf();
-                        break;
-                    case "UpdateManuf":
-                        UpdateManuf();
-                        break;
-                }
             }
         }
 
@@ -3163,15 +3150,6 @@ namespace WpfApp.ViewModel
             {
                 _selectedManufName = value;
                 OnPropertyChanged();
-                switch (ActionManufName)
-                {
-                    case "CreateManuf":
-                        CreateManuf();
-                        break;
-                    case "UpdateManuf":
-                        UpdateManuf();
-                        break;
-                }
             }
         }
 
@@ -3183,16 +3161,8 @@ namespace WpfApp.ViewModel
             set
             {
                 _selectedManufAddress = value;
+                Console.WriteLine("selected manuf address->"+value);
                 OnPropertyChanged();
-                switch (ActionManufName)
-                {
-                    case "CreateManuf":
-                        CreateManuf();
-                        break;
-                    case "UpdateManuf":
-                        UpdateManuf();
-                        break;
-                }
             }
         }
 
@@ -3205,15 +3175,6 @@ namespace WpfApp.ViewModel
             {
                 _selectedManufAddress2 = value;
                 OnPropertyChanged();
-                switch (ActionManufName)
-                {
-                    case "CreateManuf":
-                        CreateManuf();
-                        break;
-                    case "UpdateManuf":
-                        UpdateManuf();
-                        break;
-                }
             }
         }
 
@@ -3226,15 +3187,6 @@ namespace WpfApp.ViewModel
             {
                 _selectedManufCity = value;
                 OnPropertyChanged();
-                switch (ActionManufName)
-                {
-                    case "CreateManuf":
-                        CreateManuf();
-                        break;
-                    case "UpdateManuf":
-                        UpdateManuf();
-                        break;
-                }
             }
         }
 
@@ -3247,15 +3199,6 @@ namespace WpfApp.ViewModel
             {
                 _selectedManufState = value;
                 OnPropertyChanged();
-                switch (ActionManufName)
-                {
-                    case "CreateManuf":
-                        CreateManuf();
-                        break;
-                    case "UpdateManuf":
-                        UpdateManuf();
-                        break;
-                }
             }
         }
 
@@ -3268,15 +3211,6 @@ namespace WpfApp.ViewModel
             {
                 _selectedManufZip = value;
                 OnPropertyChanged();
-                switch (ActionManufName)
-                {
-                    case "CreateManuf":
-                        CreateManuf();
-                        break;
-                    case "UpdateManuf":
-                        UpdateManuf();
-                        break;
-                }
             }
         }
 
@@ -3289,15 +3223,6 @@ namespace WpfApp.ViewModel
             {
                 _selectedManufPhone = value;
                 OnPropertyChanged();
-                switch (ActionManufName)
-                {
-                    case "CreateManuf":
-                        CreateManuf();
-                        break;
-                    case "UpdateManuf":
-                        UpdateManuf();
-                        break;
-                }
             }
         }
 
@@ -3310,15 +3235,6 @@ namespace WpfApp.ViewModel
             {
                 _selectedManufFax = value;
                 OnPropertyChanged();
-                switch (ActionManufName)
-                {
-                    case "CreateManuf":
-                        CreateManuf();
-                        break;
-                    case "UpdateManuf":
-                        UpdateManuf();
-                        break;
-                }
             }
         }
 
@@ -3331,15 +3247,6 @@ namespace WpfApp.ViewModel
             {
                 _selectedManufContactName = value;
                 OnPropertyChanged();
-                switch (ActionManufName)
-                {
-                    case "CreateManuf":
-                        CreateManuf();
-                        break;
-                    case "UpdateManuf":
-                        UpdateManuf();
-                        break;
-                }
             }
         }
 
@@ -3352,15 +3259,6 @@ namespace WpfApp.ViewModel
             {
                 _selectedManufContactPhone = value;
                 OnPropertyChanged();
-                switch (ActionManufName)
-                {
-                    case "CreateManuf":
-                        CreateManuf();
-                        break;
-                    case "UpdateManuf":
-                        UpdateManuf();
-                        break;
-                }
             }
         }
 
@@ -3373,15 +3271,6 @@ namespace WpfApp.ViewModel
             {
                 _selectedManufContactEmail = value;
                 OnPropertyChanged();
-                switch (ActionManufName)
-                {
-                    case "CreateManuf":
-                        CreateManuf();
-                        break;
-                    case "UpdateManuf":
-                        UpdateManuf();
-                        break;
-                }
             }
         }
 
@@ -3965,6 +3854,30 @@ namespace WpfApp.ViewModel
             set
             {
                 _tempCustomer = value;
+                OnPropertyChanged();
+            }
+        }
+
+        private Manufacturer _tempDetailManuf;
+
+        public Manufacturer TempDetailManuf
+        {
+            get { return _tempDetailManuf; }
+            set
+            {
+                _tempDetailManuf = value;
+                OnPropertyChanged();
+            }
+        }
+
+        private Manufacturer _tempCreateManuf;
+
+        public Manufacturer TempCreateManuf
+        {
+            get { return _tempCreateManuf; }
+            set
+            {
+                _tempCreateManuf = value;
                 OnPropertyChanged();
             }
         }

@@ -872,7 +872,7 @@
                                 </Grid.RowDefinitions>
                                 <WrapPanel HorizontalAlignment="Right" Margin="0,0,0,4">
                                     <Label Content="Active?" />
-                                    <CheckBox IsChecked="{Binding SelectedManufActive, Mode=TwoWay}" />
+                                    <CheckBox IsChecked="{Binding TempDetailManuf.Active, Mode=TwoWay}" Checked="ManufDetail_CheckBox" Unchecked="ManufDetail_CheckBox" />
                                 </WrapPanel>
                                 <Grid Grid.Row="1" Margin="0,0,0,4">
                                     <Grid.ColumnDefinitions>
@@ -880,7 +880,7 @@
                                         <ColumnDefinition Width="4*" />
                                     </Grid.ColumnDefinitions>
                                     <Label Content="Name:" />
-                                    <TextBox Grid.Column="1" Text="{Binding SelectedManufName, Mode=TwoWay}" />
+                                    <TextBox Grid.Column="1" Text="{Binding TempDetailManuf.ManufacturerName, Mode=TwoWay}" KeyUp="ManufDetail_PreviewKeyUp" Tag="Name" />
                                 </Grid>
                                 <Grid Grid.Row="2" Margin="0,0,0,4">
                                     <Grid.ColumnDefinitions>
@@ -888,7 +888,7 @@
                                         <ColumnDefinition Width="4*" />
                                     </Grid.ColumnDefinitions>
                                     <Label Content="Address:" />
-                                    <TextBox Grid.Column="1" Text="{Binding SelectedManufAddress, Mode=TwoWay}" />
+                                    <TextBox Grid.Column="1" Text="{Binding TempDetailManuf.Address, Mode=TwoWay}" KeyUp="ManufDetail_PreviewKeyUp" Tag="Address" />
                                 </Grid>
                                 <Grid Grid.Row="3" Margin="0,0,0,4">
                                     <Grid.ColumnDefinitions>
@@ -896,7 +896,7 @@
                                         <ColumnDefinition Width="4*" />
                                     </Grid.ColumnDefinitions>
                                     <Label Content="" />
-                                    <TextBox Grid.Column="1" Text="{Binding SelectedManufAddress2, Mode=TwoWay}" />
+                                    <TextBox Grid.Column="1" Text="{Binding TempDetailManuf.Address2, Mode=TwoWay}" KeyUp="ManufDetail_PreviewKeyUp" Tag="Address2" />
                                 </Grid>
                                 <Grid Grid.Row="4" Margin="0,0,0,4">
                                     <Grid.ColumnDefinitions>
@@ -910,14 +910,14 @@
                                             <ColumnDefinition Width="1*" />
                                             <ColumnDefinition Width="1*" />
                                         </Grid.ColumnDefinitions>
-                                        <TextBox Margin="0,0,10,0" Text="{Binding SelectedManufCity, Mode=TwoWay}" />
+                                        <TextBox Margin="0,0,10,0" Text="{Binding TempDetailManuf.City, Mode=TwoWay}" KeyUp="ManufDetail_PreviewKeyUp" Tag="City" />
                                         <Grid Grid.Column="1">
                                             <Grid.ColumnDefinitions>
                                                 <ColumnDefinition Width="1*" />
                                                 <ColumnDefinition Width="1*" />
                                             </Grid.ColumnDefinitions>
                                             <Label Content="State:" />
-                                            <TextBox Grid.Column="1" Text="{Binding SelectedManufState, Mode=TwoWay}" MaxLength="2" />
+                                            <TextBox Grid.Column="1" Text="{Binding TempDetailManuf.State, Mode=TwoWay}" MaxLength="2" KeyUp="ManufDetail_PreviewKeyUp" Tag="State" />
                                         </Grid>
                                         <Grid Grid.Column="2">
                                             <Grid.ColumnDefinitions>
@@ -925,7 +925,7 @@
                                                 <ColumnDefinition Width="1*" />
                                             </Grid.ColumnDefinitions>
                                             <Label Content="Zip:" />
-                                            <TextBox Grid.Column="1" Text="{Binding SelectedManufZip, Mode=TwoWay}" />
+                                            <TextBox Grid.Column="1" Text="{Binding TempDetailManuf.Zip, Mode=TwoWay}" KeyUp="ManufDetail_PreviewKeyUp" Tag="Zip" />
                                         </Grid>
                                     </Grid>
                                 </Grid>
@@ -940,14 +940,14 @@
                                             <ColumnDefinition Width="1*" />
                                             <ColumnDefinition Width="2*" />
                                         </Grid.ColumnDefinitions>
-                                        <TextBox Margin="0,0,10,0" Text="{Binding SelectedManufPhone, Mode=TwoWay}" />
+                                        <TextBox Margin="0,0,10,0" Text="{Binding TempDetailManuf.Phone, Mode=TwoWay}" KeyUp="ManufDetail_PreviewKeyUp" Tag="Phone" />
                                         <Grid Grid.Column="1">
                                             <Grid.ColumnDefinitions>
                                                 <ColumnDefinition Width="1*" />
                                                 <ColumnDefinition Width="3*" />
                                             </Grid.ColumnDefinitions>
                                             <Label Content="Fax:" />
-                                            <TextBox Grid.Column="1" Text="{Binding SelectedManufFax, Mode=TwoWay}" />
+                                            <TextBox Grid.Column="1" Text="{Binding TempDetailManuf.Fax, Mode=TwoWay}" KeyUp="ManufDetail_PreviewKeyUp" Tag="Fax" />
                                         </Grid>
                                     </Grid>
                                 </Grid>
@@ -962,14 +962,14 @@
                                             <ColumnDefinition Width="1*" />
                                             <ColumnDefinition Width="2*" />
                                         </Grid.ColumnDefinitions>
-                                        <TextBox Text="{Binding SelectedManufContactName, Mode=TwoWay}" />
+                                        <TextBox Text="{Binding TempDetailManuf.ContactName, Mode=TwoWay}" KeyUp="ManufDetail_PreviewKeyUp" Tag="ContactName" />
                                         <Grid Grid.Column="1">
                                             <Grid.ColumnDefinitions>
                                                 <ColumnDefinition Width="1*" />
                                                 <ColumnDefinition Width="2*" />
                                             </Grid.ColumnDefinitions>
                                             <Label Content="Phone:" />
-                                            <TextBox Grid.Column="1" Text="{Binding SelectedManufContactPhone, Mode=TwoWay}" />
+                                            <TextBox Grid.Column="1" Text="{Binding TempDetailManuf.ContactPhone, Mode=TwoWay}" KeyUp="ManufDetail_PreviewKeyUp" Tag="ContactPhone" />
                                         </Grid>
                                     </Grid>
                                 </Grid>
@@ -979,7 +979,7 @@
                                         <ColumnDefinition Width="4*" />
                                     </Grid.ColumnDefinitions>
                                     <Label Content="Email:" />
-                                    <TextBox Grid.Column="1" Text="{Binding SelectedManufContactEmail, Mode=TwoWay}" />
+                                    <TextBox Grid.Column="1" Text="{Binding TempDetailManuf.ContactEmail, Mode=TwoWay}" KeyUp="ManufDetail_PreviewKeyUp" Tag="ContactEmail" />
                                 </Grid>
                             </Grid>
                             <Grid Grid.Column="1">
@@ -1082,7 +1082,7 @@
                                 <DataGridTemplateColumn Width="1*" Header="State">
                                     <DataGridTemplateColumn.CellTemplate>
                                         <DataTemplate>
-                                            <TextBox Text="{Binding State, Mode=TwoWay}" KeyUp="ManufTab_PreviewKeyUp" Tag="State" />
+                                            <TextBox Text="{Binding State, Mode=TwoWay}" MaxLength="2" KeyUp="ManufTab_PreviewKeyUp" Tag="State" />
                                         </DataTemplate>
                                     </DataGridTemplateColumn.CellTemplate>
                                 </DataGridTemplateColumn>
@@ -1103,7 +1103,7 @@
                                 <DataGridTemplateColumn Header="Active?" Width="1*">
                                     <DataGridTemplateColumn.CellTemplate>
                                         <DataTemplate>
-                                            <CheckBox IsChecked="{Binding Active}" />
+                                            <CheckBox IsChecked="{Binding Active}" Unchecked="ManufTab_CheckBox" Checked="ManufTab_CheckBox" />
                                         </DataTemplate>
                                     </DataGridTemplateColumn.CellTemplate>
                                 </DataGridTemplateColumn>

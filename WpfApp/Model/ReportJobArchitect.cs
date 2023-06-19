@@ -20,7 +20,6 @@ namespace WpfApp.Model
         private string _zip;
         private string _jobNo;
         private string _salesmanName;
-        private bool _active;
         private List<ProjectMatTracking> _projectMatTracking;
 
         public int ProjectID

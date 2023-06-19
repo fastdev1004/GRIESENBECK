@@ -686,25 +686,11 @@ namespace WpfApp.View
                     }
                     else if (AdminVM.SelectedTempCustIndex != selectedRowIndex)
                     {
-                        AdminVM.TempCustomer = new Customer();
                         AdminVM.SelectedTempCustIndex = selectedRowIndex;
                     }
                     Customer item = dataGrid.Items[selectedRowIndex] as Customer;
                         
-                    if (string.IsNullOrEmpty(AdminVM.TempCustomer.FullName))
-                    {
-                        AdminVM.TempCustomer.ID = item.ID;
-                        AdminVM.TempCustomer.FullName = item.FullName;
-                        AdminVM.TempCustomer.ShortName = item.ShortName;
-                        AdminVM.TempCustomer.PoBox = item.PoBox;
-                        AdminVM.TempCustomer.Address = item.Address;
-                        AdminVM.TempCustomer.City = item.City;
-                        AdminVM.TempCustomer.State = item.State;
-                        AdminVM.TempCustomer.Zip = item.Zip;
-                        AdminVM.TempCustomer.Phone = item.Phone;
-                        AdminVM.TempCustomer.Fax = item.Fax;
-                        AdminVM.TempCustomer.Active = item.Active;
-                    }
+                    AdminVM.TempCustomer = item;
                     //AdminVM.Customers[selectedRowIndex] = AdminVM.TempCustomer;
                     switch (itemName)
                     {
@@ -740,111 +726,41 @@ namespace WpfApp.View
                     AdminVM.UpdateCustomer();
                 }
             }
-                e.Handled = true;
+            e.Handled = true;
         }
 
         private void CustomerTab_ChkPreviewKeyUp(object sender, RoutedEventArgs e)
         {
            
-            CheckBox activeCheckBox = sender as CheckBox;
-            DataGrid dataGrid = noteHelper.FindDataGrid(activeCheckBox);
-            if (dataGrid != null)
-            {
-                AdminVM.UpdateComponent = "Table";
-                int selectedRowIndex = AdminVM.SelectedCustRowIndex;
-                if (AdminVM.SelectedTempCustIndex == -1)
-                {
-                    AdminVM.SelectedTempCustIndex = selectedRowIndex;
-                }
-                else if (AdminVM.SelectedTempCustIndex != selectedRowIndex)
-                {
-                    AdminVM.TempCustomer = new Customer();
-                    AdminVM.SelectedTempCustIndex = selectedRowIndex;
-                }
+            //CheckBox activeCheckBox = sender as CheckBox;
+            //DataGrid dataGrid = noteHelper.FindDataGrid(activeCheckBox);
+            //if (dataGrid != null)
+            //{
+            //    AdminVM.UpdateComponent = "Table";
+            //    int selectedRowIndex = AdminVM.SelectedCustRowIndex;
+            //    if (AdminVM.SelectedTempCustIndex == -1)
+            //    {
+            //        AdminVM.SelectedTempCustIndex = selectedRowIndex;
+            //    }
+            //    else if (AdminVM.SelectedTempCustIndex != selectedRowIndex)
+            //    {
+            //        AdminVM.TempCustomer = new Customer();
+            //        AdminVM.SelectedTempCustIndex = selectedRowIndex;
+            //    }
 
-                if(selectedRowIndex >= 0)
-                {
-                    Customer item = dataGrid.Items[selectedRowIndex] as Customer;
+            //    if(selectedRowIndex >= 0)
+            //    {
+            //        Customer item = dataGrid.Items[selectedRowIndex] as Customer;
 
-                    if (string.IsNullOrEmpty(AdminVM.TempCustomer.FullName))
-                    {
-                        AdminVM.TempCustomer.ID = item.ID;
-                        AdminVM.TempCustomer.FullName = item.FullName;
-                        AdminVM.TempCustomer.ShortName = item.ShortName;
-                        AdminVM.TempCustomer.PoBox = item.PoBox;
-                        AdminVM.TempCustomer.Address = item.Address;
-                        AdminVM.TempCustomer.City = item.City;
-                        AdminVM.TempCustomer.State = item.State;
-                        AdminVM.TempCustomer.Zip = item.Zip;
-                        AdminVM.TempCustomer.Phone = item.Phone;
-                        AdminVM.TempCustomer.Fax = item.Fax;
-                        AdminVM.TempCustomer.Active = item.Active;
-                    }
-                    AdminVM.Customers[selectedRowIndex] = AdminVM.TempCustomer;
-                    if (activeCheckBox.IsChecked == true)
-                        AdminVM.TempCustomer.Active = true;
-                    else AdminVM.TempCustomer.Active = false;
+            //        AdminVM.TempCustomer = item;
+            //        AdminVM.Customers[selectedRowIndex] = AdminVM.TempCustomer;
+            //        if (activeCheckBox.IsChecked == true)
+            //            AdminVM.TempCustomer.Active = true;
+            //        else AdminVM.TempCustomer.Active = false;
 
-                    AdminVM.UpdateCustomer();
-                }
-            }
-        }
-
-        private void ManufTab_PreviewKeyUp(object sender, KeyEventArgs e)
-        {
-            TextBox textBox = sender as TextBox;
-            if (textBox != null)
-            {
-                DataGrid dataGrid = noteHelper.FindDataGrid(textBox);
-
-                if (dataGrid != null)
-                {
-                    string itemName = textBox.Tag as string;
-                    AdminVM.UpdateComponent = "Table";
-
-                    int selectedRowIndex = dataGrid.SelectedIndex;
-                   
-                    Manufacturer item = dataGrid.Items[selectedRowIndex] as Manufacturer;
-                    AdminVM.TempManuf.ID = item.ID;
-                    AdminVM.TempManuf.ManufacturerName = item.ManufacturerName;
-                    AdminVM.TempManuf.Address = item.Address;
-                    AdminVM.TempManuf.Address2 = item.Address2;
-                    AdminVM.TempManuf.City = item.City;
-                    AdminVM.TempManuf.State = item.State;
-                    AdminVM.TempManuf.Zip = item.Zip;
-                    AdminVM.TempManuf.Phone = item.Phone;
-                    AdminVM.TempManuf.Fax = item.Fax;
-                    AdminVM.TempManuf.ContactName = item.ContactName;
-                    AdminVM.TempManuf.ContactPhone = item.ContactPhone;
-                    AdminVM.TempManuf.ContactEmail = item.ContactEmail;
-                    AdminVM.TempManuf.Active = item.Active;
-
-                    switch (itemName)
-                    {
-                        case "ManufacturerName":
-                            AdminVM.TempManuf.ManufacturerName = textBox.Text;
-                            break;
-                        case "Address":
-                            AdminVM.TempManuf.Address = textBox.Text;
-                            break;
-                        case "City":
-                            AdminVM.TempManuf.City = textBox.Text;
-                            break;
-                        case "State":
-                            AdminVM.TempManuf.State = textBox.Text;
-                            break;
-                        case "Zip":
-                            AdminVM.TempManuf.Zip = textBox.Text;
-                            break;
-                        case "Phone":
-                            AdminVM.TempManuf.Phone = textBox.Text;
-                            break;
-                    }
-
-                    AdminVM.UpdateManuf();
-                }
-            }
-            e.Handled = true;
+            //        AdminVM.UpdateCustomer();
+            //    }
+            //}
         }
 
         private void AcronymTab_PreviewKeyUp(object sender, KeyEventArgs e)
@@ -1054,8 +970,8 @@ namespace WpfApp.View
                             }
                             else
                             {
-                                Console.WriteLine("Material Desc is existed.");
-                                //MessageBox.Show("Material Desc is existed.");
+                                //Console.WriteLine("Material Desc is existed.");
+                                MessageBox.Show("Material Desc is existed.");
                             }
 
                         }
@@ -1205,7 +1121,7 @@ namespace WpfApp.View
                             else
                             {
                                 Console.WriteLine("Labor Desc is existed.");
-                                //MessageBox.Show("Labor Desc is existed.");
+                                MessageBox.Show("Labor Desc is existed.");
                             }
 
                         }
@@ -2025,7 +1941,6 @@ namespace WpfApp.View
             if(comboBox.SelectedValue != null)
             {
                 int optID = int.Parse(comboBox.SelectedValue.ToString());
-                //Console.WriteLine("comboBox.SelectedValue->"+ comboBox.SelectedValue);
                 DataGrid dataGrid = noteHelper.FindDataGrid(comboBox);
                 int selectedRowIndex = dataGrid.SelectedIndex;
                 int rowIndex = selectedRowIndex;
@@ -2150,14 +2065,12 @@ namespace WpfApp.View
                                 AdminVM.TempInstaller.FirstAidExpireDate = DateTime.Parse(textBox.Text);
                                 break;
                         }
-                        Console.WriteLine(AdminVM.TempInstaller);
                         AdminVM.CreateInstaller();
                     }
                     else
                     {
                         InHouseInstaller _installer = dataGrid.Items[rowIndex] as InHouseInstaller;
                         AdminVM.TempInstaller = _installer;
-                        Console.WriteLine(_installer.ID);
                         switch (itemName)
                         {
                             case "Name":
@@ -2353,6 +2266,207 @@ namespace WpfApp.View
         private void AdminDataGrid_TabChanged(object sender, SelectionChangedEventArgs e)
         {
             //AdminVM.CurrentIndex = 0;
+        }
+
+        private void ManufTab_PreviewKeyUp(object sender, KeyEventArgs e)
+        {
+            TextBox textBox = sender as TextBox;
+            if (textBox != null)
+            {
+                DataGrid dataGrid = noteHelper.FindDataGrid(textBox);
+
+                if (dataGrid != null)
+                {
+                    string itemName = textBox.Tag as string;
+                    AdminVM.UpdateComponent = "Table";
+
+                    int selectedRowIndex = dataGrid.SelectedIndex;
+
+                    Manufacturer item = dataGrid.Items[selectedRowIndex] as Manufacturer;
+                    AdminVM.TempManuf = item;
+
+                    switch (itemName)
+                    {
+                        case "ManufacturerName":
+                            AdminVM.TempManuf.ManufacturerName = textBox.Text;
+                            break;
+                        case "Address":
+                            AdminVM.TempManuf.Address = textBox.Text;
+                            break;
+                        case "City":
+                            AdminVM.TempManuf.City = textBox.Text;
+                            break;
+                        case "State":
+                            AdminVM.TempManuf.State = textBox.Text;
+                            break;
+                        case "Zip":
+                            AdminVM.TempManuf.Zip = textBox.Text;
+                            break;
+                        case "Phone":
+                            AdminVM.TempManuf.Phone = textBox.Text;
+                            break;
+                    }
+
+                    AdminVM.UpdateManuf();
+                }
+            }
+            e.Handled = true;
+        }
+
+        private void ManufTab_CheckBox(object sender, RoutedEventArgs e)
+        {
+            CheckBox chkBox = sender as CheckBox;
+
+            DataGrid dataGrid = noteHelper.FindDataGrid(chkBox);
+            int selectedRowIndex = dataGrid.SelectedIndex;
+            int rowIndex = selectedRowIndex;
+
+            if (AdminVM.ActionState.Equals("AddRow") || (AdminVM.ActionState.Equals("UpdateRow") && selectedRowIndex == -1))
+            {
+                rowIndex = AdminVM.CurrentIndex;
+            }
+            else
+            {
+                rowIndex = selectedRowIndex;
+            }
+            if (rowIndex >= 0)
+            {
+                Manufacturer newRow = dataGrid.Items[rowIndex] as Manufacturer;
+                if (dataGrid != null)
+                {
+                    if (selectedRowIndex == dataGrid.Items.Count - 1)
+                    {
+                        ObservableCollection<Manufacturer> manufs = AdminVM.Manufacturers;
+                        Manufacturer item = new Manufacturer();
+                        manufs.Add(item);
+                        AdminVM.ActionState = "AddRow";
+                        AdminVM.TempManuf = new Manufacturer();
+
+                        if (chkBox.IsChecked == true)
+                            AdminVM.TempManuf.Active = true;
+                        else AdminVM.TempManuf.Active = false;
+
+                        AdminVM.CreateManuf();
+                    }
+                    else
+                    {
+                        Manufacturer _manuf = dataGrid.Items[rowIndex] as Manufacturer;
+                        AdminVM.SelectedManufID = _manuf.ID;
+                        AdminVM.TempManuf = _manuf;
+
+                        if (chkBox.IsChecked == true)
+                            AdminVM.TempManuf.Active = true;
+                        else AdminVM.TempManuf.Active = false;
+
+                        AdminVM.UpdateComponent = "Table";
+                        AdminVM.UpdateManuf();
+                    }
+                    e.Handled = true;
+                }
+            }
+        }
+
+        private void ManufDetail_PreviewKeyUp(object sender, KeyEventArgs e)
+        {
+            TextBox textBox = sender as TextBox;
+
+            string itemName = textBox.Tag as string;
+            if (AdminVM.SelectedManufID == -1)
+            {
+                // Create Manuf
+                AdminVM.TempCreateManuf = new Manufacturer();
+                //Manufacturer _manuf = new Manufacturer();
+                switch (itemName)
+                {
+                    case "Name":
+                        AdminVM.TempCreateManuf.ManufacturerName = textBox.Text;
+                        break;
+                    case "Address":
+                        AdminVM.TempCreateManuf.Address = textBox.Text;
+                        break;
+                    case "Address2":
+                        AdminVM.TempCreateManuf.Address2 = textBox.Text;
+                        break;
+                    case "City":
+                        AdminVM.TempCreateManuf.City = textBox.Text;
+                        break;
+                    case "State":
+                        AdminVM.TempCreateManuf.State = textBox.Text;
+                        break;
+                    case "Zip":
+                        AdminVM.TempCreateManuf.Zip = textBox.Text;
+                        break;
+                    case "Phone":
+                        AdminVM.TempCreateManuf.Phone = textBox.Text;
+                        break;
+                    case "Fax":
+                        AdminVM.TempCreateManuf.Fax = textBox.Text;
+                        break;
+                    case "ContactName":
+                        AdminVM.TempCreateManuf.ContactName = textBox.Text;
+                        break;
+                    case "ContactPhone":
+                        AdminVM.TempCreateManuf.ContactPhone = textBox.Text;
+                        break;
+                    case "ContactEmail":
+                        AdminVM.TempCreateManuf.ContactEmail = textBox.Text;
+                        break;
+                }
+                AdminVM.CreateManuf();
+            }
+            else
+            {
+                // Update Manuf
+                switch (itemName)
+                {
+                    case "Name":
+                        AdminVM.TempDetailManuf.ManufacturerName = textBox.Text;
+                        break;
+                    case "Address":
+                        AdminVM.TempDetailManuf.Address = textBox.Text;
+                        break;
+                    case "Address2":
+                        AdminVM.TempDetailManuf.Address2 = textBox.Text;
+                        break;
+                    case "City":
+                        AdminVM.TempDetailManuf.City = textBox.Text;
+                        break;
+                    case "State":
+                        AdminVM.TempDetailManuf.State = textBox.Text;
+                        break;
+                    case "Zip":
+                        AdminVM.TempDetailManuf.Zip = textBox.Text;
+                        break;
+                    case "Phone":
+                        AdminVM.TempDetailManuf.Phone = textBox.Text;
+                        break;
+                    case "Fax":
+                        AdminVM.TempDetailManuf.Fax = textBox.Text;
+                        break;
+                    case "ContactName":
+                        AdminVM.TempDetailManuf.ContactName = textBox.Text;
+                        break;
+                    case "ContactPhone":
+                        AdminVM.TempDetailManuf.ContactPhone = textBox.Text;
+                        break;
+                    case "ContactEmail":
+                        AdminVM.TempDetailManuf.ContactEmail = textBox.Text;
+                        break;
+                }
+                AdminVM.UpdateManuf();
+            }
+        }
+
+        private void ManufDetail_CheckBox(object sender, RoutedEventArgs e)
+        {
+            CheckBox chkBox = sender as CheckBox;
+
+            if (chkBox.IsChecked == true)
+                AdminVM.TempDetailManuf.Active = true;
+            else AdminVM.TempDetailManuf.Active = false;
+
+            AdminVM.UpdateComponent = "Detail";
+            AdminVM.UpdateManuf();
         }
     }
 }
