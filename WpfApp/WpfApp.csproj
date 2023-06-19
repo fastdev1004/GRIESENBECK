@@ -67,6 +67,7 @@
     <Compile Include="Converter\YesNoBothConverter.cs" />
     <Compile Include="Converter\ZeroToEmptyStringConverter.cs" />
     <Compile Include="Model\Acronym.cs" />
+    <Compile Include="Model\ApplOption.cs" />
     <Compile Include="Model\Architect.cs" />
     <Compile Include="Model\ArchRep.cs" />
     <Compile Include="Model\ChangeOrder.cs" />
@@ -83,6 +84,7 @@
     <Compile Include="Model\Manufacturer.cs" />
     <Compile Include="Model\Material.cs" />
     <Compile Include="Model\Note.cs" />
+    <Compile Include="Model\OSHA.cs" />
     <Compile Include="Model\Payment.cs" />
     <Compile Include="Model\PC.cs" />
     <Compile Include="Model\Project.cs" />

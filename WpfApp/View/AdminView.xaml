@@ -14,6 +14,7 @@
         <ResourceDictionary>
             <converter:DateTimeToDateConverter x:Key="DateTimeToDateConverter" />
             <converter:DateTimeToDateTimeConverter x:Key="DateTimeToDateTimeConverter" />
+            <converter:ZeroToEmptyStringConverter x:Key="ZeroToEmptyStringConverter" />
             <ResourceDictionary.MergedDictionaries>
                 <ResourceDictionary Source="../Themes/Generic.xaml" />
             </ResourceDictionary.MergedDictionaries>
@@ -35,7 +36,7 @@
             </Border>
         </Grid>
         <Grid Grid.Row="1">
-            <TabControl Margin="10" BorderBrush="Gainsboro">
+            <TabControl Margin="10" BorderBrush="Gainsboro" SelectionChanged="AdminDataGrid_TabChanged">
                 <TabControl.Resources>
                     <Style TargetType="TabItem">
                         <Setter Property="Template">
@@ -744,7 +745,7 @@
                             </Grid>
                         </Grid>
                         <Grid Grid.Row="1">
-                            <DataGrid GridLinesVisibility="None" ItemsSource="{Binding Customers, Mode=TwoWay}" AutoGenerateColumns="False" CanUserResizeColumns="False"  HeadersVisibility="Column" SelectedIndex="{Binding SelectedCustRowIndex, Mode=TwoWay}">
+                            <DataGrid GridLinesVisibility="None" ItemsSource="{Binding Customers, Mode=TwoWay}" AutoGenerateColumns="False" CanUserResizeColumns="False"  HeadersVisibility="Column" SelectedIndex="{Binding SelectedCustRowIndex, Mode=TwoWay}" CanUserAddRows="False">
                                 <DataGrid.Resources>
                                     <Style TargetType="DataGridColumnHeader" BasedOn="{StaticResource GridColumnHeaderBase}">
                                         <Setter Property="Background" Value="#648278" />
@@ -1036,7 +1037,7 @@
                                 </DataGrid>
                             </Grid>
                         </Grid>
-                        <DataGrid Grid.Row="1" GridLinesVisibility="None" ItemsSource="{Binding Manufacturers}" AutoGenerateColumns="False" CanUserResizeColumns="False" AlternatingRowBackground="LightGray" HeadersVisibility="Column">
+                        <DataGrid Grid.Row="1" GridLinesVisibility="None" ItemsSource="{Binding Manufacturers}" AutoGenerateColumns="False" CanUserResizeColumns="False" HeadersVisibility="Column" CanUserAddRows="False">
                             <DataGrid.Resources>
                                 <Style TargetType="DataGridColumnHeader" BasedOn="{StaticResource GridColumnHeaderBase}">
                                     <Setter Property="Background" Value="#5C83B4" />
@@ -1064,15 +1065,45 @@
                                         </DataTemplate>
                                     </DataGridTemplateColumn.CellTemplate>
                                 </DataGridTemplateColumn>
-                                <DataGridTextColumn IsReadOnly="False" Width="4*" Binding="{Binding Path=Address}" Header="Address" />
-                                <DataGridTextColumn IsReadOnly="False" Width="2*" Binding="{Binding Path=City}" Header="City" />
-                                <DataGridTextColumn IsReadOnly="False" Width="1*" Binding="{Binding Path=State}" Header="State" />
-                                <DataGridTextColumn IsReadOnly="False" Width="2*" Binding="{Binding Path=Zip}" Header="Zip" />
-                                <DataGridTextColumn IsReadOnly="False" Width="3*" Binding="{Binding Path=Phone}" Header="Phone" />
+                                <DataGridTemplateColumn Width="4*" Header="Address">
+                                    <DataGridTemplateColumn.CellTemplate>
+                                        <DataTemplate>
+                                            <TextBox Text="{Binding Address, Mode=TwoWay}" KeyUp="ManufTab_PreviewKeyUp" Tag="Address" />
+                                        </DataTemplate>
+                                    </DataGridTemplateColumn.CellTemplate>
+                                </DataGridTemplateColumn>
+                                <DataGridTemplateColumn Width="2*" Header="City">
+                                    <DataGridTemplateColumn.CellTemplate>
+                                        <DataTemplate>
+                                            <TextBox Text="{Binding City, Mode=TwoWay}" KeyUp="ManufTab_PreviewKeyUp" Tag="City" />
+                                        </DataTemplate>
+                                    </DataGridTemplateColumn.CellTemplate>
+                                </DataGridTemplateColumn>
+                                <DataGridTemplateColumn Width="1*" Header="State">
+                                    <DataGridTemplateColumn.CellTemplate>
+                                        <DataTemplate>
+                                            <TextBox Text="{Binding State, Mode=TwoWay}" KeyUp="ManufTab_PreviewKeyUp" Tag="State" />
+                                        </DataTemplate>
+                                    </DataGridTemplateColumn.CellTemplate>
+                                </DataGridTemplateColumn>
+                                <DataGridTemplateColumn Width="2*" Header="Zip">
+                                    <DataGridTemplateColumn.CellTemplate>
+                                        <DataTemplate>
+                                            <TextBox Text="{Binding Zip, Mode=TwoWay}" KeyUp="ManufTab_PreviewKeyUp" Tag="Zip" />
+                                        </DataTemplate>
+                                    </DataGridTemplateColumn.CellTemplate>
+                                </DataGridTemplateColumn>
+                                <DataGridTemplateColumn Width="3*" Header="Phone">
+                                    <DataGridTemplateColumn.CellTemplate>
+                                        <DataTemplate>
+                                            <TextBox Text="{Binding Phone, Mode=TwoWay}" KeyUp="ManufTab_PreviewKeyUp" Tag="Phone" />
+                                        </DataTemplate>
+                                    </DataGridTemplateColumn.CellTemplate>
+                                </DataGridTemplateColumn>
                                 <DataGridTemplateColumn Header="Active?" Width="1*">
                                     <DataGridTemplateColumn.CellTemplate>
                                         <DataTemplate>
-                                            <CheckBox IsChecked="{Binding Active}" BorderThickness="0" />
+                                            <CheckBox IsChecked="{Binding Active}" />
                                         </DataTemplate>
                                     </DataGridTemplateColumn.CellTemplate>
                                 </DataGridTemplateColumn>
@@ -1086,7 +1117,7 @@
                             <ColumnDefinition Width="1*" />
                             <ColumnDefinition Width="1*" />
                         </Grid.ColumnDefinitions>
-                        <DataGrid  GridLinesVisibility="None" ItemsSource="{Binding Acronyms}" AutoGenerateColumns="False" CanUserResizeColumns="False" AlternatingRowBackground="LightGray" HeadersVisibility="Column">
+                        <DataGrid  GridLinesVisibility="None" ItemsSource="{Binding Acronyms}" AutoGenerateColumns="False" CanUserResizeColumns="False" HeadersVisibility="Column" CanUserAddRows="False" SelectedIndex="{Binding SelectedAcronymRowIndex, Mode=TwoWay}">
                             <DataGrid.Resources>
                                 <Style TargetType="DataGridColumnHeader" BasedOn="{StaticResource GridColumnHeaderBase}">
                                     <Setter Property="Background" Value="#648278" />
@@ -1100,12 +1131,24 @@
                                 </Style>
                             </DataGrid.Resources>
                             <DataGrid.Columns>
-                                <DataGridTextColumn IsReadOnly="False" Width="5*" Binding="{Binding Path=AcronymDesc}" Header="Description" />
-                                <DataGridTextColumn IsReadOnly="False" Width="2*" Binding="{Binding Path=AcronymName}" Header="Acronym" />
+                                <DataGridTemplateColumn Width="5*" Header="Description">
+                                    <DataGridTemplateColumn.CellTemplate>
+                                        <DataTemplate>
+                                            <TextBox Text="{Binding AcronymDesc, Mode=TwoWay}" KeyUp="AcronymTab_PreviewKeyUp" Tag="AcronymDesc" />
+                                        </DataTemplate>
+                                    </DataGridTemplateColumn.CellTemplate>
+                                </DataGridTemplateColumn>
+                                <DataGridTemplateColumn Width="2*" Header="Acronym">
+                                    <DataGridTemplateColumn.CellTemplate>
+                                        <DataTemplate>
+                                            <TextBox Text="{Binding AcronymName, Mode=TwoWay}" KeyUp="AcronymTab_PreviewKeyUp" Tag="AcronymName" />
+                                        </DataTemplate>
+                                    </DataGridTemplateColumn.CellTemplate>
+                                </DataGridTemplateColumn>
                                 <DataGridTemplateColumn Header="Active?" Width="1*">
                                     <DataGridTemplateColumn.CellTemplate>
                                         <DataTemplate>
-                                            <CheckBox IsChecked="{Binding Active}" BorderThickness="0" />
+                                            <CheckBox IsChecked="{Binding Active}" Unchecked="AcronymTab_CheckBox" Checked="AcronymTab_CheckBox" />
                                         </DataTemplate>
                                     </DataGridTemplateColumn.CellTemplate>
                                 </DataGridTemplateColumn>
@@ -1119,7 +1162,7 @@
                             <ColumnDefinition Width="1*" />
                             <ColumnDefinition Width="1*" />
                         </Grid.ColumnDefinitions>
-                        <DataGrid  GridLinesVisibility="None" ItemsSource="{Binding Materials}" AutoGenerateColumns="False" CanUserResizeColumns="False" AlternatingRowBackground="LightGray" HeadersVisibility="Column">
+                        <DataGrid  GridLinesVisibility="None" ItemsSource="{Binding Materials}" AutoGenerateColumns="False" CanUserResizeColumns="False" HeadersVisibility="Column" CanUserAddRows="False">
                             <DataGrid.Resources>
                                 <Style TargetType="DataGridColumnHeader" BasedOn="{StaticResource GridColumnHeaderBase}">
                                     <Setter Property="Background" Value="#BD623D" />
@@ -1133,11 +1176,17 @@
                                 </Style>
                             </DataGrid.Resources>
                             <DataGrid.Columns>
-                                <DataGridTextColumn IsReadOnly="False" Width="5*" Binding="{Binding Path=MatDesc}" Header="Material" />
+                                <DataGridTemplateColumn Width="5*" Header="Material">
+                                    <DataGridTemplateColumn.CellTemplate>
+                                        <DataTemplate>
+                                            <TextBox Text="{Binding MatDesc, Mode=TwoWay}" KeyUp="MaterialTab_PreviewKeyUp" Tag="MatDesc" />
+                                        </DataTemplate>
+                                    </DataGridTemplateColumn.CellTemplate>
+                                </DataGridTemplateColumn>
                                 <DataGridTemplateColumn Header="Active?" Width="1*">
                                     <DataGridTemplateColumn.CellTemplate>
                                         <DataTemplate>
-                                            <CheckBox IsChecked="{Binding Active}" BorderThickness="0" />
+                                            <CheckBox IsChecked="{Binding Active}" Checked="MaterialTab_CheckBox" Unchecked="MaterialTab_CheckBox" />
                                         </DataTemplate>
                                     </DataGridTemplateColumn.CellTemplate>
                                 </DataGridTemplateColumn>
@@ -1151,7 +1200,7 @@
                             <ColumnDefinition Width="1*" />
                             <ColumnDefinition Width="1*" />
                         </Grid.ColumnDefinitions>
-                        <DataGrid  GridLinesVisibility="None" ItemsSource="{Binding Labors}" AutoGenerateColumns="False" CanUserResizeColumns="False" AlternatingRowBackground="LightGray" HeadersVisibility="Column">
+                        <DataGrid  GridLinesVisibility="None" ItemsSource="{Binding Labors}" AutoGenerateColumns="False" CanUserResizeColumns="False" HeadersVisibility="Column" CanUserAddRows="False">
                             <DataGrid.Resources>
                                 <Style TargetType="DataGridColumnHeader" BasedOn="{StaticResource GridColumnHeaderBase}">
                                     <Setter Property="Background" Value="#7A9F35" />
@@ -1165,12 +1214,24 @@
                                 </Style>
                             </DataGrid.Resources>
                             <DataGrid.Columns>
-                                <DataGridTextColumn IsReadOnly="False" Width="5*" Binding="{Binding Path=LaborDesc}" Header="Description" />
-                                <DataGridTextColumn IsReadOnly="False" Width="2*" Binding="{Binding Path=UnitPrice}" Header="Unit Price" />
+                                <DataGridTemplateColumn Width="5*" Header="Description">
+                                    <DataGridTemplateColumn.CellTemplate>
+                                        <DataTemplate>
+                                            <TextBox Text="{Binding LaborDesc, Mode=TwoWay}" KeyUp="LaborTab_PreviewKeyUp" Tag="LaborDesc" />
+                                        </DataTemplate>
+                                    </DataGridTemplateColumn.CellTemplate>
+                                </DataGridTemplateColumn>
+                                <DataGridTemplateColumn Width="2*" Header="Unit Price">
+                                    <DataGridTemplateColumn.CellTemplate>
+                                        <DataTemplate>
+                                            <TextBox Text="{Binding UnitPrice, Mode=TwoWay}" KeyUp="LaborTab_PreviewKeyUp" Tag="UnitPrice" />
+                                        </DataTemplate>
+                                    </DataGridTemplateColumn.CellTemplate>
+                                </DataGridTemplateColumn>
                                 <DataGridTemplateColumn Header="Active?" Width="1*">
                                     <DataGridTemplateColumn.CellTemplate>
                                         <DataTemplate>
-                                            <CheckBox IsChecked="{Binding Active}" BorderThickness="0" />
+                                            <CheckBox IsChecked="{Binding Active}" Unchecked="LaborTab_CheckBox" Checked="LaborTab_CheckBox" />
                                         </DataTemplate>
                                     </DataGridTemplateColumn.CellTemplate>
                                 </DataGridTemplateColumn>
@@ -1184,7 +1245,7 @@
                             <ColumnDefinition Width="1*" />
                             <ColumnDefinition Width="1*" />
                         </Grid.ColumnDefinitions>
-                        <DataGrid  GridLinesVisibility="None" ItemsSource="{Binding Salesmans}" AutoGenerateColumns="False" CanUserResizeColumns="False" AlternatingRowBackground="LightGray" HeadersVisibility="Column">
+                        <DataGrid  GridLinesVisibility="None" ItemsSource="{Binding Salesmans}" AutoGenerateColumns="False" CanUserResizeColumns="False" HeadersVisibility="Column" CanUserAddRows="False">
                             <DataGrid.Resources>
                                 <Style TargetType="DataGridColumnHeader" BasedOn="{StaticResource GridColumnHeaderBase}">
                                     <Setter Property="Background" Value="#648278" />
@@ -1198,14 +1259,45 @@
                                 </Style>
                             </DataGrid.Resources>
                             <DataGrid.Columns>
-                                <DataGridTextColumn IsReadOnly="False" Width="5*" Binding="{Binding Path=SalesmanName}" Header="Name" />
-                                <DataGridTextColumn IsReadOnly="False" Width="2*" Binding="{Binding Path=Phone}" Header="Phone" />
-                                <DataGridTextColumn IsReadOnly="False" Width="2*" Binding="{Binding Path=Cell}" Header="Cell" />
-                                <DataGridTextColumn IsReadOnly="False" Width="2*" Binding="{Binding Path=Email}" Header="Email" />
+                                <DataGridTemplateColumn Width="2*" Header="Initials">
+                                    <DataGridTemplateColumn.CellTemplate>
+                                        <DataTemplate>
+                                            <TextBox Text="{Binding Init, Mode=TwoWay}" KeyUp="SalesTab_PreviewKeyUp" Tag="Init" />
+                                        </DataTemplate>
+                                    </DataGridTemplateColumn.CellTemplate>
+                                </DataGridTemplateColumn>
+                                <DataGridTemplateColumn Width="5*" Header="Name">
+                                    <DataGridTemplateColumn.CellTemplate>
+                                        <DataTemplate>
+                                            <TextBox Text="{Binding SalesmanName, Mode=TwoWay}" KeyUp="SalesTab_PreviewKeyUp" Tag="Name" />
+                                        </DataTemplate>
+                                    </DataGridTemplateColumn.CellTemplate>
+                                </DataGridTemplateColumn>
+                                <DataGridTemplateColumn Width="2*" Header="Phone">
+                                    <DataGridTemplateColumn.CellTemplate>
+                                        <DataTemplate>
+                                            <TextBox Text="{Binding Phone, Mode=TwoWay}" KeyUp="SalesTab_PreviewKeyUp" Tag="Phone" />
+                                        </DataTemplate>
+                                    </DataGridTemplateColumn.CellTemplate>
+                                </DataGridTemplateColumn>
+                                <DataGridTemplateColumn Width="2*" Header="Cell">
+                                    <DataGridTemplateColumn.CellTemplate>
+                                        <DataTemplate>
+                                            <TextBox Text="{Binding Cell, Mode=TwoWay}" KeyUp="SalesTab_PreviewKeyUp" Tag="Cell" />
+                                        </DataTemplate>
+                                    </DataGridTemplateColumn.CellTemplate>
+                                </DataGridTemplateColumn>
+                                <DataGridTemplateColumn Width="2*" Header="Email">
+                                    <DataGridTemplateColumn.CellTemplate>
+                                        <DataTemplate>
+                                            <TextBox Text="{Binding Email, Mode=TwoWay}" KeyUp="SalesTab_PreviewKeyUp" Tag="Email" />
+                                        </DataTemplate>
+                                    </DataGridTemplateColumn.CellTemplate>
+                                </DataGridTemplateColumn>
                                 <DataGridTemplateColumn Header="Active?" Width="1*">
                                     <DataGridTemplateColumn.CellTemplate>
                                         <DataTemplate>
-                                            <CheckBox IsChecked="{Binding Active}" BorderThickness="0" />
+                                            <CheckBox IsChecked="{Binding Active}" Checked="SalesTab_CheckBox" Unchecked="SalesTab_CheckBox" />
                                         </DataTemplate>
                                     </DataGridTemplateColumn.CellTemplate>
                                 </DataGridTemplateColumn>
@@ -1219,7 +1311,7 @@
                             <ColumnDefinition Width="1*" />
                             <ColumnDefinition Width="1*" />
                         </Grid.ColumnDefinitions>
-                        <DataGrid  GridLinesVisibility="None" ItemsSource="{Binding Crews}" AutoGenerateColumns="False" CanUserResizeColumns="False" AlternatingRowBackground="LightGray" HeadersVisibility="Column">
+                        <DataGrid  GridLinesVisibility="None" ItemsSource="{Binding Crews}" AutoGenerateColumns="False" CanUserResizeColumns="False" HeadersVisibility="Column" CanUserAddRows="False">
                             <DataGrid.Resources>
                                 <Style TargetType="DataGridColumnHeader" BasedOn="{StaticResource GridColumnHeaderBase}">
                                     <Setter Property="Background" Value="#648278" />
@@ -1233,14 +1325,38 @@
                                 </Style>
                             </DataGrid.Resources>
                             <DataGrid.Columns>
-                                <DataGridTextColumn IsReadOnly="False" Width="5*" Binding="{Binding Path=CrewName}" Header="Name" />
-                                <DataGridTextColumn IsReadOnly="False" Width="2*" Binding="{Binding Path=Phone}" Header="Phone" />
-                                <DataGridTextColumn IsReadOnly="False" Width="2*" Binding="{Binding Path=Cell}" Header="Cell" />
-                                <DataGridTextColumn IsReadOnly="False" Width="2*" Binding="{Binding Path=Email}" Header="Email" />
+                                <DataGridTemplateColumn Width="5*" Header="Name">
+                                    <DataGridTemplateColumn.CellTemplate>
+                                        <DataTemplate>
+                                            <TextBox Text="{Binding CrewName, Mode=TwoWay}" KeyUp="CrewTab_PreviewKeyUp" Tag="Name" />
+                                        </DataTemplate>
+                                    </DataGridTemplateColumn.CellTemplate>
+                                </DataGridTemplateColumn>
+                                <DataGridTemplateColumn Width="2*" Header="Phone">
+                                    <DataGridTemplateColumn.CellTemplate>
+                                        <DataTemplate>
+                                            <TextBox Text="{Binding Phone, Mode=TwoWay}" KeyUp="CrewTab_PreviewKeyUp" Tag="Phone" />
+                                        </DataTemplate>
+                                    </DataGridTemplateColumn.CellTemplate>
+                                </DataGridTemplateColumn>
+                                <DataGridTemplateColumn Width="2*" Header="Cell">
+                                    <DataGridTemplateColumn.CellTemplate>
+                                        <DataTemplate>
+                                            <TextBox Text="{Binding Cell, Mode=TwoWay}" KeyUp="CrewTab_PreviewKeyUp" Tag="Cell" />
+                                        </DataTemplate>
+                                    </DataGridTemplateColumn.CellTemplate>
+                                </DataGridTemplateColumn>
+                                <DataGridTemplateColumn Width="2*" Header="Email">
+                                    <DataGridTemplateColumn.CellTemplate>
+                                        <DataTemplate>
+                                            <TextBox Text="{Binding Email, Mode=TwoWay}" KeyUp="CrewTab_PreviewKeyUp" Tag="Email" />
+                                        </DataTemplate>
+                                    </DataGridTemplateColumn.CellTemplate>
+                                </DataGridTemplateColumn>
                                 <DataGridTemplateColumn Header="Active?" Width="1*">
                                     <DataGridTemplateColumn.CellTemplate>
                                         <DataTemplate>
-                                            <CheckBox IsChecked="{Binding Active}" BorderThickness="0" />
+                                            <CheckBox IsChecked="{Binding Active}" Checked="CrewTab_CheckBox" Unchecked="CrewTab_CheckBox" />
                                         </DataTemplate>
                                     </DataGridTemplateColumn.CellTemplate>
                                 </DataGridTemplateColumn>
@@ -1250,11 +1366,7 @@
                 </TabItem>
                 <TabItem Header="In House Installers">
                     <Grid Margin="20">
-                        <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="4*" />
-                            <ColumnDefinition Width="1*" />
-                        </Grid.ColumnDefinitions>
-                        <DataGrid  GridLinesVisibility="None" ItemsSource="{Binding Installers}" AutoGenerateColumns="False" CanUserResizeColumns="False" AlternatingRowBackground="LightGray" HeadersVisibility="Column">
+                        <DataGrid  GridLinesVisibility="None" ItemsSource="{Binding Installers}" AutoGenerateColumns="False" CanUserResizeColumns="False" HeadersVisibility="Column" CanUserAddRows="False">
                             <DataGrid.Resources>
                                 <Style TargetType="DataGridColumnHeader" BasedOn="{StaticResource GridColumnHeaderBase}">
                                     <Setter Property="Background" Value="#5C83B4" />
@@ -1268,25 +1380,87 @@
                                 </Style>
                             </DataGrid.Resources>
                             <DataGrid.Columns>
-                                <DataGridTextColumn IsReadOnly="False" Width="2*" Binding="{Binding Path=InstallerName}" Header="Name" />
-                                <DataGridTextColumn IsReadOnly="False" Width="2*" Binding="{Binding Path=InstallerCell}" Header="Cell" />
-                                <DataGridTextColumn IsReadOnly="False" Width="3*" Binding="{Binding Path=InstallerEmail}" Header="Email" />
-                                <DataGridTemplateColumn Header="Crew Assignment" Width="2*">
+                                <DataGridTemplateColumn Width="2*" Header="Name">
                                     <DataGridTemplateColumn.CellTemplate>
                                         <DataTemplate>
-                                            <ComboBox ItemsSource="{Binding DataContext.Crews, RelativeSource={RelativeSource AncestorType=local:AdminView}}" SelectedValuePath="ID" SelectedValue="{Binding CrewID, Mode=TwoWay}" DisplayMemberPath="CrewName" IsEditable="True" />
+                                            <TextBox Text="{Binding InstallerName, Mode=TwoWay}" KeyUp="Install_PreviewKeyUp" Tag="Name" />
                                         </DataTemplate>
                                     </DataGridTemplateColumn.CellTemplate>
                                 </DataGridTemplateColumn>
-                                <DataGridTextColumn IsReadOnly="False" Width="2*" Binding="{Binding Path=OSHALevel}" Header="OSHA Level" />
-                                <DataGridTextColumn IsReadOnly="False" Width="2*" Binding="{Binding Path=OSHAExpireDate}" Header="Certification Date" />
-                                <DataGridTextColumn IsReadOnly="False" Width="2*" Binding="{Binding Path=OSHACert}" Header="Certification Date" />
-                                <DataGridTextColumn IsReadOnly="False" Width="2*" Binding="{Binding Path=FirstAidCert}" Header="OSHA Certificate" />
-                                <DataGridTextColumn IsReadOnly="False" Width="2*" Binding="{Binding Path=FirstAidExpireDate}" Header="First Aid/CPR Date" />
+                                <DataGridTemplateColumn Width="1*" Header="Cell">
+                                    <DataGridTemplateColumn.CellTemplate>
+                                        <DataTemplate>
+                                            <TextBox Text="{Binding InstallerCell, Mode=TwoWay}" KeyUp="Install_PreviewKeyUp" Tag="Cell" />
+                                        </DataTemplate>
+                                    </DataGridTemplateColumn.CellTemplate>
+                                </DataGridTemplateColumn>
+                                <DataGridTemplateColumn Width="3*" Header="Email">
+                                    <DataGridTemplateColumn.CellTemplate>
+                                        <DataTemplate>
+                                            <TextBox Text="{Binding InstallerEmail, Mode=TwoWay}" KeyUp="Install_PreviewKeyUp" Tag="Email" />
+                                        </DataTemplate>
+                                    </DataGridTemplateColumn.CellTemplate>
+                                </DataGridTemplateColumn>
+                                <DataGridTemplateColumn Header="Crew Assignment" Width="1.5*">
+                                    <DataGridTemplateColumn.CellTemplate>
+                                        <DataTemplate>
+                                            <ComboBox ItemsSource="{Binding DataContext.Crews, RelativeSource={RelativeSource AncestorType=local:AdminView}}" SelectedValuePath="ID" SelectedValue="{Binding CrewID, Mode=TwoWay}" DisplayMemberPath="CrewName" IsEditable="True" SelectionChanged="InstallCrew_ComboBox" />
+                                        </DataTemplate>
+                                    </DataGridTemplateColumn.CellTemplate>
+                                </DataGridTemplateColumn>
+                                <DataGridTemplateColumn Width="1.5*" Header="OSHA Level">
+                                    <DataGridTemplateColumn.CellTemplate>
+                                        <DataTemplate>
+                                            <ComboBox ItemsSource="{Binding DataContext.OSHAs, RelativeSource={RelativeSource AncestorType=local:AdminView}}" SelectedValuePath="Name" SelectedValue="{Binding OSHALevel, Mode=TwoWay}" DisplayMemberPath="Name" IsEditable="True" SelectionChanged="InstallOsha_ComboBox" />
+                                        </DataTemplate>
+                                    </DataGridTemplateColumn.CellTemplate>
+                                </DataGridTemplateColumn>
+                                <DataGridTemplateColumn Width="1.5*" Header="Certification Date">
+                                    <DataGridTemplateColumn.CellTemplate>
+                                        <DataTemplate>
+                                            <DatePicker SelectedDate="{Binding OSHAExpireDate, Mode=TwoWay}" Tag="CertificationDate" />
+                                        </DataTemplate>
+                                    </DataGridTemplateColumn.CellTemplate>
+                                </DataGridTemplateColumn>
+                                <DataGridTemplateColumn Width="3*" Header="OSHA Certificate">
+                                    <DataGridTemplateColumn.CellTemplate>
+                                        <DataTemplate>
+                                            <Grid>
+                                                <Grid.ColumnDefinitions>
+                                                    <ColumnDefinition Width="Auto" />
+                                                    <ColumnDefinition Width="Auto" />
+                                                </Grid.ColumnDefinitions>
+                                                <Button Content="File" Background="#8064A2" Click="Installer_FileSelector" Tag="OshaCert" />
+                                                <TextBox Grid.Column="1" Text="{Binding OSHACert, Mode=TwoWay}" KeyUp="Install_PreviewKeyUp" Tag="OshaCert" TextDecorations="Underline" Foreground="Blue" />
+                                            </Grid>
+                                        </DataTemplate>
+                                    </DataGridTemplateColumn.CellTemplate>
+                                </DataGridTemplateColumn>
+                                <DataGridTemplateColumn Width="1.5*" Header="First Aid/CPR Date">
+                                    <DataGridTemplateColumn.CellTemplate>
+                                        <DataTemplate>
+                                            <DatePicker SelectedDate="{Binding FirstAidExpireDate, Mode=TwoWay}" Tag="FacDate" />
+                                        </DataTemplate>
+                                    </DataGridTemplateColumn.CellTemplate>
+                                </DataGridTemplateColumn>
+                                <DataGridTemplateColumn Width="3*" Header="First Aid/CPR Cert">
+                                    <DataGridTemplateColumn.CellTemplate>
+                                        <DataTemplate>
+                                            <Grid>
+                                                <Grid.ColumnDefinitions>
+                                                    <ColumnDefinition Width="Auto" />
+                                                    <ColumnDefinition Width="Auto" />
+                                                </Grid.ColumnDefinitions>
+                                                <Button Content="FAC" Background="#8064A2" Click="Installer_FileSelector" Tag="FacCert" />
+                                                <TextBox Grid.Column="1" TextDecorations="Underline" Foreground="Blue" Text="{Binding FirstAidCert, Mode=TwoWay}" KeyUp="Install_PreviewKeyUp" Tag="FacCert" />
+                                            </Grid>
+                                        </DataTemplate>
+                                    </DataGridTemplateColumn.CellTemplate>
+                                </DataGridTemplateColumn>
                                 <DataGridTemplateColumn Header="Active?" Width="1*">
                                     <DataGridTemplateColumn.CellTemplate>
                                         <DataTemplate>
-                                            <CheckBox IsChecked="{Binding Active}" BorderThickness="0" />
+                                            <CheckBox IsChecked="{Binding Active}" Unchecked="Install_CheckBox" Checked="Install_CheckBox" />
                                         </DataTemplate>
                                     </DataGridTemplateColumn.CellTemplate>
                                 </DataGridTemplateColumn>
@@ -1300,7 +1474,7 @@
                             <ColumnDefinition Width="3*" />
                             <ColumnDefinition Width="1*" />
                         </Grid.ColumnDefinitions>
-                        <DataGrid  GridLinesVisibility="None" ItemsSource="{Binding Architects}" AutoGenerateColumns="False" CanUserResizeColumns="False" AlternatingRowBackground="LightGray" HeadersVisibility="Column">
+                        <DataGrid  GridLinesVisibility="None" ItemsSource="{Binding Architects}" AutoGenerateColumns="False" CanUserResizeColumns="False" HeadersVisibility="Column" CanUserAddRows="False">
                             <DataGrid.Resources>
                                 <Style TargetType="DataGridColumnHeader" BasedOn="{StaticResource GridColumnHeaderBase}">
                                     <Setter Property="Background" Value="#648278" />
@@ -1314,20 +1488,73 @@
                                 </Style>
                             </DataGrid.Resources>
                             <DataGrid.Columns>
-                                <DataGridTextColumn IsReadOnly="False" Width="5*" Binding="{Binding Path=ArchCompany}" Header="Company" />
-                                <DataGridTextColumn IsReadOnly="False" Width="2*" Binding="{Binding Path=Contact}" Header="Contact" />
-                                <DataGridTextColumn IsReadOnly="False" Width="3*" Binding="{Binding Path=Address}" Header="Contact" />
-                                <DataGridTextColumn IsReadOnly="False" Width="2*" Binding="{Binding Path=City}" Header="City" />
-                                <DataGridTextColumn IsReadOnly="False" Width="1*" Binding="{Binding Path=State}" Header="State" />
-                                <DataGridTextColumn IsReadOnly="False" Width="1*" Binding="{Binding Path=Zip}" Header="Zip" />
-                                <DataGridTextColumn IsReadOnly="False" Width="2*" Binding="{Binding Path=Email}" Header="Email" />
-                                <DataGridTextColumn IsReadOnly="False" Width="2*" Binding="{Binding Path=Phone}" Header="Phone" />
-                                <DataGridTextColumn IsReadOnly="False" Width="2*" Binding="{Binding Path=Fax}" Header="Fax" />
-                                <DataGridTextColumn IsReadOnly="False" Width="2*" Binding="{Binding Path=Cell}" Header="Cell" />
+                                <DataGridTemplateColumn Width="5*" Header="Company">
+                                    <DataGridTemplateColumn.CellTemplate>
+                                        <DataTemplate>
+                                            <TextBox Text="{Binding ArchCompany, Mode=TwoWay}" KeyUp="ArchTab_PreviewKeyUp" Tag="Company" />
+                                        </DataTemplate>
+                                    </DataGridTemplateColumn.CellTemplate>
+                                </DataGridTemplateColumn>
+                                <DataGridTemplateColumn Width="2*" Header="Contact">
+                                    <DataGridTemplateColumn.CellTemplate>
+                                        <DataTemplate>
+                                            <TextBox Text="{Binding Contact, Mode=TwoWay}" KeyUp="ArchTab_PreviewKeyUp" Tag="Contact" />
+                                        </DataTemplate>
+                                    </DataGridTemplateColumn.CellTemplate>
+                                </DataGridTemplateColumn>
+                                <DataGridTemplateColumn Width="3*" Header="Address">
+                                    <DataGridTemplateColumn.CellTemplate>
+                                        <DataTemplate>
+                                            <TextBox Text="{Binding Address, Mode=TwoWay}" KeyUp="ArchTab_PreviewKeyUp" Tag="Address" />
+                                        </DataTemplate>
+                                    </DataGridTemplateColumn.CellTemplate>
+                                </DataGridTemplateColumn>
+                                <DataGridTemplateColumn Width="2*" Header="City">
+                                    <DataGridTemplateColumn.CellTemplate>
+                                        <DataTemplate>
+                                            <TextBox Text="{Binding City, Mode=TwoWay}" KeyUp="ArchTab_PreviewKeyUp" Tag="City" />
+                                        </DataTemplate>
+                                    </DataGridTemplateColumn.CellTemplate>
+                                </DataGridTemplateColumn>
+                                <DataGridTemplateColumn Width="1*" Header="State">
+                                    <DataGridTemplateColumn.CellTemplate>
+                                        <DataTemplate>
+                                            <TextBox Text="{Binding State, Mode=TwoWay}" KeyUp="ArchTab_PreviewKeyUp" Tag="State" />
+                                        </DataTemplate>
+                                    </DataGridTemplateColumn.CellTemplate>
+                                </DataGridTemplateColumn>
+                                <DataGridTemplateColumn Width="2*" Header="ZIP">
+                                    <DataGridTemplateColumn.CellTemplate>
+                                        <DataTemplate>
+                                            <TextBox Text="{Binding Zip, Mode=TwoWay}" KeyUp="ArchTab_PreviewKeyUp" Tag="Zip" />
+                                        </DataTemplate>
+                                    </DataGridTemplateColumn.CellTemplate>
+                                </DataGridTemplateColumn>
+                                <DataGridTemplateColumn Width="2*" Header="Phone">
+                                    <DataGridTemplateColumn.CellTemplate>
+                                        <DataTemplate>
+                                            <TextBox Text="{Binding Phone, Mode=TwoWay}" KeyUp="ArchTab_PreviewKeyUp" Tag="Phone" />
+                                        </DataTemplate>
+                                    </DataGridTemplateColumn.CellTemplate>
+                                </DataGridTemplateColumn>
+                                <DataGridTemplateColumn Width="2*" Header="FAX">
+                                    <DataGridTemplateColumn.CellTemplate>
+                                        <DataTemplate>
+                                            <TextBox Text="{Binding Fax, Mode=TwoWay}" KeyUp="ArchTab_PreviewKeyUp" Tag="Fax" />
+                                        </DataTemplate>
+                                    </DataGridTemplateColumn.CellTemplate>
+                                </DataGridTemplateColumn>
+                                <DataGridTemplateColumn Width="2*" Header="Cell">
+                                    <DataGridTemplateColumn.CellTemplate>
+                                        <DataTemplate>
+                                            <TextBox Text="{Binding Cell, Mode=TwoWay}" KeyUp="ArchTab_PreviewKeyUp" Tag="Cell" />
+                                        </DataTemplate>
+                                    </DataGridTemplateColumn.CellTemplate>
+                                </DataGridTemplateColumn>
                                 <DataGridTemplateColumn Header="Active?" Width="1*">
                                     <DataGridTemplateColumn.CellTemplate>
                                         <DataTemplate>
-                                            <CheckBox IsChecked="{Binding Active}" BorderThickness="0" />
+                                            <CheckBox IsChecked="{Binding Active}" Unchecked="ArchTab_CheckBox" Checked="ArchTab_CheckBox" />
                                         </DataTemplate>
                                     </DataGridTemplateColumn.CellTemplate>
                                 </DataGridTemplateColumn>
@@ -1341,7 +1568,7 @@
                             <ColumnDefinition Width="4*" />
                             <ColumnDefinition Width="1*" />
                         </Grid.ColumnDefinitions>
-                        <DataGrid  GridLinesVisibility="None" ItemsSource="{Binding Users}" AutoGenerateColumns="False" CanUserResizeColumns="False" AlternatingRowBackground="LightGray" HeadersVisibility="Column">
+                        <DataGrid  GridLinesVisibility="None" ItemsSource="{Binding Users}" AutoGenerateColumns="False" CanUserResizeColumns="False" HeadersVisibility="Column" CanUserAddRows="False">
                             <DataGrid.Resources>
                                 <Style TargetType="DataGridColumnHeader" BasedOn="{StaticResource GridColumnHeaderBase}">
                                     <Setter Property="Background" Value="#648278" />
@@ -1355,15 +1582,45 @@
                                 </Style>
                             </DataGrid.Resources>
                             <DataGrid.Columns>
-                                <DataGridTextColumn IsReadOnly="False" Width="5*" Binding="{Binding Path=UserName}" Header="Computer Login" />
-                                <DataGridTextColumn IsReadOnly="False" Width="2*" Binding="{Binding Path=PersonName}" Header="User Name" />
-                                <DataGridTextColumn IsReadOnly="False" Width="1*" Binding="{Binding Path=Level}" Header="Level" />
-                                <DataGridTextColumn IsReadOnly="False" Width="2*" Binding="{Binding Path=FromOnOpen}" Header="Form On Open" />
-                                <DataGridTextColumn IsReadOnly="False" Width="2*" Binding="{Binding Path=Email}" Header="Email Address" />
+                                <DataGridTemplateColumn Width="3*" Header="Computer Login">
+                                    <DataGridTemplateColumn.CellTemplate>
+                                        <DataTemplate>
+                                            <TextBox Text="{Binding UserName, Mode=TwoWay}" KeyUp="UserTab_PreviewKeyUp" Tag="UserName" />
+                                        </DataTemplate>
+                                    </DataGridTemplateColumn.CellTemplate>
+                                </DataGridTemplateColumn>
+                                <DataGridTemplateColumn Width="3*" Header="User Name">
+                                    <DataGridTemplateColumn.CellTemplate>
+                                        <DataTemplate>
+                                            <TextBox Text="{Binding PersonName, Mode=TwoWay}" KeyUp="UserTab_PreviewKeyUp" Tag="PersonName" />
+                                        </DataTemplate>
+                                    </DataGridTemplateColumn.CellTemplate>
+                                </DataGridTemplateColumn>
+                                <DataGridTemplateColumn Width="1*" Header="Level">
+                                    <DataGridTemplateColumn.CellTemplate>
+                                        <DataTemplate>
+                                            <TextBox Text="{Binding Level, Mode=TwoWay, Converter={StaticResource ZeroToEmptyStringConverter}}" KeyUp="UserTab_PreviewKeyUp" Tag="Level" />
+                                        </DataTemplate>
+                                    </DataGridTemplateColumn.CellTemplate>
+                                </DataGridTemplateColumn>
+                                <DataGridTemplateColumn Width="2*" Header="Form On Open">
+                                    <DataGridTemplateColumn.CellTemplate>
+                                        <DataTemplate>
+                                            <ComboBox ItemsSource="{Binding DataContext.FormOnOpens, RelativeSource={RelativeSource AncestorType=local:AdminView}}" DisplayMemberPath="OptTxtVal" SelectedValuePath="OptID" IsEditable="True" SelectedValue="{Binding FormOnOpen, Mode=TwoWay}" SelectionChanged="UserTab_ComboBox"/>
+                                        </DataTemplate>
+                                    </DataGridTemplateColumn.CellTemplate>
+                                </DataGridTemplateColumn>
+                                <DataGridTemplateColumn Width="4*" Header="Email Addres">
+                                    <DataGridTemplateColumn.CellTemplate>
+                                        <DataTemplate>
+                                            <TextBox Text="{Binding Email, Mode=TwoWay}" KeyUp="UserTab_PreviewKeyUp" Tag="Email" />
+                                        </DataTemplate>
+                                    </DataGridTemplateColumn.CellTemplate>
+                                </DataGridTemplateColumn>
                                 <DataGridTemplateColumn Header="Active?" Width="1*">
                                     <DataGridTemplateColumn.CellTemplate>
                                         <DataTemplate>
-                                            <CheckBox IsChecked="{Binding Active}" BorderThickness="0" />
+                                            <CheckBox IsChecked="{Binding Active}" Checked="UserTab_CheckBox" Unchecked="UserTab_CheckBox" />
                                         </DataTemplate>
                                     </DataGridTemplateColumn.CellTemplate>
                                 </DataGridTemplateColumn>
@@ -1377,7 +1634,7 @@
                             <ColumnDefinition Width="1*" />
                             <ColumnDefinition Width="1*" />
                         </Grid.ColumnDefinitions>
-                        <DataGrid  GridLinesVisibility="None" ItemsSource="{Binding FreightCos}" AutoGenerateColumns="False" CanUserResizeColumns="False" AlternatingRowBackground="LightGray" HeadersVisibility="Column">
+                        <DataGrid  GridLinesVisibility="None" ItemsSource="{Binding FreightCos}" AutoGenerateColumns="False" CanUserResizeColumns="False" HeadersVisibility="Column" CanUserAddRows="False">
                             <DataGrid.Resources>
                                 <Style TargetType="DataGridColumnHeader" BasedOn="{StaticResource GridColumnHeaderBase}">
                                     <Setter Property="Background" Value="#648278" />
@@ -1391,15 +1648,45 @@
                                 </Style>
                             </DataGrid.Resources>
                             <DataGrid.Columns>
-                                <DataGridTextColumn IsReadOnly="False" Width="5*" Binding="{Binding Path=FreightName}" Header="Name" />
-                                <DataGridTextColumn IsReadOnly="False" Width="2*" Binding="{Binding Path=Contact}" Header="Phone" />
-                                <DataGridTextColumn IsReadOnly="False" Width="2*" Binding="{Binding Path=Phone}" Header="Cell" />
-                                <DataGridTextColumn IsReadOnly="False" Width="2*" Binding="{Binding Path=Cell}" Header="Cell" />
-                                <DataGridTextColumn IsReadOnly="False" Width="2*" Binding="{Binding Path=Email}" Header="Cell" />
-                                <DataGridTemplateColumn Header="Active?" Width="1*">
+                                <DataGridTemplateColumn Width="3*" Header="Name">
                                     <DataGridTemplateColumn.CellTemplate>
                                         <DataTemplate>
-                                            <CheckBox IsChecked="{Binding Active}" BorderThickness="0" />
+                                            <TextBox Text="{Binding FreightName, Mode=TwoWay}" KeyUp="FreightTab_PreviewKeyUp" Tag="Name" />
+                                        </DataTemplate>
+                                    </DataGridTemplateColumn.CellTemplate>
+                                </DataGridTemplateColumn>
+                                <DataGridTemplateColumn Width="2*" Header="Contact Name">
+                                    <DataGridTemplateColumn.CellTemplate>
+                                        <DataTemplate>
+                                            <TextBox Text="{Binding Contact, Mode=TwoWay}" KeyUp="FreightTab_PreviewKeyUp" Tag="ContactName" />
+                                        </DataTemplate>
+                                    </DataGridTemplateColumn.CellTemplate>
+                                </DataGridTemplateColumn>
+                                <DataGridTemplateColumn Width="2*" Header="Phone">
+                                    <DataGridTemplateColumn.CellTemplate>
+                                        <DataTemplate>
+                                            <TextBox Text="{Binding Phone, Mode=TwoWay}" KeyUp="FreightTab_PreviewKeyUp" Tag="Phone" />
+                                        </DataTemplate>
+                                    </DataGridTemplateColumn.CellTemplate>
+                                </DataGridTemplateColumn>
+                                <DataGridTemplateColumn Width="2*" Header="Cell">
+                                    <DataGridTemplateColumn.CellTemplate>
+                                        <DataTemplate>
+                                            <TextBox Text="{Binding Cell, Mode=TwoWay}" KeyUp="FreightTab_PreviewKeyUp" Tag="Cell" />
+                                        </DataTemplate>
+                                    </DataGridTemplateColumn.CellTemplate>
+                                </DataGridTemplateColumn>
+                                <DataGridTemplateColumn Width="5*" Header="Email">
+                                    <DataGridTemplateColumn.CellTemplate>
+                                        <DataTemplate>
+                                            <TextBox Text="{Binding Email, Mode=TwoWay}" KeyUp="FreightTab_PreviewKeyUp" Tag="Email" />
+                                        </DataTemplate>
+                                    </DataGridTemplateColumn.CellTemplate>
+                                </DataGridTemplateColumn>
+                                <DataGridTemplateColumn Header="Active?" Width="2*">
+                                    <DataGridTemplateColumn.CellTemplate>
+                                        <DataTemplate>
+                                            <CheckBox IsChecked="{Binding Active}" Checked="FreightTab_CheckBox" Unchecked="FreightTab_CheckBox" />
                                         </DataTemplate>
                                     </DataGridTemplateColumn.CellTemplate>
                                 </DataGridTemplateColumn>

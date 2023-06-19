@@ -13,7 +13,7 @@ namespace WpfApp.Model
         private string _name;
         private string _personName;
         private int _level;
-        private string _fromOnOpen;
+        private int _formOnOpen;
         private string _email;
         private bool _active;
 
@@ -61,13 +61,13 @@ namespace WpfApp.Model
             }
         }
 
-        public string FromOnOpen
+        public int FormOnOpen
         {
-            get => _fromOnOpen;
+            get => _formOnOpen;
             set
             {
-                if (value == _fromOnOpen) return;
-                _fromOnOpen = value;
+                if (value == _formOnOpen) return;
+                _formOnOpen = value;
                 OnPropertyChanged();
             }
         }

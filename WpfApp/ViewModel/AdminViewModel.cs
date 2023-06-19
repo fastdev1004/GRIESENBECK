@@ -56,6 +56,10 @@ namespace WpfApp.ViewModel
             CustSupts.Add(superintendent);
 
             TempCustomer = new Customer();
+            TempManuf = new Manufacturer();
+            TempAcronym = new Acronym();
+            TempMaterial = new Material();
+            TempInstaller = new InHouseInstaller();
             SelectedTempCustIndex = 0;
             SelectedCustRowIndex = -1;
             ActionCustState = "Clear";
@@ -64,6 +68,7 @@ namespace WpfApp.ViewModel
             ActionManufName = "CreateManuf";
             ActionPmName = "";
             UpdateComponent = "Detail";
+            ActionState = "";
             LoadAdmin();
             //IsInitialLoad = true;
             this.ViewCustomerCommand = new RelayCommand((e) =>
@@ -88,6 +93,745 @@ namespace WpfApp.ViewModel
                 this.ClearManuf();
             });
 
+        }
+
+        public void CreateInstaller()
+        {
+            sqlquery = "INSERT INTO tblInHouseInstallers(Installer_Name, Installer_Cell, Installer_Email, OSHA_Level, Crew, [OSHA Expiration], OSHA_Cert, FirstAidCPR_Expiration, FirstAidCPR_Cert, Active) OUTPUT INSERTED.Installer_ID VALUES (@Name, @Cell, @Email, @OshaLevel, @Crew, @OshaDate, @OshaCert, @FacDate, @FacCert, @Active)";
+            using (cmd = new SqlCommand(sqlquery, dbConnection.Connection))
+            {
+                if (!string.IsNullOrEmpty(TempInstaller.InstallerName))
+                    cmd.Parameters.AddWithValue("@Name", TempInstaller.InstallerName);
+                else cmd.Parameters.AddWithValue("@Name", DBNull.Value);
+                if (!string.IsNullOrEmpty(TempInstaller.InstallerCell))
+                    cmd.Parameters.AddWithValue("@Cell", TempInstaller.InstallerCell);
+                else cmd.Parameters.AddWithValue("@Cell", DBNull.Value);
+                if (!string.IsNullOrEmpty(TempInstaller.InstallerEmail))
+                    cmd.Parameters.AddWithValue("@Email", TempInstaller.InstallerEmail);
+                else cmd.Parameters.AddWithValue("@Email", DBNull.Value);
+                if (!string.IsNullOrEmpty(TempInstaller.OSHALevel))
+                    cmd.Parameters.AddWithValue("@OshaLevel", TempInstaller.OSHALevel);
+                else cmd.Parameters.AddWithValue("@OshaLevel", DBNull.Value);
+                if (TempInstaller.CrewID != 0)
+                    cmd.Parameters.AddWithValue("@Crew", TempInstaller.CrewID);
+                else cmd.Parameters.AddWithValue("@Crew", DBNull.Value);
+                if (!TempInstaller.OSHAExpireDate.Equals(DateTime.MinValue))
+                    cmd.Parameters.AddWithValue("@OshaDate", TempInstaller.OSHAExpireDate);
+                else cmd.Parameters.AddWithValue("@OshaDate", DBNull.Value);
+                if (!string.IsNullOrEmpty(TempInstaller.OSHACert))
+                    cmd.Parameters.AddWithValue("@OshaCert", TempInstaller.OSHACert);
+                else cmd.Parameters.AddWithValue("@OshaCert", DBNull.Value);
+                if (!TempInstaller.FirstAidExpireDate.Equals(DateTime.MinValue))
+                    cmd.Parameters.AddWithValue("@FacDate", TempInstaller.FirstAidExpireDate);
+                else cmd.Parameters.AddWithValue("@FacDate", DBNull.Value);
+                if (!string.IsNullOrEmpty(TempInstaller.FirstAidCert))
+                    cmd.Parameters.AddWithValue("@FacCert", TempInstaller.FirstAidCert);
+                else cmd.Parameters.AddWithValue("@FacCert", DBNull.Value);
+                cmd.Parameters.AddWithValue("@Active", TempInstaller.Active);
+
+                try
+                {
+                    int insertedInstallerID = (int)cmd.ExecuteScalar();
+                    SelectedInstallerID = insertedInstallerID;
+                    int totalCount = Installers.Count;
+                    CurrentIndex = totalCount - 2;
+                    TempInstaller.ID = SelectedInstallerID;
+                    Installers[totalCount - 2] = TempInstaller;
+                }
+                catch (SqlException e)
+                {
+                    Console.WriteLine(e);
+                }
+            }
+        }
+
+        public void UpdateInstaller()
+        {
+            sqlquery = "UPDATE tblInHouseInstallers SET Installer_Name=@Name, Installer_Cell=@Cell, Installer_Email=@Email, OSHA_Level=@OshaLevel, Crew=@Crew, [OSHA Expiration]=@OshaDate, OSHA_Cert=@OshaCert, FirstAidCPR_Expiration=@FacDate, FirstAidCPR_Cert=@FacCert, Active=@Active WHERE Installer_ID=@InstallerID";
+            using (cmd = new SqlCommand(sqlquery, dbConnection.Connection))
+            {
+                if (!string.IsNullOrEmpty(TempInstaller.InstallerName))
+                    cmd.Parameters.AddWithValue("@Name", TempInstaller.InstallerName);
+                else cmd.Parameters.AddWithValue("@Name", DBNull.Value);
+                if (!string.IsNullOrEmpty(TempInstaller.InstallerCell))
+                    cmd.Parameters.AddWithValue("@Cell", TempInstaller.InstallerCell);
+                else cmd.Parameters.AddWithValue("@Cell", DBNull.Value);
+                if (!string.IsNullOrEmpty(TempInstaller.InstallerEmail))
+                    cmd.Parameters.AddWithValue("@Email", TempInstaller.InstallerEmail);
+                else cmd.Parameters.AddWithValue("@Email", DBNull.Value);
+                if (!string.IsNullOrEmpty(TempInstaller.OSHALevel))
+                    cmd.Parameters.AddWithValue("@OshaLevel", TempInstaller.OSHALevel);
+                else cmd.Parameters.AddWithValue("@OshaLevel", DBNull.Value);
+                if (TempInstaller.CrewID > 0)
+                    cmd.Parameters.AddWithValue("@Crew", TempInstaller.CrewID);
+                else cmd.Parameters.AddWithValue("@Crew", DBNull.Value);
+                if (!TempInstaller.OSHAExpireDate.Equals(DateTime.MinValue))
+                    cmd.Parameters.AddWithValue("@OshaDate", TempInstaller.OSHAExpireDate);
+                else cmd.Parameters.AddWithValue("@OshaDate", DBNull.Value);
+                if (!string.IsNullOrEmpty(TempInstaller.OSHACert))
+                    cmd.Parameters.AddWithValue("@OshaCert", TempInstaller.OSHACert);
+                else cmd.Parameters.AddWithValue("@OshaCert", DBNull.Value);
+                if (!TempInstaller.FirstAidExpireDate.Equals(DateTime.MinValue))
+                    cmd.Parameters.AddWithValue("@FacDate", TempInstaller.FirstAidExpireDate);
+                else cmd.Parameters.AddWithValue("@FacDate", DBNull.Value);
+                if (!string.IsNullOrEmpty(TempInstaller.FirstAidCert))
+                    cmd.Parameters.AddWithValue("@FacCert", TempInstaller.FirstAidCert);
+                else cmd.Parameters.AddWithValue("@FacCert", DBNull.Value);
+                cmd.Parameters.AddWithValue("@Active", TempInstaller.Active);
+                cmd.Parameters.AddWithValue("@InstallerID", TempInstaller.ID);
+
+                try
+                {
+                    int rowsAffected = cmd.ExecuteNonQuery();
+                }
+                catch (SqlException e)
+                {
+                    Console.WriteLine(e);
+                }
+            }
+        }
+
+        public void CreateUser()
+        {
+            sqlquery = "INSERT INTO tblUsers(User_Name, User_PersonName, User_Level, User_FormOnOpen, User_Email, Active) OUTPUT INSERTED.User_ID VALUES (@UserName, @PersonName, @Level, @FormOnOpen, @Email, @Active)";
+            using (cmd = new SqlCommand(sqlquery, dbConnection.Connection))
+            {
+                if (!string.IsNullOrEmpty(TempUser.UserName))
+                    cmd.Parameters.AddWithValue("@UserName", TempUser.UserName);
+                else cmd.Parameters.AddWithValue("@UserName", DBNull.Value);
+                if (!string.IsNullOrEmpty(TempUser.PersonName))
+                    cmd.Parameters.AddWithValue("@PersonName", TempUser.PersonName);
+                else cmd.Parameters.AddWithValue("@PersonName", DBNull.Value);
+                if (TempUser.Level <= 0)
+                    cmd.Parameters.AddWithValue("@Level", TempUser.Level);
+                else cmd.Parameters.AddWithValue("@Level", DBNull.Value);
+                if (TempUser.FormOnOpen <= 0)
+                    cmd.Parameters.AddWithValue("@FormOnOpen", TempUser.FormOnOpen);
+                else cmd.Parameters.AddWithValue("@FormOnOpen", DBNull.Value);
+                if (!string.IsNullOrEmpty(TempUser.Email))
+                    cmd.Parameters.AddWithValue("@Email", TempUser.Email);
+                else cmd.Parameters.AddWithValue("@Email", DBNull.Value);
+                cmd.Parameters.AddWithValue("@Active", TempUser.Active);
+
+                try
+                {
+                    int insertedUserID = (int)cmd.ExecuteScalar();
+                    SelectedUserID = insertedUserID;
+                    int totalCount = Users.Count;
+                    CurrentIndex = totalCount - 2;
+                    TempUser.ID = insertedUserID;
+                    Users[totalCount - 2] = TempUser;
+                }
+                catch (SqlException e)
+                {
+                    Console.WriteLine(e);
+                }
+            }
+        }
+
+        public void UpdateUser()
+        {
+            int userID = TempUser.ID;
+            string userName = TempUser.UserName;
+            string personName = TempUser.PersonName;
+            int level = TempUser.Level;
+            int formOnOpen = TempUser.FormOnOpen;
+            string email = TempUser.Email;
+            bool active = TempUser.Active;
+
+            sqlquery = "UPDATE tblUsers SET User_Name=@UserName, User_PersonName=@PersonName, User_Level=@Level, User_FormOnOpen=@FormOnOpen, User_Email=@Email, Active=@Active WHERE User_ID=@UserID";
+            using (cmd = new SqlCommand(sqlquery, dbConnection.Connection))
+            {
+                if (!string.IsNullOrEmpty(userName))
+                    cmd.Parameters.AddWithValue("@UserName", userName);
+                else cmd.Parameters.AddWithValue("@UserName", DBNull.Value);
+                if (!string.IsNullOrEmpty(personName))
+                    cmd.Parameters.AddWithValue("@PersonName", personName);
+                else cmd.Parameters.AddWithValue("@PersonName", DBNull.Value);
+                if (level > 0)
+                    cmd.Parameters.AddWithValue("@Level", level);
+                else cmd.Parameters.AddWithValue("@Level", DBNull.Value);
+                if (formOnOpen >= 0)
+                    cmd.Parameters.AddWithValue("@FormOnOpen", formOnOpen);
+                else cmd.Parameters.AddWithValue("@FormOnOpen", DBNull.Value);
+                if (!string.IsNullOrEmpty(email))
+                    cmd.Parameters.AddWithValue("@Email", email);
+                else cmd.Parameters.AddWithValue("@Email", DBNull.Value);
+                cmd.Parameters.AddWithValue("@UserID", userID);
+                cmd.Parameters.AddWithValue("@Active", active);
+
+                try
+                {
+                    int rowsAffected = cmd.ExecuteNonQuery();
+                }
+                catch (SqlException e)
+                {
+                    Console.WriteLine(e);
+                }
+            }
+        }
+
+        public void CreateFreightCo()
+        {
+            sqlquery = "INSERT INTO tblFreightCo(FreightCo_Name, FreightCo_Phone, FreightCo_Email, FreightCo_Contact, FreightCo_Cell, Active) OUTPUT INSERTED.FreightCo_ID VALUES (@Name, @Phone, @Email, @Contact, @Cell, @Active)";
+            using (cmd = new SqlCommand(sqlquery, dbConnection.Connection))
+            {
+                if (!string.IsNullOrEmpty(TempFreightCo.FreightName))
+                    cmd.Parameters.AddWithValue("@Name", TempFreightCo.FreightName);
+                else cmd.Parameters.AddWithValue("@Name", DBNull.Value);
+                if (!string.IsNullOrEmpty(TempFreightCo.Phone))
+                    cmd.Parameters.AddWithValue("@Phone", TempFreightCo.Phone);
+                else cmd.Parameters.AddWithValue("@Phone", DBNull.Value);
+                if (!string.IsNullOrEmpty(TempFreightCo.Email))
+                    cmd.Parameters.AddWithValue("@Email", TempFreightCo.Email);
+                else cmd.Parameters.AddWithValue("@Email", DBNull.Value);
+                if (!string.IsNullOrEmpty(TempFreightCo.Contact))
+                    cmd.Parameters.AddWithValue("@Contact", TempFreightCo.Contact);
+                else cmd.Parameters.AddWithValue("@Contact", DBNull.Value);
+                if (!string.IsNullOrEmpty(TempFreightCo.Cell))
+                    cmd.Parameters.AddWithValue("@Cell", TempFreightCo.Cell);
+                else cmd.Parameters.AddWithValue("@Cell", DBNull.Value);
+                cmd.Parameters.AddWithValue("@Active", TempFreightCo.Active);
+
+                try
+                {
+                    int insertedFgtCoID = (int)cmd.ExecuteScalar();
+                    SelectedFreightCoID = insertedFgtCoID;
+                    int totalCount = FreightCos.Count;
+                    CurrentIndex = totalCount - 2;
+                    TempFreightCo.ID = insertedFgtCoID;
+                    FreightCos[totalCount - 2] = TempFreightCo;
+                }
+                catch (SqlException e)
+                {
+                    Console.WriteLine(e);
+                }
+            }
+        }
+
+        public void UpdateFreightCo()
+        {
+            int freightCoID = TempFreightCo.ID;
+            string freightName = TempFreightCo.FreightName;
+            string freightPhone = TempFreightCo.Phone;
+            string freightEmail = TempFreightCo.Email;
+            string freightContact = TempFreightCo.Contact;
+            string fregithCell = TempFreightCo.Cell;
+            bool active = TempFreightCo.Active;
+
+            sqlquery = "UPDATE tblFreightCo SET FreightCo_Name=@Name, FreightCo_Phone=@Phone, FreightCo_Email=@Email, FreightCo_Contact=@Contact, FreightCo_Cell=@Email, Active=@Active WHERE FreightCo_ID=@FreightCoID";
+            using (cmd = new SqlCommand(sqlquery, dbConnection.Connection))
+            {
+                if (!string.IsNullOrEmpty(TempFreightCo.FreightName))
+                    cmd.Parameters.AddWithValue("@Name", TempFreightCo.FreightName);
+                else cmd.Parameters.AddWithValue("@Name", DBNull.Value);
+                if (!string.IsNullOrEmpty(TempFreightCo.Phone))
+                    cmd.Parameters.AddWithValue("@Phone", TempFreightCo.Phone);
+                else cmd.Parameters.AddWithValue("@Phone", DBNull.Value);
+                if (!string.IsNullOrEmpty(TempFreightCo.Email))
+                    cmd.Parameters.AddWithValue("@Email", TempFreightCo.Email);
+                else cmd.Parameters.AddWithValue("@Email", DBNull.Value);
+                if (!string.IsNullOrEmpty(TempFreightCo.Contact))
+                    cmd.Parameters.AddWithValue("@Contact", TempFreightCo.Contact);
+                else cmd.Parameters.AddWithValue("@Contact", DBNull.Value);
+                if (!string.IsNullOrEmpty(TempFreightCo.Cell))
+                    cmd.Parameters.AddWithValue("@Cell", TempFreightCo.Cell);
+                else cmd.Parameters.AddWithValue("@Cell", DBNull.Value);
+                cmd.Parameters.AddWithValue("@Active", TempFreightCo.Active);
+                cmd.Parameters.AddWithValue("@FreightCoID", TempFreightCo.ID);
+
+                try
+                {
+                    int rowsAffected = cmd.ExecuteNonQuery();
+                }
+                catch (SqlException e)
+                {
+                    Console.WriteLine(e);
+                }
+            }
+        }
+
+        public void UpdateArch()
+        {
+            //if (!string.IsNullOrEmpty(TempCrew.CrewName))
+            //{
+            int archID = TempArch.ID;
+            string archCompany = TempArch.ArchCompany;
+            string archContact = TempArch.Contact;
+            string archAddress = TempArch.Address;
+            string archCity = TempArch.City;
+            string archState = TempArch.State;
+            string archZip = TempArch.Zip;
+            string archPhone = TempArch.Phone;
+            string archFax = TempArch.Fax;
+            string archCell = TempArch.Cell;
+            string archEmail = TempArch.Email;
+            bool active = TempArch.Active;
+
+            sqlquery = "UPDATE tblArchitects SET Arch_Company=@Company, Arch_Contact=@Contact, Arch_Address=@Address, Arch_City=@City, Arch_State=@State, Arch_ZIP=@Zip, Arch_Phone=@Phone, Arch_FAX=@Fax, Arch_Cell=@Cell, Arch_Email=@Email, Active=@Active WHERE Architect_ID=@ArchitectID";
+            using (cmd = new SqlCommand(sqlquery, dbConnection.Connection))
+            {
+                if (!string.IsNullOrEmpty(archCompany))
+                    cmd.Parameters.AddWithValue("@Company", archCompany);
+                else cmd.Parameters.AddWithValue("@Company", DBNull.Value);
+                if (!string.IsNullOrEmpty(archContact))
+                    cmd.Parameters.AddWithValue("@Contact", archContact);
+                else cmd.Parameters.AddWithValue("@Contact", DBNull.Value);
+                if (!string.IsNullOrEmpty(archAddress))
+                    cmd.Parameters.AddWithValue("@Address", archAddress);
+                else cmd.Parameters.AddWithValue("@Address", DBNull.Value);
+                if (!string.IsNullOrEmpty(archCity))
+                    cmd.Parameters.AddWithValue("@City", archCity);
+                else cmd.Parameters.AddWithValue("@City", DBNull.Value);
+                if (!string.IsNullOrEmpty(archState))
+                    cmd.Parameters.AddWithValue("@State", archState);
+                else cmd.Parameters.AddWithValue("@State", DBNull.Value);
+                if (!string.IsNullOrEmpty(archZip))
+                    cmd.Parameters.AddWithValue("@Zip", archZip);
+                else cmd.Parameters.AddWithValue("@Zip", DBNull.Value);
+                if (!string.IsNullOrEmpty(archPhone))
+                    cmd.Parameters.AddWithValue("@Phone", archPhone);
+                else cmd.Parameters.AddWithValue("@Phone", DBNull.Value);
+                if (!string.IsNullOrEmpty(archFax))
+                    cmd.Parameters.AddWithValue("@Fax", archFax);
+                else cmd.Parameters.AddWithValue("@Fax", DBNull.Value);
+                if (!string.IsNullOrEmpty(archCell))
+                    cmd.Parameters.AddWithValue("@Cell", archCell);
+                else cmd.Parameters.AddWithValue("@Cell", DBNull.Value);
+                if (!string.IsNullOrEmpty(archEmail))
+                    cmd.Parameters.AddWithValue("@Email", archEmail);
+                else cmd.Parameters.AddWithValue("@Email", DBNull.Value);
+                cmd.Parameters.AddWithValue("@Active", active);
+                cmd.Parameters.AddWithValue("@ArchitectID", archID);
+
+                try
+                {
+                    int rowsAffected = cmd.ExecuteNonQuery();
+                }
+                catch (SqlException e)
+                {
+                    Console.WriteLine(e);
+                }
+            }
+            //}
+            //else
+            //{
+            //    MessageBox.Show("Crew Name is required.");
+            //}
+        }
+
+        public void CreateArch()
+        {
+            sqlquery = "INSERT INTO tblArchitects(Arch_Company, Arch_Contact, Arch_Address, Arch_City, Arch_State, Arch_ZIP, Arch_Phone, Arch_FAX, Arch_Cell, Arch_Email, Active) OUTPUT INSERTED.Architect_ID VALUES (@Company, @Contact, @Address, @City, @State, @Zip, @Phone, @Fax, @Cell, @Email, @Active)";
+            using (cmd = new SqlCommand(sqlquery, dbConnection.Connection))
+            {
+                if (!string.IsNullOrEmpty(TempArch.ArchCompany))
+                    cmd.Parameters.AddWithValue("@Company", TempArch.ArchCompany);
+                else cmd.Parameters.AddWithValue("@Company", DBNull.Value);
+                if (!string.IsNullOrEmpty(TempArch.Contact))
+                    cmd.Parameters.AddWithValue("@Contact", TempArch.Contact);
+                else cmd.Parameters.AddWithValue("@Contact", DBNull.Value);
+                if (!string.IsNullOrEmpty(TempArch.Address))
+                    cmd.Parameters.AddWithValue("@Address", TempArch.Address);
+                else cmd.Parameters.AddWithValue("@Address", DBNull.Value);
+                if (!string.IsNullOrEmpty(TempArch.City))
+                    cmd.Parameters.AddWithValue("@City", TempArch.City);
+                else cmd.Parameters.AddWithValue("@City", DBNull.Value);
+                if (!string.IsNullOrEmpty(TempArch.State))
+                    cmd.Parameters.AddWithValue("@State", TempArch.State);
+                else cmd.Parameters.AddWithValue("@State", DBNull.Value);
+                if (!string.IsNullOrEmpty(TempArch.Zip))
+                    cmd.Parameters.AddWithValue("@Zip", TempArch.Zip);
+                else cmd.Parameters.AddWithValue("@Zip", DBNull.Value);
+                if (!string.IsNullOrEmpty(TempArch.Phone))
+                    cmd.Parameters.AddWithValue("@Phone", TempArch.Phone);
+                else cmd.Parameters.AddWithValue("@Phone", DBNull.Value);
+                if (!string.IsNullOrEmpty(TempArch.Fax))
+                    cmd.Parameters.AddWithValue("@Fax", TempArch.Fax);
+                else cmd.Parameters.AddWithValue("@Fax", DBNull.Value);
+                if (!string.IsNullOrEmpty(TempArch.Cell))
+                    cmd.Parameters.AddWithValue("@Cell", TempArch.Cell);
+                else cmd.Parameters.AddWithValue("@Cell", DBNull.Value);
+                if (!string.IsNullOrEmpty(TempArch.Email))
+                    cmd.Parameters.AddWithValue("@Email", TempArch.Email);
+                else cmd.Parameters.AddWithValue("@Email", DBNull.Value);
+                cmd.Parameters.AddWithValue("@Active", TempArch.Active);
+
+                try
+                {
+                    int insertedArchID = (int)cmd.ExecuteScalar();
+                    SelectedArchID = insertedArchID;
+                    int totalCount = Architects.Count;
+                    CurrentIndex = totalCount - 2;
+                    TempArch.ID = insertedArchID;
+                    Architects[totalCount - 2] = TempArch;
+                }
+                catch (SqlException e)
+                {
+                    Console.WriteLine(e);
+                }
+            }
+        }
+
+        public void CreateCrew()
+        {
+            sqlquery = "INSERT INTO tblInstallCrew(Crew_Name, Crew_Phone, Crew_Cell, Crew_Email, Active) OUTPUT INSERTED.Crew_ID VALUES (@Name, @Phone, @Cell, @Email, @Active)";
+            using (cmd = new SqlCommand(sqlquery, dbConnection.Connection))
+            {
+                if (!string.IsNullOrEmpty(TempCrew.CrewName))
+                    cmd.Parameters.AddWithValue("@Name", TempCrew.CrewName);
+                else cmd.Parameters.AddWithValue("@Name", DBNull.Value);
+                if (!string.IsNullOrEmpty(TempCrew.Phone))
+                    cmd.Parameters.AddWithValue("@Phone", TempCrew.Phone);
+                else cmd.Parameters.AddWithValue("@Phone", DBNull.Value);
+                if (!string.IsNullOrEmpty(TempCrew.Cell))
+                    cmd.Parameters.AddWithValue("@Cell", TempCrew.Cell);
+                else cmd.Parameters.AddWithValue("@Cell", DBNull.Value);
+                if (!string.IsNullOrEmpty(TempCrew.Email))
+                    cmd.Parameters.AddWithValue("@Email", TempCrew.Email);
+                else cmd.Parameters.AddWithValue("@Email", DBNull.Value);
+                cmd.Parameters.AddWithValue("@Active", TempCrew.Active);
+
+                try
+                {
+                    int insertedCrewID = (int)cmd.ExecuteScalar();
+                    SelectedCrewID = insertedCrewID;
+                    int totalCount = Crews.Count;
+                    CurrentIndex = totalCount - 2;
+                    TempCrew.ID = insertedCrewID;
+                    Crews[totalCount - 2] = TempCrew;
+                }
+                catch (SqlException e)
+                {
+                    Console.WriteLine(e);
+                }
+            }
+        }
+
+        public void UpdateCrew()
+        {
+            //if (!string.IsNullOrEmpty(TempCrew.CrewName))
+            //{
+                int crewID = TempCrew.ID;
+                string crewName = TempCrew.CrewName;
+                string crewPhone = TempCrew.Phone;
+                string crewCell = TempCrew.Cell;
+                string crewEmail = TempCrew.Email;
+                bool active = TempCrew.Active;
+
+                sqlquery = "UPDATE tblInstallCrew SET Crew_Name=@Name, Crew_Phone=@Phone, Crew_Cell=@Cell, Crew_Email=@Email, Active=@Active WHERE Crew_ID=@CrewID";
+                using (cmd = new SqlCommand(sqlquery, dbConnection.Connection))
+                {
+                    if (!string.IsNullOrEmpty(crewName))
+                        cmd.Parameters.AddWithValue("@Name", crewName);
+                    else cmd.Parameters.AddWithValue("@Name", DBNull.Value);
+                    if (!string.IsNullOrEmpty(crewPhone))
+                        cmd.Parameters.AddWithValue("@Phone", crewPhone);
+                    else cmd.Parameters.AddWithValue("@Phone", DBNull.Value);
+                    if (!string.IsNullOrEmpty(crewCell))
+                        cmd.Parameters.AddWithValue("@Cell", crewCell);
+                    else cmd.Parameters.AddWithValue("@Cell", DBNull.Value);
+                    if (!string.IsNullOrEmpty(crewName))
+                        cmd.Parameters.AddWithValue("@Email", crewEmail);
+                    else cmd.Parameters.AddWithValue("@Email", DBNull.Value);
+                    cmd.Parameters.AddWithValue("@Active", active);
+                    cmd.Parameters.AddWithValue("@CrewID", crewID);
+
+                    try
+                    {
+                        int rowsAffected = cmd.ExecuteNonQuery();
+                    }
+                    catch (SqlException e)
+                    {
+                        Console.WriteLine(e);
+                    }
+                }
+            //}
+            //else
+            //{
+            //    MessageBox.Show("Crew Name is required.");
+            //}
+        }
+
+        public void UpdateSalesman()
+        {
+            if (!string.IsNullOrEmpty(TempSalesman.SalesmanName))
+            {
+                int salesID = TempSalesman.ID;
+                string salesInit = TempSalesman.Init;
+                string salesName = TempSalesman.SalesmanName;
+                string salesPhone = TempSalesman.Phone;
+                string salesCell = TempSalesman.Cell;
+                string salesEmail = TempSalesman.Email;
+                bool active = TempSalesman.Active;
+                
+                sqlquery = "UPDATE tblSalesmen SET Salesman_Init=@Init, Salesman_Name=@Name, Phone=@Phone, Cell=@Cell, Salesman_Email=@Email, Active=@Active WHERE Salesman_ID=@SalesID";
+                using (cmd = new SqlCommand(sqlquery, dbConnection.Connection))
+                {
+                    if (!string.IsNullOrEmpty(salesInit))
+                        cmd.Parameters.AddWithValue("@Init", salesInit);
+                    else cmd.Parameters.AddWithValue("@Init", DBNull.Value);
+                    if (!string.IsNullOrEmpty(salesName))
+                        cmd.Parameters.AddWithValue("@Name", salesName);
+                    else cmd.Parameters.AddWithValue("@Name", DBNull.Value);
+                    if (!string.IsNullOrEmpty(salesPhone))
+                        cmd.Parameters.AddWithValue("@Phone", salesPhone);
+                    else cmd.Parameters.AddWithValue("@Phone", DBNull.Value);
+                    if (!string.IsNullOrEmpty(salesCell))
+                        cmd.Parameters.AddWithValue("@Cell", salesCell);
+                    else cmd.Parameters.AddWithValue("@Cell", DBNull.Value);
+                    if (!string.IsNullOrEmpty(salesName))
+                        cmd.Parameters.AddWithValue("@Email", salesEmail);
+                    else cmd.Parameters.AddWithValue("@Email", DBNull.Value);
+                    cmd.Parameters.AddWithValue("@Active", active);
+                    cmd.Parameters.AddWithValue("@SalesID", salesID);
+
+                    try
+                    {
+                        int rowsAffected = cmd.ExecuteNonQuery();
+                    }
+                    catch (SqlException e)
+                    {
+                        Console.WriteLine(e);
+                    }
+                }
+            }
+            else
+            {
+                MessageBox.Show("Salesman Name is required.");
+            }
+        }
+
+        public void CreateSalesman()
+        {
+            sqlquery = "INSERT INTO tblSalesmen(Salesman_Init, Salesman_Name, Phone, Cell, Salesman_Email, Active) OUTPUT INSERTED.Salesman_ID VALUES (@Init, @Name, @Phone, @Cell, @Email, @Active)";
+            using (cmd = new SqlCommand(sqlquery, dbConnection.Connection))
+            {
+                if (!string.IsNullOrEmpty(TempSalesman.Init))
+                    cmd.Parameters.AddWithValue("@Init", TempSalesman.Init);
+                else cmd.Parameters.AddWithValue("@Init", DBNull.Value);
+                if (!string.IsNullOrEmpty(TempSalesman.SalesmanName))
+                    cmd.Parameters.AddWithValue("@Name", TempSalesman.SalesmanName);
+                else cmd.Parameters.AddWithValue("@Name", DBNull.Value);
+                if (!string.IsNullOrEmpty(TempSalesman.Phone))
+                    cmd.Parameters.AddWithValue("@Phone", TempSalesman.Phone);
+                else cmd.Parameters.AddWithValue("@Phone", DBNull.Value);
+                if (!string.IsNullOrEmpty(TempSalesman.Cell))
+                    cmd.Parameters.AddWithValue("@Cell", TempSalesman.Cell);
+                else cmd.Parameters.AddWithValue("@Cell", DBNull.Value);
+                if (!string.IsNullOrEmpty(TempSalesman.Email))
+                    cmd.Parameters.AddWithValue("@Email", TempSalesman.Email);
+                else cmd.Parameters.AddWithValue("@Email", DBNull.Value);
+                cmd.Parameters.AddWithValue("@Active", TempSalesman.Active);
+
+                try
+                {
+                    int insertedSalesID = (int)cmd.ExecuteScalar();
+                    SelectedSalesmanID = insertedSalesID;
+                    int totalCount = Salesmans.Count;
+                    CurrentIndex = totalCount - 2;
+                    TempSalesman.ID = insertedSalesID;
+                    Salesmans[totalCount - 2] = TempSalesman;
+                }
+                catch (SqlException e)
+                {
+                    Console.WriteLine(e);
+                }
+            }
+        }
+
+        public void CreateLabor()
+        {
+            sqlquery = "INSERT INTO tblLabor(Labor_Desc, Labor_UnitPrice, Active) OUTPUT INSERTED.Labor_ID VALUES (@LaborDesc, @UnitPrice, @Active)";
+            using (cmd = new SqlCommand(sqlquery, dbConnection.Connection))
+            {
+                if (!string.IsNullOrEmpty(TempLabor.LaborDesc))
+                    cmd.Parameters.AddWithValue("@LaborDesc", TempLabor.LaborDesc);
+                else cmd.Parameters.AddWithValue("@LaborDesc", DBNull.Value);
+                if (TempLabor.UnitPrice >= 0.0)
+                    cmd.Parameters.AddWithValue("@UnitPrice", TempLabor.UnitPrice);
+                else cmd.Parameters.AddWithValue("@UnitPrice", DBNull.Value);
+                cmd.Parameters.AddWithValue("@Active", TempLabor.Active);
+
+                try
+                {
+                    int insertedMatID = (int)cmd.ExecuteScalar();
+                    SelectedLaborID = insertedMatID;
+                    int totalCount = Labors.Count;
+                    CurrentIndex = totalCount - 2;
+                    TempLabor.ID = insertedMatID;
+                    Labors[totalCount - 2] = TempLabor;
+                }
+                catch (SqlException e)
+                {
+                    Console.WriteLine(e);
+                }
+            }
+        }
+
+        public void UpdateLabor()
+        {
+            if (!string.IsNullOrEmpty(TempLabor.LaborDesc))
+            {
+                int laborID = TempLabor.ID;
+                string laborDesc = TempLabor.LaborDesc;
+                double unitPrice = TempLabor.UnitPrice;
+                bool active = TempLabor.Active;
+
+                sqlquery = "UPDATE tblLabor SET Labor_Desc=@LaborDesc, Labor_UnitPrice=@UnitPrice, Active=@Active WHERE Labor_ID=@LaborID";
+                using (cmd = new SqlCommand(sqlquery, dbConnection.Connection))
+                {
+                    if (!string.IsNullOrEmpty(laborDesc))
+                        cmd.Parameters.AddWithValue("@LaborDesc", laborDesc);
+                    else cmd.Parameters.AddWithValue("@LaborDesc", DBNull.Value);
+                    if (TempLabor.UnitPrice >= 0.0)
+                        cmd.Parameters.AddWithValue("@UnitPrice", unitPrice);
+                    else cmd.Parameters.AddWithValue("@UnitPrice", DBNull.Value);
+                    cmd.Parameters.AddWithValue("@Active", active);
+                    cmd.Parameters.AddWithValue("@LaborID", laborID);
+
+                    try
+                    {
+                        int rowsAffected = cmd.ExecuteNonQuery();
+                    }
+                    catch (SqlException e)
+                    {
+                        Console.WriteLine(e);
+                    }
+                }
+            }
+            else
+            {
+                MessageBox.Show("Labor Desc is required.");
+            }
+        }
+
+        public void CreateMaterial()
+        {
+            sqlquery = "INSERT INTO tblMaterials(Material_Desc, Active) OUTPUT INSERTED.Material_ID VALUES (@MatDesc, @Active)";
+            using (cmd = new SqlCommand(sqlquery, dbConnection.Connection))
+            {
+                if (!string.IsNullOrEmpty(TempMaterial.MatDesc))
+                    cmd.Parameters.AddWithValue("MatDesc", TempMaterial.MatDesc);
+                else cmd.Parameters.AddWithValue("@MatDesc", DBNull.Value);
+                cmd.Parameters.AddWithValue("@Active", TempMaterial.Active);
+                try
+                {
+                    int insertedMatID = (int)cmd.ExecuteScalar();
+                    SelectedMaterialID = insertedMatID;
+                    int totalCount = Materials.Count;
+                    CurrentIndex = totalCount - 2;
+                    TempMaterial.ID = insertedMatID;
+                    Materials[totalCount - 2] = TempMaterial;
+                }
+                catch (SqlException e)
+                {
+                    Console.WriteLine(e);
+                }
+            }
+        }
+
+        public void UpdateMaterial()
+        {
+            if (!string.IsNullOrEmpty(TempMaterial.MatDesc))
+            {
+                string matDesc = TempMaterial.MatDesc;
+                int matID = TempMaterial.ID;
+                bool active = TempMaterial.Active;
+                sqlquery = "UPDATE tblMaterials SET Material_Desc=@MatDesc, Active=@Active WHERE Material_ID=@MatID";
+                using (cmd = new SqlCommand(sqlquery, dbConnection.Connection))
+                {
+                    if (!string.IsNullOrEmpty(matDesc))
+                        cmd.Parameters.AddWithValue("@MatDesc", matDesc);
+                    else cmd.Parameters.AddWithValue("@MatDesc", DBNull.Value);
+                    cmd.Parameters.AddWithValue("@MatID", matID);
+                    cmd.Parameters.AddWithValue("@Active", active);
+
+                    try
+                    {
+                        int rowsAffected = cmd.ExecuteNonQuery();
+                    }
+                    catch (SqlException e)
+                    {
+                        Console.WriteLine(e);
+                    }
+                }
+            }
+            else
+            {
+                MessageBox.Show("Sov Name is required.");
+            }
+        }
+
+        public void CreateAcronym()
+        {
+            if(!string.IsNullOrEmpty(SelectedSovName) || (SelectedAcronymRowIndex == Acronyms.Count-2))
+            {
+                sqlquery = "INSERT INTO tblScheduleOfValues(SOV_Acronym, SOV_Desc, Active) OUTPUT INSERTED.SOV_Acronym VALUES (@SovAcronym, @SovDesc , @Active)";
+                using (cmd = new SqlCommand(sqlquery, dbConnection.Connection))
+                {
+                    if (!string.IsNullOrEmpty(TempAcronym.AcronymName))
+                        cmd.Parameters.AddWithValue("@SovAcronym", TempAcronym.AcronymName);
+                    else cmd.Parameters.AddWithValue("@SovAcronym", DBNull.Value);
+                    if (!string.IsNullOrEmpty(CurrentSubmCell))
+                        cmd.Parameters.AddWithValue("@SovDesc", TempAcronym.AcronymDesc);
+                    else cmd.Parameters.AddWithValue("@SovDesc", DBNull.Value);
+                    cmd.Parameters.AddWithValue("@Active", TempAcronym.Active);
+                    try
+                    {
+                        string insertedSov = (string)cmd.ExecuteScalar();
+                        SelectedSovName = insertedSov;
+                        int totalCount = Acronyms.Count;
+                        CurrentIndex = totalCount - 2;
+                        Acronyms[totalCount - 2] = TempAcronym;
+                    }
+                    catch (SqlException e)
+                    {
+                        Console.WriteLine(e);
+                    }
+                }
+            } else
+            {
+                MessageBox.Show("Sov Name is required.");
+            }
+        }
+
+        public void UpdateAcronym()
+        {
+            if (!string.IsNullOrEmpty(SelectedSovName))
+            {
+                string sovName = TempAcronym.AcronymName;
+                string sovDesc = TempAcronym.AcronymDesc;
+                bool active = TempAcronym.Active;
+
+                sqlquery = "UPDATE tblScheduleOfValues SET SOV_Acronym=@Name, SOV_Desc=@Desc, Active=@Active WHERE SOV_Acronym=@OriginName";
+                using (cmd = new SqlCommand(sqlquery, dbConnection.Connection))
+                {
+                    if (!string.IsNullOrEmpty(sovName))
+                        cmd.Parameters.AddWithValue("@Name", sovName);
+                    else cmd.Parameters.AddWithValue("@Name", DBNull.Value);
+                    if (!string.IsNullOrEmpty(sovDesc))
+                        cmd.Parameters.AddWithValue("@Desc", sovDesc);
+                    else cmd.Parameters.AddWithValue("@Desc", DBNull.Value);
+                    if (!string.IsNullOrEmpty(SelectedSovName))
+                        cmd.Parameters.AddWithValue("@OriginName", SelectedSovName);
+                    else cmd.Parameters.AddWithValue("@OriginName", DBNull.Value);
+                    cmd.Parameters.AddWithValue("@Active", active);
+
+                    try
+                    {
+                        int rowsAffected = cmd.ExecuteNonQuery();
+
+                    }
+                    catch (SqlException e)
+                    {
+                        Console.WriteLine(e);
+                    }
+                }
+            } else
+            {
+                MessageBox.Show("Sov Name is required.");
+            }
         }
 
         private void CreateSubm()
@@ -404,66 +1148,73 @@ namespace WpfApp.ViewModel
             }
         }
 
-        private void UpdateManuf()
+        public void UpdateManuf()
         {
-            if (!string.IsNullOrEmpty(SelectedManufName))
+            int manufID = (UpdateComponent.Equals("Table")) ? TempManuf.ID : SelectedManufID;
+            string manufName = (UpdateComponent.Equals("Table")) ? TempManuf.ManufacturerName : SelectedManufName;
+            string address = (UpdateComponent.Equals("Table")) ? TempManuf.Address : SelectedManufAddress;
+            string address2 = (UpdateComponent.Equals("Table")) ? TempManuf.Address2 : SelectedManufAddress2;
+            string city = (UpdateComponent.Equals("Table")) ? TempManuf.City : SelectedManufCity;
+            string state = (UpdateComponent.Equals("Table")) ? TempManuf.State : SelectedManufState;
+            string zip = (UpdateComponent.Equals("Table")) ? TempManuf.Zip : SelectedManufZip;
+            string phone = (UpdateComponent.Equals("Table")) ? TempManuf.Phone : SelectedManufPhone;
+            string fax = (UpdateComponent.Equals("Table")) ? TempManuf.Fax : SelectedManufFax;
+            string contactName = (UpdateComponent.Equals("Table")) ? TempManuf.ContactName : SelectedManufContactName;
+            string contactPhone = (UpdateComponent.Equals("Table")) ? TempManuf.ContactPhone : SelectedManufContactPhone;
+            string contactEmail = (UpdateComponent.Equals("Table")) ? TempManuf.ContactEmail : SelectedManufContactEmail;
+            bool active = (UpdateComponent.Equals("Table")) ? TempManuf.Active : SelectedManufActive;
+            
+            sqlquery = "UPDATE tblManufacturers SET Manuf_Name=@ManufName, Address=@Address, Address2=@Address2, City=@City, State=@State, ZIP=@Zip, Phone=@Phone, FAX=@Fax, Contact_Name=@ContactName, Contact_Phone=@ContactPhone, Contact_Email=@ContactEmail, Active=@Active WHERE Manuf_ID=@ManufID";
+            using (cmd = new SqlCommand(sqlquery, dbConnection.Connection))
             {
-                sqlquery = "UPDATE tblManufacturers SET Manuf_Name=@ManufName, Address=@Address, Address2=@Address2, City=@City, State=@State, ZIP=@Zip, Phone=@Phone, FAX=@Fax, Contact_Name=@ContactName, Contact_Phone=@ContactPhone, Contact_Email=@ContactEmail, Active=@Active WHERE Manuf_ID=@ManufID";
-                using (cmd = new SqlCommand(sqlquery, dbConnection.Connection))
+                if (!string.IsNullOrEmpty(manufName))
+                    cmd.Parameters.AddWithValue("@ManufName", manufName);
+                else cmd.Parameters.AddWithValue("@ManufName", DBNull.Value);
+                if (!string.IsNullOrEmpty(address))
+                    cmd.Parameters.AddWithValue("@Address", address);
+                else cmd.Parameters.AddWithValue("@Address", DBNull.Value);
+                if (!string.IsNullOrEmpty(address2))
+                    cmd.Parameters.AddWithValue("@Address2", address2);
+                else cmd.Parameters.AddWithValue("@Address2", DBNull.Value);
+                if (!string.IsNullOrEmpty(city))
+                    cmd.Parameters.AddWithValue("@City", city);
+                else cmd.Parameters.AddWithValue("@City", DBNull.Value);
+                if (!string.IsNullOrEmpty(state))
+                    cmd.Parameters.AddWithValue("@State", state);
+                else cmd.Parameters.AddWithValue("@State", DBNull.Value);
+                if (!string.IsNullOrEmpty(zip))
+                    cmd.Parameters.AddWithValue("@Zip", zip);
+                else cmd.Parameters.AddWithValue("@Zip", DBNull.Value);
+                if (!string.IsNullOrEmpty(phone))
+                    cmd.Parameters.AddWithValue("@Phone", phone);
+                else cmd.Parameters.AddWithValue("@Phone", DBNull.Value);
+                if (!string.IsNullOrEmpty(fax))
+                    cmd.Parameters.AddWithValue("@Fax", fax);
+                else cmd.Parameters.AddWithValue("@Fax", DBNull.Value);
+                if (!string.IsNullOrEmpty(contactName))
+                    cmd.Parameters.AddWithValue("@ContactName", contactName);
+                else cmd.Parameters.AddWithValue("@ContactName", DBNull.Value);
+                if (!string.IsNullOrEmpty(contactPhone))
+                    cmd.Parameters.AddWithValue("@ContactPhone", contactPhone);
+                else cmd.Parameters.AddWithValue("@ContactPhone", DBNull.Value);
+                if (!string.IsNullOrEmpty(contactEmail))
+                    cmd.Parameters.AddWithValue("@ContactEmail", contactEmail);
+                else cmd.Parameters.AddWithValue("@ContactEmail", DBNull.Value);
+                if (manufID != 0)
+                    cmd.Parameters.AddWithValue("@ManufID", manufID);
+                else cmd.Parameters.AddWithValue("@ManufID", DBNull.Value);
+                cmd.Parameters.AddWithValue("@Active", active);
+
+                try
                 {
-                    if (!string.IsNullOrEmpty(SelectedManufName))
-                        cmd.Parameters.AddWithValue("@ManufName", SelectedManufName);
-                    else cmd.Parameters.AddWithValue("@ManufName", DBNull.Value);
-                    if (!string.IsNullOrEmpty(SelectedManufAddress))
-                        cmd.Parameters.AddWithValue("@Address", SelectedManufAddress);
-                    else cmd.Parameters.AddWithValue("@Address", DBNull.Value);
-                    if (!string.IsNullOrEmpty(SelectedManufAddress2))
-                        cmd.Parameters.AddWithValue("@Address2", SelectedManufAddress2);
-                    else cmd.Parameters.AddWithValue("@Address2", DBNull.Value);
-                    if (!string.IsNullOrEmpty(SelectedManufCity))
-                        cmd.Parameters.AddWithValue("@City", SelectedManufCity);
-                    else cmd.Parameters.AddWithValue("@City", DBNull.Value);
-                    if (!string.IsNullOrEmpty(SelectedManufState))
-                        cmd.Parameters.AddWithValue("@State", SelectedManufState);
-                    else cmd.Parameters.AddWithValue("@State", DBNull.Value);
-                    if (!string.IsNullOrEmpty(SelectedManufZip))
-                        cmd.Parameters.AddWithValue("@Zip", SelectedManufZip);
-                    else cmd.Parameters.AddWithValue("@Zip", DBNull.Value);
-                    if (!string.IsNullOrEmpty(SelectedManufPhone))
-                        cmd.Parameters.AddWithValue("@Phone", SelectedManufPhone);
-                    else cmd.Parameters.AddWithValue("@Phone", DBNull.Value);
-                    if (!string.IsNullOrEmpty(SelectedManufFax))
-                        cmd.Parameters.AddWithValue("@Fax", SelectedManufFax);
-                    else cmd.Parameters.AddWithValue("@Fax", DBNull.Value);
-                    if (!string.IsNullOrEmpty(SelectedManufContactName))
-                        cmd.Parameters.AddWithValue("@ContactName", SelectedManufContactName);
-                    else cmd.Parameters.AddWithValue("@ContactName", DBNull.Value);
-                    if (!string.IsNullOrEmpty(SelectedManufContactPhone))
-                        cmd.Parameters.AddWithValue("@ContactPhone", SelectedManufContactPhone);
-                    else cmd.Parameters.AddWithValue("@ContactPhone", DBNull.Value);
-                    if (!string.IsNullOrEmpty(SelectedManufContactEmail))
-                        cmd.Parameters.AddWithValue("@ContactEmail", SelectedManufContactEmail);
-                    else cmd.Parameters.AddWithValue("@ContactEmail", DBNull.Value);
-                    if (SelectedManufID != 0)
-                        cmd.Parameters.AddWithValue("@ManufID", SelectedManufID);
-                    else cmd.Parameters.AddWithValue("@ManufID", DBNull.Value);
-                    cmd.Parameters.AddWithValue("@Active", SelectedManufActive);
+                    int rowsAffected = cmd.ExecuteNonQuery();
 
-                    try
-                    {
-                        int rowsAffected = cmd.ExecuteNonQuery();
-
-                    }
-                    catch (SqlException e)
-                    {
-                        Console.WriteLine(e);
-                    }
-                    ActionManufState = "";
                 }
-            } else
-            {
-                if (!ActionManufState.Equals("ClearManuf"))
-                    MessageBox.Show("Manufacturer Name is required.");
+                catch (SqlException e)
+                {
+                    Console.WriteLine(e);
+                }
+                ActionManufState = "";
             }
         }
 
@@ -629,7 +1380,6 @@ namespace WpfApp.ViewModel
             if (!string.IsNullOrEmpty(fullName))
             {
                 sqlquery = "UPDATE tblCustomers SET Short_Name=@ShortName, Full_Name=@FullName, PO_Box=@PoNumber, Address=@Address, City=@City, State=@State, ZIP=@Zip, Phone=@Phone, FAX=@Fax, Email=@Email, Active=@Active WHERE Customer_ID=@CustomerID";
-                Console.WriteLine("SelectedCustRowIndex->"+ SelectedCustRowIndex + "Customers count->" + Customers.Count);
                 // Update datatable for Customers
                 //if (SelectedCustRowIndex >= 0)
                 //{
@@ -1187,7 +1937,8 @@ namespace WpfApp.ViewModel
             }
             st_pm.Add(new ProjectManager());
             CustPMs = st_pm;
-
+            
+            // Superintendents
             sqlquery = "SELECT * FROM tblSuperintendents WHERE Customer_ID=" + customerID;
             cmd = new SqlCommand(sqlquery, dbConnection.Connection);
             sda = new SqlDataAdapter(cmd);
@@ -1238,6 +1989,7 @@ namespace WpfApp.ViewModel
             st_supt.Add(new Superintendent());
             CustSupts = st_supt;
 
+            // Customer Contacts
             sqlquery = "SELECT * FROM tblCustomerContacts WHERE Customer_ID=" + customerID;
             cmd = new SqlCommand(sqlquery, dbConnection.Connection);
             sda = new SqlDataAdapter(cmd);
@@ -1306,6 +2058,8 @@ namespace WpfApp.ViewModel
                 bool active = row.Field<Boolean>("Active");
                 st_acronym.Add(new Acronym { AcronymName = acronymName, AcronymDesc = acronymDesc, Active = active });
             }
+
+            st_acronym.Add(new Acronym());
             Acronyms = st_acronym;
 
             // Material
@@ -1324,6 +2078,8 @@ namespace WpfApp.ViewModel
 
                 st_material.Add(new Material { ID = materialID, MatDesc = materialDesc, Active = active });
             }
+
+            st_material.Add(new Material());
             Materials = st_material;
 
             // Labor
@@ -1338,12 +2094,16 @@ namespace WpfApp.ViewModel
             {
                 int laborID = int.Parse(row["Labor_ID"].ToString());
                 string laborDesc = row["Labor_Desc"].ToString();
-                //double unitPrice = row.Field<float>("Labor_UnitPrice");
                 double unitPrice = 0.0;
+                if (!row.IsNull("Labor_UnitPrice"))
+                    unitPrice = row.Field<double>("Labor_UnitPrice");
+                //double unitPrice = 0.0;
                 bool active = row.Field<Boolean>("Active");
 
                 st_labor.Add(new Labor { ID = laborID, LaborDesc = laborDesc, UnitPrice = unitPrice, Active = active });
             }
+
+            st_labor.Add(new Labor());
             Labors = st_labor;
 
             // Salesmen
@@ -1364,8 +2124,10 @@ namespace WpfApp.ViewModel
                 string email = row["Salesman_Email"].ToString();
                 bool active = row.Field<Boolean>("Active");
 
-                st_salesman.Add(new Salesman { ID = salesmanID, SalesmanName = name, Phone = phone, Cell = cell, Email = email, Active = active });
+                st_salesman.Add(new Salesman { ID = salesmanID, Init = init, SalesmanName = name, Phone = phone, Cell = cell, Email = email, Active = active });
             }
+
+            st_salesman.Add(new Salesman());
             Salesmans = st_salesman;
 
             // Crew
@@ -1387,6 +2149,8 @@ namespace WpfApp.ViewModel
 
                 st_crew.Add(new Crew { ID = crewID, CrewName = crewDesc, Phone = phone, Cell = cell, Email = email, Active = active });
             }
+
+            st_crew.Add(new Crew());
             Crews = st_crew;
 
             // User
@@ -1399,16 +2163,22 @@ namespace WpfApp.ViewModel
             ObservableCollection<User> st_user = new ObservableCollection<User>();
             foreach (DataRow row in ds.Tables[0].Rows)
             {
+                int formOnOpen = -1;
+                int level = 0;
                 int id = int.Parse(row["User_ID"].ToString());
                 string name = row["User_Name"].ToString();
                 string personName = row["User_PersonName"].ToString();
-                int level = int.Parse(row["User_Level"].ToString());
-                string fromOnOpen = row["User_FormOnOpen"].ToString();
+                if(!row.IsNull("User_Level"))
+                    level = int.Parse(row["User_Level"].ToString());
+                if(!row.IsNull("User_FormOnOpen"))
+                    formOnOpen = int.Parse(row["User_FormOnOpen"].ToString());
                 string email = row["User_Email"].ToString();
                 bool active = row.Field<Boolean>("Active");
 
-                st_user.Add(new User { ID = id, UserName = name, PersonName = personName, Level = level, FromOnOpen = fromOnOpen, Email = email, Active = active });
+                st_user.Add(new User { ID = id, UserName = name, PersonName = personName, Level = level, FormOnOpen = formOnOpen, Email = email, Active = active });
             }
+
+            st_user.Add(new User());
             Users = st_user;
 
             // Architect
@@ -1436,6 +2206,8 @@ namespace WpfApp.ViewModel
 
                 st_architect.Add(new Architect { ID = id, ArchCompany = company, Contact = contact, Address = address, City = city, State = state, Zip = zip, Phone = phone, Fax = fax, Cell = cell, Email = email, Active = active });
             }
+
+            st_architect.Add(new Architect());
             Architects = st_architect;
 
             // Freight CO
@@ -1458,6 +2230,8 @@ namespace WpfApp.ViewModel
 
                 st_freightCO.Add(new FreightCo { ID = id, FreightName = name, Phone = phone, Email = email, Contact = contact, Cell = cell, Active = active });
             }
+
+            st_freightCO.Add(new FreightCo());
             FreightCos = st_freightCO;
 
             // House Installer
@@ -1504,6 +2278,8 @@ namespace WpfApp.ViewModel
 
                 st_installer.Add(new InHouseInstaller { ID = id, InstallerName = name, InstallerCell = cell, InstallerEmail = email, OSHALevel = oshaLevel, CrewID = crewID, OSHAExpireDate = oshaExpireDate, OSHACert = oshaCert, FirstAidCert = firstAidCert, FirstAidExpireDate = firstAidExpireDate, Active = active });
             }
+
+            st_installer.Add(new InHouseInstaller());
             Installers = st_installer;
 
             // Customer
@@ -1602,7 +2378,43 @@ namespace WpfApp.ViewModel
             }
             Superintendents = st_superintendents;
 
-            cmd.Dispose();
+            // FormOnOpen
+            sqlquery = "SELECT * FROM tblApplOptions WHERE OptCat = 'FormOnOpen';";
+            cmd = new SqlCommand(sqlquery, dbConnection.Connection);
+            sda = new SqlDataAdapter(cmd);
+            ds = new DataSet();
+            sda.Fill(ds);
+
+            ObservableCollection<ApplOption> st_formOnOpens = new ObservableCollection<ApplOption>();
+            foreach (DataRow row in ds.Tables[0].Rows)
+            {
+                int optID = int.Parse(row["Option_ID"].ToString());
+                string optCat = row["OptCat"].ToString();
+                string optTxtVal = row["OptTxtVal"].ToString();
+                string optNumVal = row["OptNumVal"].ToString();
+                string optDesc = row["OptDesc"].ToString();
+                string optLong = row["OptLong"].ToString();
+
+                st_formOnOpens.Add(new ApplOption { OptID = optID, OptCat = optCat, OptTxtVal = optTxtVal, OptNumVal = optNumVal, OptDesc = optDesc, OptLong = optLong });
+            }
+            FormOnOpens = st_formOnOpens;
+
+            // OHSA Level
+            sqlquery = "SELECT DISTINCT OSHA_Level FROM tblInHouseInstallers;";
+            cmd = new SqlCommand(sqlquery, dbConnection.Connection);
+            sda = new SqlDataAdapter(cmd);
+            ds = new DataSet();
+            sda.Fill(ds);
+
+            ObservableCollection<OSHA> st_oshas = new ObservableCollection<OSHA>();
+            foreach (DataRow row in ds.Tables[0].Rows)
+            {
+                string levelName = row["OSHA_Level"].ToString();
+
+                st_oshas.Add(new OSHA { Name = levelName });
+            }
+            OSHAs = st_oshas;
+            //cmd.Dispose();
             //dbConnection.Close();
         }
 
@@ -1762,6 +2574,18 @@ namespace WpfApp.ViewModel
             }
         }
 
+        private ObservableCollection<ApplOption> _formOnOpens;
+
+        public ObservableCollection<ApplOption> FormOnOpens
+        {
+            get { return _formOnOpens; }
+            set
+            {
+                _formOnOpens = value;
+                OnPropertyChanged();
+            }
+        }
+
         private ObservableCollection<Note> _manufNotes;
 
         public ObservableCollection<Note> ManufNotes
@@ -1858,7 +2682,21 @@ namespace WpfApp.ViewModel
             }
         }
 
+        private ObservableCollection<OSHA> _osha;
+
+        public ObservableCollection<OSHA> OSHAs
+        {
+            get { return _osha; }
+            set
+            {
+                _osha = value;
+                OnPropertyChanged();
+            }
+        }
+
         public int SelectedPMRowIndex { get; set; }
+
+        public int SelectedAcronymRowIndex { get; set; }
 
         public int SelectedSubmRowIndex { get; set; }
 
@@ -1916,6 +2754,123 @@ namespace WpfApp.ViewModel
             set
             {
                 _selectedCustPmID = value;
+                OnPropertyChanged();
+
+            }
+        }
+
+        private string _selectedSovName;
+
+        public string SelectedSovName
+        {
+            get { return _selectedSovName; }
+            set
+            {
+                _selectedSovName = value;
+                OnPropertyChanged();
+
+            }
+        }
+
+        private int _selectedMaterialID;
+
+        public int SelectedMaterialID
+        {
+            get { return _selectedMaterialID; }
+            set
+            {
+                _selectedMaterialID = value;
+                OnPropertyChanged();
+
+            }
+        }
+
+        private int _selectedLaborID;
+
+        public int SelectedLaborID
+        {
+            get { return _selectedLaborID; }
+            set
+            {
+                _selectedLaborID = value;
+                OnPropertyChanged();
+
+            }
+        }
+
+        private int _selectedSalesmanID;
+
+        public int SelectedSalesmanID
+        {
+            get { return _selectedSalesmanID; }
+            set
+            {
+                _selectedSalesmanID = value;
+                OnPropertyChanged();
+
+            }
+        }
+
+        private int _selectedCrewID;
+
+        public int SelectedCrewID
+        {
+            get { return _selectedCrewID; }
+            set
+            {
+                _selectedCrewID = value;
+                OnPropertyChanged();
+
+            }
+        }
+
+        private int _selectedArchID;
+
+        public int SelectedArchID
+        {
+            get { return _selectedArchID; }
+            set
+            {
+                _selectedArchID = value;
+                OnPropertyChanged();
+
+            }
+        }
+
+        private int _selectedFreightCoID;
+
+        public int SelectedFreightCoID
+        {
+            get { return _selectedFreightCoID; }
+            set
+            {
+                _selectedFreightCoID = value;
+                OnPropertyChanged();
+
+            }
+        }
+
+        private int _selectedUserID;
+
+        public int SelectedUserID
+        {
+            get { return _selectedUserID; }
+            set
+            {
+                _selectedUserID = value;
+                OnPropertyChanged();
+
+            }
+        }
+
+        private int _selectedInstallerID;
+
+        public int SelectedInstallerID
+        {
+            get { return _selectedInstallerID; }
+            set
+            {
+                _selectedInstallerID = value;
                 OnPropertyChanged();
 
             }
@@ -2468,14 +3423,26 @@ namespace WpfApp.ViewModel
             }
         }
 
-        private string _ActionPmName;
+        private string _actionPmName;
 
         public string ActionPmName
         {
-            get { return _ActionPmName; }
+            get { return _actionPmName; }
             set
             {
-                _ActionPmName = value;
+                _actionPmName = value;
+                OnPropertyChanged();
+            }
+        }
+
+        private string _actionName;
+
+        public string ActionName
+        {
+            get { return _actionName; }
+            set
+            {
+                _actionName = value;
                 OnPropertyChanged();
             }
         }
@@ -3014,17 +3981,120 @@ namespace WpfApp.ViewModel
             }
         }
 
-        public int SelectedTempCustIndex { get; set; }
+        private Acronym _tempAcronym;
 
-        private bool _isInitialLoad = false;
-
-        public bool IsInitialLoad
+        public Acronym TempAcronym
         {
-            get { return _isInitialLoad; }
+            get { return _tempAcronym; }
             set
             {
-                _isInitialLoad = value;
+                _tempAcronym = value;
+                OnPropertyChanged();
             }
         }
+
+        private Material _tempMaterial;
+
+        public Material TempMaterial
+        {
+            get { return _tempMaterial; }
+            set
+            {
+                _tempMaterial = value;
+                OnPropertyChanged();
+            }
+        }
+
+        private Labor _tempLabor;
+
+        public Labor TempLabor
+        {
+            get { return _tempLabor; }
+            set
+            {
+                _tempLabor = value;
+                OnPropertyChanged();
+            }
+        }
+
+        private Salesman _tempSalesman;
+
+        public Salesman TempSalesman
+        {
+            get { return _tempSalesman; }
+            set
+            {
+                _tempSalesman = value;
+                OnPropertyChanged();
+            }
+        }
+
+        private Crew _tempCrew;
+
+        public Crew TempCrew
+        {
+            get { return _tempCrew; }
+            set
+            {
+                _tempCrew = value;
+                OnPropertyChanged();
+            }
+        }
+
+        private FreightCo _tempFreightCo;
+
+        public FreightCo TempFreightCo
+        {
+            get { return _tempFreightCo; }
+            set
+            {
+                _tempFreightCo = value;
+                OnPropertyChanged();
+            }
+        }
+
+        private User _tempUser;
+
+        public User TempUser
+        {
+            get { return _tempUser; }
+            set
+            {
+                _tempUser = value;
+                OnPropertyChanged();
+            }
+        }
+
+        private InHouseInstaller _tempInstaller;
+
+        public InHouseInstaller TempInstaller
+        {
+            get { return _tempInstaller; }
+            set
+            {
+                _tempInstaller = value;
+                OnPropertyChanged();
+            }
+        }
+
+        private Architect _tempArch;
+
+        public Architect TempArch
+        {
+            get { return _tempArch; }
+            set
+            {
+                _tempArch = value;
+                OnPropertyChanged();
+            }
+        }
+
+        public int SelectedTempCustIndex { get; set; }
+
+        public int SelectedTempAcronymIndex { get; set; }
+
+        public int SelectedTempManufIndex { get; set; }
+
+        public int CurrentIndex { get; set; }
     }
 }

@@ -14,6 +14,7 @@ using System.Windows.Media;
 using WpfApp.Model;
 using WpfApp.Utils;
 using WpfApp.ViewModel;
+using Microsoft.Win32;
 
 namespace WpfApp.View
 {
@@ -294,10 +295,10 @@ namespace WpfApp.View
                         if (selectedRowIndex == dataGrid.Items.Count - 1)
                         {
                             // add new row
-                            AdminVM.CurrentPmName = "";
-                            AdminVM.CurrentPmPhone = "";
-                            AdminVM.CurrentPmCell = "";
-                            AdminVM.CurrentPmEmail = "";
+                            //AdminVM.CurrentPmName = "";
+                            //AdminVM.CurrentPmPhone = "";
+                            //AdminVM.CurrentPmCell = "";
+                            //AdminVM.CurrentPmEmail = "";
                             ObservableCollection<ProjectManager> custPMs = AdminVM.CustPMs;
                             ProjectManager item = new ProjectManager();
                             custPMs.Add(item);
@@ -665,7 +666,6 @@ namespace WpfApp.View
             }
         }
 
-
         private void CustomerTab_PreviewKeyUp(object sender, KeyEventArgs e)
         {
             TextBox textBox = sender as TextBox;
@@ -741,29 +741,29 @@ namespace WpfApp.View
                 }
             }
                 e.Handled = true;
-          
         }
 
         private void CustomerTab_ChkPreviewKeyUp(object sender, RoutedEventArgs e)
         {
-            if(AdminVM.IsInitialLoad)
+           
+            CheckBox activeCheckBox = sender as CheckBox;
+            DataGrid dataGrid = noteHelper.FindDataGrid(activeCheckBox);
+            if (dataGrid != null)
             {
-                CheckBox activeCheckBox = sender as CheckBox;
-                DataGrid dataGrid = noteHelper.FindDataGrid(activeCheckBox);
-                if (dataGrid != null)
+                AdminVM.UpdateComponent = "Table";
+                int selectedRowIndex = AdminVM.SelectedCustRowIndex;
+                if (AdminVM.SelectedTempCustIndex == -1)
                 {
-                    AdminVM.UpdateComponent = "Table";
-                    int selectedRowIndex = AdminVM.SelectedCustRowIndex;
-                    if (AdminVM.SelectedTempCustIndex == -1)
-                    {
-                        AdminVM.SelectedTempCustIndex = selectedRowIndex;
-                    }
-                    else if (AdminVM.SelectedTempCustIndex != selectedRowIndex)
-                    {
-                        AdminVM.TempCustomer = new Customer();
-                        AdminVM.SelectedTempCustIndex = selectedRowIndex;
-                    }
+                    AdminVM.SelectedTempCustIndex = selectedRowIndex;
+                }
+                else if (AdminVM.SelectedTempCustIndex != selectedRowIndex)
+                {
+                    AdminVM.TempCustomer = new Customer();
+                    AdminVM.SelectedTempCustIndex = selectedRowIndex;
+                }
 
+                if(selectedRowIndex >= 0)
+                {
                     Customer item = dataGrid.Items[selectedRowIndex] as Customer;
 
                     if (string.IsNullOrEmpty(AdminVM.TempCustomer.FullName))
@@ -787,8 +787,1572 @@ namespace WpfApp.View
 
                     AdminVM.UpdateCustomer();
                 }
-                e.Handled = true;
             }
+        }
+
+        private void ManufTab_PreviewKeyUp(object sender, KeyEventArgs e)
+        {
+            TextBox textBox = sender as TextBox;
+            if (textBox != null)
+            {
+                DataGrid dataGrid = noteHelper.FindDataGrid(textBox);
+
+                if (dataGrid != null)
+                {
+                    string itemName = textBox.Tag as string;
+                    AdminVM.UpdateComponent = "Table";
+
+                    int selectedRowIndex = dataGrid.SelectedIndex;
+                   
+                    Manufacturer item = dataGrid.Items[selectedRowIndex] as Manufacturer;
+                    AdminVM.TempManuf.ID = item.ID;
+                    AdminVM.TempManuf.ManufacturerName = item.ManufacturerName;
+                    AdminVM.TempManuf.Address = item.Address;
+                    AdminVM.TempManuf.Address2 = item.Address2;
+                    AdminVM.TempManuf.City = item.City;
+                    AdminVM.TempManuf.State = item.State;
+                    AdminVM.TempManuf.Zip = item.Zip;
+                    AdminVM.TempManuf.Phone = item.Phone;
+                    AdminVM.TempManuf.Fax = item.Fax;
+                    AdminVM.TempManuf.ContactName = item.ContactName;
+                    AdminVM.TempManuf.ContactPhone = item.ContactPhone;
+                    AdminVM.TempManuf.ContactEmail = item.ContactEmail;
+                    AdminVM.TempManuf.Active = item.Active;
+
+                    switch (itemName)
+                    {
+                        case "ManufacturerName":
+                            AdminVM.TempManuf.ManufacturerName = textBox.Text;
+                            break;
+                        case "Address":
+                            AdminVM.TempManuf.Address = textBox.Text;
+                            break;
+                        case "City":
+                            AdminVM.TempManuf.City = textBox.Text;
+                            break;
+                        case "State":
+                            AdminVM.TempManuf.State = textBox.Text;
+                            break;
+                        case "Zip":
+                            AdminVM.TempManuf.Zip = textBox.Text;
+                            break;
+                        case "Phone":
+                            AdminVM.TempManuf.Phone = textBox.Text;
+                            break;
+                    }
+
+                    AdminVM.UpdateManuf();
+                }
+            }
+            e.Handled = true;
+        }
+
+        private void AcronymTab_PreviewKeyUp(object sender, KeyEventArgs e)
+        {
+            TextBox textBox = sender as TextBox;
+            if (textBox != null)
+            {
+                DataGrid dataGrid = noteHelper.FindDataGrid(textBox);
+                int selectedRowIndex = dataGrid.SelectedIndex;
+                int rowIndex = selectedRowIndex;
+
+                string itemName = textBox.Tag as string;
+                if (AdminVM.ActionState.Equals("AddRow") || (AdminVM.ActionState.Equals("UpdateRow") && selectedRowIndex == -1))
+                {
+                    rowIndex = AdminVM.CurrentIndex;
+                }
+                else
+                {
+                    rowIndex = selectedRowIndex;
+                }
+
+                Acronym newRow = dataGrid.Items[rowIndex] as Acronym;
+
+                if (dataGrid != null)
+                {
+                    if (selectedRowIndex == dataGrid.Items.Count - 1)
+                    {
+                        if (!string.IsNullOrEmpty(textBox.Text) && itemName.Equals("AcronymName"))
+                        {
+                            bool isExisted = false;
+                            for (int i = 0; i < dataGrid.Items.Count - 2; i++)
+                            {
+                                Acronym _acronym = dataGrid.Items[i] as Acronym;
+                                if (_acronym.AcronymName.Equals(textBox.Text))
+                                {
+                                    isExisted = true;
+                                }
+                            }
+
+                            if (!isExisted)
+                            {
+                                ObservableCollection<Acronym> acronyms = AdminVM.Acronyms;
+                                Acronym item = new Acronym();
+                                acronyms.Add(item);
+                                AdminVM.ActionState = "AddRow";
+                                AdminVM.TempAcronym = new Acronym();
+                                switch (itemName)
+                                {
+                                    case "AcronymDesc":
+                                        AdminVM.TempAcronym.AcronymDesc = textBox.Text;
+                                        break;
+                                    case "AcronymName":
+                                        AdminVM.TempAcronym.AcronymName = textBox.Text;
+                                        break;
+                                }
+                                AdminVM.CreateAcronym();
+                            }
+                            else
+                            {
+                                MessageBox.Show("Acronym Name is existed.");
+                            }
+
+                        }
+                        else
+                        {
+                            newRow.AcronymDesc = "";
+                            MessageBox.Show("Acronym Name is required.");
+                        }
+                    }
+                    else
+                    {
+                        Acronym _acronym = dataGrid.Items[rowIndex] as Acronym;
+                        AdminVM.SelectedSovName = _acronym.AcronymName;
+                        AdminVM.TempAcronym = _acronym;
+                        switch (itemName)
+                        {
+                            case "AcronymDesc":
+                                AdminVM.TempAcronym.AcronymDesc = textBox.Text;
+                                break;
+                            case "AcronymName":
+                                AdminVM.TempAcronym.AcronymName = textBox.Text;
+                                break;
+                        }
+                        AdminVM.ActionState = "UpdateRow";
+                        AdminVM.UpdateAcronym();
+                    }
+
+                    e.Handled = true;
+                }
+            }
+        }
+
+        private void AcronymTab_CheckBox(object sender, RoutedEventArgs e)
+        {
+            CheckBox chkBox = sender as CheckBox;
+            
+            DataGrid dataGrid = noteHelper.FindDataGrid(chkBox);
+            int selectedRowIndex = dataGrid.SelectedIndex;
+            int rowIndex = selectedRowIndex;
+
+            if (AdminVM.ActionState.Equals("AddRow") || (AdminVM.ActionState.Equals("UpdateRow") && selectedRowIndex == -1))
+            {
+                rowIndex = AdminVM.CurrentIndex;
+            }
+            else
+            {
+                rowIndex = selectedRowIndex;
+            }
+            
+            if(rowIndex >= 0)
+            {
+                Acronym newRow = dataGrid.Items[rowIndex] as Acronym;
+                if (dataGrid != null)
+                {
+                    if (selectedRowIndex == dataGrid.Items.Count - 1)
+                    {
+                        if (!string.IsNullOrEmpty(newRow.AcronymName))
+                        {
+                            ObservableCollection<Acronym> acronyms = AdminVM.Acronyms;
+                            Acronym item = new Acronym();
+                            acronyms.Add(item);
+                            AdminVM.ActionState = "AddRow";
+                            AdminVM.TempAcronym = new Acronym();
+                            
+                        if (chkBox.IsChecked == true)
+                            AdminVM.TempAcronym.Active = true;
+                        else AdminVM.TempAcronym.Active = false;
+
+                        AdminVM.CreateAcronym();
+                        }
+                        else
+                        {
+                            newRow.Active = false;
+                            MessageBox.Show("Acronym Name is required.");
+                        }
+                    }
+                    else
+                    {
+                        Acronym _acronym = dataGrid.Items[rowIndex] as Acronym;
+                        AdminVM.SelectedSovName = _acronym.AcronymName;
+                        AdminVM.TempAcronym = _acronym;
+
+                        if (chkBox.IsChecked == true)
+                            AdminVM.TempAcronym.Active = true;
+                        else AdminVM.TempAcronym.Active = false;
+                        AdminVM.ActionState = "UpdateRow";
+
+                        AdminVM.UpdateAcronym();
+                    }
+
+                    e.Handled = true;
+                }
+            }
+        }
+
+        private void MaterialTab_PreviewKeyUp(object sender, KeyEventArgs e)
+        {
+            TextBox textBox = sender as TextBox;
+            if (textBox != null)
+            {
+                DataGrid dataGrid = noteHelper.FindDataGrid(textBox);
+                int selectedRowIndex = dataGrid.SelectedIndex;
+                int rowIndex = selectedRowIndex;
+
+                string itemName = textBox.Tag as string;
+                if (AdminVM.ActionState.Equals("AddRow") || (AdminVM.ActionState.Equals("UpdateRow") && selectedRowIndex == -1))
+                {
+                    rowIndex = AdminVM.CurrentIndex;
+                }
+                else
+                {
+                    rowIndex = selectedRowIndex;
+                }
+
+                Material newRow = dataGrid.Items[rowIndex] as Material;
+
+                if (dataGrid != null)
+                {
+                    if (selectedRowIndex == dataGrid.Items.Count - 1)
+                    {
+                        if (!string.IsNullOrEmpty(textBox.Text) && itemName.Equals("MatDesc"))
+                        {
+                            bool isExisted = false;
+                            for (int i = 0; i < dataGrid.Items.Count - 2; i++)
+                            {
+                                Material _material = dataGrid.Items[i] as Material;
+                                if (_material.MatDesc.Equals(textBox.Text))
+                                {
+                                    isExisted = true;
+                                }
+                            }
+
+                            if (!isExisted)
+                            {
+                                ObservableCollection<Material> materials = AdminVM.Materials;
+                                Material item = new Material();
+                                materials.Add(item);
+                                AdminVM.ActionState = "AddRow";
+                                AdminVM.TempMaterial = new Material();
+                                switch (itemName)
+                                {
+                                    case "MatDesc":
+                                        AdminVM.TempMaterial.MatDesc = textBox.Text;
+                                        break;
+                                }
+                                AdminVM.CreateMaterial();
+                            }
+                            else
+                            {
+                                Console.WriteLine("Material Desc is existed.");
+                                //MessageBox.Show("Material Desc is existed.");
+                            }
+
+                        }
+                        else
+                        {
+                            newRow.MatDesc = "";
+                            MessageBox.Show("Material Desc is required.");
+                        }
+                    }
+                    else
+                    {
+                        Material _material = dataGrid.Items[rowIndex] as Material;
+                        //AdminVM.SelectedMaterialID = _material.ID;
+                        AdminVM.TempMaterial = _material;
+                        switch (itemName)
+                        {
+                            case "MatDesc":
+                                AdminVM.TempMaterial.MatDesc = textBox.Text;
+                                break;
+                        }
+                        AdminVM.TempMaterial.ID = _material.ID;
+                        AdminVM.ActionState = "UpdateRow";
+                        AdminVM.UpdateMaterial();
+                    }
+
+                    e.Handled = true;
+                }
+            }
+        }
+
+        private void MaterialTab_CheckBox(object sender, RoutedEventArgs e)
+        {
+            CheckBox chkBox = sender as CheckBox;
+
+            DataGrid dataGrid = noteHelper.FindDataGrid(chkBox);
+            int selectedRowIndex = dataGrid.SelectedIndex;
+            int rowIndex = selectedRowIndex;
+
+            if (AdminVM.ActionState.Equals("AddRow") || (AdminVM.ActionState.Equals("UpdateRow") && selectedRowIndex == -1))
+            {
+                rowIndex = AdminVM.CurrentIndex;
+            } else
+            {
+                rowIndex = selectedRowIndex;
+            }
+            if (rowIndex >= 0)
+            {
+                Material newRow = dataGrid.Items[rowIndex] as Material;
+                if (dataGrid != null)
+                {
+                    if (selectedRowIndex == dataGrid.Items.Count - 1)
+                    {
+                        if (!string.IsNullOrEmpty(newRow.MatDesc))
+                        {
+                            ObservableCollection<Material> materials = AdminVM.Materials;
+                            Material item = new Material();
+                            materials.Add(item);
+                            AdminVM.ActionState = "AddRow";
+                            AdminVM.TempMaterial = new Material();
+
+                            if (chkBox.IsChecked == true)
+                                AdminVM.TempMaterial.Active = true;
+                            else AdminVM.TempMaterial.Active = false;
+
+                            AdminVM.CreateMaterial();
+                        }
+                        else
+                        {
+                            newRow.Active = false;
+                            MessageBox.Show("Material Name is required.");
+                        }
+                    }
+                    else
+                    {
+                        Material _material = dataGrid.Items[rowIndex] as Material;
+                        AdminVM.SelectedMaterialID = _material.ID;
+                        AdminVM.TempMaterial = _material;
+
+                        if (chkBox.IsChecked == true)
+                            AdminVM.TempMaterial.Active = true;
+                        else AdminVM.TempMaterial.Active = false;
+                        AdminVM.ActionState = "UpdateRow";
+
+                        AdminVM.UpdateMaterial();
+                    }
+
+                    e.Handled = false;
+                }
+            }
+        }
+
+        private void LaborTab_PreviewKeyUp(object sender, KeyEventArgs e)
+        {
+            TextBox textBox = sender as TextBox;
+            if (textBox != null)
+            {
+                DataGrid dataGrid = noteHelper.FindDataGrid(textBox);
+                int selectedRowIndex = dataGrid.SelectedIndex;
+                int rowIndex = selectedRowIndex;
+
+                string itemName = textBox.Tag as string;
+                if (AdminVM.ActionState.Equals("AddRow") || (AdminVM.ActionState.Equals("UpdateRow") && selectedRowIndex == -1))
+                {
+                    rowIndex = AdminVM.CurrentIndex;
+                }
+                else
+                {
+                    rowIndex = selectedRowIndex;
+                }
+
+                Labor newRow = dataGrid.Items[rowIndex] as Labor;
+
+                if (dataGrid != null)
+                {
+                    if (selectedRowIndex == dataGrid.Items.Count - 1)
+                    {
+                        if (!string.IsNullOrEmpty(textBox.Text) && itemName.Equals("LaborDesc"))
+                        {
+                            bool isExisted = false;
+                            for (int i = 0; i < dataGrid.Items.Count - 2; i++)
+                            {
+                                Labor _labor = dataGrid.Items[i] as Labor;
+                                if (_labor.LaborDesc.Equals(textBox.Text))
+                                {
+                                    isExisted = true;
+                                }
+                            }
+
+                            if (!isExisted)
+                            {
+                                ObservableCollection<Labor> labors = AdminVM.Labors;
+                                Labor item = new Labor();
+                                labors.Add(item);
+                                AdminVM.ActionState = "AddRow";
+                                AdminVM.TempLabor = new Labor();
+                                switch (itemName)
+                                {
+                                    case "LaborDesc":
+                                        AdminVM.TempLabor.LaborDesc = textBox.Text;
+                                        break;
+                                    case "UnitPrice":
+                                        AdminVM.TempLabor.UnitPrice = double.Parse(textBox.Text);
+                                        break;
+                                }
+                                AdminVM.CreateLabor();
+                            }
+                            else
+                            {
+                                Console.WriteLine("Labor Desc is existed.");
+                                //MessageBox.Show("Labor Desc is existed.");
+                            }
+
+                        }
+                        else
+                        {
+                            newRow.LaborDesc = "";
+                            MessageBox.Show("Labor Desc is required.");
+                        }
+                    }
+                    else
+                    {
+                        Labor _labor = dataGrid.Items[rowIndex] as Labor;
+                        AdminVM.TempLabor = _labor;
+                        switch (itemName)
+                        {
+                            case "LaborDesc":
+                                AdminVM.TempLabor.LaborDesc = textBox.Text;
+                                break;
+                            case "UnitPrice":
+                                AdminVM.TempLabor.UnitPrice = double.Parse(textBox.Text);
+                                break;
+                        }
+                        AdminVM.TempLabor.ID = _labor.ID;
+                        AdminVM.TempLabor.Active = _labor.Active;
+                        AdminVM.ActionState = "UpdateRow";
+                        AdminVM.UpdateLabor();
+                    }
+
+                    e.Handled = true;
+                }
+            }
+        }
+
+        private void LaborTab_CheckBox(object sender, RoutedEventArgs e)
+        {
+            CheckBox chkBox = sender as CheckBox;
+
+            DataGrid dataGrid = noteHelper.FindDataGrid(chkBox);
+            int selectedRowIndex = dataGrid.SelectedIndex;
+            int rowIndex = selectedRowIndex;
+
+            if (AdminVM.ActionState.Equals("AddRow") || (AdminVM.ActionState.Equals("UpdateRow") && selectedRowIndex == -1))
+            {
+                rowIndex = AdminVM.CurrentIndex;
+            } else
+            {
+                rowIndex = selectedRowIndex;
+            }
+            if (rowIndex >= 0)
+            {
+                Labor newRow = dataGrid.Items[rowIndex] as Labor;
+                if (dataGrid != null)
+                {
+                    if (selectedRowIndex == dataGrid.Items.Count - 1)
+                    {
+                        if (!string.IsNullOrEmpty(newRow.LaborDesc))
+                        {
+                            ObservableCollection<Labor> labors = AdminVM.Labors;
+                            Labor item = new Labor();
+                            labors.Add(item);
+                            AdminVM.ActionState = "AddRow";
+                            AdminVM.TempLabor = new Labor();
+
+                            if (chkBox.IsChecked == true)
+                                AdminVM.TempLabor.Active = true;
+                            else AdminVM.TempLabor.Active = false;
+
+                            AdminVM.CreateLabor();
+                        }
+                        else
+                        {
+                            newRow.Active = false;
+                            MessageBox.Show("Labor Name is required.");
+                        }
+                    }
+                    else
+                    {
+                        Labor _labor = dataGrid.Items[rowIndex] as Labor;
+                        AdminVM.SelectedLaborID = _labor.ID;
+                        AdminVM.TempLabor = _labor;
+
+                        if (chkBox.IsChecked == true)
+                            AdminVM.TempLabor.Active = true;
+                        else AdminVM.TempLabor.Active = false;
+                        AdminVM.ActionState = "UpdateRow";
+
+                        AdminVM.UpdateLabor();
+                    }
+
+                    e.Handled = false;
+                }
+            }
+        }
+
+        private void SalesTab_PreviewKeyUp(object sender, KeyEventArgs e)
+        {
+            TextBox textBox = sender as TextBox;
+            if (textBox != null)
+            {
+                DataGrid dataGrid = noteHelper.FindDataGrid(textBox);
+                int selectedRowIndex = dataGrid.SelectedIndex;
+                int rowIndex = selectedRowIndex;
+
+                string itemName = textBox.Tag as string;
+                if (AdminVM.ActionState.Equals("AddRow") || (AdminVM.ActionState.Equals("UpdateRow") && selectedRowIndex == -1))
+                {
+                    rowIndex = AdminVM.CurrentIndex;
+                }
+                else
+                {
+                    rowIndex = selectedRowIndex;
+                }
+
+                Salesman newRow = dataGrid.Items[rowIndex] as Salesman;
+
+                if (dataGrid != null)
+                {
+                    if (selectedRowIndex == dataGrid.Items.Count - 1)
+                    {
+                        if (!string.IsNullOrEmpty(textBox.Text) && itemName.Equals("Name"))
+                        {
+                            ObservableCollection<Salesman> salesMans = AdminVM.Salesmans;
+                            Salesman item = new Salesman();
+                            salesMans.Add(item);
+                            AdminVM.ActionState = "AddRow";
+                            AdminVM.TempSalesman = new Salesman();
+                            switch (itemName)
+                            {
+                                case "Salesman_Init":
+                                    AdminVM.TempSalesman.Init = textBox.Text;
+                                    break;
+                                case "Name":
+                                    AdminVM.TempSalesman.SalesmanName = textBox.Text;
+                                    break;
+                                case "Phone":
+                                    AdminVM.TempSalesman.Phone= textBox.Text;
+                                    break;
+                                case "Cell":
+                                    AdminVM.TempSalesman.Cell = textBox.Text;
+                                    break;
+                                case "Email":
+                                    AdminVM.TempSalesman.Email = textBox.Text;
+                                    break;
+                            }
+                            AdminVM.CreateSalesman();
+                        }
+                        else
+                        {
+                            newRow.SalesmanName = "";
+                            MessageBox.Show("Salesman Name is required.");
+                        }
+                    }
+                    else
+                    {
+                        Salesman _salesman = dataGrid.Items[rowIndex] as Salesman;
+                        AdminVM.TempSalesman = _salesman;
+                        switch (itemName)
+                        {
+                            case "Init":
+                                AdminVM.TempSalesman.Init = textBox.Text;
+                                break;
+                            case "Name":
+                                AdminVM.TempSalesman.SalesmanName = textBox.Text;
+                                break;
+                            case "Phone":
+                                AdminVM.TempSalesman.Phone = textBox.Text;
+                                break;
+                            case "Cell":
+                                AdminVM.TempSalesman.Cell = textBox.Text;
+                                break;
+                            case "Email":
+                                AdminVM.TempSalesman.Email = textBox.Text;
+                                break;
+                        }
+                        AdminVM.TempSalesman.ID = _salesman.ID;
+                        AdminVM.TempSalesman.Active = _salesman.Active;
+                        AdminVM.ActionState = "UpdateRow";
+                        AdminVM.UpdateSalesman();
+                    }
+
+                    e.Handled = true;
+                }
+            }
+        }
+
+        private void SalesTab_CheckBox(object sender, RoutedEventArgs e)
+        {
+            CheckBox chkBox = sender as CheckBox;
+
+            DataGrid dataGrid = noteHelper.FindDataGrid(chkBox);
+            int selectedRowIndex = dataGrid.SelectedIndex;
+            int rowIndex = selectedRowIndex;
+
+            if (AdminVM.ActionState.Equals("AddRow") || (AdminVM.ActionState.Equals("UpdateRow") && selectedRowIndex == -1))
+            {
+                rowIndex = AdminVM.CurrentIndex;
+            }
+            else
+            {
+                rowIndex = selectedRowIndex;
+            }
+            if (rowIndex >= 0)
+            {
+                Salesman newRow = dataGrid.Items[rowIndex] as Salesman;
+                if (dataGrid != null)
+                {
+                    if (selectedRowIndex == dataGrid.Items.Count - 1)
+                    {
+                        if (!string.IsNullOrEmpty(newRow.SalesmanName))
+                        {
+                            ObservableCollection<Salesman> salesmans = AdminVM.Salesmans;
+                            Salesman item = new Salesman();
+                            salesmans.Add(item);
+                            AdminVM.ActionState = "AddRow";
+                            AdminVM.TempSalesman = new Salesman();
+
+                            if (chkBox.IsChecked == true)
+                                AdminVM.TempSalesman.Active = true;
+                            else AdminVM.TempSalesman.Active = false;
+
+                            AdminVM.CreateSalesman();
+                        }
+                        else
+                        {
+                            newRow.Active = false;
+                            MessageBox.Show("Salesman name is required.");
+                        }
+                    }
+                    else
+                    {
+                        Salesman _salesman = dataGrid.Items[rowIndex] as Salesman;
+                        AdminVM.SelectedSalesmanID = _salesman.ID;
+                        AdminVM.TempSalesman = _salesman;
+
+                        if (chkBox.IsChecked == true)
+                            AdminVM.TempSalesman.Active = true;
+                        else AdminVM.TempSalesman.Active = false;
+                        AdminVM.ActionState = "UpdateRow";
+
+                        AdminVM.UpdateSalesman();
+                    }
+
+                    e.Handled = false;
+                }
+            }
+        }
+
+        private void CrewTab_PreviewKeyUp(object sender, KeyEventArgs e)
+        {
+            TextBox textBox = sender as TextBox;
+            if (textBox != null)
+            {
+                DataGrid dataGrid = noteHelper.FindDataGrid(textBox);
+                int selectedRowIndex = dataGrid.SelectedIndex;
+                int rowIndex = selectedRowIndex;
+
+                string itemName = textBox.Tag as string;
+                if (AdminVM.ActionState.Equals("AddRow") || (AdminVM.ActionState.Equals("UpdateRow") && selectedRowIndex == -1))
+                {
+                    rowIndex = AdminVM.CurrentIndex;
+                }
+                else
+                {
+                    rowIndex = selectedRowIndex;
+                }
+
+                Crew newRow = dataGrid.Items[rowIndex] as Crew;
+
+                if (dataGrid != null)
+                {
+                    if (selectedRowIndex == dataGrid.Items.Count - 1)
+                    {
+                            ObservableCollection<Crew> crews = AdminVM.Crews;
+                            Crew item = new Crew();
+                            crews.Add(item);
+                            AdminVM.ActionState = "AddRow";
+                            AdminVM.TempCrew = new Crew();
+                            switch (itemName)
+                            {
+                                case "Name":
+                                    AdminVM.TempCrew.CrewName = textBox.Text;
+                                    break;
+                                case "Phone":
+                                    AdminVM.TempCrew.Phone = textBox.Text;
+                                    break;
+                                case "Cell":
+                                    AdminVM.TempCrew.Cell = textBox.Text;
+                                    break;
+                                case "Email":
+                                    AdminVM.TempCrew.Email = textBox.Text;
+                                    break;
+                            }
+                            AdminVM.CreateCrew();
+                    }
+                    else
+                    {
+                        Crew _crew = dataGrid.Items[rowIndex] as Crew;
+                        AdminVM.TempCrew = _crew;
+                        switch (itemName)
+                        {
+                            case "Name":
+                                AdminVM.TempCrew.CrewName = textBox.Text;
+                                break;
+                            case "Phone":
+                                AdminVM.TempCrew.Phone = textBox.Text;
+                                break;
+                            case "Cell":
+                                AdminVM.TempCrew.Cell = textBox.Text;
+                                break;
+                            case "Email":
+                                AdminVM.TempCrew.Email = textBox.Text;
+                                break;
+                        }
+                        AdminVM.TempCrew.ID = _crew.ID;
+                        AdminVM.TempCrew.Active = _crew.Active;
+                        AdminVM.ActionState = "UpdateRow";
+                        AdminVM.UpdateCrew();
+                    }
+
+                    e.Handled = true;
+                }
+            }
+        }
+
+        private void CrewTab_CheckBox(object sender, RoutedEventArgs e)
+        {
+            CheckBox chkBox = sender as CheckBox;
+
+            DataGrid dataGrid = noteHelper.FindDataGrid(chkBox);
+            int selectedRowIndex = dataGrid.SelectedIndex;
+            int rowIndex = selectedRowIndex;
+
+            if (AdminVM.ActionState.Equals("AddRow") || (AdminVM.ActionState.Equals("UpdateRow") && selectedRowIndex == -1))
+            {
+                rowIndex = AdminVM.CurrentIndex;
+            }
+            else
+            {
+                rowIndex = selectedRowIndex;
+            }
+            if (rowIndex >= 0)
+            {
+                Crew newRow = dataGrid.Items[rowIndex] as Crew;
+                if (dataGrid != null)
+                {
+                    if (selectedRowIndex == dataGrid.Items.Count - 1)
+                    {
+                        //if (!string.IsNullOrEmpty(newRow.CrewName))
+                        //{
+                            ObservableCollection<Crew> crews = AdminVM.Crews;
+                            Crew item = new Crew();
+                            crews.Add(item);
+                            AdminVM.ActionState = "AddRow";
+                            AdminVM.TempCrew = new Crew();
+
+                            if (chkBox.IsChecked == true)
+                                AdminVM.TempCrew.Active = true;
+                            else AdminVM.TempCrew.Active = false;
+
+                            AdminVM.CreateCrew();
+                        //}
+                        //else
+                        //{
+                        //    newRow.Active = false;
+                        //    MessageBox.Show("Crew name is required.");
+                        //}
+                    }
+                    else
+                    {
+                        Crew _crew = dataGrid.Items[rowIndex] as Crew;
+                        AdminVM.SelectedCrewID = _crew.ID;
+                        AdminVM.TempCrew = _crew;
+
+                        if (chkBox.IsChecked == true)
+                            AdminVM.TempCrew.Active = true;
+                        else AdminVM.TempCrew.Active = false;
+                        AdminVM.ActionState = "UpdateRow";
+
+                        AdminVM.UpdateCrew();
+                    }
+
+                    e.Handled = true;
+                }
+            }
+        }
+
+        private void ArchTab_PreviewKeyUp(object sender, KeyEventArgs e)
+        {
+            TextBox textBox = sender as TextBox;
+            if (textBox != null)
+            {
+                DataGrid dataGrid = noteHelper.FindDataGrid(textBox);
+                int selectedRowIndex = dataGrid.SelectedIndex;
+                int rowIndex = selectedRowIndex;
+
+                string itemName = textBox.Tag as string;
+                if (AdminVM.ActionState.Equals("AddRow") || (AdminVM.ActionState.Equals("UpdateRow") && selectedRowIndex == -1))
+                {
+                    rowIndex = AdminVM.CurrentIndex;
+                }
+                else
+                {
+                    rowIndex = selectedRowIndex;
+                }
+
+                Architect newRow = dataGrid.Items[rowIndex] as Architect;
+
+                if (dataGrid != null)
+                {
+                    if (selectedRowIndex == dataGrid.Items.Count - 1)
+                    {
+                        ObservableCollection<Architect> architects = AdminVM.Architects;
+                        Architect item = new Architect();
+                        architects.Add(item);
+                        AdminVM.ActionState = "AddRow";
+                        AdminVM.TempArch = new Architect();
+                        switch (itemName)
+                        {
+                            case "Company":
+                                AdminVM.TempArch.ArchCompany = textBox.Text;
+                                break;
+                            case "Contact":
+                                AdminVM.TempArch.Contact = textBox.Text;
+                                break;
+                            case "Address":
+                                AdminVM.TempArch.Address = textBox.Text;
+                                break;
+                            case "City":
+                                AdminVM.TempArch.City = textBox.Text;
+                                break;
+                            case "State":
+                                AdminVM.TempArch.State = textBox.Text;
+                                break;
+                            case "Zip":
+                                AdminVM.TempArch.Zip = textBox.Text;
+                                break;
+                            case "Phone":
+                                AdminVM.TempArch.Phone = textBox.Text;
+                                break;
+                            case "Fax":
+                                AdminVM.TempArch.Fax = textBox.Text;
+                                break;
+                            case "Cell":
+                                AdminVM.TempArch.Cell = textBox.Text;
+                                break;
+                        }
+                        AdminVM.CreateArch();
+                    }
+                    else
+                    {
+                        Architect _arch = dataGrid.Items[rowIndex] as Architect;
+                        AdminVM.TempArch = _arch;
+                        switch (itemName)
+                        {
+                            case "Company":
+                                AdminVM.TempArch.ArchCompany = textBox.Text;
+                                break;
+                            case "Contact":
+                                AdminVM.TempArch.Contact = textBox.Text;
+                                break;
+                            case "Address":
+                                AdminVM.TempArch.Address = textBox.Text;
+                                break;
+                            case "City":
+                                AdminVM.TempArch.City = textBox.Text;
+                                break;
+                            case "State":
+                                AdminVM.TempArch.State = textBox.Text;
+                                break;
+                            case "Zip":
+                                AdminVM.TempArch.Zip = textBox.Text;
+                                break;
+                            case "Phone":
+                                AdminVM.TempArch.Phone = textBox.Text;
+                                break;
+                            case "Fax":
+                                AdminVM.TempArch.Fax = textBox.Text;
+                                break;
+                            case "Cell":
+                                AdminVM.TempArch.Cell = textBox.Text;
+                                break;
+                        }
+                        AdminVM.TempArch.ID = _arch.ID;
+                        AdminVM.TempArch.Active = _arch.Active;
+                        AdminVM.ActionState = "UpdateRow";
+                        AdminVM.UpdateArch();
+                    }
+
+                    e.Handled = true;
+                }
+            }
+        }
+
+        private void ArchTab_CheckBox(object sender, RoutedEventArgs e)
+        {
+            CheckBox chkBox = sender as CheckBox;
+
+            DataGrid dataGrid = noteHelper.FindDataGrid(chkBox);
+            int selectedRowIndex = dataGrid.SelectedIndex;
+            int rowIndex = selectedRowIndex;
+
+            if (AdminVM.ActionState.Equals("AddRow") || (AdminVM.ActionState.Equals("UpdateRow") && selectedRowIndex == -1))
+            {
+                rowIndex = AdminVM.CurrentIndex;
+            }
+            else
+            {
+                rowIndex = selectedRowIndex;
+            }
+            if (rowIndex >= 0)
+            {
+                Architect newRow = dataGrid.Items[rowIndex] as Architect;
+                if (dataGrid != null)
+                {
+                    if (selectedRowIndex == dataGrid.Items.Count - 1)
+                    {
+                        ObservableCollection<Architect> architects = AdminVM.Architects;
+                        Architect item = new Architect();
+                        architects.Add(item);
+                        AdminVM.ActionState = "AddRow";
+                        AdminVM.TempArch = new Architect();
+
+                        if (chkBox.IsChecked == true)
+                            AdminVM.TempArch.Active = true;
+                        else AdminVM.TempArch.Active = false;
+
+                        AdminVM.CreateCrew();
+                    }
+                    else
+                    {
+                        Architect _architect = dataGrid.Items[rowIndex] as Architect;
+                        AdminVM.SelectedArchID = _architect.ID;
+                        AdminVM.TempArch = _architect;
+
+                        if (chkBox.IsChecked == true)
+                            AdminVM.TempArch.Active = true;
+                        else AdminVM.TempArch.Active = false;
+                        AdminVM.ActionState = "UpdateRow";
+
+                        AdminVM.UpdateArch();
+                    }
+
+                    e.Handled = true;
+                }
+            }
+        }
+
+        private void FreightTab_PreviewKeyUp(object sender, KeyEventArgs e)
+        {
+            TextBox textBox = sender as TextBox;
+            if (textBox != null)
+            {
+                DataGrid dataGrid = noteHelper.FindDataGrid(textBox);
+                int selectedRowIndex = dataGrid.SelectedIndex;
+                int rowIndex = selectedRowIndex;
+
+                string itemName = textBox.Tag as string;
+                if (AdminVM.ActionState.Equals("AddRow") || (AdminVM.ActionState.Equals("UpdateRow") && selectedRowIndex == -1))
+                {
+                    rowIndex = AdminVM.CurrentIndex;
+                }
+                else
+                {
+                    rowIndex = selectedRowIndex;
+                }
+
+                FreightCo newRow = dataGrid.Items[rowIndex] as FreightCo;
+
+                if (dataGrid != null)
+                {
+                    if (selectedRowIndex == dataGrid.Items.Count - 1)
+                    {
+                        ObservableCollection<FreightCo> freightCOs = AdminVM.FreightCos;
+                        FreightCo item = new FreightCo();
+                        freightCOs.Add(item);
+                        AdminVM.ActionState = "AddRow";
+                        AdminVM.TempFreightCo = new FreightCo();
+                        switch (itemName)
+                        {
+                            case "Name":
+                                AdminVM.TempFreightCo.FreightName = textBox.Text;
+                                break;
+                            case "ContactName":
+                                AdminVM.TempFreightCo.Contact = textBox.Text;
+                                break;
+                            case "Phone":
+                                AdminVM.TempFreightCo.Phone = textBox.Text;
+                                break;
+                            case "Cell":
+                                AdminVM.TempFreightCo.Cell = textBox.Text;
+                                break;
+                            case "Email":
+                                AdminVM.TempFreightCo.Email = textBox.Text;
+                                break;
+                        }
+                        AdminVM.CreateFreightCo();
+                    }
+                    else
+                    {
+                        FreightCo _freightCo = dataGrid.Items[rowIndex] as FreightCo;
+                        AdminVM.TempFreightCo = _freightCo;
+                        switch (itemName)
+                        {
+                            case "Name":
+                                AdminVM.TempFreightCo.FreightName = textBox.Text;
+                                break;
+                            case "ContactName":
+                                AdminVM.TempFreightCo.Contact = textBox.Text;
+                                break;
+                            case "Phone":
+                                AdminVM.TempFreightCo.Phone = textBox.Text;
+                                break;
+                            case "Cell":
+                                AdminVM.TempFreightCo.Cell = textBox.Text;
+                                break;
+                            case "Email":
+                                AdminVM.TempFreightCo.Email = textBox.Text;
+                                break;
+                        }
+                        AdminVM.TempFreightCo.ID = _freightCo.ID;
+                        AdminVM.TempFreightCo.Active = _freightCo.Active;
+                        AdminVM.ActionState = "UpdateRow";
+                        AdminVM.UpdateFreightCo();
+                    }
+
+                    e.Handled = true;
+                }
+            }
+        }
+
+        private void FreightTab_CheckBox(object sender, RoutedEventArgs e)
+        {
+            CheckBox chkBox = sender as CheckBox;
+
+            DataGrid dataGrid = noteHelper.FindDataGrid(chkBox);
+            int selectedRowIndex = dataGrid.SelectedIndex;
+            int rowIndex = selectedRowIndex;
+
+            if (AdminVM.ActionState.Equals("AddRow") || (AdminVM.ActionState.Equals("UpdateRow") && selectedRowIndex == -1))
+            {
+                rowIndex = AdminVM.CurrentIndex;
+            }
+            else
+            {
+                rowIndex = selectedRowIndex;
+            }
+            if (rowIndex >= 0)
+            {
+                FreightCo newRow = dataGrid.Items[rowIndex] as FreightCo;
+                if (dataGrid != null)
+                {
+                    if (selectedRowIndex == dataGrid.Items.Count - 1)
+                    {
+                        ObservableCollection<FreightCo> freightCos = AdminVM.FreightCos;
+                        FreightCo item = new FreightCo();
+                        freightCos.Add(item);
+                        AdminVM.ActionState = "AddRow";
+                        AdminVM.TempFreightCo = new FreightCo();
+
+                        if (chkBox.IsChecked == true)
+                            AdminVM.TempFreightCo.Active = true;
+                        else AdminVM.TempFreightCo.Active = false;
+
+                        AdminVM.CreateFreightCo();
+                    }
+                    else
+                    {
+                        FreightCo _freightCo = dataGrid.Items[rowIndex] as FreightCo;
+                        AdminVM.SelectedFreightCoID = _freightCo.ID;
+                        AdminVM.TempFreightCo = _freightCo;
+
+                        if (chkBox.IsChecked == true)
+                            AdminVM.TempFreightCo.Active = true;
+                        else AdminVM.TempFreightCo.Active = false;
+                        AdminVM.ActionState = "UpdateRow";
+
+                        AdminVM.UpdateFreightCo();
+                    }
+                    e.Handled = true;
+                }
+            }
+        }
+
+        private void UserTab_PreviewKeyUp(object sender, KeyEventArgs e)
+        {
+            TextBox textBox = sender as TextBox;
+            if (textBox != null)
+            {
+                DataGrid dataGrid = noteHelper.FindDataGrid(textBox);
+                int selectedRowIndex = dataGrid.SelectedIndex;
+                int rowIndex = selectedRowIndex;
+
+                string itemName = textBox.Tag as string;
+                if (AdminVM.ActionState.Equals("AddRow") || (AdminVM.ActionState.Equals("UpdateRow") && selectedRowIndex == -1))
+                {
+                    rowIndex = AdminVM.CurrentIndex;
+                }
+                else
+                {
+                    rowIndex = selectedRowIndex;
+                }
+
+                User newRow = dataGrid.Items[rowIndex] as User;
+
+                if (dataGrid != null)
+                {
+                    if (selectedRowIndex == dataGrid.Items.Count - 1)
+                    {
+                        ObservableCollection<User> users = AdminVM.Users;
+                        User item = new User();
+                        users.Add(item);
+                        AdminVM.ActionState = "AddRow";
+                        AdminVM.TempUser = new User();
+                        switch (itemName)
+                        {
+                            case "UserName":
+                                AdminVM.TempUser.UserName = textBox.Text;
+                                break;
+                            case "PersonName":
+                                AdminVM.TempUser.PersonName = textBox.Text;
+                                break;
+                            case "Level":
+                                AdminVM.TempUser.Level = int.Parse(textBox.Text);
+                                break;
+                            case "Email":
+                                AdminVM.TempUser.Email = textBox.Text;
+                                break;
+                        }
+                        AdminVM.CreateUser();
+                    }
+                    else
+                    {
+                        User _user = dataGrid.Items[rowIndex] as User;
+                        AdminVM.TempUser = _user;
+                        switch (itemName)
+                        {
+                            case "UserName":
+                                AdminVM.TempUser.UserName = textBox.Text;
+                                break;
+                            case "PersonName":
+                                AdminVM.TempUser.PersonName = textBox.Text;
+                                break;
+                            case "Level":
+                                AdminVM.TempUser.Level = int.Parse(textBox.Text);
+                                break;
+                            case "Email":
+                                AdminVM.TempUser.Email = textBox.Text;
+                                break;
+                        }
+                        AdminVM.TempUser.ID = _user.ID;
+                        AdminVM.TempUser.Active = _user.Active;
+                        AdminVM.ActionState = "UpdateRow";
+                        AdminVM.UpdateUser();
+                    }
+
+                    e.Handled = true;
+                }
+            }
+        }
+
+        private void UserTab_CheckBox(object sender, RoutedEventArgs e)
+        {
+            CheckBox chkBox = sender as CheckBox;
+
+            DataGrid dataGrid = noteHelper.FindDataGrid(chkBox);
+            int selectedRowIndex = dataGrid.SelectedIndex;
+            int rowIndex = selectedRowIndex;
+
+            if (AdminVM.ActionState.Equals("AddRow") || (AdminVM.ActionState.Equals("UpdateRow") && selectedRowIndex == -1))
+            {
+                rowIndex = AdminVM.CurrentIndex;
+            }
+            else
+            {
+                rowIndex = selectedRowIndex;
+            }
+            if (rowIndex >= 0)
+            {
+                User newRow = dataGrid.Items[rowIndex] as User;
+                if (dataGrid != null)
+                {
+                    if (selectedRowIndex == dataGrid.Items.Count - 1)
+                    {
+                        ObservableCollection<User> users = AdminVM.Users;
+                        User item = new User();
+                        users.Add(item);
+                        AdminVM.ActionState = "AddRow";
+                        AdminVM.TempUser = new User();
+
+                        if (chkBox.IsChecked == true)
+                            AdminVM.TempUser.Active = true;
+                        else AdminVM.TempUser.Active = false;
+
+                        AdminVM.CreateUser();
+                    }
+                    else
+                    {
+                        User _user = dataGrid.Items[rowIndex] as User;
+                        AdminVM.SelectedUserID = _user.ID;
+                        AdminVM.TempUser = _user;
+
+                        if (chkBox.IsChecked == true)
+                            AdminVM.TempUser.Active = true;
+                        else AdminVM.TempUser.Active = false;
+                        AdminVM.ActionState = "UpdateRow";
+
+                        AdminVM.UpdateUser();
+                    }
+                    e.Handled = true;
+                }
+            }
+        }
+
+        private void UserTab_ComboBox(object sender, SelectionChangedEventArgs e)
+        {
+            ComboBox comboBox = sender as ComboBox;
+            if(comboBox.SelectedValue != null)
+            {
+                int optID = int.Parse(comboBox.SelectedValue.ToString());
+                //Console.WriteLine("comboBox.SelectedValue->"+ comboBox.SelectedValue);
+                DataGrid dataGrid = noteHelper.FindDataGrid(comboBox);
+                int selectedRowIndex = dataGrid.SelectedIndex;
+                int rowIndex = selectedRowIndex;
+
+                if (AdminVM.ActionState.Equals("AddRow") || (AdminVM.ActionState.Equals("UpdateRow") && selectedRowIndex == -1))
+                {
+                    rowIndex = AdminVM.CurrentIndex;
+                }
+                else
+                {
+                    rowIndex = selectedRowIndex;
+                }
+                if (rowIndex >= 0)
+                {
+                    User newRow = dataGrid.Items[rowIndex] as User;
+                    if (dataGrid != null)
+                    {
+                        if (selectedRowIndex == dataGrid.Items.Count - 1)
+                        {
+                            ObservableCollection<User> users = AdminVM.Users;
+                            User item = new User();
+                            users.Add(item);
+                            AdminVM.ActionState = "AddRow";
+                            AdminVM.TempUser = new User();
+                            AdminVM.TempUser.FormOnOpen = optID;
+
+                            AdminVM.CreateUser();
+                        }
+                        else
+                        {
+                            User _user = dataGrid.Items[rowIndex] as User;
+                            AdminVM.SelectedUserID = _user.ID;
+                            AdminVM.TempUser = _user;
+                            AdminVM.TempUser.FormOnOpen = optID;
+
+                            AdminVM.ActionState = "UpdateRow";
+
+                            AdminVM.UpdateUser();
+                        }
+                        e.Handled = true;
+                    }
+                }
+            }
+        }
+
+        private void Installer_FileSelector(object sender, RoutedEventArgs e)
+        {
+            Button oshaCertButton = sender as Button;
+            string itemName = oshaCertButton.Tag as string;
+
+            DataGrid dataGrid = noteHelper.FindDataGrid(oshaCertButton);
+            int selectedRowIndex = dataGrid.SelectedIndex;
+            InHouseInstaller _installer = dataGrid.Items[selectedRowIndex] as InHouseInstaller;
+
+            OpenFileDialog openFileDialog = new OpenFileDialog();
+            //openFileDialog.Filter = "Text files (*.txt)|*.txt|All files (*.*)|*.*";
+            if (openFileDialog.ShowDialog() == true)
+            {
+                string selectedFileName = openFileDialog.FileName;
+                switch (itemName)
+                {
+                    case "OshaCert":
+                        _installer.OSHACert = selectedFileName;
+                        break;
+                    case "FacCert":
+                        _installer.FirstAidCert = selectedFileName;
+                        break;
+                    default:
+                        break;
+                }
+                AdminVM.TempInstaller = _installer;
+                AdminVM.ActionState = "UpdateRow";
+                AdminVM.UpdateInstaller();
+            }
+        }
+
+        private void Install_PreviewKeyUp(object sender, KeyEventArgs e)
+        {
+            TextBox textBox = sender as TextBox;
+            if (textBox != null)
+            {
+                DataGrid dataGrid = noteHelper.FindDataGrid(textBox);
+                int selectedRowIndex = dataGrid.SelectedIndex;
+                int rowIndex = selectedRowIndex;
+
+                string itemName = textBox.Tag as string;
+                if (AdminVM.ActionState.Equals("AddRow") || (AdminVM.ActionState.Equals("UpdateRow") && selectedRowIndex == -1))
+                {
+                    rowIndex = AdminVM.CurrentIndex;
+                }
+                else
+                {
+                    rowIndex = selectedRowIndex;
+                }
+
+                User newRow = dataGrid.Items[rowIndex] as User;
+
+                if (dataGrid != null)
+                {
+                    if (selectedRowIndex == dataGrid.Items.Count - 1)
+                    {
+                        ObservableCollection<InHouseInstaller> installers = AdminVM.Installers;
+                        InHouseInstaller item = new InHouseInstaller();
+                        installers.Add(item);
+                        AdminVM.ActionState = "AddRow";
+                        AdminVM.TempInstaller = new InHouseInstaller();
+                        switch (itemName)
+                        {
+                            case "Name":
+                                AdminVM.TempInstaller.InstallerName= textBox.Text;
+                                break;
+                            case "Cell":
+                                AdminVM.TempInstaller.InstallerCell = textBox.Text;
+                                break;
+                            case "Email":
+                                AdminVM.TempInstaller.InstallerEmail = textBox.Text;
+                                break;
+                            case "CertificationDate":
+                                AdminVM.TempInstaller.OSHAExpireDate = DateTime.Parse(textBox.Text);
+                                break;
+                            case "FacDate":
+                                AdminVM.TempInstaller.FirstAidExpireDate = DateTime.Parse(textBox.Text);
+                                break;
+                        }
+                        Console.WriteLine(AdminVM.TempInstaller);
+                        AdminVM.CreateInstaller();
+                    }
+                    else
+                    {
+                        InHouseInstaller _installer = dataGrid.Items[rowIndex] as InHouseInstaller;
+                        AdminVM.TempInstaller = _installer;
+                        Console.WriteLine(_installer.ID);
+                        switch (itemName)
+                        {
+                            case "Name":
+                                AdminVM.TempInstaller.InstallerName = textBox.Text;
+                                break;
+                            case "Cell":
+                                AdminVM.TempInstaller.InstallerCell = textBox.Text;
+                                break;
+                            case "Email":
+                                AdminVM.TempInstaller.InstallerEmail = textBox.Text;
+                                break;
+                            case "CertificationDate":
+                                AdminVM.TempInstaller.OSHAExpireDate = DateTime.Parse(textBox.Text);
+                                break;
+                            case "OshaCert":
+                                AdminVM.TempInstaller.OSHACert = textBox.Text;
+                                break;
+                            case "FacDate":
+                                AdminVM.TempInstaller.FirstAidExpireDate = DateTime.Parse(textBox.Text);
+                                break;
+                            case "FacCert":
+                                AdminVM.TempInstaller.FirstAidCert = textBox.Text;
+                                break;
+                        }
+                        AdminVM.TempInstaller.ID = _installer.ID;
+                        AdminVM.TempInstaller.CrewID = _installer.CrewID;
+                        AdminVM.TempInstaller.OSHALevel = _installer.OSHALevel;
+                        AdminVM.TempInstaller.Active = _installer.Active;
+                        AdminVM.ActionState = "UpdateRow";
+                        AdminVM.UpdateInstaller();
+                    }
+
+                    e.Handled = true;
+                }
+            }
+        }
+
+        private void InstallCrew_ComboBox(object sender, SelectionChangedEventArgs e)
+        {
+            ComboBox comboBox = sender as ComboBox;
+            if (comboBox.SelectedValue != null)
+            {
+                int crewID = int.Parse(comboBox.SelectedValue.ToString());
+                DataGrid dataGrid = noteHelper.FindDataGrid(comboBox);
+                int selectedRowIndex = dataGrid.SelectedIndex;
+                int rowIndex = selectedRowIndex;
+
+                if (AdminVM.ActionState.Equals("AddRow") || (AdminVM.ActionState.Equals("UpdateRow") && selectedRowIndex == -1))
+                {
+                    rowIndex = AdminVM.CurrentIndex;
+                }
+                else
+                {
+                    rowIndex = selectedRowIndex;
+                }
+                if (rowIndex >= 0)
+                {
+                    InHouseInstaller newRow = dataGrid.Items[rowIndex] as InHouseInstaller;
+                    if (dataGrid != null)
+                    {
+                        if (selectedRowIndex == dataGrid.Items.Count - 1)
+                        {
+                            ObservableCollection<InHouseInstaller> installers = AdminVM.Installers;
+                            InHouseInstaller item = new InHouseInstaller();
+                            installers.Add(item);
+                            AdminVM.ActionState = "AddRow";
+                            AdminVM.TempInstaller = new InHouseInstaller();
+                            AdminVM.TempInstaller.CrewID = crewID;
+
+                            AdminVM.CreateInstaller();
+                        }
+                        else
+                        {
+                            InHouseInstaller _installer = dataGrid.Items[rowIndex] as InHouseInstaller;
+                            AdminVM.SelectedInstallerID = _installer.ID;
+                            AdminVM.TempInstaller = _installer;
+                            AdminVM.TempInstaller.CrewID = crewID;
+
+                            AdminVM.ActionState = "UpdateRow";
+
+                            AdminVM.UpdateInstaller();
+                        }
+                        e.Handled = true;
+                    }
+                }
+            }
+        }
+
+        private void InstallOsha_ComboBox(object sender, SelectionChangedEventArgs e)
+        {
+            ComboBox comboBox = sender as ComboBox;
+            if (comboBox.SelectedValue != null)
+            {
+                string oshaLevel = comboBox.SelectedValue.ToString();
+                DataGrid dataGrid = noteHelper.FindDataGrid(comboBox);
+                int selectedRowIndex = dataGrid.SelectedIndex;
+                int rowIndex = selectedRowIndex;
+
+                if (AdminVM.ActionState.Equals("AddRow") || (AdminVM.ActionState.Equals("UpdateRow") && selectedRowIndex == -1))
+                {
+                    rowIndex = AdminVM.CurrentIndex;
+                }
+                else
+                {
+                    rowIndex = selectedRowIndex;
+                }
+                if (rowIndex >= 0)
+                {
+                    InHouseInstaller newRow = dataGrid.Items[rowIndex] as InHouseInstaller;
+                    if (dataGrid != null)
+                    {
+                        if (selectedRowIndex == dataGrid.Items.Count - 1)
+                        {
+                            ObservableCollection<InHouseInstaller> installers = AdminVM.Installers;
+                            InHouseInstaller item = new InHouseInstaller();
+                            installers.Add(item);
+                            AdminVM.ActionState = "AddRow";
+                            AdminVM.TempInstaller = new InHouseInstaller();
+                            AdminVM.TempInstaller.OSHALevel = oshaLevel;
+
+                            AdminVM.CreateInstaller();
+                        }
+                        else
+                        {
+                            InHouseInstaller _installer = dataGrid.Items[rowIndex] as InHouseInstaller;
+                            AdminVM.SelectedInstallerID = _installer.ID;
+                            AdminVM.TempInstaller = _installer;
+                            AdminVM.TempInstaller.OSHALevel = oshaLevel;
+
+                            AdminVM.ActionState = "UpdateRow";
+
+                            AdminVM.UpdateInstaller();
+                        }
+                        e.Handled = true;
+                    }
+                }
+            }
+        }
+
+        private void Install_CheckBox(object sender, RoutedEventArgs e)
+        {
+            CheckBox chkBox = sender as CheckBox;
+
+            DataGrid dataGrid = noteHelper.FindDataGrid(chkBox);
+            int selectedRowIndex = dataGrid.SelectedIndex;
+            int rowIndex = selectedRowIndex;
+
+            if (AdminVM.ActionState.Equals("AddRow") || (AdminVM.ActionState.Equals("UpdateRow") && selectedRowIndex == -1))
+            {
+                rowIndex = AdminVM.CurrentIndex;
+            }
+            else
+            {
+                rowIndex = selectedRowIndex;
+            }
+            if (rowIndex >= 0)
+            {
+                InHouseInstaller newRow = dataGrid.Items[rowIndex] as InHouseInstaller;
+                if (dataGrid != null)
+                {
+                    if (selectedRowIndex == dataGrid.Items.Count - 1)
+                    {
+                        ObservableCollection<InHouseInstaller> installers = AdminVM.Installers;
+                        InHouseInstaller item = new InHouseInstaller();
+                        installers.Add(item);
+                        AdminVM.ActionState = "AddRow";
+                        AdminVM.TempInstaller = new InHouseInstaller();
+
+                        if (chkBox.IsChecked == true)
+                            AdminVM.TempInstaller.Active = true;
+                        else AdminVM.TempInstaller.Active = false;
+
+                        AdminVM.CreateInstaller();
+                    }
+                    else
+                    {
+                        InHouseInstaller _installer = dataGrid.Items[rowIndex] as InHouseInstaller;
+                        AdminVM.SelectedInstallerID = _installer.ID;
+                        AdminVM.TempInstaller = _installer;
+
+                        if (chkBox.IsChecked == true)
+                            AdminVM.TempInstaller.Active = true;
+                        else AdminVM.TempInstaller.Active = false;
+                        AdminVM.ActionState = "UpdateRow";
+
+                        AdminVM.UpdateInstaller();
+                    }
+                    e.Handled = true;
+                }
+            }
+        }
+
+        private void AdminDataGrid_TabChanged(object sender, SelectionChangedEventArgs e)
+        {
+            //AdminVM.CurrentIndex = 0;
         }
     }
 }
