@@ -63,6 +63,12 @@ namespace WpfApp.ViewModel
             TempMaterial = new Material();
             TempInstaller = new InHouseInstaller();
             TempCreateCustomer = new Customer();
+
+            //TempCustomerNote = new Note();
+            //TempSubmNote = new Note();
+            //TempSupNote = new Note();
+            //TempPMNote = new Note();
+            TempNote = new Note();
             SelectedTempCustIndex = 0;
             SelectedCustRowIndex = -1;
             ActionCustState = "Clear";
@@ -72,6 +78,8 @@ namespace WpfApp.ViewModel
             ActionPmName = "";
             UpdateComponent = "Detail";
             ActionState = "";
+            ActionSubState = "";
+            ActionNoteState = "";
 
             SelectedManufID = -1;
             SelectedCustomerID = -1;
@@ -765,7 +773,7 @@ namespace WpfApp.ViewModel
             }
             else
             {
-                MessageBox.Show("Sov Name is required.");
+                MessageBox.Show("Material is required.");
             }
         }
 
@@ -779,7 +787,7 @@ namespace WpfApp.ViewModel
                     if (!string.IsNullOrEmpty(TempAcronym.AcronymName))
                         cmd.Parameters.AddWithValue("@SovAcronym", TempAcronym.AcronymName);
                     else cmd.Parameters.AddWithValue("@SovAcronym", DBNull.Value);
-                    if (!string.IsNullOrEmpty(CurrentSubmCell))
+                    if (!string.IsNullOrEmpty(TempAcronym.AcronymDesc))
                         cmd.Parameters.AddWithValue("@SovDesc", TempAcronym.AcronymDesc);
                     else cmd.Parameters.AddWithValue("@SovDesc", DBNull.Value);
                     cmd.Parameters.AddWithValue("@Active", TempAcronym.Active);
@@ -841,317 +849,224 @@ namespace WpfApp.ViewModel
             }
         }
 
-        private void CreateSubm()
+        public void CreateCustCC()
         {
-            if (SelectedCustomerID != 0)
-            {
-                sqlquery = "INSERT INTO tblCustomerContacts(Customer_ID, CC_Name, CC_Phone, CC_CellPhone, CC_Email, Active) OUTPUT INSERTED.CC_ID VALUES (@CustomerID, @CCName, @CCPhone, @CCCell, @CCEmail, @Active)";
-                using (cmd = new SqlCommand(sqlquery, dbConnection.Connection))
-                {
-                    if (SelectedCustomerID != 0)
-                        cmd.Parameters.AddWithValue("@CustomerID", SelectedCustomerID);
-                    else cmd.Parameters.AddWithValue("@CustomerID", DBNull.Value);
-                    if (!string.IsNullOrEmpty(CurrentSubmName))
-                        cmd.Parameters.AddWithValue("@CCName", CurrentSubmName);
-                    else cmd.Parameters.AddWithValue("@CCName", DBNull.Value);
-                    if (!string.IsNullOrEmpty(CurrentSubmPhone))
-                        cmd.Parameters.AddWithValue("@CCPhone", CurrentSubmPhone);
-                    else cmd.Parameters.AddWithValue("@CCPhone", DBNull.Value);
-                    if (!string.IsNullOrEmpty(CurrentSubmCell))
-                        cmd.Parameters.AddWithValue("@CCCell", CurrentSubmCell);
-                    else cmd.Parameters.AddWithValue("@CCCell", DBNull.Value);
-                    if (!string.IsNullOrEmpty(CurrentSubmEmail))
-                        cmd.Parameters.AddWithValue("@CCEmail", CurrentSubmEmail);
-                    else cmd.Parameters.AddWithValue("@CCEmail", DBNull.Value);
-                    cmd.Parameters.AddWithValue("@Active", CurrentPmActive);
-                }
-
-                try
-                {
-                    int insertedNoteId = (int)cmd.ExecuteScalar();
-                    CurrentCCID = insertedNoteId;
-                    SelectedCustPmID = CurrentCCID;
-                    ActionSubmName = "UpdateSubm";
-                }
-                catch (SqlException e)
-                {
-                    Console.WriteLine(e);
-                }
-            }
-            else
-            {
-                if (!ActionCustState.Equals("Clear"))
-                    MessageBox.Show("Customer Full Name is Required");
-            }
-        }
-
-        private void UpdateSubm()
-        {
-            if (SelectedCustomerID != 0)
-            {
-                string sqlquery = "UPDATE tblCustomerContacts SET ";
-                List<string> itemList = new List<string>();
-                if (!string.IsNullOrEmpty(CurrentSubmName))
-                {
-                    itemList.Add("CC_Name=@CCName");
-                }
-                if (!string.IsNullOrEmpty(CurrentSubmPhone))
-                {
-                    itemList.Add("CC_Phone=@CCPhone");
-                }
-                if (!string.IsNullOrEmpty(CurrentSubmCell))
-                {
-                    itemList.Add("CC_CellPhone=@CCCell");
-                }
-                if (!string.IsNullOrEmpty(CurrentSubmEmail))
-                {
-                    itemList.Add("CC_Email=@CCEmail");
-                }
-
-                itemList.Add("Active=@CCActive");
-                sqlquery += string.Join(", ", itemList);
-                sqlquery += " WHERE CC_ID=@CCID";
-
-                using (cmd = new SqlCommand(sqlquery, dbConnection.Connection))
-                {
-                    if (!string.IsNullOrEmpty(CurrentSubmName))
-                        cmd.Parameters.AddWithValue("@CCName", CurrentSubmName);
-                    if (!string.IsNullOrEmpty(CurrentSubmPhone))
-                        cmd.Parameters.AddWithValue("@CCPhone", CurrentSubmPhone);
-                    if (!string.IsNullOrEmpty(CurrentSubmCell))
-                        cmd.Parameters.AddWithValue("@CCCell", CurrentSubmCell);
-                    if (!string.IsNullOrEmpty(CurrentSubmEmail))
-                        cmd.Parameters.AddWithValue("@CCEmail", CurrentSubmEmail);
-
-                    int submID = 0;
-
-                    switch (ActionState)
-                    {
-                        case "AddRow":
-                            submID = CurrentCCID;
-                            SelectedCustSubmID = CurrentCCID;
-                            break;
-                        case "UpdateRow":
-                            submID = SelectedCustSubmID;
-                            break;
-                    }
-
-                    cmd.Parameters.AddWithValue("@CCID", submID);
-                    cmd.Parameters.AddWithValue("@CCActive", CurrentSubmActive);
-
-
-                    int rowsAffected = cmd.ExecuteNonQuery();
-                }
-            }
-            else
-            {
-                if (!ActionCustState.Equals("Clear"))
-                    MessageBox.Show("Customer Full Name is Required");
-            }
-        }
-
-        private void CreateSup()
-        {
-            if (SelectedCustomerID != 0)
-            {
-                sqlquery = "INSERT INTO tblSuperintendents(Customer_ID, Sup_Name, Sup_Phone, Sup_CellPhone, Sup_Email, Active) OUTPUT INSERTED.Sup_ID VALUES (@CustomerID, @SupName, @SupPhone, @SupCell, @SupEmail, @Active)";
-                using (cmd = new SqlCommand(sqlquery, dbConnection.Connection))
-                {
-                    if (SelectedCustomerID != 0)
-                        cmd.Parameters.AddWithValue("@CustomerID", SelectedCustomerID);
-                    else cmd.Parameters.AddWithValue("@CustomerID", DBNull.Value);
-                    if (!string.IsNullOrEmpty(CurrentSupName))
-                        cmd.Parameters.AddWithValue("@SupName", CurrentSupName);
-                    else cmd.Parameters.AddWithValue("@SupName", DBNull.Value);
-                    if (!string.IsNullOrEmpty(CurrentSupPhone))
-                        cmd.Parameters.AddWithValue("@SupPhone", CurrentSupPhone);
-                    else cmd.Parameters.AddWithValue("@SupPhone", DBNull.Value);
-                    if (!string.IsNullOrEmpty(CurrentSupCell))
-                        cmd.Parameters.AddWithValue("@SupCell", CurrentSupCell);
-                    else cmd.Parameters.AddWithValue("@SupCell", DBNull.Value);
-                    if (!string.IsNullOrEmpty(CurrentSupEmail))
-                        cmd.Parameters.AddWithValue("@SupEmail", CurrentSupEmail);
-                    else cmd.Parameters.AddWithValue("@SupEmail", DBNull.Value);
-                    cmd.Parameters.AddWithValue("@Active", CurrentPmActive);
-                }
-
-                try
-                {
-                    int insertedNoteId = (int)cmd.ExecuteScalar();
-                    CurrentSupID = insertedNoteId;
-                    SelectedCustSupID = CurrentSupID;
-                    ActionPmName = "UpdatePM";
-                }
-                catch (SqlException e)
-                {
-                    Console.WriteLine(e);
-                }
-            }
-            else
-            {
-                if (!ActionCustState.Equals("Clear"))
-                    MessageBox.Show("Customer Full Name is Required");
-            }
-        }
-
-        private void UpdateSup()
-        {
-            if (SelectedCustomerID != 0)
-            {
-                string sqlquery = "UPDATE tblSuperintendents SET ";
-                List<string> itemList = new List<string>();
-                if (!string.IsNullOrEmpty(CurrentSupName))
-                {
-                    itemList.Add("Sup_Name=@SupName");
-                }
-                if (!string.IsNullOrEmpty(CurrentSupPhone))
-                {
-                    itemList.Add("Sup_Phone=@SupPhone");
-                }
-                if (!string.IsNullOrEmpty(CurrentSupCell))
-                {
-                    itemList.Add("Sup_CellPhone=@SupCell");
-                }
-                if (!string.IsNullOrEmpty(CurrentSupEmail))
-                {
-                    itemList.Add("Sup_Email=@SupEmail");
-                }
-
-                itemList.Add("Active=@SupActive");
-                sqlquery += string.Join(", ", itemList);
-                sqlquery += " WHERE Sup_ID=@SupID";
-
-                using (cmd = new SqlCommand(sqlquery, dbConnection.Connection))
-                {
-                    if (!string.IsNullOrEmpty(CurrentSupName))
-                        cmd.Parameters.AddWithValue("@SupName", CurrentSupName);
-                    if (!string.IsNullOrEmpty(CurrentSupPhone))
-                        cmd.Parameters.AddWithValue("@SupPhone", CurrentSupPhone);
-                    if (!string.IsNullOrEmpty(CurrentSupCell))
-                        cmd.Parameters.AddWithValue("@SupCell", CurrentSupCell);
-                    if (!string.IsNullOrEmpty(CurrentSupEmail))
-                        cmd.Parameters.AddWithValue("@SupEmail", CurrentSupEmail);
-                    int supID = 0;
-
-                    switch (ActionState)
-                    {
-                        case "AddRow":
-                            supID = CurrentSupID;
-                            SelectedCustSupID = CurrentSupID;
-                            break;
-                        case "UpdateRow":
-                            supID = SelectedCustSupID;
-                            break;
-                    }
-
-                    cmd.Parameters.AddWithValue("@SupID", supID);
-                    cmd.Parameters.AddWithValue("@SupActive", CurrentSupActive);
-
-                    int rowsAffected = cmd.ExecuteNonQuery();
-                }
-            }
-            else
-            {
-                if (!ActionCustState.Equals("Clear"))
-                    MessageBox.Show("Customer Full Name is Required");
-            }
-        }
-
-        private void CreatePM()
-        {
-            if (SelectedCustomerID != 0)
-            {
-                sqlquery = "INSERT INTO tblProjectManagers(Customer_ID, PM_Name, PM_Phone, PM_CellPhone, PM_Email, Active) OUTPUT INSERTED.PM_ID VALUES (@CustomerID, @PmName, @PmPhone, @PmCell, @PmEmail, @Active)";
-                using (cmd = new SqlCommand(sqlquery, dbConnection.Connection))
-                {
-                    if (SelectedCustomerID != 0)
-                        cmd.Parameters.AddWithValue("@CustomerID", SelectedCustomerID);
-                    else cmd.Parameters.AddWithValue("@CustomerID", DBNull.Value);
-                    if (!string.IsNullOrEmpty(CurrentPmName))
-                        cmd.Parameters.AddWithValue("@PmName", CurrentPmName);
-                    else cmd.Parameters.AddWithValue("@PmName", DBNull.Value);
-                    if (!string.IsNullOrEmpty(CurrentPmPhone))
-                        cmd.Parameters.AddWithValue("@PmPhone", CurrentPmPhone);
-                    else cmd.Parameters.AddWithValue("@PmPhone", DBNull.Value);
-                    if (!string.IsNullOrEmpty(CurrentPmCell))
-                        cmd.Parameters.AddWithValue("@PmCell", CurrentPmCell);
-                    else cmd.Parameters.AddWithValue("@PmCell", DBNull.Value);
-                    if (!string.IsNullOrEmpty(CurrentPmEmail))
-                        cmd.Parameters.AddWithValue("@PmEmail", CurrentPmEmail);
-                    else cmd.Parameters.AddWithValue("@PmEmail", DBNull.Value);
-                    cmd.Parameters.AddWithValue("@Active", CurrentPmActive);
-                }
-
-                try
-                {
-                    int insertedPmId = (int)cmd.ExecuteScalar();
-                    CurrentPmID = insertedPmId;
-                    SelectedCustPmID = CurrentPmID;
-                    ActionPmName = "UpdatePM";
-                }
-                catch (SqlException e)
-                {
-                    Console.WriteLine(e);
-                }
-            }
-            else
-            {
-                if (!ActionCustState.Equals("Clear"))
-                    MessageBox.Show("Customer Full Name is Required");
-            }
-        }
-
-        private void UpdatePM()
-        {
-            string sqlquery = "UPDATE tblProjectManagers SET ";
-
-            List<string> itemList = new List<string>();
-            if (!string.IsNullOrEmpty(CurrentPmName))
-            {
-                itemList.Add("PM_Name=@PmName");
-            }
-            if (!string.IsNullOrEmpty(CurrentPmPhone))
-            {
-                itemList.Add("PM_Phone=@PmPhone");
-            }
-            if (!string.IsNullOrEmpty(CurrentPmCell))
-            {
-                itemList.Add("PM_CellPhone=@PmCell");
-            }
-            if (!string.IsNullOrEmpty(CurrentPmEmail))
-            {
-                itemList.Add("PM_Email=@PmEmail");
-            }
-
-            itemList.Add("Active=@PmActive");
-
-            sqlquery += string.Join(", ", itemList);
-            sqlquery += " WHERE PM_ID=@PmID";
+            sqlquery = "INSERT INTO tblCustomerContacts(Customer_ID, CC_Name, CC_Phone, CC_CellPhone, CC_Email, Active) OUTPUT INSERTED.CC_ID VALUES (@CustomerID, @CCName, @CCPhone, @CCCell, @CCEmail, @Active)";
             using (cmd = new SqlCommand(sqlquery, dbConnection.Connection))
             {
-                if (!string.IsNullOrEmpty(CurrentPmName))
-                    cmd.Parameters.AddWithValue("@PmName", CurrentPmName);
-                if (!string.IsNullOrEmpty(CurrentPmPhone))
-                    cmd.Parameters.AddWithValue("@PmPhone", CurrentPmPhone);
-                if (!string.IsNullOrEmpty(CurrentPmCell))
-                    cmd.Parameters.AddWithValue("@PmCell", CurrentPmCell);
-                if (!string.IsNullOrEmpty(CurrentPmEmail))
-                    cmd.Parameters.AddWithValue("@PmEmail", CurrentPmEmail);
-                int pmID = 0;
-                switch (ActionState)
-                {
-                    case "AddRow":
-                        pmID = CurrentPmID;
-                        SelectedCustPmID = CurrentPmID;
-                        break;
-                    case "UpdateRow":
-                        pmID = SelectedCustPmID;
-                        break;
-                }
-                cmd.Parameters.AddWithValue("@PmID", pmID);
-                cmd.Parameters.AddWithValue("@PmActive", CurrentPmActive);
+                if (SelectedCustomerID != 0)
+                    cmd.Parameters.AddWithValue("@CustomerID", SelectedCustomerID);
+                else cmd.Parameters.AddWithValue("@CustomerID", DBNull.Value);
+                if (!string.IsNullOrEmpty(TempCC.CCName))
+                    cmd.Parameters.AddWithValue("@CCName", TempCC.CCName);
+                else cmd.Parameters.AddWithValue("@CCName", DBNull.Value);
+                if (!string.IsNullOrEmpty(TempCC.CCPhone))
+                    cmd.Parameters.AddWithValue("@CCPhone", TempCC.CCPhone);
+                else cmd.Parameters.AddWithValue("@CCPhone", DBNull.Value);
+                if (!string.IsNullOrEmpty(TempCC.CCCell))
+                    cmd.Parameters.AddWithValue("@CCCell", TempCC.CCCell);
+                else cmd.Parameters.AddWithValue("@CCCell", DBNull.Value);
+                if (!string.IsNullOrEmpty(TempCC.CCEmail))
+                    cmd.Parameters.AddWithValue("@CCEmail", TempCC.CCEmail);
+                else cmd.Parameters.AddWithValue("@CCEmail", DBNull.Value);
+                cmd.Parameters.AddWithValue("@Active", TempCC.CCActive);
 
-                int rowsAffected = cmd.ExecuteNonQuery();
+                try
+                {
+                    int insertedSubmId = (int)cmd.ExecuteScalar();
+                    SelectedCustSubmID = insertedSubmId;
+                    TempCC.ID = insertedSubmId;
+                    int totalCount = CustContacts.Count;
+                    CurrentIndex = totalCount - 2;
+                    ActionSubState = "UpdateRow";
+                    CustContacts[totalCount - 2] = TempCC;
+                }
+                catch (SqlException e)
+                {
+                    Console.WriteLine(e);
+                }
+            }
+        }
+
+        public void UpdateCustCC()
+        {
+            sqlquery = "UPDATE tblCustomerContacts SET Customer_ID=@CustomerID, CC_Name=@CCName, CC_Phone=@CCPhone, CC_CellPhone=@CCCell, CC_Email=@CCEmail, Active=@Active WHERE CC_ID=@CCID";
+            using (cmd = new SqlCommand(sqlquery, dbConnection.Connection))
+            {
+                cmd.Parameters.AddWithValue("@CCID", TempCC.ID);
+                if (SelectedCustomerID != 0)
+                    cmd.Parameters.AddWithValue("@CustomerID", SelectedCustomerID);
+                else cmd.Parameters.AddWithValue("@CustomerID", DBNull.Value);
+                if (!string.IsNullOrEmpty(TempCC.CCName))
+                    cmd.Parameters.AddWithValue("@CCName", TempCC.CCName);
+                else cmd.Parameters.AddWithValue("@CCName", DBNull.Value);
+                if (!string.IsNullOrEmpty(TempCC.CCPhone))
+                    cmd.Parameters.AddWithValue("@CCPhone", TempCC.CCPhone);
+                else cmd.Parameters.AddWithValue("@CCPhone", DBNull.Value);
+                if (!string.IsNullOrEmpty(TempCC.CCCell))
+                    cmd.Parameters.AddWithValue("@CCCell", TempCC.CCCell);
+                else cmd.Parameters.AddWithValue("@CCCell", DBNull.Value);
+                if (!string.IsNullOrEmpty(TempCC.CCEmail))
+                    cmd.Parameters.AddWithValue("@CCEmail", TempCC.CCEmail);
+                else cmd.Parameters.AddWithValue("@CCEmail", DBNull.Value);
+                cmd.Parameters.AddWithValue("@Active", TempCC.CCActive);
+
+                try
+                {
+                    int rowsAffected = cmd.ExecuteNonQuery();
+                }
+                catch (SqlException e)
+                {
+                    Console.WriteLine(e);
+                }
+            }
+        }
+
+        public void CreateCustSup()
+        {
+            sqlquery = "INSERT INTO tblSuperintendents(Customer_ID, Sup_Name, Sup_Phone, Sup_CellPhone, Sup_Email, Active) OUTPUT INSERTED.Sup_ID VALUES (@CustomerID, @SupName, @SupPhone, @SupCell, @SupEmail, @Active)";
+
+            using (cmd = new SqlCommand(sqlquery, dbConnection.Connection))
+            {
+                if (SelectedCustomerID != 0)
+                    cmd.Parameters.AddWithValue("@CustomerID", SelectedCustomerID);
+                else cmd.Parameters.AddWithValue("@CustomerID", DBNull.Value);
+                if (!string.IsNullOrEmpty(TempSup.SupName))
+                    cmd.Parameters.AddWithValue("@SupName", TempSup.SupName);
+                else cmd.Parameters.AddWithValue("@SupName", DBNull.Value);
+                if (!string.IsNullOrEmpty(TempSup.SupPhone))
+                    cmd.Parameters.AddWithValue("@SupPhone", TempSup.SupPhone);
+                else cmd.Parameters.AddWithValue("@SupPhone", DBNull.Value);
+                if (!string.IsNullOrEmpty(TempSup.SupCellPhone))
+                    cmd.Parameters.AddWithValue("@SupCell", TempSup.SupCellPhone);
+                else cmd.Parameters.AddWithValue("@SupCell", DBNull.Value);
+                if (!string.IsNullOrEmpty(TempSup.SupEmail))
+                    cmd.Parameters.AddWithValue("@SupEmail", TempSup.SupEmail);
+                else cmd.Parameters.AddWithValue("@SupEmail", DBNull.Value);
+                cmd.Parameters.AddWithValue("@Active", TempSup.Active);
+
+                try
+                {
+                    int insertedSupId = (int)cmd.ExecuteScalar();
+                    SelectedCustSupID = insertedSupId;
+                    TempSup.SupID = insertedSupId;
+                    int totalCount = CustSupts.Count;
+                    CurrentIndex = totalCount - 2;
+                    ActionSubState = "UpdateRow";
+                    CustSupts[totalCount - 2] = TempSup;
+                }
+                catch (SqlException e)
+                {
+                    Console.WriteLine(e);
+                }
+            }
+        }
+
+        public void UpdateCustSup()
+        {
+            sqlquery = "UPDATE tblSuperintendents SET Customer_ID=@CustomerID, Sup_Name=@SupName, Sup_Phone=@SupPhone, Sup_CellPhone=@SupCell, Sup_Email=@SupEmail, Active=@Active WHERE Sup_ID=@SupID";
+            using (cmd = new SqlCommand(sqlquery, dbConnection.Connection))
+            {
+                cmd.Parameters.AddWithValue("@SupID", TempSup.SupID);
+                if (SelectedCustomerID != 0)
+                    cmd.Parameters.AddWithValue("@CustomerID", SelectedCustomerID);
+                else cmd.Parameters.AddWithValue("@CustomerID", DBNull.Value);
+                if (!string.IsNullOrEmpty(TempSup.SupName))
+                    cmd.Parameters.AddWithValue("@SupName", TempSup.SupName);
+                else cmd.Parameters.AddWithValue("@SupName", DBNull.Value);
+                if (!string.IsNullOrEmpty(TempSup.SupPhone))
+                    cmd.Parameters.AddWithValue("@SupPhone", TempSup.SupPhone);
+                else cmd.Parameters.AddWithValue("@SupPhone", DBNull.Value);
+                if (!string.IsNullOrEmpty(TempSup.SupCellPhone))
+                    cmd.Parameters.AddWithValue("@SupCell", TempSup.SupCellPhone);
+                else cmd.Parameters.AddWithValue("@SupCell", DBNull.Value);
+                if (!string.IsNullOrEmpty(TempSup.SupEmail))
+                    cmd.Parameters.AddWithValue("@SupEmail", TempSup.SupEmail);
+                else cmd.Parameters.AddWithValue("@SupEmail", DBNull.Value);
+                cmd.Parameters.AddWithValue("@Active", TempSup.Active);
+
+                try
+                {
+                    int rowsAffected = cmd.ExecuteNonQuery();
+                }
+                catch (SqlException e)
+                {
+                    Console.WriteLine(e);
+                }
+            }
+        }
+
+        public void CreateCustPM()
+        {
+            sqlquery = "INSERT INTO tblProjectManagers(Customer_ID, PM_Name, PM_Phone, PM_CellPhone, PM_Email, Active) OUTPUT INSERTED.PM_ID VALUES (@CustomerID, @PmName, @PmPhone, @PmCell, @PmEmail, @Active)";
+
+            using (cmd = new SqlCommand(sqlquery, dbConnection.Connection))
+            {
+                if (SelectedCustomerID != 0)
+                    cmd.Parameters.AddWithValue("@CustomerID", SelectedCustomerID);
+                else cmd.Parameters.AddWithValue("@CustomerID", DBNull.Value);
+                if (!string.IsNullOrEmpty(TempPM.PMName))
+                    cmd.Parameters.AddWithValue("@PmName", TempPM.PMName);
+                else cmd.Parameters.AddWithValue("@PmName", DBNull.Value);
+                if (!string.IsNullOrEmpty(TempPM.PMPhone))
+                    cmd.Parameters.AddWithValue("@PmPhone", TempPM.PMPhone);
+                else cmd.Parameters.AddWithValue("@PmPhone", DBNull.Value);
+                if (!string.IsNullOrEmpty(TempPM.PMCellPhone))
+                    cmd.Parameters.AddWithValue("@PmCell", TempPM.PMCellPhone);
+                else cmd.Parameters.AddWithValue("@PmCell", DBNull.Value);
+                if (!string.IsNullOrEmpty(TempPM.PMEmail))
+                    cmd.Parameters.AddWithValue("@PmEmail", TempPM.PMEmail);
+                else cmd.Parameters.AddWithValue("@PmEmail", DBNull.Value);
+                cmd.Parameters.AddWithValue("@Active", TempPM.Active);
+
+                try
+                {
+                    int insertedPMId = (int)cmd.ExecuteScalar();
+                    SelectedCustPmID = insertedPMId;
+                    TempPM.ID = insertedPMId;
+                    int totalCount = CustPMs.Count;
+                    CurrentIndex = totalCount - 2;
+                    ActionSubState = "UpdateRow";
+                    CustPMs[totalCount - 2] = TempPM;
+                }
+                catch (SqlException e)
+                {
+                    Console.WriteLine(e);
+                }
+            }
+        }
+
+        public void UpdateCustPM()
+        {
+            sqlquery = "UPDATE tblProjectManagers SET Customer_ID=@CustomerID, PM_Name=@PmName, PM_Phone=@PmPhone, PM_CellPhone=@PmCell, PM_Email=@PmEmail, Active=@Active WHERE PM_ID=@PmID";
+            using (cmd = new SqlCommand(sqlquery, dbConnection.Connection))
+            {
+                cmd.Parameters.AddWithValue("@PmID", TempPM.ID);
+                if (SelectedCustomerID != 0)
+                    cmd.Parameters.AddWithValue("@CustomerID", SelectedCustomerID);
+                else cmd.Parameters.AddWithValue("@CustomerID", DBNull.Value);
+                if (!string.IsNullOrEmpty(TempPM.PMName))
+                    cmd.Parameters.AddWithValue("@PmName", TempPM.PMName);
+                else cmd.Parameters.AddWithValue("@PmName", DBNull.Value);
+                if (!string.IsNullOrEmpty(TempPM.PMPhone))
+                    cmd.Parameters.AddWithValue("@PmPhone", TempPM.PMPhone);
+                else cmd.Parameters.AddWithValue("@PmPhone", DBNull.Value);
+                if (!string.IsNullOrEmpty(TempPM.PMCellPhone))
+                    cmd.Parameters.AddWithValue("@PmCell", TempPM.PMCellPhone);
+                else cmd.Parameters.AddWithValue("@PmCell", DBNull.Value);
+                if (!string.IsNullOrEmpty(TempPM.PMEmail))
+                    cmd.Parameters.AddWithValue("@PmEmail", TempPM.PMEmail);
+                else cmd.Parameters.AddWithValue("@PmEmail", DBNull.Value);
+                cmd.Parameters.AddWithValue("@Active", TempPM.Active);
+
+                try
+                {
+                    int rowsAffected = cmd.ExecuteNonQuery();
+                }
+                catch (SqlException e)
+                {
+                    Console.WriteLine(e);
+                }
             }
         }
 
@@ -1289,80 +1204,84 @@ namespace WpfApp.ViewModel
             }
         }
 
-        private void UpdateNote()
+        public void UpdateNote()
         {
             sqlquery = "UPDATE tblNotes SET Notes_Note=@NotesNote, Notes_DateAdded=@NotesDateAdded, Notes_User=@NotesUser WHERE Notes_ID=@NotesID";
 
             using (cmd = new SqlCommand(sqlquery, dbConnection.Connection))
             {
-                if (!string.IsNullOrEmpty(CurrentNotesNote))
-                    cmd.Parameters.AddWithValue("@NotesNote", CurrentNotesNote);
+                if (!string.IsNullOrEmpty(TempNote.NotesNote))
+                    cmd.Parameters.AddWithValue("@NotesNote", TempNote.NotesNote);
                 else cmd.Parameters.AddWithValue("@NotesNote", DBNull.Value);
-                if (!CurrentNotesDateAdded.Equals(DateTime.MinValue))
-                    cmd.Parameters.AddWithValue("@NotesDateAdded", CurrentNotesDateAdded);
+                if (!TempNote.NotesDateAdded.Equals(DateTime.MinValue))
+                    cmd.Parameters.AddWithValue("@NotesDateAdded", TempNote.NotesDateAdded);
                 else cmd.Parameters.AddWithValue("@NotesDateAdded", DBNull.Value);
-                if (!string.IsNullOrEmpty(CurrnetNoteUser))
-                    cmd.Parameters.AddWithValue("@NotesUser", CurrnetNoteUser);
+                if (!string.IsNullOrEmpty(TempNote.NoteUser))
+                    cmd.Parameters.AddWithValue("@NotesUser", TempNote.NoteUser);
                 else cmd.Parameters.AddWithValue("@NotesUser", DBNull.Value);
-                if (CurrentNoteID != 0)
-                    cmd.Parameters.AddWithValue("@NotesID", CurrentNoteID);
+                if (TempNote.NoteID != 0)
+                    cmd.Parameters.AddWithValue("@NotesID", TempNote.NoteID);
                 else cmd.Parameters.AddWithValue("@NotesID", DBNull.Value);
             }
             int rowsAffected = cmd.ExecuteNonQuery();
         }
 
-        private void CreateNote()
+        public void CreateNote()
         {
             sqlquery = "INSERT INTO tblNotes(Notes_PK, Notes_PK_Desc, Notes_Note, Notes_DateAdded, Notes_User) OUTPUT INSERTED.Notes_ID VALUES (@NotesPK, @NotesDesc, @NotesNote, @NotesDateAdded, @NotesUser)";
-            string notesDesc = "";
             int notesPK = 0;
-            switch (CurrentNotesDesc)
+            ObservableCollection<Note> notes = new ObservableCollection<Note>();
+          
+            switch (TempNote.NotesPKDesc)
             {
                 case "Customer":
-                    notesDesc = "Customer";
                     notesPK = SelectedCustomerID;
+                    notes = CustomerNotes;
                     break;
                 case "ProjectManager":
-                    notesDesc = "ProjectManager";
                     notesPK = SelectedCustPmID;
+                    notes = CustPMNotes;
                     break;
                 case "Superintendent":
-                    notesDesc = "Superintendent";
                     notesPK = SelectedCustSupID;
+                    notes = CustSuptNotes;
                     break;
                 case "CustomerContact":
-                    notesDesc = "CustomerContact";
                     notesPK = SelectedCustSubmID;
+                    notes = CustSubmNotes;
                     break;
                 case "Manuf":
-                    notesDesc = "Manuf";
                     notesPK = SelectedManufID;
+                    notes = ManufNotes;
                     break;
-
             }
             using (cmd = new SqlCommand(sqlquery, dbConnection.Connection))
             {
                 if (notesPK != 0)
                     cmd.Parameters.AddWithValue("@NotesPK", notesPK);
                 else cmd.Parameters.AddWithValue("@NotesPK", DBNull.Value);
-                if (!string.IsNullOrEmpty(CurrentNotesDesc))
-                    cmd.Parameters.AddWithValue("@NotesDesc", notesDesc);
+                if (!string.IsNullOrEmpty(TempNote.NotesPKDesc))
+                    cmd.Parameters.AddWithValue("@NotesDesc", TempNote.NotesPKDesc);
                 else cmd.Parameters.AddWithValue("@NotesDesc", DBNull.Value);
-                if (!string.IsNullOrEmpty(CurrentNotesNote))
-                    cmd.Parameters.AddWithValue("@NotesNote", CurrentNotesNote);
+                if (!string.IsNullOrEmpty(TempNote.NotesNote))
+                    cmd.Parameters.AddWithValue("@NotesNote", TempNote.NotesNote);
                 else cmd.Parameters.AddWithValue("@NotesNote", DBNull.Value);
-                if (!CurrentNotesDateAdded.Equals(DateTime.MinValue))
-                    cmd.Parameters.AddWithValue("@NotesDateAdded", CurrentNotesDateAdded);
+                if (!TempNote.NotesDateAdded.Equals(DateTime.MinValue))
+                    cmd.Parameters.AddWithValue("@NotesDateAdded", TempNote.NotesDateAdded);
                 else cmd.Parameters.AddWithValue("@NotesDateAdded", DBNull.Value);
-                if (!string.IsNullOrEmpty(CurrnetNoteUser))
-                    cmd.Parameters.AddWithValue("@NotesUser", CurrnetNoteUser);
+                if (!string.IsNullOrEmpty(TempNote.NoteUser))
+                    cmd.Parameters.AddWithValue("@NotesUser", TempNote.NoteUser);
                 else cmd.Parameters.AddWithValue("@NotesUser", DBNull.Value);
 
                 try
                 {
                     int insertedNoteId = (int)cmd.ExecuteScalar();
                     CurrentNoteID = insertedNoteId;
-                    ActionNoteState = "UpdateNote";
+                    TempNote.NoteID = insertedNoteId;
+                    TempNote.NotePK = notesPK;
+
+                    notes[notes.Count - 2] = TempNote;
+                    ActionNoteState = "UpdateRow";
                 }
                 catch (SqlException e)
                 {
@@ -1392,12 +1311,12 @@ namespace WpfApp.ViewModel
                
                 for (int i = 0; i < Customers.Count - 1; i++)
                 {
-                    Customer _customer = Customers[i];
-                    if (_customer.ID == customerID)
-                    {
-                        Console.WriteLine("customerID->" + customerID);
-                        Customers[i] = _customer;
-                    }
+                   Customer _customer = Customers[i];
+                   if (_customer.ID == customerID)
+                   {
+                       Console.WriteLine("customerID->" + customerID);
+                       Customers[i] = _customer;
+                   }
                 }
 
                 using (cmd = new SqlCommand(sqlquery, dbConnection.Connection))
@@ -1503,7 +1422,7 @@ namespace WpfApp.ViewModel
             else
             {
                 if (!ActionCustState.Equals("Clear"))
-                    MessageBox.Show("Customer Full Name is required");
+                   MessageBox.Show("Customer Full Name is required");
             }
         }
 
@@ -1658,7 +1577,10 @@ namespace WpfApp.ViewModel
             DataRow firstRow = ds.Tables[0].Rows[0];
             SelectedCustomerID = customerID;
             ActionState = "UpdateRow";
+            ActionSubState = "";
+            ActionNoteState = "";
 
+            TempDetailCustomer.ID = int.Parse(firstRow["Customer_ID"].ToString());
             if (!firstRow.IsNull("Full_Name"))
                 TempDetailCustomer.FullName = firstRow["Full_Name"].ToString();
             if (!firstRow.IsNull("Short_Name"))
@@ -1689,8 +1611,7 @@ namespace WpfApp.ViewModel
                 TempDetailCustomer.Email = firstRow["Email"].ToString();
             else TempDetailCustomer.Email = "";
             TempDetailCustomer.Active = firstRow.Field<Boolean>("Active");
-            TempDetailCustomer.ID = int.Parse(firstRow["Customer_ID"].ToString());
-
+            
             sqlquery = "SELECT * FROM tblNotes WHERE Notes_PK_Desc='Customer' AND Notes_PK=" + customerID;
             cmd = new SqlCommand(sqlquery, dbConnection.Connection);
             sda = new SqlDataAdapter(cmd);
@@ -1735,6 +1656,56 @@ namespace WpfApp.ViewModel
             }
             st_customerNotes.Add(new Note());
             CustomerNotes = st_customerNotes;
+
+            // Project Managers for customers
+            sqlquery = "select * from tblProjectManagers WHERE Customer_ID=" + customerID;
+            cmd = new SqlCommand(sqlquery, dbConnection.Connection);
+            sda = new SqlDataAdapter(cmd);
+            ds = new DataSet();
+            sda.Fill(ds);
+
+            if (ds.Tables[0].Rows.Count > 0)
+            {
+                firstRow = ds.Tables[0].Rows[0];
+                SelectedCustPmID = int.Parse(firstRow["PM_ID"].ToString());
+            }
+            ObservableCollection<ProjectManager> st_pm = new ObservableCollection<ProjectManager>();
+            foreach (DataRow row in ds.Tables[0].Rows)
+            {
+                int _id = 0;
+                int _customerID = 0;
+                string _name = "";
+                string _phone = "";
+                string _cellPhone = "";
+                string _email = "";
+                bool _active = false;
+
+                if (!row.IsNull("PM_ID"))
+                    _id = int.Parse(row["PM_ID"].ToString());
+                if (!row.IsNull("Customer_ID"))
+                    _customerID = int.Parse(row["Customer_ID"].ToString());
+                if (!row.IsNull("PM_Name"))
+                    _name = row["PM_Name"].ToString();
+                if (!row.IsNull("PM_Phone"))
+                    _phone = row["PM_Phone"].ToString();
+                if (!row.IsNull("PM_CellPhone"))
+                    _cellPhone = row["PM_CellPhone"].ToString();
+                if (!row.IsNull("PM_Email"))
+                    _email = row["PM_Email"].ToString();
+                if (!row.IsNull("Active"))
+                    _active = row.Field<Boolean>("Active");
+                st_pm.Add(new ProjectManager
+                {
+                    ID = _id,
+                    PMName = _name,
+                    PMPhone = _phone,
+                    PMCellPhone = _cellPhone,
+                    PMEmail = _email,
+                    Active = _active
+                });
+            }
+            st_pm.Add(new ProjectManager());
+            CustPMs = st_pm;
 
             // Project Manager Notes
             sqlquery = "SELECT * FROM tblNotes INNER JOIN (SELECT * FROM tblProjectManagers WHERE Customer_ID = " + customerID + ") AS tblProjManager ON tblNotes.Notes_PK = tblProjManager.PM_ID WHERE Notes_PK_Desc = 'ProjectManager'";
@@ -1873,56 +1844,6 @@ namespace WpfApp.ViewModel
             }
             st_ccNotes.Add(new Note());
             CustSubmNotes = st_ccNotes;
-
-            // Project Managers for customers
-            sqlquery = "select * from tblProjectManagers WHERE Customer_ID=" + customerID;
-            cmd = new SqlCommand(sqlquery, dbConnection.Connection);
-            sda = new SqlDataAdapter(cmd);
-            ds = new DataSet();
-            sda.Fill(ds);
-
-            if (ds.Tables[0].Rows.Count > 0)
-            {
-                firstRow = ds.Tables[0].Rows[0];
-                SelectedCustPmID = int.Parse(firstRow["PM_ID"].ToString());
-            }
-            ObservableCollection<ProjectManager> st_pm = new ObservableCollection<ProjectManager>();
-            foreach (DataRow row in ds.Tables[0].Rows)
-            {
-                int _id = 0;
-                int _customerID = 0;
-                string _name = "";
-                string _phone = "";
-                string _cellPhone = "";
-                string _email = "";
-                bool _active = false;
-
-                if (!row.IsNull("PM_ID"))
-                    _id = int.Parse(row["PM_ID"].ToString());
-                if (!row.IsNull("Customer_ID"))
-                    _customerID = int.Parse(row["Customer_ID"].ToString());
-                if (!row.IsNull("PM_Name"))
-                    _name = row["PM_Name"].ToString();
-                if (!row.IsNull("PM_Phone"))
-                    _phone = row["PM_Phone"].ToString();
-                if (!row.IsNull("PM_CellPhone"))
-                    _cellPhone = row["PM_CellPhone"].ToString();
-                if (!row.IsNull("PM_Email"))
-                    _email = row["PM_Email"].ToString();
-                if (!row.IsNull("Active"))
-                    _active = row.Field<Boolean>("Active");
-                st_pm.Add(new ProjectManager
-                {
-                    ID = _id,
-                    PMName = _name,
-                    PMPhone = _phone,
-                    PMCellPhone = _cellPhone,
-                    PMEmail = _email,
-                    Active = _active
-                });
-            }
-            st_pm.Add(new ProjectManager());
-            CustPMs = st_pm;
 
             // Superintendents
             sqlquery = "SELECT * FROM tblSuperintendents WHERE Customer_ID=" + customerID;
@@ -2914,6 +2835,19 @@ namespace WpfApp.ViewModel
             }
         }
 
+        private string _actionSubState;
+
+        public string ActionSubState
+        {
+            get { return _actionSubState; }
+            set
+            {
+                _actionSubState = value;
+                OnPropertyChanged();
+
+            }
+        }
+
         private string _ActionManufName;
 
         public string ActionManufName
@@ -3011,52 +2945,6 @@ namespace WpfApp.ViewModel
             }
         }
 
-        private string _currentNotesNote;
-
-        public string CurrentNotesNote
-        {
-            get { return _currentNotesNote; }
-            set
-            {
-                _currentNotesNote = value;
-                OnPropertyChanged();
-                switch (ActionNoteState)
-                {
-                    case "CreateNote":
-                        CreateNote();
-                        break;
-                    case "UpdateNote":
-                        UpdateNote();
-                        break;
-                }
-            }
-        }
-
-        private DateTime _currentNotesDateAdded;
-
-        public DateTime CurrentNotesDateAdded
-        {
-            get { return _currentNotesDateAdded; }
-            set
-            {
-                _currentNotesDateAdded = value;
-                OnPropertyChanged();
-
-            }
-        }
-
-        private string _currnetNoteUser;
-
-        public string CurrnetNoteUser
-        {
-            get { return _currnetNoteUser; }
-            set
-            {
-                _currnetNoteUser = value;
-                OnPropertyChanged();
-            }
-        }
-
         private int _currnetNoteID;
 
         public int CurrnetNoteID
@@ -3066,356 +2954,6 @@ namespace WpfApp.ViewModel
             {
                 _currnetNoteID = value;
                 OnPropertyChanged();
-            }
-        }
-
-        private string _currentPmName;
-
-        public string CurrentPmName
-        {
-            get { return _currentPmName; }
-            set
-            {
-                _currentPmName = value;
-                OnPropertyChanged();
-                switch (ActionPmName)
-                {
-                    case "CreatePM":
-                        CreatePM();
-                        break;
-                    case "UpdatePM":
-                        UpdatePM();
-                        break;
-                }
-            }
-        }
-
-        private string _currentPmPhone;
-
-        public string CurrentPmPhone
-        {
-            get { return _currentPmPhone; }
-            set
-            {
-                _currentPmPhone = value;
-                OnPropertyChanged();
-                switch (ActionPmName)
-                {
-                    case "CreatePM":
-                        CreatePM();
-                        break;
-                    case "UpdatePM":
-                        UpdatePM();
-                        break;
-                }
-            }
-        }
-
-        private int _currentPmID;
-
-        public int CurrentPmID
-        {
-            get { return _currentPmID; }
-            set
-            {
-                _currentPmID = value;
-                OnPropertyChanged();
-            }
-        }
-
-        private string _currentPmCell;
-
-        public string CurrentPmCell
-        {
-            get { return _currentPmCell; }
-            set
-            {
-                _currentPmCell = value;
-                OnPropertyChanged();
-                switch (ActionPmName)
-                {
-                    case "CreatePM":
-                        CreatePM();
-                        break;
-                    case "UpdatePM":
-                        UpdatePM();
-                        break;
-                }
-            }
-        }
-
-        private bool _currentPmActive;
-
-        public bool CurrentPmActive
-        {
-            get { return _currentPmActive; }
-            set
-            {
-                _currentPmActive = value;
-                OnPropertyChanged();
-                switch (ActionPmName)
-                {
-                    case "CreatePM":
-                        CreatePM();
-                        break;
-                    case "UpdatePM":
-                        UpdatePM();
-                        break;
-                }
-            }
-        }
-
-        private string _currentPmEmail;
-
-        public string CurrentPmEmail
-        {
-            get { return _currentPmEmail; }
-            set
-            {
-                _currentPmEmail = value;
-                OnPropertyChanged();
-                switch (ActionPmName)
-                {
-                    case "CreatePM":
-                        CreatePM();
-                        break;
-                    case "UpdatePM":
-                        UpdatePM();
-                        break;
-                }
-            }
-        }
-
-        private string _currentSupName;
-
-        public string CurrentSupName
-        {
-            get { return _currentSupName; }
-            set
-            {
-                _currentSupName = value;
-                OnPropertyChanged();
-                switch (ActionSupName)
-                {
-                    case "CreateSup":
-                        CreateSup();
-                        break;
-                    case "UpdateSup":
-                        UpdateSup();
-                        break;
-                }
-            }
-        }
-
-        private string _currentSupPhone;
-
-        public string CurrentSupPhone
-        {
-            get { return _currentSupPhone; }
-            set
-            {
-                _currentSupPhone = value;
-                OnPropertyChanged();
-                switch (ActionSupName)
-                {
-                    case "CreateSup":
-                        CreateSup();
-                        break;
-                    case "UpdateSup":
-                        UpdateSup();
-                        break;
-                }
-            }
-        }
-
-        private string _currentSupCell;
-
-        public string CurrentSupCell
-        {
-            get { return _currentSupCell; }
-            set
-            {
-                _currentSupCell = value;
-                OnPropertyChanged();
-                switch (ActionSupName)
-                {
-                    case "CreateSup":
-                        CreateSup();
-                        break;
-                    case "UpdateSup":
-                        UpdateSup();
-                        break;
-                }
-            }
-        }
-
-        private string _currentSupEmail;
-
-        public string CurrentSupEmail
-        {
-            get { return _currentSupEmail; }
-            set
-            {
-                _currentSupEmail = value;
-                OnPropertyChanged();
-                switch (ActionSupName)
-                {
-                    case "CreateSup":
-                        CreateSup();
-                        break;
-                    case "UpdateSup":
-                        UpdateSup();
-                        break;
-                }
-            }
-        }
-
-        private bool _currentSupActive;
-
-        public bool CurrentSupActive
-        {
-            get { return _currentSupActive; }
-            set
-            {
-                _currentSupActive = value;
-                OnPropertyChanged();
-                switch (ActionSupName)
-                {
-                    case "CreateSup":
-                        CreateSup();
-                        break;
-                    case "UpdateSup":
-                        UpdateSup();
-                        break;
-                }
-            }
-        }
-
-        private int _currentSupID;
-
-        public int CurrentSupID
-        {
-            get { return _currentSupID; }
-            set
-            {
-                _currentSupID = value;
-                OnPropertyChanged();
-            }
-        }
-
-        private string _currentSubmName;
-
-        public string CurrentSubmName
-        {
-            get { return _currentSubmName; }
-            set
-            {
-                _currentSubmName = value;
-                OnPropertyChanged();
-                switch (ActionSubmName)
-                {
-                    case "CreateSubm":
-                        CreateSubm();
-                        break;
-                    case "UpdateSubm":
-                        UpdateSubm();
-                        break;
-                }
-            }
-        }
-
-        private string _currentSubmPhone;
-
-        public string CurrentSubmPhone
-        {
-            get { return _currentSubmPhone; }
-            set
-            {
-                _currentSubmPhone = value;
-                OnPropertyChanged();
-                switch (ActionSubmName)
-                {
-                    case "CreateSubm":
-                        CreateSubm();
-                        break;
-                    case "UpdateSubm":
-                        UpdateSubm();
-                        break;
-                }
-            }
-        }
-
-        private string _currentSubmCell;
-
-        public string CurrentSubmCell
-        {
-            get { return _currentSubmCell; }
-            set
-            {
-                _currentSubmCell = value;
-                OnPropertyChanged();
-                switch (ActionSubmName)
-                {
-                    case "CreateSubm":
-                        CreateSubm();
-                        break;
-                    case "UpdateSubm":
-                        UpdateSubm();
-                        break;
-                }
-            }
-        }
-
-        private string _currentSubmEmail;
-
-        public string CurrentSubmEmail
-        {
-            get { return _currentSubmEmail; }
-            set
-            {
-                _currentSubmEmail = value;
-                OnPropertyChanged();
-                switch (ActionSubmName)
-                {
-                    case "CreateSubm":
-                        CreateSubm();
-                        break;
-                    case "UpdateSubm":
-                        UpdateSubm();
-                        break;
-                }
-            }
-        }
-
-        private int _currentCCID;
-
-        public int CurrentCCID
-        {
-            get { return _currentCCID; }
-            set
-            {
-                _currentCCID = value;
-                OnPropertyChanged();
-            }
-        }
-        private bool _currentSubmActive;
-
-        public bool CurrentSubmActive
-        {
-            get { return _currentSubmActive; }
-            set
-            {
-                _currentSubmActive = value;
-                OnPropertyChanged();
-                switch (ActionSubmName)
-                {
-                    case "CreateSubm":
-                        CreateSubm();
-                        break;
-                    case "UpdateSubm":
-                        UpdateSubm();
-                        break;
-                }
             }
         }
 
@@ -3552,6 +3090,90 @@ namespace WpfApp.ViewModel
             set
             {
                 _tempMaterial = value;
+                OnPropertyChanged();
+            }
+        }
+
+        private ProjectManager _tempPM;
+
+        public ProjectManager TempPM
+        {
+            get { return _tempPM; }
+            set
+            {
+                _tempPM = value;
+                OnPropertyChanged();
+            }
+        }
+
+        private Note _tempNote;
+
+        public Note TempNote
+        {
+            get { return _tempNote; }
+            set
+            {
+                _tempNote = value;
+                OnPropertyChanged();
+            }
+        }
+
+        private Note _tempCustomerNote;
+
+        public Note TempCustomerNote
+        {
+            get { return _tempCustomerNote; }
+            set
+            {
+                _tempCustomerNote = value;
+                OnPropertyChanged();
+            }
+        }
+
+        private Note _tempSupNote;
+
+        public Note TempSupNote
+        {
+            get { return _tempSupNote; }
+            set
+            {
+                _tempSupNote = value;
+                OnPropertyChanged();
+            }
+        }
+
+        private Note _tempSubmNote;
+
+        public Note TempSubmNote
+        {
+            get { return _tempSubmNote; }
+            set
+            {
+                _tempSubmNote = value;
+                OnPropertyChanged();
+            }
+        }
+
+        private Superintendent _tempSup;
+
+        public Superintendent TempSup
+        {
+            get { return _tempSup; }
+            set
+            {
+                _tempSup = value;
+                OnPropertyChanged();
+            }
+        }
+
+        private CustomerContact _tempCC;
+
+        public CustomerContact TempCC
+        {
+            get { return _tempCC; }
+            set
+            {
+                _tempCC = value;
                 OnPropertyChanged();
             }
         }

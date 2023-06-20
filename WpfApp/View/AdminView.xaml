@@ -238,10 +238,9 @@
                                                                         </Grid.ColumnDefinitions>
                                                                         <TextBlock Text="{Binding NotesDateAdded , Mode=TwoWay}" />
                                                                         <TextBlock Grid.Column="1" Text="{Binding NoteUserName, Mode=TwoWay}" HorizontalAlignment="Right" />
-                                                                        <TextBlock Grid.Column="1" Text="{Binding NoteID, Mode=TwoWay}" Visibility="Hidden" />
                                                                     </Grid>
                                                                     <Grid Grid.Row="1">
-                                                                        <TextBox Text="{Binding NotesNote, Mode=TwoWay}" AcceptsReturn="True" ScrollViewer.VerticalScrollBarVisibility="Auto" Height="40" PreviewKeyUp="CustomerNote_PreviewKeyUp" />
+                                                                        <TextBox Text="{Binding NotesNote, Mode=TwoWay}" AcceptsReturn="True" ScrollViewer.VerticalScrollBarVisibility="Auto" Height="40" PreviewKeyUp="Note_PreviewKeyUp" Tag="Customer" />
                                                                     </Grid>
                                                                 </Grid>
                                                             </Grid>
@@ -289,7 +288,7 @@
                                                 <RowDefinition Height="1*" />
                                             </Grid.RowDefinitions>
                                             <Grid Margin="10">
-                                                <DataGrid ItemsSource="{Binding CustPMs, Mode=TwoWay}" GridLinesVisibility="None" AutoGenerateColumns="False" HeadersVisibility="Column" BorderThickness="1" Background="White" CanUserAddRows="False" SelectedIndex="{Binding SelectedPMRowIndex, Mode=TwoWay}">
+                                                <DataGrid ItemsSource="{Binding CustPMs, Mode=TwoWay}" GridLinesVisibility="None" AutoGenerateColumns="False" HeadersVisibility="Column" BorderThickness="1" Background="White" CanUserAddRows="False">
                                                     <DataGrid.Resources>
                                                         <Style TargetType="DataGridColumnHeader" BasedOn="{StaticResource GridColumnHeaderBase}">
                                                             <Setter Property="Background" Value="#5C83B4" />
@@ -315,10 +314,7 @@
                                                             </DataGridTemplateColumn.Header>
                                                             <DataGridTemplateColumn.CellTemplate>
                                                                 <DataTemplate>
-                                                                    <Grid>
                                                                     <TextBox Text="{Binding PMName, Mode=TwoWay}" KeyUp="CustPM_PreviewKeyUp" Tag="PmName" />
-                                                                    <TextBlock Visibility="Hidden" Text="{Binding ID, Mode=TwoWay}" />
-                                                                    </Grid>
                                                                 </DataTemplate>
                                                             </DataGridTemplateColumn.CellTemplate>
                                                         </DataGridTemplateColumn>
@@ -328,10 +324,7 @@
                                                             </DataGridTemplateColumn.Header>
                                                             <DataGridTemplateColumn.CellTemplate>
                                                                 <DataTemplate>
-                                                                    <Grid>
-                                                                        <TextBox Text="{Binding PMPhone, Mode=TwoWay}" KeyUp="CustPM_PreviewKeyUp" Tag="PmPhone" />
-                                                                    <TextBlock Visibility="Hidden" Text="{Binding ID, Mode=TwoWay}" />
-                                                                    </Grid>
+                                                                   <TextBox Text="{Binding PMPhone, Mode=TwoWay}" KeyUp="CustPM_PreviewKeyUp" Tag="PmPhone" />
                                                                 </DataTemplate>
                                                             </DataGridTemplateColumn.CellTemplate>
                                                         </DataGridTemplateColumn>
@@ -341,10 +334,7 @@
                                                             </DataGridTemplateColumn.Header>
                                                             <DataGridTemplateColumn.CellTemplate>
                                                                 <DataTemplate>
-                                                                    <Grid>
-                                                                        <TextBox Text="{Binding PMCellPhone, Mode=TwoWay}" KeyUp="CustPM_PreviewKeyUp" Tag="PmCell" />
-                                                                    <TextBlock Visibility="Hidden" Text="{Binding ID, Mode=TwoWay}" />
-                                                                    </Grid>
+                                                                     <TextBox Text="{Binding PMCellPhone, Mode=TwoWay}" KeyUp="CustPM_PreviewKeyUp" Tag="PmCell" />
                                                                 </DataTemplate>
                                                             </DataGridTemplateColumn.CellTemplate>
                                                         </DataGridTemplateColumn>
@@ -354,10 +344,7 @@
                                                             </DataGridTemplateColumn.Header>
                                                             <DataGridTemplateColumn.CellTemplate>
                                                                 <DataTemplate>
-                                                                    <Grid>
-                                                                        <CheckBox IsChecked="{Binding Active, Mode=TwoWay}" Checked="CustPM_ChkPreviewKeyUp" Unchecked="CustPM_ChkPreviewKeyUp" />
-                                                                    <TextBlock Visibility="Hidden" Text="{Binding ID, Mode=TwoWay}" />
-                                                                    </Grid>
+                                                                    <CheckBox IsChecked="{Binding Active, Mode=TwoWay}" Checked="CustPMActive_CheckBox" Unchecked="CustPMActive_CheckBox" />
                                                                 </DataTemplate>
                                                             </DataGridTemplateColumn.CellTemplate>
                                                         </DataGridTemplateColumn>
@@ -367,10 +354,7 @@
                                                             </DataGridTemplateColumn.Header>
                                                             <DataGridTemplateColumn.CellTemplate>
                                                                 <DataTemplate>
-                                                                    <Grid>
-                                                                        <TextBox Text="{Binding PMEmail, Mode=TwoWay}" KeyUp="CustPM_PreviewKeyUp" Tag="PmEmail" />
-                                                                        <TextBlock Visibility="Hidden" Text="{Binding ID, Mode=TwoWay}" />
-                                                                    </Grid>
+                                                                    <TextBox Text="{Binding PMEmail, Mode=TwoWay}" KeyUp="CustPM_PreviewKeyUp" Tag="PmEmail" />
                                                                 </DataTemplate>
                                                             </DataGridTemplateColumn.CellTemplate>
                                                         </DataGridTemplateColumn>
@@ -385,7 +369,7 @@
                                                 </Grid.ColumnDefinitions>
                                                 <Label Content="Notes:" />
                                                 <Grid Grid.Column="1" Background="#F5FFAF">
-                                                    <DataGrid Margin="4,0" Padding="10" Grid.Column="1" ItemsSource="{Binding CustPMNotes, Mode=TwoWay}" GridLinesVisibility="None" AutoGenerateColumns="False" HeadersVisibility="None" BorderThickness="0" Background="#F5FFAF" CanUserAddRows="False" SelectedIndex="{Binding SelectedPMNoteRowIndex, Mode=TwoWay}">
+                                                    <DataGrid Name="PM" Margin="4,0" Padding="10" Grid.Column="1" ItemsSource="{Binding CustPMNotes, Mode=TwoWay}" GridLinesVisibility="None" AutoGenerateColumns="False" HeadersVisibility="None" BorderThickness="0" Background="#F5FFAF" CanUserAddRows="False">
                                                         <DataGrid.Resources>
                                                             <Style TargetType="DataGridColumnHeader" BasedOn="{StaticResource GridColumnHeaderBase}">
                                                                 <Setter Property="Background" Value="#4BACC6" />
@@ -419,10 +403,9 @@
                                                                                     </Grid.ColumnDefinitions>
                                                                                     <TextBlock Text="{Binding NotesDateAdded , Mode=TwoWay}" />
                                                                                     <TextBlock Grid.Column="1" Text="{Binding NoteUserName, Mode=TwoWay}" HorizontalAlignment="Right" />
-                                                                                    <TextBlock Grid.Column="1" Text="{Binding NoteID, Mode=TwoWay}" Visibility="Hidden" />
                                                                                 </Grid>
                                                                                 <Grid Grid.Row="1">
-                                                                                    <TextBox Text="{Binding NotesNote, Mode=TwoWay}" AcceptsReturn="True" ScrollViewer.VerticalScrollBarVisibility="Auto" Height="40" PreviewKeyUp="PMNote_PreviewKeyUp"/>
+                                                                                    <TextBox Text="{Binding NotesNote, Mode=TwoWay}" AcceptsReturn="True" ScrollViewer.VerticalScrollBarVisibility="Auto" Height="40" PreviewKeyUp="Note_PreviewKeyUp" Tag="ProjectManager" />
                                                                                 </Grid>
                                                                             </Grid>
                                                                         </Grid>
@@ -451,7 +434,6 @@
                                                         <Style TargetType="DataGridCell">
                                                             <Setter Property="Padding" Value="10,0" />
                                                             <Setter Property="Margin" Value="10,0" />
-                                                            <!--<Setter Property="BorderThickness" Value="0,0,0,1" />-->
                                                         </Style>
                                                         <Style TargetType="TextBox">
                                                             <Setter Property="BorderThickness" Value="0,0,0,1" />
@@ -468,10 +450,7 @@
                                                             </DataGridTemplateColumn.Header>
                                                             <DataGridTemplateColumn.CellTemplate>
                                                                 <DataTemplate>
-                                                                    <Grid>
                                                                     <TextBox Text="{Binding SupName}" KeyUp="CustSupt_PreviewKeyUp" Tag="SupName" />
-                                                                        <TextBlock Visibility="Hidden" Text="{Binding SupID, Mode=TwoWay}" />
-                                                                    </Grid>
                                                                 </DataTemplate>
                                                             </DataGridTemplateColumn.CellTemplate>
                                                         </DataGridTemplateColumn>
@@ -481,10 +460,7 @@
                                                             </DataGridTemplateColumn.Header>
                                                             <DataGridTemplateColumn.CellTemplate>
                                                                 <DataTemplate>
-                                                                    <Grid>
                                                                     <TextBox Text="{Binding SupPhone}" PreviewKeyUp="CustSupt_PreviewKeyUp" Tag="SupPhone" />
-                                                                    <TextBlock Visibility="Hidden" Text="{Binding SupID, Mode=TwoWay}" />
-                                                                    </Grid>
                                                                 </DataTemplate>
                                                             </DataGridTemplateColumn.CellTemplate>
                                                         </DataGridTemplateColumn>
@@ -494,10 +470,7 @@
                                                             </DataGridTemplateColumn.Header>
                                                             <DataGridTemplateColumn.CellTemplate>
                                                                 <DataTemplate>
-                                                                    <Grid>
                                                                     <TextBox Text="{Binding SupCellPhone}" PreviewKeyUp="CustSupt_PreviewKeyUp" Tag="SupCell" />
-                                                                    <TextBlock Visibility="Hidden" Text="{Binding SupID, Mode=TwoWay}" />
-                                                                    </Grid>
                                                                 </DataTemplate>
                                                             </DataGridTemplateColumn.CellTemplate>
                                                         </DataGridTemplateColumn>
@@ -507,10 +480,7 @@
                                                             </DataGridTemplateColumn.Header>
                                                             <DataGridTemplateColumn.CellTemplate>
                                                                 <DataTemplate>
-                                                                    <Grid>
-                                                                    <CheckBox IsChecked="{Binding Active}" Checked="CustSupt_ChkPreviewKeyUp" Unchecked="CustSupt_ChkPreviewKeyUp" />
-                                                                    <TextBlock Visibility="Hidden" Text="{Binding SupID, Mode=TwoWay}" />
-                                                                    </Grid>
+                                                                    <CheckBox IsChecked="{Binding Active}" Checked="CustSupActive_CheckBox" Unchecked="CustSupActive_CheckBox" />
                                                                 </DataTemplate>
                                                             </DataGridTemplateColumn.CellTemplate>
                                                         </DataGridTemplateColumn>
@@ -520,10 +490,7 @@
                                                             </DataGridTemplateColumn.Header>
                                                             <DataGridTemplateColumn.CellTemplate>
                                                                 <DataTemplate>
-                                                                    <Grid>
                                                                     <TextBox Text="{Binding SupEmail}" PreviewKeyUp="CustSupt_PreviewKeyUp" Tag="SupEmail" />
-                                                                    <TextBlock Visibility="Hidden" Text="{Binding SupID, Mode=TwoWay}" />
-                                                                    </Grid>
                                                                 </DataTemplate>
                                                             </DataGridTemplateColumn.CellTemplate>
                                                         </DataGridTemplateColumn>
@@ -538,7 +505,7 @@
                                                 </Grid.ColumnDefinitions>
                                                 <Label Content="Notes:" />
                                                 <Grid Grid.Column="1" Background="#F5FFAF">
-                                                    <DataGrid Margin="4,0" Padding="10" Grid.Column="1" ItemsSource="{Binding CustSuptNotes, Mode=TwoWay}" GridLinesVisibility="None" AutoGenerateColumns="False" HeadersVisibility="None" BorderThickness="0" Background="#F5FFAF" CanUserAddRows="False" SelectedIndex="{Binding SelectedSuptNoteRowIndex, Mode=TwoWay}">
+                                                    <DataGrid Name="Sup" Margin="4,0" Padding="10" Grid.Column="1" ItemsSource="{Binding CustSuptNotes, Mode=TwoWay}" GridLinesVisibility="None" AutoGenerateColumns="False" HeadersVisibility="None" BorderThickness="0" Background="#F5FFAF" CanUserAddRows="False" SelectedIndex="{Binding SelectedSuptNoteRowIndex, Mode=TwoWay}">
                                                         <DataGrid.Resources>
                                                             <Style TargetType="DataGridColumnHeader" BasedOn="{StaticResource GridColumnHeaderBase}">
                                                                 <Setter Property="Background" Value="#4BACC6" />
@@ -572,10 +539,9 @@
                                                                                     </Grid.ColumnDefinitions>
                                                                                     <TextBlock Text="{Binding NotesDateAdded , Mode=TwoWay}" />
                                                                                     <TextBlock Grid.Column="1" Text="{Binding NoteUserName, Mode=TwoWay}" HorizontalAlignment="Right" />
-                                                                                    <TextBlock Grid.Column="1" Text="{Binding NoteID, Mode=TwoWay}" Visibility="Hidden" />
                                                                                 </Grid>
                                                                                 <Grid Grid.Row="1">
-                                                                                    <TextBox Text="{Binding NotesNote, Mode=TwoWay}" AcceptsReturn="True" ScrollViewer.VerticalScrollBarVisibility="Auto" Height="40" PreviewKeyUp="SuptNote_PreviewKeyUp"/>
+                                                                                    <TextBox Text="{Binding NotesNote, Mode=TwoWay}" AcceptsReturn="True" ScrollViewer.VerticalScrollBarVisibility="Auto" Height="40" PreviewKeyUp="Note_PreviewKeyUp" Tag="Superintendent"/>
                                                                                 </Grid>
                                                                             </Grid>
                                                                         </Grid>
@@ -621,10 +587,7 @@
                                                             </DataGridTemplateColumn.Header>
                                                             <DataGridTemplateColumn.CellTemplate>
                                                                 <DataTemplate>
-                                                                    <Grid>
                                                                         <TextBox Text="{Binding CCName}" PreviewKeyUp="CustContact_PreviewKeyUp" Tag="SubmName" />
-                                                                        <TextBlock Visibility="Hidden" Text="{Binding ID, Mode=TwoWay}" />
-                                                                    </Grid>
                                                                 </DataTemplate>
                                                             </DataGridTemplateColumn.CellTemplate>
                                                         </DataGridTemplateColumn>
@@ -634,10 +597,7 @@
                                                             </DataGridTemplateColumn.Header>
                                                             <DataGridTemplateColumn.CellTemplate>
                                                                 <DataTemplate>
-                                                                    <Grid>
                                                                     <TextBox Text="{Binding CCPhone}" PreviewKeyUp="CustContact_PreviewKeyUp" Tag="SubmPhone" />
-                                                                    <TextBlock Visibility="Hidden" Text="{Binding ID, Mode=TwoWay}" />
-                                                                    </Grid>
                                                                 </DataTemplate>
                                                             </DataGridTemplateColumn.CellTemplate>
                                                         </DataGridTemplateColumn>
@@ -647,10 +607,7 @@
                                                             </DataGridTemplateColumn.Header>
                                                             <DataGridTemplateColumn.CellTemplate>
                                                                 <DataTemplate>
-                                                                    <Grid>
                                                                     <TextBox Text="{Binding CCCell}" PreviewKeyUp="CustContact_PreviewKeyUp" Tag="SubmCell" />
-                                                                    <TextBlock Visibility="Hidden" Text="{Binding ID, Mode=TwoWay}" />
-                                                                    </Grid>
                                                                 </DataTemplate>
                                                             </DataGridTemplateColumn.CellTemplate>
                                                         </DataGridTemplateColumn>
@@ -660,10 +617,7 @@
                                                             </DataGridTemplateColumn.Header>
                                                             <DataGridTemplateColumn.CellTemplate>
                                                                 <DataTemplate>
-                                                                    <Grid>
-                                                                    <CheckBox IsChecked="{Binding CCActive}" Checked="CustContact_ChkPreviewKeyUp" Unchecked="CustContact_ChkPreviewKeyUp" />
-                                                                    <TextBlock Visibility="Hidden" Text="{Binding ID, Mode=TwoWay}" />
-                                                                    </Grid>
+                                                                    <CheckBox IsChecked="{Binding CCActive}" Checked="CustCCActive_CheckBox" Unchecked="CustCCActive_CheckBox" />
                                                                 </DataTemplate>
                                                             </DataGridTemplateColumn.CellTemplate>
                                                         </DataGridTemplateColumn>
@@ -673,10 +627,7 @@
                                                             </DataGridTemplateColumn.Header>
                                                             <DataGridTemplateColumn.CellTemplate>
                                                                 <DataTemplate>
-                                                                    <Grid>
                                                                     <TextBox Text="{Binding CCEmail}" PreviewKeyUp="CustContact_PreviewKeyUp" Tag="SubmEmail" />
-                                                                    <TextBlock Visibility="Hidden" Text="{Binding ID, Mode=TwoWay}" />
-                                                                    </Grid>
                                                                 </DataTemplate>
                                                             </DataGridTemplateColumn.CellTemplate>
                                                         </DataGridTemplateColumn>
@@ -691,7 +642,7 @@
                                                 </Grid.ColumnDefinitions>
                                                 <Label Content="Notes:" />
                                                 <Grid Grid.Column="1" Background="#F5FFAF">
-                                                    <DataGrid Margin="4,0" Padding="10" Grid.Column="1" ItemsSource="{Binding CustSubmNotes, Mode=TwoWay}" GridLinesVisibility="None" AutoGenerateColumns="False" HeadersVisibility="None" BorderThickness="0" Background="#F5FFAF" CanUserAddRows="False" SelectedIndex="{Binding SelectedSubmNoteRowIndex, Mode=TwoWay}">
+                                                    <DataGrid Name="Subm" Margin="4,0" Padding="10" Grid.Column="1" ItemsSource="{Binding CustSubmNotes, Mode=TwoWay}" GridLinesVisibility="None" AutoGenerateColumns="False" HeadersVisibility="None" BorderThickness="0" Background="#F5FFAF" CanUserAddRows="False" SelectedIndex="{Binding SelectedSubmNoteRowIndex, Mode=TwoWay}">
                                                         <DataGrid.Resources>
                                                             <Style TargetType="DataGridColumnHeader" BasedOn="{StaticResource GridColumnHeaderBase}">
                                                                 <Setter Property="Background" Value="#4BACC6" />
@@ -728,7 +679,7 @@
                                                                                     <TextBlock Grid.Column="1" Text="{Binding NoteID, Mode=TwoWay}" Visibility="Hidden" />
                                                                                 </Grid>
                                                                                 <Grid Grid.Row="1">
-                                                                                    <TextBox Text="{Binding NotesNote, Mode=TwoWay}" AcceptsReturn="True" ScrollViewer.VerticalScrollBarVisibility="Auto" Height="40" PreviewKeyUp="SubmNote_PreviewKeyUp"/>
+                                                                                    <TextBox Text="{Binding NotesNote, Mode=TwoWay}" AcceptsReturn="True" ScrollViewer.VerticalScrollBarVisibility="Auto" Height="40" PreviewKeyUp="Note_PreviewKeyUp" Tag="CustomerContact"/>
                                                                                 </Grid>
                                                                             </Grid>
                                                                         </Grid>
@@ -1026,7 +977,7 @@
                                                                 <TextBlock Grid.Column="1" Text="{Binding NoteID, Mode=TwoWay}" Visibility="Hidden" />
                                                             </Grid>
                                                             <Grid Grid.Row="1">
-                                                                <TextBox Text="{Binding NotesNote, Mode=TwoWay}" AcceptsReturn="True" ScrollViewer.VerticalScrollBarVisibility="Auto" Height="40" PreviewKeyUp="ManufNote_PreviewKeyUp"/>
+                                                                <TextBox Text="{Binding NotesNote, Mode=TwoWay}" AcceptsReturn="True" ScrollViewer.VerticalScrollBarVisibility="Auto" Height="40" PreviewKeyUp="Note_PreviewKeyUp" Tag="Manuf"/>
                                                             </Grid>
                                                         </Grid>
                                                     </Grid>
