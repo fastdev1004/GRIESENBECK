@@ -696,7 +696,7 @@
                             </Grid>
                         </Grid>
                         <Grid Grid.Row="1">
-                            <DataGrid GridLinesVisibility="None" ItemsSource="{Binding Customers, Mode=TwoWay}" AutoGenerateColumns="False" CanUserResizeColumns="False"  HeadersVisibility="Column" SelectedIndex="{Binding SelectedCustRowIndex, Mode=TwoWay}" CanUserAddRows="False">
+                            <DataGrid GridLinesVisibility="None" ItemsSource="{Binding Customers, Mode=TwoWay}" AutoGenerateColumns="False" CanUserResizeColumns="False"  HeadersVisibility="Column" CanUserAddRows="False">
                                 <DataGrid.Resources>
                                     <Style TargetType="DataGridColumnHeader" BasedOn="{StaticResource GridColumnHeaderBase}">
                                         <Setter Property="Background" Value="#648278" />
@@ -1369,7 +1369,7 @@
                                 <DataGridTemplateColumn Width="1.5*" Header="Certification Date">
                                     <DataGridTemplateColumn.CellTemplate>
                                         <DataTemplate>
-                                            <DatePicker SelectedDate="{Binding OSHAExpireDate, Mode=TwoWay}" Tag="CertificationDate" />
+                                            <DatePicker SelectedDate="{Binding OSHAExpireDate, Mode=TwoWay}" Tag="CertificationDate" SelectedDateChanged="InstallDate_DatePicker" />
                                         </DataTemplate>
                                     </DataGridTemplateColumn.CellTemplate>
                                 </DataGridTemplateColumn>
@@ -1390,7 +1390,7 @@
                                 <DataGridTemplateColumn Width="1.5*" Header="First Aid/CPR Date">
                                     <DataGridTemplateColumn.CellTemplate>
                                         <DataTemplate>
-                                            <DatePicker SelectedDate="{Binding FirstAidExpireDate, Mode=TwoWay}" Tag="FacDate" />
+                                            <DatePicker SelectedDate="{Binding FirstAidExpireDate, Mode=TwoWay}" Tag="FacDate" SelectedDateChanged="InstallDate_DatePicker" />
                                         </DataTemplate>
                                     </DataGridTemplateColumn.CellTemplate>
                                 </DataGridTemplateColumn>

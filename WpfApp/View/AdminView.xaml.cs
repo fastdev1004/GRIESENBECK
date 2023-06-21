@@ -578,20 +578,23 @@ namespace WpfApp.View
                     string itemName = textBox.Tag as string;
                     AdminVM.UpdateComponent = "Table";
 
-                    int selectedRowIndex = AdminVM.SelectedCustRowIndex;
-                    int selectedIndex = dataGrid.SelectedIndex;
-                    if (AdminVM.SelectedTempCustIndex == -1)
+                    int selectedRowIndex = dataGrid.SelectedIndex;
+                    int rowIndex = selectedRowIndex;
+
+                    if (AdminVM.ActionState.Equals("AddRow") || (AdminVM.ActionState.Equals("UpdateRow") && selectedRowIndex == -1))
                     {
-                        AdminVM.SelectedTempCustIndex = selectedRowIndex;
+                        rowIndex = AdminVM.SelectedCustomerIndex;
                     }
-                    else if (AdminVM.SelectedTempCustIndex != selectedRowIndex)
+                    else
                     {
-                        AdminVM.SelectedTempCustIndex = selectedRowIndex;
+                        rowIndex = selectedRowIndex;
+                        AdminVM.SelectedCustomerIndex = rowIndex;
                     }
-                    Customer item = dataGrid.Items[selectedRowIndex] as Customer;
+
+                    Customer item = dataGrid.Items[rowIndex] as Customer;
                   
                     AdminVM.TempCustomer = item;
-                    //AdminVM.Customers[selectedRowIndex] = AdminVM.TempCustomer;
+
                     switch (itemName)
                     {
                         case "ShortName":
@@ -622,7 +625,8 @@ namespace WpfApp.View
                             AdminVM.TempCustomer.Fax = textBox.Text;
                             break;
                     }
-
+                    AdminVM.Customers[rowIndex] = AdminVM.TempCustomer;
+                    AdminVM.ActionState = "UpdateRow";
                     AdminVM.UpdateCustomer();
                 }
             }
@@ -637,7 +641,7 @@ namespace WpfApp.View
             if (dataGrid != null)
             {
                 AdminVM.UpdateComponent = "Table";
-                int selectedRowIndex = AdminVM.SelectedCustRowIndex;
+                int selectedRowIndex = dataGrid.SelectedIndex;
                 if (AdminVM.SelectedTempCustIndex == -1)
                 {
                     AdminVM.SelectedTempCustIndex = selectedRowIndex;
@@ -1019,7 +1023,7 @@ namespace WpfApp.View
                             }
                             else
                             {
-                                Console.WriteLine("Labor Desc is existed.");
+                                //Console.WriteLine("Labor Desc is existed.");
                                 MessageBox.Show("Labor Desc is existed.");
                             }
 
@@ -1958,12 +1962,6 @@ namespace WpfApp.View
                             case "Email":
                                 AdminVM.TempInstaller.InstallerEmail = textBox.Text;
                                 break;
-                            case "CertificationDate":
-                                AdminVM.TempInstaller.OSHAExpireDate = DateTime.Parse(textBox.Text);
-                                break;
-                            case "FacDate":
-                                AdminVM.TempInstaller.FirstAidExpireDate = DateTime.Parse(textBox.Text);
-                                break;
                         }
                         AdminVM.CreateInstaller();
                     }
@@ -2461,6 +2459,75 @@ namespace WpfApp.View
 
             AdminVM.UpdateComponent = "Detail";
             AdminVM.UpdateCustomer();
+        }
+
+        private void InstallDate_DatePicker(object sender, SelectionChangedEventArgs e)
+        {
+            DatePicker datePicker = sender as DatePicker;
+            if (datePicker.SelectedDate.Equals(DateTime.MinValue))
+                datePicker.SelectedDate = DateTime.Today;
+            string tag = datePicker.Tag as string;
+            DateTime selectedDate = (DateTime)datePicker.SelectedDate;
+
+            DataGrid dataGrid = noteHelper.FindDataGrid(datePicker);
+            int selectedRowIndex = dataGrid.SelectedIndex;
+            int rowIndex = selectedRowIndex;
+
+            if (AdminVM.ActionState.Equals("AddRow") || (AdminVM.ActionState.Equals("UpdateRow") && selectedRowIndex == -1))
+            {
+                rowIndex = AdminVM.CurrentIndex;
+            }
+            else
+            {
+                rowIndex = selectedRowIndex;
+            }
+            if (rowIndex >= 0)
+            {
+                InHouseInstaller newRow = dataGrid.Items[rowIndex] as InHouseInstaller;
+                if (dataGrid != null)
+                {
+                    if (selectedRowIndex == dataGrid.Items.Count - 1)
+                    {
+                        ObservableCollection<InHouseInstaller> installers = AdminVM.Installers;
+                        InHouseInstaller item = new InHouseInstaller();
+                        installers.Add(item);
+                        AdminVM.ActionState = "AddRow";
+                        AdminVM.TempInstaller = new InHouseInstaller();
+
+                        switch (tag)
+                        {
+                            case "CertificationDate":
+                                AdminVM.TempInstaller.OSHAExpireDate = selectedDate;
+                                break;
+                            case "FacDate":
+                                AdminVM.TempInstaller.FirstAidExpireDate = selectedDate;
+                                break;
+                        }
+                        
+                        AdminVM.CreateInstaller();
+                    }
+                    else
+                    {
+                        InHouseInstaller _installer = dataGrid.Items[rowIndex] as InHouseInstaller;
+                        AdminVM.SelectedInstallerID = _installer.ID;
+                        AdminVM.TempInstaller = _installer;
+
+                        switch (tag)
+                        {
+                            case "CertificationDate":
+                                AdminVM.TempInstaller.OSHAExpireDate = selectedDate;
+                                break;
+                            case "FacDate":
+                                AdminVM.TempInstaller.FirstAidExpireDate = selectedDate;
+                                break;
+                        }
+
+                        AdminVM.ActionState = "UpdateRow";
+                        AdminVM.UpdateInstaller();
+                    }
+                    e.Handled = true;
+                }
+            }
         }
     }
 }

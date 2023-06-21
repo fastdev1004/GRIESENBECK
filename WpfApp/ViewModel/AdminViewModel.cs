@@ -64,13 +64,8 @@ namespace WpfApp.ViewModel
             TempInstaller = new InHouseInstaller();
             TempCreateCustomer = new Customer();
 
-            //TempCustomerNote = new Note();
-            //TempSubmNote = new Note();
-            //TempSupNote = new Note();
-            //TempPMNote = new Note();
             TempNote = new Note();
             SelectedTempCustIndex = 0;
-            SelectedCustRowIndex = -1;
             ActionCustState = "Clear";
             ActionManufState = "ClearManuf";
             ActionCustName = "CreateCustomer";
@@ -1308,17 +1303,19 @@ namespace WpfApp.ViewModel
             if (!string.IsNullOrEmpty(fullName))
             {
                 sqlquery = "UPDATE tblCustomers SET Short_Name=@ShortName, Full_Name=@FullName, PO_Box=@PoNumber, Address=@Address, City=@City, State=@State, ZIP=@Zip, Phone=@Phone, FAX=@Fax, Email=@Email, Active=@Active WHERE Customer_ID=@CustomerID";
-               
-                for (int i = 0; i < Customers.Count - 1; i++)
-                {
-                   Customer _customer = Customers[i];
-                   if (_customer.ID == customerID)
-                   {
-                       Console.WriteLine("customerID->" + customerID);
-                       Customers[i] = _customer;
-                   }
-                }
 
+                if (UpdateComponent.Equals("Detail"))
+                {
+                    for (int i = 0; i < Customers.Count - 1; i++)
+                    {
+                        Customer _customer = Customers[i];
+                        if (_customer.ID == customerID)
+                        {
+                            Customers[i] = TempDetailCustomer;
+                            break;
+                        }
+                    }
+                }
                 using (cmd = new SqlCommand(sqlquery, dbConnection.Connection))
                 {
                     if (!string.IsNullOrEmpty(fullName))
@@ -1354,7 +1351,7 @@ namespace WpfApp.ViewModel
                     cmd.Parameters.AddWithValue("@CustomerID", customerID);
 
                     int rowsAffected = cmd.ExecuteNonQuery();
-                    ActionCustName = "UpdateCustomer";
+                    ActionState = "UpdateRow";
                 }
                 ActionCustState = "";
             }
@@ -2601,6 +2598,8 @@ namespace WpfApp.ViewModel
             }
         }
 
+        public int SelectedCustomerIndex { get; set; }
+
         public int SelectedPMRowIndex { get; set; }
 
         public int SelectedAcronymRowIndex { get; set; }
@@ -2921,18 +2920,6 @@ namespace WpfApp.ViewModel
             }
         }
 
-        private string _currentNotesDesc;
-
-        public string CurrentNotesDesc
-        {
-            get { return _currentNotesDesc; }
-            set
-            {
-                _currentNotesDesc = value;
-                OnPropertyChanged();
-            }
-        }
-
         private int _currentNoteID;
 
         public int CurrentNoteID
@@ -2942,31 +2929,6 @@ namespace WpfApp.ViewModel
             {
                 _currentNoteID = value;
                 OnPropertyChanged();
-            }
-        }
-
-        private int _currnetNoteID;
-
-        public int CurrnetNoteID
-        {
-            get { return _currnetNoteID; }
-            set
-            {
-                _currnetNoteID = value;
-                OnPropertyChanged();
-            }
-        }
-
-        private int _selectedCustRowIndex;
-
-        public int SelectedCustRowIndex
-        {
-            get { return _selectedCustRowIndex; }
-            set
-            {
-                _selectedCustRowIndex = value;
-                OnPropertyChanged();
-
             }
         }
 
