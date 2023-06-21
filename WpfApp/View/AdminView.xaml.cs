@@ -515,7 +515,7 @@ namespace WpfApp.View
                     {
                         if (AdminVM.ActionNoteState.Equals("AddRow") || (AdminVM.ActionNoteState.Equals("UpdateRow") && selectedRowIndex == -1))
                         {
-                            rowIndex = AdminVM.CurrentIndex;
+                            rowIndex = AdminVM.CurrentNoteID;
                         }
                         else
                         {
@@ -528,12 +528,12 @@ namespace WpfApp.View
                         {
                             NotesDateAdded.Text = DateTime.Now.ToString();
                             NoteUserName.Text = "smile";
-                            AdminVM.TempNote = new Note();
+                            AdminVM.TempCreateNote = new Note();
 
-                            AdminVM.TempNote.NoteUserName = "smile";
-                            AdminVM.TempNote.NotesDateAdded = DateTime.Now;
-                            AdminVM.TempNote.NotesNote = NotesNote.Text;
-                            AdminVM.TempNote.NotesPKDesc = notesDesc;
+                            AdminVM.TempCreateNote.NoteUserName = "smile";
+                            AdminVM.TempCreateNote.NotesDateAdded = DateTime.Now;
+                            AdminVM.TempCreateNote.NotesNote = NotesNote.Text;
+                            AdminVM.TempCreateNote.NotesPKDesc = notesDesc;
                             // Create Note
                             AdminVM.ActionNoteState = "AddRow";
                             Note item = new Note();
@@ -553,7 +553,7 @@ namespace WpfApp.View
                             AdminVM.TempNote.NotesNote = NotesNote.Text;
                             AdminVM.ActionNoteState = "UpdateRow";
                             AdminVM.UpdateNote();
-                       }
+                        }
 
                         e.Handled = true;
                     }
@@ -2179,8 +2179,19 @@ namespace WpfApp.View
                     AdminVM.UpdateComponent = "Table";
 
                     int selectedRowIndex = dataGrid.SelectedIndex;
+                    int rowIndex = selectedRowIndex;
 
-                    Manufacturer item = dataGrid.Items[selectedRowIndex] as Manufacturer;
+                    if (AdminVM.ActionState.Equals("AddRow") || (AdminVM.ActionState.Equals("UpdateRow") && selectedRowIndex == -1))
+                    {
+                        rowIndex = AdminVM.SelectedManufIndex;
+                    }
+                    else
+                    {
+                        rowIndex = selectedRowIndex;
+                        AdminVM.SelectedManufIndex = rowIndex;
+                    }
+
+                    Manufacturer item = dataGrid.Items[rowIndex] as Manufacturer;
                     AdminVM.TempManuf = item;
 
                     switch (itemName)
@@ -2205,6 +2216,8 @@ namespace WpfApp.View
                             break;
                     }
 
+                    AdminVM.ActionState = "UpdateRow";
+                    AdminVM.Manufacturers[rowIndex] = item;
                     AdminVM.UpdateManuf();
                 }
             }
@@ -2273,7 +2286,8 @@ namespace WpfApp.View
             {
                 // Create Manuf
                 AdminVM.TempCreateManuf = new Manufacturer();
-                //Manufacturer _manuf = new Manufacturer();
+                AdminVM.UpdateComponent = "Detail";
+
                 switch (itemName)
                 {
                     case "Name":
@@ -2372,6 +2386,8 @@ namespace WpfApp.View
             TextBox textBox = sender as TextBox;
 
             string itemName = textBox.Tag as string;
+            AdminVM.UpdateComponent = "Detail";
+            
             if (AdminVM.SelectedCustomerID == -1)
             {
                 AdminVM.TempCreateCustomer = new Customer();

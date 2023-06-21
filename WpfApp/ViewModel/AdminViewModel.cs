@@ -1082,6 +1082,20 @@ namespace WpfApp.ViewModel
             bool active = (UpdateComponent.Equals("Table")) ? TempManuf.Active : TempDetailManuf.Active;
 
             sqlquery = "UPDATE tblManufacturers SET Manuf_Name=@ManufName, Address=@Address, Address2=@Address2, City=@City, State=@State, ZIP=@Zip, Phone=@Phone, FAX=@Fax, Contact_Name=@ContactName, Contact_Phone=@ContactPhone, Contact_Email=@ContactEmail, Active=@Active WHERE Manuf_ID=@ManufID";
+
+            if (UpdateComponent.Equals("Detail"))
+            {
+                for (int i = 0; i < Manufacturers.Count - 1; i++)
+                {
+                    Manufacturer _manuf = Manufacturers[i];
+                    if (_manuf.ID == manufID)
+                    {
+                        Manufacturers[i] = TempDetailManuf;
+                        break;
+                    }
+                }
+            }
+
             using (cmd = new SqlCommand(sqlquery, dbConnection.Connection))
             {
                 if (!string.IsNullOrEmpty(manufName))
@@ -1227,7 +1241,7 @@ namespace WpfApp.ViewModel
             int notesPK = 0;
             ObservableCollection<Note> notes = new ObservableCollection<Note>();
           
-            switch (TempNote.NotesPKDesc)
+            switch (TempCreateNote.NotesPKDesc)
             {
                 case "Customer":
                     notesPK = SelectedCustomerID;
@@ -1255,27 +1269,34 @@ namespace WpfApp.ViewModel
                 if (notesPK != 0)
                     cmd.Parameters.AddWithValue("@NotesPK", notesPK);
                 else cmd.Parameters.AddWithValue("@NotesPK", DBNull.Value);
-                if (!string.IsNullOrEmpty(TempNote.NotesPKDesc))
-                    cmd.Parameters.AddWithValue("@NotesDesc", TempNote.NotesPKDesc);
+                if (!string.IsNullOrEmpty(TempCreateNote.NotesPKDesc))
+                    cmd.Parameters.AddWithValue("@NotesDesc", TempCreateNote.NotesPKDesc);
                 else cmd.Parameters.AddWithValue("@NotesDesc", DBNull.Value);
-                if (!string.IsNullOrEmpty(TempNote.NotesNote))
-                    cmd.Parameters.AddWithValue("@NotesNote", TempNote.NotesNote);
+                if (!string.IsNullOrEmpty(TempCreateNote.NotesNote))
+                    cmd.Parameters.AddWithValue("@NotesNote", TempCreateNote.NotesNote);
                 else cmd.Parameters.AddWithValue("@NotesNote", DBNull.Value);
-                if (!TempNote.NotesDateAdded.Equals(DateTime.MinValue))
-                    cmd.Parameters.AddWithValue("@NotesDateAdded", TempNote.NotesDateAdded);
+                if (!TempCreateNote.NotesDateAdded.Equals(DateTime.MinValue))
+                    cmd.Parameters.AddWithValue("@NotesDateAdded", TempCreateNote.NotesDateAdded);
                 else cmd.Parameters.AddWithValue("@NotesDateAdded", DBNull.Value);
-                if (!string.IsNullOrEmpty(TempNote.NoteUser))
-                    cmd.Parameters.AddWithValue("@NotesUser", TempNote.NoteUser);
+                if (!string.IsNullOrEmpty(TempCreateNote.NoteUser))
+                    cmd.Parameters.AddWithValue("@NotesUser", TempCreateNote.NoteUser);
                 else cmd.Parameters.AddWithValue("@NotesUser", DBNull.Value);
 
                 try
                 {
                     int insertedNoteId = (int)cmd.ExecuteScalar();
-                    CurrentNoteID = insertedNoteId;
-                    TempNote.NoteID = insertedNoteId;
-                    TempNote.NotePK = notesPK;
+                    TempCreateNote.NoteID = insertedNoteId;
+                    TempCreateNote.NotePK = notesPK;
 
-                    notes[notes.Count - 2] = TempNote;
+                    TempNote.NoteID = TempCreateNote.NoteID;
+                    TempNote.NotePK = TempCreateNote.NotePK;
+                    TempNote.NotesDateAdded = TempCreateNote.NotesDateAdded;
+                    TempNote.NotesPKDesc = TempCreateNote.NotesPKDesc;
+                    TempNote.NoteUser = TempCreateNote.NoteUser;
+                    TempNote.NoteUserName = TempCreateNote.NoteUserName;
+
+                    notes[notes.Count - 2] = TempCreateNote;
+                    CurrentNoteID = notes.Count - 2;
                     ActionNoteState = "UpdateRow";
                 }
                 catch (SqlException e)
@@ -1569,7 +1590,6 @@ namespace WpfApp.ViewModel
             sda = new SqlDataAdapter(cmd);
             ds = new DataSet();
             sda.Fill(ds);
-            UpdateComponent = "Detail";
 
             DataRow firstRow = ds.Tables[0].Rows[0];
             SelectedCustomerID = customerID;
@@ -2600,6 +2620,8 @@ namespace WpfApp.ViewModel
 
         public int SelectedCustomerIndex { get; set; }
 
+        public int SelectedManufIndex { get; set; }
+
         public int SelectedPMRowIndex { get; set; }
 
         public int SelectedAcronymRowIndex { get; set; }
@@ -3076,6 +3098,18 @@ namespace WpfApp.ViewModel
             set
             {
                 _tempNote = value;
+                OnPropertyChanged();
+            }
+        }
+
+        private Note _tempCreateNote;
+
+        public Note TempCreateNote
+        {
+            get { return _tempCreateNote; }
+            set
+            {
+                _tempCreateNote = value;
                 OnPropertyChanged();
             }
         }
