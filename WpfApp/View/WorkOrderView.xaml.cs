@@ -31,7 +31,6 @@ namespace WpfApp.View
             sb_notes = new ObservableCollection<Note>();
             dbConnection = new DatabaseConnection();
             noteHelper = new NoteHelper();
-            dbConnection.Open();
             this.DataContext = WorkOrderVM;
         }
 

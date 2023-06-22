@@ -11,22 +11,22 @@ using System.Windows.Input;
 using WpfApp.Command;
 using WpfApp.Model;
 using WpfApp.Utils;
+using System.Configuration;
 
 namespace WpfApp.ViewModel
 {
     class AdminViewModel : ViewModelBase
     {
         private DatabaseConnection dbConnection;
-        public SqlCommand cmd;
-        public SqlDataAdapter sda;
-        public DataSet ds;
-        public string sqlquery;
+        private SqlCommand cmd = null;
+        private SqlDataAdapter sda;
+        private DataSet ds;
+        private string sqlquery;
 
 
         public AdminViewModel()
         {
             dbConnection = new DatabaseConnection();
-            dbConnection.Open();
             Note noteItem = new Note();
             ManufNotes = new ObservableCollection<Note>();
             ManufNotes.Add(noteItem);
@@ -107,135 +107,34 @@ namespace WpfApp.ViewModel
         public void CreateInstaller()
         {
             sqlquery = "INSERT INTO tblInHouseInstallers(Installer_Name, Installer_Cell, Installer_Email, OSHA_Level, Crew, [OSHA Expiration], OSHA_Cert, FirstAidCPR_Expiration, FirstAidCPR_Cert, Active) OUTPUT INSERTED.Installer_ID VALUES (@Name, @Cell, @Email, @OshaLevel, @Crew, @OshaDate, @OshaCert, @FacDate, @FacCert, @Active)";
-            using (cmd = new SqlCommand(sqlquery, dbConnection.Connection))
-            {
-                if (!string.IsNullOrEmpty(TempInstaller.InstallerName))
-                    cmd.Parameters.AddWithValue("@Name", TempInstaller.InstallerName);
-                else cmd.Parameters.AddWithValue("@Name", DBNull.Value);
-                if (!string.IsNullOrEmpty(TempInstaller.InstallerCell))
-                    cmd.Parameters.AddWithValue("@Cell", TempInstaller.InstallerCell);
-                else cmd.Parameters.AddWithValue("@Cell", DBNull.Value);
-                if (!string.IsNullOrEmpty(TempInstaller.InstallerEmail))
-                    cmd.Parameters.AddWithValue("@Email", TempInstaller.InstallerEmail);
-                else cmd.Parameters.AddWithValue("@Email", DBNull.Value);
-                if (!string.IsNullOrEmpty(TempInstaller.OSHALevel))
-                    cmd.Parameters.AddWithValue("@OshaLevel", TempInstaller.OSHALevel);
-                else cmd.Parameters.AddWithValue("@OshaLevel", DBNull.Value);
-                if (TempInstaller.CrewID != 0)
-                    cmd.Parameters.AddWithValue("@Crew", TempInstaller.CrewID);
-                else cmd.Parameters.AddWithValue("@Crew", DBNull.Value);
-                if (!TempInstaller.OSHAExpireDate.Equals(DateTime.MinValue))
-                    cmd.Parameters.AddWithValue("@OshaDate", TempInstaller.OSHAExpireDate);
-                else cmd.Parameters.AddWithValue("@OshaDate", DBNull.Value);
-                if (!string.IsNullOrEmpty(TempInstaller.OSHACert))
-                    cmd.Parameters.AddWithValue("@OshaCert", TempInstaller.OSHACert);
-                else cmd.Parameters.AddWithValue("@OshaCert", DBNull.Value);
-                if (!TempInstaller.FirstAidExpireDate.Equals(DateTime.MinValue))
-                    cmd.Parameters.AddWithValue("@FacDate", TempInstaller.FirstAidExpireDate);
-                else cmd.Parameters.AddWithValue("@FacDate", DBNull.Value);
-                if (!string.IsNullOrEmpty(TempInstaller.FirstAidCert))
-                    cmd.Parameters.AddWithValue("@FacCert", TempInstaller.FirstAidCert);
-                else cmd.Parameters.AddWithValue("@FacCert", DBNull.Value);
-                cmd.Parameters.AddWithValue("@Active", TempInstaller.Active);
 
-                try
-                {
-                    int insertedInstallerID = (int)cmd.ExecuteScalar();
-                    SelectedInstallerID = insertedInstallerID;
-                    int totalCount = Installers.Count;
-                    CurrentIndex = totalCount - 2;
-                    TempInstaller.ID = SelectedInstallerID;
-                    Installers[totalCount - 2] = TempInstaller;
-                }
-                catch (SqlException e)
-                {
-                    Console.WriteLine(e);
-                }
-            }
+            int insertedInstallerID = dbConnection.RunQueryToCreateInstaller(sqlquery, TempInstaller.InstallerName, TempInstaller.InstallerCell, TempInstaller.InstallerEmail, TempInstaller.OSHALevel, TempInstaller.CrewID, TempInstaller.OSHAExpireDate, TempInstaller.OSHACert, TempInstaller.FirstAidExpireDate, TempInstaller.FirstAidCert, TempInstaller.Active);
+            SelectedInstallerID = insertedInstallerID;
+
+            int totalCount = Installers.Count;
+            CurrentIndex = totalCount - 2;
+            TempInstaller.ID = SelectedInstallerID;
+            Installers[totalCount - 2] = TempInstaller;
         }
 
         public void UpdateInstaller()
         {
             sqlquery = "UPDATE tblInHouseInstallers SET Installer_Name=@Name, Installer_Cell=@Cell, Installer_Email=@Email, OSHA_Level=@OshaLevel, Crew=@Crew, [OSHA Expiration]=@OshaDate, OSHA_Cert=@OshaCert, FirstAidCPR_Expiration=@FacDate, FirstAidCPR_Cert=@FacCert, Active=@Active WHERE Installer_ID=@InstallerID";
-            using (cmd = new SqlCommand(sqlquery, dbConnection.Connection))
-            {
-                if (!string.IsNullOrEmpty(TempInstaller.InstallerName))
-                    cmd.Parameters.AddWithValue("@Name", TempInstaller.InstallerName);
-                else cmd.Parameters.AddWithValue("@Name", DBNull.Value);
-                if (!string.IsNullOrEmpty(TempInstaller.InstallerCell))
-                    cmd.Parameters.AddWithValue("@Cell", TempInstaller.InstallerCell);
-                else cmd.Parameters.AddWithValue("@Cell", DBNull.Value);
-                if (!string.IsNullOrEmpty(TempInstaller.InstallerEmail))
-                    cmd.Parameters.AddWithValue("@Email", TempInstaller.InstallerEmail);
-                else cmd.Parameters.AddWithValue("@Email", DBNull.Value);
-                if (!string.IsNullOrEmpty(TempInstaller.OSHALevel))
-                    cmd.Parameters.AddWithValue("@OshaLevel", TempInstaller.OSHALevel);
-                else cmd.Parameters.AddWithValue("@OshaLevel", DBNull.Value);
-                if (TempInstaller.CrewID > 0)
-                    cmd.Parameters.AddWithValue("@Crew", TempInstaller.CrewID);
-                else cmd.Parameters.AddWithValue("@Crew", DBNull.Value);
-                if (!TempInstaller.OSHAExpireDate.Equals(DateTime.MinValue))
-                    cmd.Parameters.AddWithValue("@OshaDate", TempInstaller.OSHAExpireDate);
-                else cmd.Parameters.AddWithValue("@OshaDate", DBNull.Value);
-                if (!string.IsNullOrEmpty(TempInstaller.OSHACert))
-                    cmd.Parameters.AddWithValue("@OshaCert", TempInstaller.OSHACert);
-                else cmd.Parameters.AddWithValue("@OshaCert", DBNull.Value);
-                if (!TempInstaller.FirstAidExpireDate.Equals(DateTime.MinValue))
-                    cmd.Parameters.AddWithValue("@FacDate", TempInstaller.FirstAidExpireDate);
-                else cmd.Parameters.AddWithValue("@FacDate", DBNull.Value);
-                if (!string.IsNullOrEmpty(TempInstaller.FirstAidCert))
-                    cmd.Parameters.AddWithValue("@FacCert", TempInstaller.FirstAidCert);
-                else cmd.Parameters.AddWithValue("@FacCert", DBNull.Value);
-                cmd.Parameters.AddWithValue("@Active", TempInstaller.Active);
-                cmd.Parameters.AddWithValue("@InstallerID", TempInstaller.ID);
 
-                try
-                {
-                    int rowsAffected = cmd.ExecuteNonQuery();
-                }
-                catch (SqlException e)
-                {
-                    Console.WriteLine(e);
-                }
-            }
+            cmd = dbConnection.RunQueryToUpdateInstaller(sqlquery, TempInstaller.InstallerName, TempInstaller.InstallerCell, TempInstaller.InstallerEmail, TempInstaller.OSHALevel, TempInstaller.CrewID, TempInstaller.OSHAExpireDate, TempInstaller.OSHACert, TempInstaller.FirstAidExpireDate, TempInstaller.FirstAidCert, TempInstaller.Active, TempInstaller.ID);
         }
 
         public void CreateUser()
         {
             sqlquery = "INSERT INTO tblUsers(User_Name, User_PersonName, User_Level, User_FormOnOpen, User_Email, Active) OUTPUT INSERTED.User_ID VALUES (@UserName, @PersonName, @Level, @FormOnOpen, @Email, @Active)";
-            using (cmd = new SqlCommand(sqlquery, dbConnection.Connection))
-            {
-                if (!string.IsNullOrEmpty(TempUser.UserName))
-                    cmd.Parameters.AddWithValue("@UserName", TempUser.UserName);
-                else cmd.Parameters.AddWithValue("@UserName", DBNull.Value);
-                if (!string.IsNullOrEmpty(TempUser.PersonName))
-                    cmd.Parameters.AddWithValue("@PersonName", TempUser.PersonName);
-                else cmd.Parameters.AddWithValue("@PersonName", DBNull.Value);
-                if (TempUser.Level <= 0)
-                    cmd.Parameters.AddWithValue("@Level", TempUser.Level);
-                else cmd.Parameters.AddWithValue("@Level", DBNull.Value);
-                if (TempUser.FormOnOpen <= 0)
-                    cmd.Parameters.AddWithValue("@FormOnOpen", TempUser.FormOnOpen);
-                else cmd.Parameters.AddWithValue("@FormOnOpen", DBNull.Value);
-                if (!string.IsNullOrEmpty(TempUser.Email))
-                    cmd.Parameters.AddWithValue("@Email", TempUser.Email);
-                else cmd.Parameters.AddWithValue("@Email", DBNull.Value);
-                cmd.Parameters.AddWithValue("@Active", TempUser.Active);
-
-                try
-                {
-                    int insertedUserID = (int)cmd.ExecuteScalar();
-                    SelectedUserID = insertedUserID;
-                    int totalCount = Users.Count;
-                    CurrentIndex = totalCount - 2;
-                    TempUser.ID = insertedUserID;
-                    Users[totalCount - 2] = TempUser;
-                }
-                catch (SqlException e)
-                {
-                    Console.WriteLine(e);
-                }
-            }
+          
+            int insertedUserID = dbConnection.RunQueryToCreateUser(sqlquery, TempUser.UserName, TempUser.PersonName, TempUser.Level, TempUser.FormOnOpen, TempUser.Email, TempUser.Active);
+            SelectedUserID = insertedUserID;
+            int totalCount = Users.Count;
+            CurrentIndex = totalCount - 2;
+            TempUser.ID = insertedUserID;
+            Users[totalCount - 2] = TempUser;
+              
         }
 
         public void UpdateUser()
@@ -244,78 +143,32 @@ namespace WpfApp.ViewModel
             string userName = TempUser.UserName;
             string personName = TempUser.PersonName;
             int level = TempUser.Level;
-            int formOnOpen = TempUser.FormOnOpen;
+            int fromOnOpen = TempUser.FormOnOpen;
             string email = TempUser.Email;
             bool active = TempUser.Active;
 
             sqlquery = "UPDATE tblUsers SET User_Name=@UserName, User_PersonName=@PersonName, User_Level=@Level, User_FormOnOpen=@FormOnOpen, User_Email=@Email, Active=@Active WHERE User_ID=@UserID";
-            using (cmd = new SqlCommand(sqlquery, dbConnection.Connection))
-            {
-                if (!string.IsNullOrEmpty(userName))
-                    cmd.Parameters.AddWithValue("@UserName", userName);
-                else cmd.Parameters.AddWithValue("@UserName", DBNull.Value);
-                if (!string.IsNullOrEmpty(personName))
-                    cmd.Parameters.AddWithValue("@PersonName", personName);
-                else cmd.Parameters.AddWithValue("@PersonName", DBNull.Value);
-                if (level > 0)
-                    cmd.Parameters.AddWithValue("@Level", level);
-                else cmd.Parameters.AddWithValue("@Level", DBNull.Value);
-                if (formOnOpen >= 0)
-                    cmd.Parameters.AddWithValue("@FormOnOpen", formOnOpen);
-                else cmd.Parameters.AddWithValue("@FormOnOpen", DBNull.Value);
-                if (!string.IsNullOrEmpty(email))
-                    cmd.Parameters.AddWithValue("@Email", email);
-                else cmd.Parameters.AddWithValue("@Email", DBNull.Value);
-                cmd.Parameters.AddWithValue("@UserID", userID);
-                cmd.Parameters.AddWithValue("@Active", active);
 
-                try
-                {
-                    int rowsAffected = cmd.ExecuteNonQuery();
-                }
-                catch (SqlException e)
-                {
-                    Console.WriteLine(e);
-                }
-            }
+            cmd = dbConnection.RunQueryToUpdateUser(sqlquery, userName, personName, level, fromOnOpen, email, active, userID);
         }
 
         public void CreateFreightCo()
         {
             sqlquery = "INSERT INTO tblFreightCo(FreightCo_Name, FreightCo_Phone, FreightCo_Email, FreightCo_Contact, FreightCo_Cell, Active) OUTPUT INSERTED.FreightCo_ID VALUES (@Name, @Phone, @Email, @Contact, @Cell, @Active)";
-            using (cmd = new SqlCommand(sqlquery, dbConnection.Connection))
-            {
-                if (!string.IsNullOrEmpty(TempFreightCo.FreightName))
-                    cmd.Parameters.AddWithValue("@Name", TempFreightCo.FreightName);
-                else cmd.Parameters.AddWithValue("@Name", DBNull.Value);
-                if (!string.IsNullOrEmpty(TempFreightCo.Phone))
-                    cmd.Parameters.AddWithValue("@Phone", TempFreightCo.Phone);
-                else cmd.Parameters.AddWithValue("@Phone", DBNull.Value);
-                if (!string.IsNullOrEmpty(TempFreightCo.Email))
-                    cmd.Parameters.AddWithValue("@Email", TempFreightCo.Email);
-                else cmd.Parameters.AddWithValue("@Email", DBNull.Value);
-                if (!string.IsNullOrEmpty(TempFreightCo.Contact))
-                    cmd.Parameters.AddWithValue("@Contact", TempFreightCo.Contact);
-                else cmd.Parameters.AddWithValue("@Contact", DBNull.Value);
-                if (!string.IsNullOrEmpty(TempFreightCo.Cell))
-                    cmd.Parameters.AddWithValue("@Cell", TempFreightCo.Cell);
-                else cmd.Parameters.AddWithValue("@Cell", DBNull.Value);
-                cmd.Parameters.AddWithValue("@Active", TempFreightCo.Active);
 
-                try
-                {
-                    int insertedFgtCoID = (int)cmd.ExecuteScalar();
-                    SelectedFreightCoID = insertedFgtCoID;
-                    int totalCount = FreightCos.Count;
-                    CurrentIndex = totalCount - 2;
-                    TempFreightCo.ID = insertedFgtCoID;
-                    FreightCos[totalCount - 2] = TempFreightCo;
-                }
-                catch (SqlException e)
-                {
-                    Console.WriteLine(e);
-                }
-            }
+            string freightName = TempFreightCo.FreightName;
+            string freightPhone = TempFreightCo.Phone;
+            string freightEmail = TempFreightCo.Email;
+            string freightContact = TempFreightCo.Contact;
+            string fregihtCell = TempFreightCo.Cell;
+            bool active = TempFreightCo.Active;
+
+            int insertedFgtCoID = dbConnection.RunQueryToCreateFreightCO(sqlquery, freightName, freightPhone, freightEmail, freightContact, fregihtCell, active);
+            SelectedFreightCoID = insertedFgtCoID;
+            int totalCount = FreightCos.Count;
+            CurrentIndex = totalCount - 2;
+            TempFreightCo.ID = insertedFgtCoID;
+            FreightCos[totalCount - 2] = TempFreightCo;
         }
 
         public void UpdateFreightCo()
@@ -325,39 +178,12 @@ namespace WpfApp.ViewModel
             string freightPhone = TempFreightCo.Phone;
             string freightEmail = TempFreightCo.Email;
             string freightContact = TempFreightCo.Contact;
-            string fregithCell = TempFreightCo.Cell;
+            string fregihtCell = TempFreightCo.Cell;
             bool active = TempFreightCo.Active;
 
             sqlquery = "UPDATE tblFreightCo SET FreightCo_Name=@Name, FreightCo_Phone=@Phone, FreightCo_Email=@Email, FreightCo_Contact=@Contact, FreightCo_Cell=@Email, Active=@Active WHERE FreightCo_ID=@FreightCoID";
-            using (cmd = new SqlCommand(sqlquery, dbConnection.Connection))
-            {
-                if (!string.IsNullOrEmpty(TempFreightCo.FreightName))
-                    cmd.Parameters.AddWithValue("@Name", TempFreightCo.FreightName);
-                else cmd.Parameters.AddWithValue("@Name", DBNull.Value);
-                if (!string.IsNullOrEmpty(TempFreightCo.Phone))
-                    cmd.Parameters.AddWithValue("@Phone", TempFreightCo.Phone);
-                else cmd.Parameters.AddWithValue("@Phone", DBNull.Value);
-                if (!string.IsNullOrEmpty(TempFreightCo.Email))
-                    cmd.Parameters.AddWithValue("@Email", TempFreightCo.Email);
-                else cmd.Parameters.AddWithValue("@Email", DBNull.Value);
-                if (!string.IsNullOrEmpty(TempFreightCo.Contact))
-                    cmd.Parameters.AddWithValue("@Contact", TempFreightCo.Contact);
-                else cmd.Parameters.AddWithValue("@Contact", DBNull.Value);
-                if (!string.IsNullOrEmpty(TempFreightCo.Cell))
-                    cmd.Parameters.AddWithValue("@Cell", TempFreightCo.Cell);
-                else cmd.Parameters.AddWithValue("@Cell", DBNull.Value);
-                cmd.Parameters.AddWithValue("@Active", TempFreightCo.Active);
-                cmd.Parameters.AddWithValue("@FreightCoID", TempFreightCo.ID);
 
-                try
-                {
-                    int rowsAffected = cmd.ExecuteNonQuery();
-                }
-                catch (SqlException e)
-                {
-                    Console.WriteLine(e);
-                }
-            }
+            cmd = dbConnection.RunQueryToUpdateFreightCO(sqlquery, freightName, freightPhone, freightEmail, freightContact, fregihtCell, active, freightCoID);
         }
 
         public void UpdateArch()
@@ -378,50 +204,8 @@ namespace WpfApp.ViewModel
             bool active = TempArch.Active;
 
             sqlquery = "UPDATE tblArchitects SET Arch_Company=@Company, Arch_Contact=@Contact, Arch_Address=@Address, Arch_City=@City, Arch_State=@State, Arch_ZIP=@Zip, Arch_Phone=@Phone, Arch_FAX=@Fax, Arch_Cell=@Cell, Arch_Email=@Email, Active=@Active WHERE Architect_ID=@ArchitectID";
-            using (cmd = new SqlCommand(sqlquery, dbConnection.Connection))
-            {
-                if (!string.IsNullOrEmpty(archCompany))
-                    cmd.Parameters.AddWithValue("@Company", archCompany);
-                else cmd.Parameters.AddWithValue("@Company", DBNull.Value);
-                if (!string.IsNullOrEmpty(archContact))
-                    cmd.Parameters.AddWithValue("@Contact", archContact);
-                else cmd.Parameters.AddWithValue("@Contact", DBNull.Value);
-                if (!string.IsNullOrEmpty(archAddress))
-                    cmd.Parameters.AddWithValue("@Address", archAddress);
-                else cmd.Parameters.AddWithValue("@Address", DBNull.Value);
-                if (!string.IsNullOrEmpty(archCity))
-                    cmd.Parameters.AddWithValue("@City", archCity);
-                else cmd.Parameters.AddWithValue("@City", DBNull.Value);
-                if (!string.IsNullOrEmpty(archState))
-                    cmd.Parameters.AddWithValue("@State", archState);
-                else cmd.Parameters.AddWithValue("@State", DBNull.Value);
-                if (!string.IsNullOrEmpty(archZip))
-                    cmd.Parameters.AddWithValue("@Zip", archZip);
-                else cmd.Parameters.AddWithValue("@Zip", DBNull.Value);
-                if (!string.IsNullOrEmpty(archPhone))
-                    cmd.Parameters.AddWithValue("@Phone", archPhone);
-                else cmd.Parameters.AddWithValue("@Phone", DBNull.Value);
-                if (!string.IsNullOrEmpty(archFax))
-                    cmd.Parameters.AddWithValue("@Fax", archFax);
-                else cmd.Parameters.AddWithValue("@Fax", DBNull.Value);
-                if (!string.IsNullOrEmpty(archCell))
-                    cmd.Parameters.AddWithValue("@Cell", archCell);
-                else cmd.Parameters.AddWithValue("@Cell", DBNull.Value);
-                if (!string.IsNullOrEmpty(archEmail))
-                    cmd.Parameters.AddWithValue("@Email", archEmail);
-                else cmd.Parameters.AddWithValue("@Email", DBNull.Value);
-                cmd.Parameters.AddWithValue("@Active", active);
-                cmd.Parameters.AddWithValue("@ArchitectID", archID);
 
-                try
-                {
-                    int rowsAffected = cmd.ExecuteNonQuery();
-                }
-                catch (SqlException e)
-                {
-                    Console.WriteLine(e);
-                }
-            }
+            cmd = dbConnection.RunQueryToUpdateArch(sqlquery, archCompany, archContact, archAddress, archCity, archState, archZip, archPhone, archFax, archCell, archEmail, active, archID);
             //}
             //else
             //{
@@ -432,89 +216,43 @@ namespace WpfApp.ViewModel
         public void CreateArch()
         {
             sqlquery = "INSERT INTO tblArchitects(Arch_Company, Arch_Contact, Arch_Address, Arch_City, Arch_State, Arch_ZIP, Arch_Phone, Arch_FAX, Arch_Cell, Arch_Email, Active) OUTPUT INSERTED.Architect_ID VALUES (@Company, @Contact, @Address, @City, @State, @Zip, @Phone, @Fax, @Cell, @Email, @Active)";
-            using (cmd = new SqlCommand(sqlquery, dbConnection.Connection))
-            {
-                if (!string.IsNullOrEmpty(TempArch.ArchCompany))
-                    cmd.Parameters.AddWithValue("@Company", TempArch.ArchCompany);
-                else cmd.Parameters.AddWithValue("@Company", DBNull.Value);
-                if (!string.IsNullOrEmpty(TempArch.Contact))
-                    cmd.Parameters.AddWithValue("@Contact", TempArch.Contact);
-                else cmd.Parameters.AddWithValue("@Contact", DBNull.Value);
-                if (!string.IsNullOrEmpty(TempArch.Address))
-                    cmd.Parameters.AddWithValue("@Address", TempArch.Address);
-                else cmd.Parameters.AddWithValue("@Address", DBNull.Value);
-                if (!string.IsNullOrEmpty(TempArch.City))
-                    cmd.Parameters.AddWithValue("@City", TempArch.City);
-                else cmd.Parameters.AddWithValue("@City", DBNull.Value);
-                if (!string.IsNullOrEmpty(TempArch.State))
-                    cmd.Parameters.AddWithValue("@State", TempArch.State);
-                else cmd.Parameters.AddWithValue("@State", DBNull.Value);
-                if (!string.IsNullOrEmpty(TempArch.Zip))
-                    cmd.Parameters.AddWithValue("@Zip", TempArch.Zip);
-                else cmd.Parameters.AddWithValue("@Zip", DBNull.Value);
-                if (!string.IsNullOrEmpty(TempArch.Phone))
-                    cmd.Parameters.AddWithValue("@Phone", TempArch.Phone);
-                else cmd.Parameters.AddWithValue("@Phone", DBNull.Value);
-                if (!string.IsNullOrEmpty(TempArch.Fax))
-                    cmd.Parameters.AddWithValue("@Fax", TempArch.Fax);
-                else cmd.Parameters.AddWithValue("@Fax", DBNull.Value);
-                if (!string.IsNullOrEmpty(TempArch.Cell))
-                    cmd.Parameters.AddWithValue("@Cell", TempArch.Cell);
-                else cmd.Parameters.AddWithValue("@Cell", DBNull.Value);
-                if (!string.IsNullOrEmpty(TempArch.Email))
-                    cmd.Parameters.AddWithValue("@Email", TempArch.Email);
-                else cmd.Parameters.AddWithValue("@Email", DBNull.Value);
-                cmd.Parameters.AddWithValue("@Active", TempArch.Active);
 
-                try
-                {
-                    int insertedArchID = (int)cmd.ExecuteScalar();
-                    SelectedArchID = insertedArchID;
-                    int totalCount = Architects.Count;
-                    CurrentIndex = totalCount - 2;
-                    TempArch.ID = insertedArchID;
-                    Architects[totalCount - 2] = TempArch;
-                }
-                catch (SqlException e)
-                {
-                    Console.WriteLine(e);
-                }
-            }
+            string archCompany = TempArch.ArchCompany;
+            string archContact = TempArch.Contact;
+            string archAddress = TempArch.Address;
+            string archCity = TempArch.City;
+            string archState = TempArch.State;
+            string archZip = TempArch.Zip;
+            string archPhone = TempArch.Phone;
+            string archFax = TempArch.Fax;
+            string archCell = TempArch.Cell;
+            string archEmail = TempArch.Email;
+            bool active = TempArch.Active;
+
+            int insertedArchID = dbConnection.RunQueryToCreateArch(sqlquery, archCompany, archContact, archAddress, archCity, archState, archZip, archPhone, archFax, archCell, archEmail, active);
+            SelectedArchID = insertedArchID;
+            int totalCount = Architects.Count;
+            CurrentIndex = totalCount - 2;
+            TempArch.ID = insertedArchID;
+            Architects[totalCount - 2] = TempArch;
         }
 
         public void CreateCrew()
         {
             sqlquery = "INSERT INTO tblInstallCrew(Crew_Name, Crew_Phone, Crew_Cell, Crew_Email, Active) OUTPUT INSERTED.Crew_ID VALUES (@Name, @Phone, @Cell, @Email, @Active)";
-            using (cmd = new SqlCommand(sqlquery, dbConnection.Connection))
-            {
-                if (!string.IsNullOrEmpty(TempCrew.CrewName))
-                    cmd.Parameters.AddWithValue("@Name", TempCrew.CrewName);
-                else cmd.Parameters.AddWithValue("@Name", DBNull.Value);
-                if (!string.IsNullOrEmpty(TempCrew.Phone))
-                    cmd.Parameters.AddWithValue("@Phone", TempCrew.Phone);
-                else cmd.Parameters.AddWithValue("@Phone", DBNull.Value);
-                if (!string.IsNullOrEmpty(TempCrew.Cell))
-                    cmd.Parameters.AddWithValue("@Cell", TempCrew.Cell);
-                else cmd.Parameters.AddWithValue("@Cell", DBNull.Value);
-                if (!string.IsNullOrEmpty(TempCrew.Email))
-                    cmd.Parameters.AddWithValue("@Email", TempCrew.Email);
-                else cmd.Parameters.AddWithValue("@Email", DBNull.Value);
-                cmd.Parameters.AddWithValue("@Active", TempCrew.Active);
 
-                try
-                {
-                    int insertedCrewID = (int)cmd.ExecuteScalar();
-                    SelectedCrewID = insertedCrewID;
-                    int totalCount = Crews.Count;
-                    CurrentIndex = totalCount - 2;
-                    TempCrew.ID = insertedCrewID;
-                    Crews[totalCount - 2] = TempCrew;
-                }
-                catch (SqlException e)
-                {
-                    Console.WriteLine(e);
-                }
-            }
+            string crewName = TempCrew.CrewName;
+            string crewPhone = TempCrew.Phone;
+            string crewCell = TempCrew.Cell;
+            string crewEmail = TempCrew.Email;
+            bool active = TempCrew.Active;
+
+            int insertedCrewID = dbConnection.RunQueryToCreateCrew(sqlquery, crewName, crewPhone, crewCell, crewEmail, active);
+            SelectedCrewID = insertedCrewID;
+            int totalCount = Crews.Count;
+            CurrentIndex = totalCount - 2;
+            TempCrew.ID = insertedCrewID;
+            Crews[totalCount - 2] = TempCrew;
         }
 
         public void UpdateCrew()
@@ -529,32 +267,9 @@ namespace WpfApp.ViewModel
             bool active = TempCrew.Active;
 
             sqlquery = "UPDATE tblInstallCrew SET Crew_Name=@Name, Crew_Phone=@Phone, Crew_Cell=@Cell, Crew_Email=@Email, Active=@Active WHERE Crew_ID=@CrewID";
-            using (cmd = new SqlCommand(sqlquery, dbConnection.Connection))
-            {
-                if (!string.IsNullOrEmpty(crewName))
-                    cmd.Parameters.AddWithValue("@Name", crewName);
-                else cmd.Parameters.AddWithValue("@Name", DBNull.Value);
-                if (!string.IsNullOrEmpty(crewPhone))
-                    cmd.Parameters.AddWithValue("@Phone", crewPhone);
-                else cmd.Parameters.AddWithValue("@Phone", DBNull.Value);
-                if (!string.IsNullOrEmpty(crewCell))
-                    cmd.Parameters.AddWithValue("@Cell", crewCell);
-                else cmd.Parameters.AddWithValue("@Cell", DBNull.Value);
-                if (!string.IsNullOrEmpty(crewName))
-                    cmd.Parameters.AddWithValue("@Email", crewEmail);
-                else cmd.Parameters.AddWithValue("@Email", DBNull.Value);
-                cmd.Parameters.AddWithValue("@Active", active);
-                cmd.Parameters.AddWithValue("@CrewID", crewID);
 
-                try
-                {
-                    int rowsAffected = cmd.ExecuteNonQuery();
-                }
-                catch (SqlException e)
-                {
-                    Console.WriteLine(e);
-                }
-            }
+            cmd = dbConnection.RunQueryToUpdateCrew(sqlquery, crewName, crewPhone, crewCell, crewEmail, active, crewID);
+
             //}
             //else
             //{
@@ -575,35 +290,8 @@ namespace WpfApp.ViewModel
                 bool active = TempSalesman.Active;
 
                 sqlquery = "UPDATE tblSalesmen SET Salesman_Init=@Init, Salesman_Name=@Name, Phone=@Phone, Cell=@Cell, Salesman_Email=@Email, Active=@Active WHERE Salesman_ID=@SalesID";
-                using (cmd = new SqlCommand(sqlquery, dbConnection.Connection))
-                {
-                    if (!string.IsNullOrEmpty(salesInit))
-                        cmd.Parameters.AddWithValue("@Init", salesInit);
-                    else cmd.Parameters.AddWithValue("@Init", DBNull.Value);
-                    if (!string.IsNullOrEmpty(salesName))
-                        cmd.Parameters.AddWithValue("@Name", salesName);
-                    else cmd.Parameters.AddWithValue("@Name", DBNull.Value);
-                    if (!string.IsNullOrEmpty(salesPhone))
-                        cmd.Parameters.AddWithValue("@Phone", salesPhone);
-                    else cmd.Parameters.AddWithValue("@Phone", DBNull.Value);
-                    if (!string.IsNullOrEmpty(salesCell))
-                        cmd.Parameters.AddWithValue("@Cell", salesCell);
-                    else cmd.Parameters.AddWithValue("@Cell", DBNull.Value);
-                    if (!string.IsNullOrEmpty(salesEmail))
-                        cmd.Parameters.AddWithValue("@Email", salesEmail);
-                    else cmd.Parameters.AddWithValue("@Email", DBNull.Value);
-                    cmd.Parameters.AddWithValue("@Active", active);
-                    cmd.Parameters.AddWithValue("@SalesID", salesID);
 
-                    try
-                    {
-                        int rowsAffected = cmd.ExecuteNonQuery();
-                    }
-                    catch (SqlException e)
-                    {
-                        Console.WriteLine(e);
-                    }
-                }
+                cmd = dbConnection.RunQueryToUpdateSalesman(sqlquery, salesInit, salesName, salesPhone, salesCell, salesEmail, active, salesID);
             }
             else
             {
@@ -614,68 +302,36 @@ namespace WpfApp.ViewModel
         public void CreateSalesman()
         {
             sqlquery = "INSERT INTO tblSalesmen(Salesman_Init, Salesman_Name, Phone, Cell, Salesman_Email, Active) OUTPUT INSERTED.Salesman_ID VALUES (@Init, @Name, @Phone, @Cell, @Email, @Active)";
-            using (cmd = new SqlCommand(sqlquery, dbConnection.Connection))
-            {
-                if (!string.IsNullOrEmpty(TempSalesman.Init))
-                    cmd.Parameters.AddWithValue("@Init", TempSalesman.Init);
-                else cmd.Parameters.AddWithValue("@Init", DBNull.Value);
-                if (!string.IsNullOrEmpty(TempSalesman.SalesmanName))
-                    cmd.Parameters.AddWithValue("@Name", TempSalesman.SalesmanName);
-                else cmd.Parameters.AddWithValue("@Name", DBNull.Value);
-                if (!string.IsNullOrEmpty(TempSalesman.Phone))
-                    cmd.Parameters.AddWithValue("@Phone", TempSalesman.Phone);
-                else cmd.Parameters.AddWithValue("@Phone", DBNull.Value);
-                if (!string.IsNullOrEmpty(TempSalesman.Cell))
-                    cmd.Parameters.AddWithValue("@Cell", TempSalesman.Cell);
-                else cmd.Parameters.AddWithValue("@Cell", DBNull.Value);
-                if (!string.IsNullOrEmpty(TempSalesman.Email))
-                    cmd.Parameters.AddWithValue("@Email", TempSalesman.Email);
-                else cmd.Parameters.AddWithValue("@Email", DBNull.Value);
-                cmd.Parameters.AddWithValue("@Active", TempSalesman.Active);
 
-                try
-                {
-                    int insertedSalesID = (int)cmd.ExecuteScalar();
-                    SelectedSalesmanID = insertedSalesID;
-                    int totalCount = Salesmans.Count;
-                    CurrentIndex = totalCount - 2;
-                    TempSalesman.ID = insertedSalesID;
-                    Salesmans[totalCount - 2] = TempSalesman;
-                }
-                catch (SqlException e)
-                {
-                    Console.WriteLine(e);
-                }
-            }
+            string salesInit = TempSalesman.Init;
+            string salesName = TempSalesman.SalesmanName;
+            string salesPhone = TempSalesman.Phone;
+            string salesCell = TempSalesman.Cell;
+            string salesEmail = TempSalesman.Email;
+            bool active = TempSalesman.Active;
+
+            int insertedSalesID = dbConnection.RunQueryToCreateSalesman(sqlquery, salesInit, salesName, salesPhone, salesCell, salesEmail, active);
+            SelectedSalesmanID = insertedSalesID;
+            int totalCount = Salesmans.Count;
+            CurrentIndex = totalCount - 2;
+            TempSalesman.ID = insertedSalesID;
+            Salesmans[totalCount - 2] = TempSalesman;
         }
 
         public void CreateLabor()
         {
             sqlquery = "INSERT INTO tblLabor(Labor_Desc, Labor_UnitPrice, Active) OUTPUT INSERTED.Labor_ID VALUES (@LaborDesc, @UnitPrice, @Active)";
-            using (cmd = new SqlCommand(sqlquery, dbConnection.Connection))
-            {
-                if (!string.IsNullOrEmpty(TempLabor.LaborDesc))
-                    cmd.Parameters.AddWithValue("@LaborDesc", TempLabor.LaborDesc);
-                else cmd.Parameters.AddWithValue("@LaborDesc", DBNull.Value);
-                if (TempLabor.UnitPrice >= 0.0)
-                    cmd.Parameters.AddWithValue("@UnitPrice", TempLabor.UnitPrice);
-                else cmd.Parameters.AddWithValue("@UnitPrice", DBNull.Value);
-                cmd.Parameters.AddWithValue("@Active", TempLabor.Active);
 
-                try
-                {
-                    int insertedMatID = (int)cmd.ExecuteScalar();
-                    SelectedLaborID = insertedMatID;
-                    int totalCount = Labors.Count;
-                    CurrentIndex = totalCount - 2;
-                    TempLabor.ID = insertedMatID;
-                    Labors[totalCount - 2] = TempLabor;
-                }
-                catch (SqlException e)
-                {
-                    Console.WriteLine(e);
-                }
-            }
+            string laborDesc = TempLabor.LaborDesc;
+            double unitPrice = TempLabor.UnitPrice;
+            bool active = TempLabor.Active;
+
+            int insertedMatID = dbConnection.RunQueryToCreateLabor(sqlquery, laborDesc, unitPrice, active);
+            SelectedLaborID = insertedMatID;
+            int totalCount = Labors.Count;
+            CurrentIndex = totalCount - 2;
+            TempLabor.ID = insertedMatID;
+            Labors[totalCount - 2] = TempLabor;
         }
 
         public void UpdateLabor()
@@ -688,26 +344,8 @@ namespace WpfApp.ViewModel
                 bool active = TempLabor.Active;
 
                 sqlquery = "UPDATE tblLabor SET Labor_Desc=@LaborDesc, Labor_UnitPrice=@UnitPrice, Active=@Active WHERE Labor_ID=@LaborID";
-                using (cmd = new SqlCommand(sqlquery, dbConnection.Connection))
-                {
-                    if (!string.IsNullOrEmpty(laborDesc))
-                        cmd.Parameters.AddWithValue("@LaborDesc", laborDesc);
-                    else cmd.Parameters.AddWithValue("@LaborDesc", DBNull.Value);
-                    if (TempLabor.UnitPrice >= 0.0)
-                        cmd.Parameters.AddWithValue("@UnitPrice", unitPrice);
-                    else cmd.Parameters.AddWithValue("@UnitPrice", DBNull.Value);
-                    cmd.Parameters.AddWithValue("@Active", active);
-                    cmd.Parameters.AddWithValue("@LaborID", laborID);
-
-                    try
-                    {
-                        int rowsAffected = cmd.ExecuteNonQuery();
-                    }
-                    catch (SqlException e)
-                    {
-                        Console.WriteLine(e);
-                    }
-                }
+                
+                cmd = dbConnection.RunQueryToUpdateLabor(sqlquery, laborDesc, unitPrice, active, laborID);
             }
             else
             {
@@ -718,26 +356,17 @@ namespace WpfApp.ViewModel
         public void CreateMaterial()
         {
             sqlquery = "INSERT INTO tblMaterials(Material_Desc, Active) OUTPUT INSERTED.Material_ID VALUES (@MatDesc, @Active)";
-            using (cmd = new SqlCommand(sqlquery, dbConnection.Connection))
-            {
-                if (!string.IsNullOrEmpty(TempMaterial.MatDesc))
-                    cmd.Parameters.AddWithValue("MatDesc", TempMaterial.MatDesc);
-                else cmd.Parameters.AddWithValue("@MatDesc", DBNull.Value);
-                cmd.Parameters.AddWithValue("@Active", TempMaterial.Active);
-                try
-                {
-                    int insertedMatID = (int)cmd.ExecuteScalar();
-                    SelectedMaterialID = insertedMatID;
-                    int totalCount = Materials.Count;
-                    CurrentIndex = totalCount - 2;
-                    TempMaterial.ID = insertedMatID;
-                    Materials[totalCount - 2] = TempMaterial;
-                }
-                catch (SqlException e)
-                {
-                    Console.WriteLine(e);
-                }
-            }
+
+            string matDesc = TempMaterial.MatDesc;
+            bool active = TempMaterial.Active;
+
+            
+            int insertedMatID = dbConnection.RunQueryToCreateMaterial(sqlquery, matDesc, active);
+            SelectedMaterialID = insertedMatID;
+            int totalCount = Materials.Count;
+            CurrentIndex = totalCount - 2;
+            TempMaterial.ID = insertedMatID;
+            Materials[totalCount - 2] = TempMaterial;
         }
 
         public void UpdateMaterial()
@@ -745,26 +374,12 @@ namespace WpfApp.ViewModel
             if (!string.IsNullOrEmpty(TempMaterial.MatDesc))
             {
                 string matDesc = TempMaterial.MatDesc;
-                int matID = TempMaterial.ID;
                 bool active = TempMaterial.Active;
-                sqlquery = "UPDATE tblMaterials SET Material_Desc=@MatDesc, Active=@Active WHERE Material_ID=@MatID";
-                using (cmd = new SqlCommand(sqlquery, dbConnection.Connection))
-                {
-                    if (!string.IsNullOrEmpty(matDesc))
-                        cmd.Parameters.AddWithValue("@MatDesc", matDesc);
-                    else cmd.Parameters.AddWithValue("@MatDesc", DBNull.Value);
-                    cmd.Parameters.AddWithValue("@MatID", matID);
-                    cmd.Parameters.AddWithValue("@Active", active);
+                int matID = TempMaterial.ID;
 
-                    try
-                    {
-                        int rowsAffected = cmd.ExecuteNonQuery();
-                    }
-                    catch (SqlException e)
-                    {
-                        Console.WriteLine(e);
-                    }
-                }
+                sqlquery = "UPDATE tblMaterials SET Material_Desc=@MatDesc, Active=@Active WHERE Material_ID=@MatID";
+
+                cmd = dbConnection.RunQueryToUpdateMaterial(sqlquery, matDesc, active, matID);
             }
             else
             {
@@ -776,29 +391,17 @@ namespace WpfApp.ViewModel
         {
             if (!string.IsNullOrEmpty(TempAcronym.AcronymName))
             {
-                sqlquery = "INSERT INTO tblScheduleOfValues(SOV_Acronym, SOV_Desc, Active) OUTPUT INSERTED.SOV_Acronym VALUES (@SovAcronym, @SovDesc , @Active)";
-                using (cmd = new SqlCommand(sqlquery, dbConnection.Connection))
-                {
-                    if (!string.IsNullOrEmpty(TempAcronym.AcronymName))
-                        cmd.Parameters.AddWithValue("@SovAcronym", TempAcronym.AcronymName);
-                    else cmd.Parameters.AddWithValue("@SovAcronym", DBNull.Value);
-                    if (!string.IsNullOrEmpty(TempAcronym.AcronymDesc))
-                        cmd.Parameters.AddWithValue("@SovDesc", TempAcronym.AcronymDesc);
-                    else cmd.Parameters.AddWithValue("@SovDesc", DBNull.Value);
-                    cmd.Parameters.AddWithValue("@Active", TempAcronym.Active);
-                    try
-                    {
-                        string insertedSov = (string)cmd.ExecuteScalar();
-                        SelectedSovName = insertedSov;
-                        int totalCount = Acronyms.Count;
-                        CurrentIndex = totalCount - 2;
-                        Acronyms[totalCount - 2] = TempAcronym;
-                    }
-                    catch (SqlException e)
-                    {
-                        Console.WriteLine(e);
-                    }
-                }
+                sqlquery = "INSERT INTO tblScheduleOfValues(SOV_Acronym, SOV_Desc, Active) OUTPUT INSERTED.SOV_Acronym VALUES (@Name, @Desc , @Active)";
+                string sovName = TempAcronym.AcronymName;
+                string sovDesc = TempAcronym.AcronymDesc;
+                bool active = TempAcronym.Active;
+
+                string insertedSov = dbConnection.RunQueryToCreateAcronym(sqlquery, sovName, sovDesc, active);
+                SelectedSovName = insertedSov;
+                int totalCount = Acronyms.Count;
+                CurrentIndex = totalCount - 2;
+                Acronyms[totalCount - 2] = TempAcronym;
+                
             }
             else
             {
@@ -815,28 +418,8 @@ namespace WpfApp.ViewModel
                 bool active = TempAcronym.Active;
 
                 sqlquery = "UPDATE tblScheduleOfValues SET SOV_Acronym=@Name, SOV_Desc=@Desc, Active=@Active WHERE SOV_Acronym=@OriginName";
-                using (cmd = new SqlCommand(sqlquery, dbConnection.Connection))
-                {
-                    if (!string.IsNullOrEmpty(sovName))
-                        cmd.Parameters.AddWithValue("@Name", sovName);
-                    else cmd.Parameters.AddWithValue("@Name", DBNull.Value);
-                    if (!string.IsNullOrEmpty(sovDesc))
-                        cmd.Parameters.AddWithValue("@Desc", sovDesc);
-                    else cmd.Parameters.AddWithValue("@Desc", DBNull.Value);
-                    if (!string.IsNullOrEmpty(SelectedSovName))
-                        cmd.Parameters.AddWithValue("@OriginName", SelectedSovName);
-                    else cmd.Parameters.AddWithValue("@OriginName", DBNull.Value);
-                    cmd.Parameters.AddWithValue("@Active", active);
 
-                    try
-                    {
-                        int rowsAffected = cmd.ExecuteNonQuery();
-                    }
-                    catch (SqlException e)
-                    {
-                        Console.WriteLine(e);
-                    }
-                }
+                cmd = dbConnection.RunQueryToUpdateAcronym(sqlquery, sovName, sovDesc, active, SelectedSovName);
             }
             else
             {
@@ -846,228 +429,113 @@ namespace WpfApp.ViewModel
 
         public void CreateCustCC()
         {
-            sqlquery = "INSERT INTO tblCustomerContacts(Customer_ID, CC_Name, CC_Phone, CC_CellPhone, CC_Email, Active) OUTPUT INSERTED.CC_ID VALUES (@CustomerID, @CCName, @CCPhone, @CCCell, @CCEmail, @Active)";
-            using (cmd = new SqlCommand(sqlquery, dbConnection.Connection))
-            {
-                if (SelectedCustomerID != 0)
-                    cmd.Parameters.AddWithValue("@CustomerID", SelectedCustomerID);
-                else cmd.Parameters.AddWithValue("@CustomerID", DBNull.Value);
-                if (!string.IsNullOrEmpty(TempCC.CCName))
-                    cmd.Parameters.AddWithValue("@CCName", TempCC.CCName);
-                else cmd.Parameters.AddWithValue("@CCName", DBNull.Value);
-                if (!string.IsNullOrEmpty(TempCC.CCPhone))
-                    cmd.Parameters.AddWithValue("@CCPhone", TempCC.CCPhone);
-                else cmd.Parameters.AddWithValue("@CCPhone", DBNull.Value);
-                if (!string.IsNullOrEmpty(TempCC.CCCell))
-                    cmd.Parameters.AddWithValue("@CCCell", TempCC.CCCell);
-                else cmd.Parameters.AddWithValue("@CCCell", DBNull.Value);
-                if (!string.IsNullOrEmpty(TempCC.CCEmail))
-                    cmd.Parameters.AddWithValue("@CCEmail", TempCC.CCEmail);
-                else cmd.Parameters.AddWithValue("@CCEmail", DBNull.Value);
-                cmd.Parameters.AddWithValue("@Active", TempCC.CCActive);
+            sqlquery = "INSERT INTO tblCustomerContacts(Customer_ID, CC_Name, CC_Phone, CC_CellPhone, CC_Email, Active) OUTPUT INSERTED.CC_ID VALUES (@CustomerID, @Name, @Phone, @Cell, @Email, @Active)";
 
-                try
-                {
-                    int insertedSubmId = (int)cmd.ExecuteScalar();
-                    SelectedCustSubmID = insertedSubmId;
-                    TempCC.ID = insertedSubmId;
-                    int totalCount = CustContacts.Count;
-                    CurrentIndex = totalCount - 2;
-                    ActionSubState = "UpdateRow";
-                    CustContacts[totalCount - 2] = TempCC;
-                }
-                catch (SqlException e)
-                {
-                    Console.WriteLine(e);
-                }
-            }
+            int selectedCustomerID = SelectedCustomerID;
+            string name = TempCC.CCName;
+            string phone = TempCC.CCPhone;
+            string cell = TempCC.CCCell;
+            string email = TempCC.CCEmail;
+            bool active = TempCC.CCActive;
+          
+            int insertedSubmId = dbConnection.RunQueryToCreateCustAddInfo(sqlquery, selectedCustomerID, name, phone, cell, email, active);
+            SelectedCustSubmID = insertedSubmId;
+            TempCC.ID = insertedSubmId;
+            int totalCount = CustContacts.Count;
+            CurrentIndex = totalCount - 2;
+            ActionSubState = "UpdateRow";
+            CustContacts[totalCount - 2] = TempCC;
         }
 
         public void UpdateCustCC()
         {
-            sqlquery = "UPDATE tblCustomerContacts SET Customer_ID=@CustomerID, CC_Name=@CCName, CC_Phone=@CCPhone, CC_CellPhone=@CCCell, CC_Email=@CCEmail, Active=@Active WHERE CC_ID=@CCID";
-            using (cmd = new SqlCommand(sqlquery, dbConnection.Connection))
-            {
-                cmd.Parameters.AddWithValue("@CCID", TempCC.ID);
-                if (SelectedCustomerID != 0)
-                    cmd.Parameters.AddWithValue("@CustomerID", SelectedCustomerID);
-                else cmd.Parameters.AddWithValue("@CustomerID", DBNull.Value);
-                if (!string.IsNullOrEmpty(TempCC.CCName))
-                    cmd.Parameters.AddWithValue("@CCName", TempCC.CCName);
-                else cmd.Parameters.AddWithValue("@CCName", DBNull.Value);
-                if (!string.IsNullOrEmpty(TempCC.CCPhone))
-                    cmd.Parameters.AddWithValue("@CCPhone", TempCC.CCPhone);
-                else cmd.Parameters.AddWithValue("@CCPhone", DBNull.Value);
-                if (!string.IsNullOrEmpty(TempCC.CCCell))
-                    cmd.Parameters.AddWithValue("@CCCell", TempCC.CCCell);
-                else cmd.Parameters.AddWithValue("@CCCell", DBNull.Value);
-                if (!string.IsNullOrEmpty(TempCC.CCEmail))
-                    cmd.Parameters.AddWithValue("@CCEmail", TempCC.CCEmail);
-                else cmd.Parameters.AddWithValue("@CCEmail", DBNull.Value);
-                cmd.Parameters.AddWithValue("@Active", TempCC.CCActive);
+            sqlquery = "UPDATE tblCustomerContacts SET Customer_ID=@CustomerID, CC_Name=@Name, CC_Phone=@Phone, CC_CellPhone=@Cell, CC_Email=@Email, Active=@Active WHERE CC_ID=@ID";
 
-                try
-                {
-                    int rowsAffected = cmd.ExecuteNonQuery();
-                }
-                catch (SqlException e)
-                {
-                    Console.WriteLine(e);
-                }
-            }
+            int selectedCustomerID = SelectedCustomerID;
+            string name = TempCC.CCName;
+            string phone = TempCC.CCPhone;
+            string cell = TempCC.CCCell;
+            string email = TempCC.CCEmail;
+            bool active = TempCC.CCActive;
+            int contactID = TempCC.ID;
+
+            cmd = dbConnection.RunQueryToUpdateCustAddInfo(sqlquery, selectedCustomerID, name, phone, cell, email, active, contactID);
         }
 
         public void CreateCustSup()
         {
-            sqlquery = "INSERT INTO tblSuperintendents(Customer_ID, Sup_Name, Sup_Phone, Sup_CellPhone, Sup_Email, Active) OUTPUT INSERTED.Sup_ID VALUES (@CustomerID, @SupName, @SupPhone, @SupCell, @SupEmail, @Active)";
+            sqlquery = "INSERT INTO tblSuperintendents(Customer_ID, Sup_Name, Sup_Phone, Sup_CellPhone, Sup_Email, Active) OUTPUT INSERTED.Sup_ID VALUES (@CustomerID, @Name, @Phone, @Cell, @Email, @Active)";
 
-            using (cmd = new SqlCommand(sqlquery, dbConnection.Connection))
-            {
-                if (SelectedCustomerID != 0)
-                    cmd.Parameters.AddWithValue("@CustomerID", SelectedCustomerID);
-                else cmd.Parameters.AddWithValue("@CustomerID", DBNull.Value);
-                if (!string.IsNullOrEmpty(TempSup.SupName))
-                    cmd.Parameters.AddWithValue("@SupName", TempSup.SupName);
-                else cmd.Parameters.AddWithValue("@SupName", DBNull.Value);
-                if (!string.IsNullOrEmpty(TempSup.SupPhone))
-                    cmd.Parameters.AddWithValue("@SupPhone", TempSup.SupPhone);
-                else cmd.Parameters.AddWithValue("@SupPhone", DBNull.Value);
-                if (!string.IsNullOrEmpty(TempSup.SupCellPhone))
-                    cmd.Parameters.AddWithValue("@SupCell", TempSup.SupCellPhone);
-                else cmd.Parameters.AddWithValue("@SupCell", DBNull.Value);
-                if (!string.IsNullOrEmpty(TempSup.SupEmail))
-                    cmd.Parameters.AddWithValue("@SupEmail", TempSup.SupEmail);
-                else cmd.Parameters.AddWithValue("@SupEmail", DBNull.Value);
-                cmd.Parameters.AddWithValue("@Active", TempSup.Active);
+            int selectedCustomerID = SelectedCustomerID;
+            string name = TempSup.SupName;
+            string phone = TempSup.SupPhone;
+            string cell = TempSup.SupCellPhone;
+            string email = TempSup.SupEmail;
+            bool active = TempSup.Active;
 
-                try
-                {
-                    int insertedSupId = (int)cmd.ExecuteScalar();
-                    SelectedCustSupID = insertedSupId;
-                    TempSup.SupID = insertedSupId;
-                    int totalCount = CustSupts.Count;
-                    CurrentIndex = totalCount - 2;
-                    ActionSubState = "UpdateRow";
-                    CustSupts[totalCount - 2] = TempSup;
-                }
-                catch (SqlException e)
-                {
-                    Console.WriteLine(e);
-                }
-            }
+            int insertedSupId = dbConnection.RunQueryToCreateCustAddInfo(sqlquery, selectedCustomerID, name, phone, cell, email, active);
+            SelectedCustSupID = insertedSupId;
+            TempSup.SupID = insertedSupId;
+            int totalCount = CustSupts.Count;
+            CurrentIndex = totalCount - 2;
+            ActionSubState = "UpdateRow";
+            CustSupts[totalCount - 2] = TempSup;
         }
 
         public void UpdateCustSup()
         {
-            sqlquery = "UPDATE tblSuperintendents SET Customer_ID=@CustomerID, Sup_Name=@SupName, Sup_Phone=@SupPhone, Sup_CellPhone=@SupCell, Sup_Email=@SupEmail, Active=@Active WHERE Sup_ID=@SupID";
-            using (cmd = new SqlCommand(sqlquery, dbConnection.Connection))
-            {
-                cmd.Parameters.AddWithValue("@SupID", TempSup.SupID);
-                if (SelectedCustomerID != 0)
-                    cmd.Parameters.AddWithValue("@CustomerID", SelectedCustomerID);
-                else cmd.Parameters.AddWithValue("@CustomerID", DBNull.Value);
-                if (!string.IsNullOrEmpty(TempSup.SupName))
-                    cmd.Parameters.AddWithValue("@SupName", TempSup.SupName);
-                else cmd.Parameters.AddWithValue("@SupName", DBNull.Value);
-                if (!string.IsNullOrEmpty(TempSup.SupPhone))
-                    cmd.Parameters.AddWithValue("@SupPhone", TempSup.SupPhone);
-                else cmd.Parameters.AddWithValue("@SupPhone", DBNull.Value);
-                if (!string.IsNullOrEmpty(TempSup.SupCellPhone))
-                    cmd.Parameters.AddWithValue("@SupCell", TempSup.SupCellPhone);
-                else cmd.Parameters.AddWithValue("@SupCell", DBNull.Value);
-                if (!string.IsNullOrEmpty(TempSup.SupEmail))
-                    cmd.Parameters.AddWithValue("@SupEmail", TempSup.SupEmail);
-                else cmd.Parameters.AddWithValue("@SupEmail", DBNull.Value);
-                cmd.Parameters.AddWithValue("@Active", TempSup.Active);
+            sqlquery = "UPDATE tblSuperintendents SET Customer_ID=@CustomerID, Sup_Name=@Name, Sup_Phone=@Phone, Sup_CellPhone=@Cell, Sup_Email=@Email, Active=@Active WHERE Sup_ID=@ID";
 
-                try
-                {
-                    int rowsAffected = cmd.ExecuteNonQuery();
-                }
-                catch (SqlException e)
-                {
-                    Console.WriteLine(e);
-                }
-            }
+            int selectedCustomerID = SelectedCustomerID;
+            string name = TempSup.SupName;
+            string phone = TempSup.SupPhone;
+            string cell = TempSup.SupCellPhone;
+            string email = TempSup.SupEmail;
+            bool active = TempSup.Active;
+            int supID = TempSup.SupID;
+
+            cmd = dbConnection.RunQueryToUpdateCustAddInfo(sqlquery, selectedCustomerID, name, phone, cell, email, active, supID);
         }
 
         public void CreateCustPM()
         {
-            sqlquery = "INSERT INTO tblProjectManagers(Customer_ID, PM_Name, PM_Phone, PM_CellPhone, PM_Email, Active) OUTPUT INSERTED.PM_ID VALUES (@CustomerID, @PmName, @PmPhone, @PmCell, @PmEmail, @Active)";
+            sqlquery = "INSERT INTO tblProjectManagers(Customer_ID, PM_Name, PM_Phone, PM_CellPhone, PM_Email, Active) OUTPUT INSERTED.PM_ID VALUES (@CustomerID, @Name, @Phone, @Cell, @Email, @Active)";
 
-            using (cmd = new SqlCommand(sqlquery, dbConnection.Connection))
-            {
-                if (SelectedCustomerID != 0)
-                    cmd.Parameters.AddWithValue("@CustomerID", SelectedCustomerID);
-                else cmd.Parameters.AddWithValue("@CustomerID", DBNull.Value);
-                if (!string.IsNullOrEmpty(TempPM.PMName))
-                    cmd.Parameters.AddWithValue("@PmName", TempPM.PMName);
-                else cmd.Parameters.AddWithValue("@PmName", DBNull.Value);
-                if (!string.IsNullOrEmpty(TempPM.PMPhone))
-                    cmd.Parameters.AddWithValue("@PmPhone", TempPM.PMPhone);
-                else cmd.Parameters.AddWithValue("@PmPhone", DBNull.Value);
-                if (!string.IsNullOrEmpty(TempPM.PMCellPhone))
-                    cmd.Parameters.AddWithValue("@PmCell", TempPM.PMCellPhone);
-                else cmd.Parameters.AddWithValue("@PmCell", DBNull.Value);
-                if (!string.IsNullOrEmpty(TempPM.PMEmail))
-                    cmd.Parameters.AddWithValue("@PmEmail", TempPM.PMEmail);
-                else cmd.Parameters.AddWithValue("@PmEmail", DBNull.Value);
-                cmd.Parameters.AddWithValue("@Active", TempPM.Active);
+            int selectedCustomerID = SelectedCustomerID;
+            string name = TempPM.PMName;
+            string phone = TempPM.PMPhone;
+            string cell = TempPM.PMCellPhone;
+            string email = TempPM.PMEmail;
+            bool active = TempPM.Active;
 
-                try
-                {
-                    int insertedPMId = (int)cmd.ExecuteScalar();
-                    SelectedCustPmID = insertedPMId;
-                    TempPM.ID = insertedPMId;
-                    int totalCount = CustPMs.Count;
-                    CurrentIndex = totalCount - 2;
-                    ActionSubState = "UpdateRow";
-                    CustPMs[totalCount - 2] = TempPM;
-                }
-                catch (SqlException e)
-                {
-                    Console.WriteLine(e);
-                }
-            }
+            int insertedPMId = dbConnection.RunQueryToCreateCustAddInfo(sqlquery, selectedCustomerID, name, phone, cell, email, active);
+            SelectedCustPmID = insertedPMId;
+            TempPM.ID = insertedPMId;
+            int totalCount = CustPMs.Count;
+            CurrentIndex = totalCount - 2;
+            ActionSubState = "UpdateRow";
+            CustPMs[totalCount - 2] = TempPM;
         }
 
         public void UpdateCustPM()
         {
-            sqlquery = "UPDATE tblProjectManagers SET Customer_ID=@CustomerID, PM_Name=@PmName, PM_Phone=@PmPhone, PM_CellPhone=@PmCell, PM_Email=@PmEmail, Active=@Active WHERE PM_ID=@PmID";
-            using (cmd = new SqlCommand(sqlquery, dbConnection.Connection))
-            {
-                cmd.Parameters.AddWithValue("@PmID", TempPM.ID);
-                if (SelectedCustomerID != 0)
-                    cmd.Parameters.AddWithValue("@CustomerID", SelectedCustomerID);
-                else cmd.Parameters.AddWithValue("@CustomerID", DBNull.Value);
-                if (!string.IsNullOrEmpty(TempPM.PMName))
-                    cmd.Parameters.AddWithValue("@PmName", TempPM.PMName);
-                else cmd.Parameters.AddWithValue("@PmName", DBNull.Value);
-                if (!string.IsNullOrEmpty(TempPM.PMPhone))
-                    cmd.Parameters.AddWithValue("@PmPhone", TempPM.PMPhone);
-                else cmd.Parameters.AddWithValue("@PmPhone", DBNull.Value);
-                if (!string.IsNullOrEmpty(TempPM.PMCellPhone))
-                    cmd.Parameters.AddWithValue("@PmCell", TempPM.PMCellPhone);
-                else cmd.Parameters.AddWithValue("@PmCell", DBNull.Value);
-                if (!string.IsNullOrEmpty(TempPM.PMEmail))
-                    cmd.Parameters.AddWithValue("@PmEmail", TempPM.PMEmail);
-                else cmd.Parameters.AddWithValue("@PmEmail", DBNull.Value);
-                cmd.Parameters.AddWithValue("@Active", TempPM.Active);
+            sqlquery = "UPDATE tblProjectManagers SET Customer_ID=@CustomerID, PM_Name=@Name, PM_Phone=@Phone, PM_CellPhone=@Cell, PM_Email=@Email, Active=@Active WHERE PM_ID=@ID";
 
-                try
-                {
-                    int rowsAffected = cmd.ExecuteNonQuery();
-                }
-                catch (SqlException e)
-                {
-                    Console.WriteLine(e);
-                }
-            }
+            int selectedCustomerID = SelectedCustomerID;
+            string name = TempPM.PMName;
+            string phone = TempPM.PMPhone;
+            string cell = TempPM.PMCellPhone;
+            string email = TempPM.PMEmail;
+            bool active = TempPM.Active;
+            int pmID = TempPM.ID;
+
+            cmd = dbConnection.RunQueryToUpdateCustAddInfo(sqlquery, selectedCustomerID, name, phone, cell, email, active, pmID);
         }
 
         public void UpdateManuf()
         {
-            int manufID = (UpdateComponent.Equals("Table")) ? TempManuf.ID : TempDetailManuf.ID;
+            sqlquery = "UPDATE tblManufacturers SET Manuf_Name=@ManufName, Address=@Address, Address2=@Address2, City=@City, State=@State, ZIP=@Zip, Phone=@Phone, FAX=@Fax, Contact_Name=@ContactName, Contact_Phone=@ContactPhone, Contact_Email=@ContactEmail, Active=@Active WHERE Manuf_ID=@ManufID";
+
             string manufName = (UpdateComponent.Equals("Table")) ? TempManuf.ManufacturerName : TempDetailManuf.ManufacturerName;
             string address = (UpdateComponent.Equals("Table")) ? TempManuf.Address : TempDetailManuf.Address;
             string address2 = (UpdateComponent.Equals("Table")) ? TempManuf.Address2 : TempDetailManuf.Address2;
@@ -1080,8 +548,7 @@ namespace WpfApp.ViewModel
             string contactPhone = (UpdateComponent.Equals("Table")) ? TempManuf.ContactPhone : TempDetailManuf.ContactPhone;
             string contactEmail = (UpdateComponent.Equals("Table")) ? TempManuf.ContactEmail : TempDetailManuf.ContactEmail;
             bool active = (UpdateComponent.Equals("Table")) ? TempManuf.Active : TempDetailManuf.Active;
-
-            sqlquery = "UPDATE tblManufacturers SET Manuf_Name=@ManufName, Address=@Address, Address2=@Address2, City=@City, State=@State, ZIP=@Zip, Phone=@Phone, FAX=@Fax, Contact_Name=@ContactName, Contact_Phone=@ContactPhone, Contact_Email=@ContactEmail, Active=@Active WHERE Manuf_ID=@ManufID";
+            int manufID = (UpdateComponent.Equals("Table")) ? TempManuf.ID : TempDetailManuf.ID;
 
             if (UpdateComponent.Equals("Detail"))
             {
@@ -1096,57 +563,9 @@ namespace WpfApp.ViewModel
                 }
             }
 
-            using (cmd = new SqlCommand(sqlquery, dbConnection.Connection))
-            {
-                if (!string.IsNullOrEmpty(manufName))
-                    cmd.Parameters.AddWithValue("@ManufName", manufName);
-                else cmd.Parameters.AddWithValue("@ManufName", DBNull.Value);
-                if (!string.IsNullOrEmpty(address))
-                    cmd.Parameters.AddWithValue("@Address", address);
-                else cmd.Parameters.AddWithValue("@Address", DBNull.Value);
-                if (!string.IsNullOrEmpty(address2))
-                    cmd.Parameters.AddWithValue("@Address2", address2);
-                else cmd.Parameters.AddWithValue("@Address2", DBNull.Value);
-                if (!string.IsNullOrEmpty(city))
-                    cmd.Parameters.AddWithValue("@City", city);
-                else cmd.Parameters.AddWithValue("@City", DBNull.Value);
-                if (!string.IsNullOrEmpty(state))
-                    cmd.Parameters.AddWithValue("@State", state);
-                else cmd.Parameters.AddWithValue("@State", DBNull.Value);
-                if (!string.IsNullOrEmpty(zip))
-                    cmd.Parameters.AddWithValue("@Zip", zip);
-                else cmd.Parameters.AddWithValue("@Zip", DBNull.Value);
-                if (!string.IsNullOrEmpty(phone))
-                    cmd.Parameters.AddWithValue("@Phone", phone);
-                else cmd.Parameters.AddWithValue("@Phone", DBNull.Value);
-                if (!string.IsNullOrEmpty(fax))
-                    cmd.Parameters.AddWithValue("@Fax", fax);
-                else cmd.Parameters.AddWithValue("@Fax", DBNull.Value);
-                if (!string.IsNullOrEmpty(contactName))
-                    cmd.Parameters.AddWithValue("@ContactName", contactName);
-                else cmd.Parameters.AddWithValue("@ContactName", DBNull.Value);
-                if (!string.IsNullOrEmpty(contactPhone))
-                    cmd.Parameters.AddWithValue("@ContactPhone", contactPhone);
-                else cmd.Parameters.AddWithValue("@ContactPhone", DBNull.Value);
-                if (!string.IsNullOrEmpty(contactEmail))
-                    cmd.Parameters.AddWithValue("@ContactEmail", contactEmail);
-                else cmd.Parameters.AddWithValue("@ContactEmail", DBNull.Value);
-                if (manufID != 0)
-                    cmd.Parameters.AddWithValue("@ManufID", manufID);
-                else cmd.Parameters.AddWithValue("@ManufID", DBNull.Value);
-                cmd.Parameters.AddWithValue("@Active", active);
+            cmd = dbConnection.RunQueryToUpdateManuf(sqlquery, manufName, address, address2, city, state, zip, phone, fax, contactName, contactPhone, contactEmail, active, manufID);
 
-                try
-                {
-                    int rowsAffected = cmd.ExecuteNonQuery();
-
-                }
-                catch (SqlException e)
-                {
-                    Console.WriteLine(e);
-                }
-                ActionManufState = "";
-            }
+           ActionManufState = "";
         }
 
         public void CreateManuf()
@@ -1155,61 +574,23 @@ namespace WpfApp.ViewModel
             {
                 sqlquery = "INSERT INTO tblManufacturers(Manuf_Name, Address, Address2, City, State, ZIP, Phone, FAX, Contact_Name, Contact_Phone, Contact_Email, Active) OUTPUT INSERTED.Manuf_ID VALUES (@ManufName, @Address, @Address2, @City, @State, @Zip, @Phone, @Fax, @ContactName, @ContactPhone, @ContactEmail, @Active)";
 
-                using (cmd = new SqlCommand(sqlquery, dbConnection.Connection))
-                {
-                    if (!string.IsNullOrEmpty(TempCreateManuf.ManufacturerName))
-                        cmd.Parameters.AddWithValue("@ManufName", TempCreateManuf.ManufacturerName);
-                    else cmd.Parameters.AddWithValue("@ManufName", DBNull.Value);
-                    if (!string.IsNullOrEmpty(TempCreateManuf.Address))
-                        cmd.Parameters.AddWithValue("@Address", TempCreateManuf.Address);
-                    else cmd.Parameters.AddWithValue("@Address", DBNull.Value);
-                    if (!string.IsNullOrEmpty(TempCreateManuf.Address2))
-                        cmd.Parameters.AddWithValue("@Address2", TempCreateManuf.Address2);
-                    else cmd.Parameters.AddWithValue("@Address2", DBNull.Value);
-                    if (!string.IsNullOrEmpty(TempCreateManuf.City))
-                        cmd.Parameters.AddWithValue("@City", TempCreateManuf.City);
-                    else cmd.Parameters.AddWithValue("@City", DBNull.Value);
-                    if (!string.IsNullOrEmpty(TempCreateManuf.State))
-                        cmd.Parameters.AddWithValue("@State", TempCreateManuf.State);
-                    else cmd.Parameters.AddWithValue("@State", DBNull.Value);
-                    if (!string.IsNullOrEmpty(TempCreateManuf.Zip))
-                        cmd.Parameters.AddWithValue("@Zip", TempCreateManuf.Zip);
-                    else cmd.Parameters.AddWithValue("@Zip", DBNull.Value);
-                    if (!string.IsNullOrEmpty(TempCreateManuf.Phone))
-                        cmd.Parameters.AddWithValue("@Phone", TempCreateManuf.Phone);
-                    else cmd.Parameters.AddWithValue("@Phone", DBNull.Value);
-                    if (!string.IsNullOrEmpty(TempCreateManuf.Fax))
-                        cmd.Parameters.AddWithValue("@Fax", TempCreateManuf.Fax);
-                    else cmd.Parameters.AddWithValue("@Fax", DBNull.Value);
-                    if (!string.IsNullOrEmpty(TempCreateManuf.ContactName))
-                        cmd.Parameters.AddWithValue("@ContactName", TempCreateManuf.ContactName);
-                    else cmd.Parameters.AddWithValue("@ContactName", DBNull.Value);
-                    if (!string.IsNullOrEmpty(TempCreateManuf.ContactPhone))
-                        cmd.Parameters.AddWithValue("@ContactPhone", TempCreateManuf.ContactPhone);
-                    else cmd.Parameters.AddWithValue("@ContactPhone", DBNull.Value);
-                    if (!string.IsNullOrEmpty(TempCreateManuf.ContactEmail))
-                        cmd.Parameters.AddWithValue("@ContactEmail", TempCreateManuf.ContactEmail);
-                    else cmd.Parameters.AddWithValue("@ContactEmail", DBNull.Value);
-                    cmd.Parameters.AddWithValue("@Active", TempCreateManuf.Active);
+                string manufName = (UpdateComponent.Equals("Table")) ? TempManuf.ManufacturerName : TempDetailManuf.ManufacturerName;
+                string address = (UpdateComponent.Equals("Table")) ? TempManuf.Address : TempDetailManuf.Address;
+                string address2 = (UpdateComponent.Equals("Table")) ? TempManuf.Address2 : TempDetailManuf.Address2;
+                string city = (UpdateComponent.Equals("Table")) ? TempManuf.City : TempDetailManuf.City;
+                string state = (UpdateComponent.Equals("Table")) ? TempManuf.State : TempDetailManuf.State;
+                string zip = (UpdateComponent.Equals("Table")) ? TempManuf.Zip : TempDetailManuf.Zip;
+                string phone = (UpdateComponent.Equals("Table")) ? TempManuf.Phone : TempDetailManuf.Phone;
+                string fax = (UpdateComponent.Equals("Table")) ? TempManuf.Fax : TempDetailManuf.Fax;
+                string contactName = (UpdateComponent.Equals("Table")) ? TempManuf.ContactName : TempDetailManuf.ContactName;
+                string contactPhone = (UpdateComponent.Equals("Table")) ? TempManuf.ContactPhone : TempDetailManuf.ContactPhone;
+                string contactEmail = (UpdateComponent.Equals("Table")) ? TempManuf.ContactEmail : TempDetailManuf.ContactEmail;
+                bool active = (UpdateComponent.Equals("Table")) ? TempManuf.Active : TempDetailManuf.Active;
 
-                    try
-                    {
-                        int insertedManufId = (int)cmd.ExecuteScalar();
-                        SelectedManufID = insertedManufId;
-                        TempDetailManuf.ID = insertedManufId;
-                        UpdateComponent = "Detail";
-                    }
-                    catch (SqlException e)
-                    {
-                        Console.WriteLine(e);
-                    }
-                    ActionManufState = "";
-                }
-            }
-            else
-            {
-                if (!ActionManufState.Equals("ClearManuf"))
-                    MessageBox.Show("Manufacturer Name is required.");
+                int insertedManufId = dbConnection.RunQueryToCreateManuf(sqlquery, manufName, address, address2, city, state, zip, phone, fax, contactName, contactPhone, contactEmail, active);
+                SelectedManufID = insertedManufId;
+                TempDetailManuf.ID = insertedManufId;
+                UpdateComponent = "Detail";
             }
         }
 
@@ -1217,22 +598,12 @@ namespace WpfApp.ViewModel
         {
             sqlquery = "UPDATE tblNotes SET Notes_Note=@NotesNote, Notes_DateAdded=@NotesDateAdded, Notes_User=@NotesUser WHERE Notes_ID=@NotesID";
 
-            using (cmd = new SqlCommand(sqlquery, dbConnection.Connection))
-            {
-                if (!string.IsNullOrEmpty(TempNote.NotesNote))
-                    cmd.Parameters.AddWithValue("@NotesNote", TempNote.NotesNote);
-                else cmd.Parameters.AddWithValue("@NotesNote", DBNull.Value);
-                if (!TempNote.NotesDateAdded.Equals(DateTime.MinValue))
-                    cmd.Parameters.AddWithValue("@NotesDateAdded", TempNote.NotesDateAdded);
-                else cmd.Parameters.AddWithValue("@NotesDateAdded", DBNull.Value);
-                if (!string.IsNullOrEmpty(TempNote.NoteUser))
-                    cmd.Parameters.AddWithValue("@NotesUser", TempNote.NoteUser);
-                else cmd.Parameters.AddWithValue("@NotesUser", DBNull.Value);
-                if (TempNote.NoteID != 0)
-                    cmd.Parameters.AddWithValue("@NotesID", TempNote.NoteID);
-                else cmd.Parameters.AddWithValue("@NotesID", DBNull.Value);
-            }
-            int rowsAffected = cmd.ExecuteNonQuery();
+            string note = TempNote.NotesNote;
+            DateTime notesDateAdded = TempNote.NotesDateAdded;
+            string user = TempNote.NoteUser;
+            int noteID = TempNote.NoteID;
+
+            cmd = dbConnection.RunQueryToUpdateNote(sqlquery, note, notesDateAdded, user, noteID);
         }
 
         public void CreateNote()
@@ -1264,51 +635,31 @@ namespace WpfApp.ViewModel
                     notes = ManufNotes;
                     break;
             }
-            using (cmd = new SqlCommand(sqlquery, dbConnection.Connection))
-            {
-                if (notesPK != 0)
-                    cmd.Parameters.AddWithValue("@NotesPK", notesPK);
-                else cmd.Parameters.AddWithValue("@NotesPK", DBNull.Value);
-                if (!string.IsNullOrEmpty(TempCreateNote.NotesPKDesc))
-                    cmd.Parameters.AddWithValue("@NotesDesc", TempCreateNote.NotesPKDesc);
-                else cmd.Parameters.AddWithValue("@NotesDesc", DBNull.Value);
-                if (!string.IsNullOrEmpty(TempCreateNote.NotesNote))
-                    cmd.Parameters.AddWithValue("@NotesNote", TempCreateNote.NotesNote);
-                else cmd.Parameters.AddWithValue("@NotesNote", DBNull.Value);
-                if (!TempCreateNote.NotesDateAdded.Equals(DateTime.MinValue))
-                    cmd.Parameters.AddWithValue("@NotesDateAdded", TempCreateNote.NotesDateAdded);
-                else cmd.Parameters.AddWithValue("@NotesDateAdded", DBNull.Value);
-                if (!string.IsNullOrEmpty(TempCreateNote.NoteUser))
-                    cmd.Parameters.AddWithValue("@NotesUser", TempCreateNote.NoteUser);
-                else cmd.Parameters.AddWithValue("@NotesUser", DBNull.Value);
+            string notesPkDesc = TempCreateNote.NotesPKDesc;
+            string notesNote = TempCreateNote.NotesNote;
+            DateTime notesDateAdded = TempCreateNote.NotesDateAdded;
+            string user = TempCreateNote.NoteUser;
 
-                try
-                {
-                    int insertedNoteId = (int)cmd.ExecuteScalar();
-                    TempCreateNote.NoteID = insertedNoteId;
-                    TempCreateNote.NotePK = notesPK;
 
-                    TempNote.NoteID = TempCreateNote.NoteID;
-                    TempNote.NotePK = TempCreateNote.NotePK;
-                    TempNote.NotesDateAdded = TempCreateNote.NotesDateAdded;
-                    TempNote.NotesPKDesc = TempCreateNote.NotesPKDesc;
-                    TempNote.NoteUser = TempCreateNote.NoteUser;
-                    TempNote.NoteUserName = TempCreateNote.NoteUserName;
+            int insertedNoteId = dbConnection.RunQueryToCreateNote(sqlquery, notesPK, notesPkDesc, notesNote, notesDateAdded, user);
+            TempCreateNote.NoteID = insertedNoteId;
+            TempCreateNote.NotePK = notesPK;
 
-                    notes[notes.Count - 2] = TempCreateNote;
-                    CurrentNoteID = notes.Count - 2;
-                    ActionNoteState = "UpdateRow";
-                }
-                catch (SqlException e)
-                {
-                    Console.WriteLine(e);
-                }
-            }
+            TempNote.NoteID = TempCreateNote.NoteID;
+            TempNote.NotePK = TempCreateNote.NotePK;
+            TempNote.NotesDateAdded = TempCreateNote.NotesDateAdded;
+            TempNote.NotesPKDesc = TempCreateNote.NotesPKDesc;
+            TempNote.NoteUser = TempCreateNote.NoteUser;
+            TempNote.NoteUserName = TempCreateNote.NoteUserName;
+
+            notes[notes.Count - 2] = TempCreateNote;
+            CurrentNoteID = notes.Count - 2;
+            ActionNoteState = "UpdateRow";
+             
         }
 
         public void UpdateCustomer()
         {
-            int customerID = (UpdateComponent.Equals("Table")) ? TempCustomer.ID : TempDetailCustomer.ID;
             string fullName = (UpdateComponent.Equals("Table")) ? TempCustomer.FullName : TempDetailCustomer.FullName;
             string shortName = (UpdateComponent.Equals("Table")) ? TempCustomer.ShortName : TempDetailCustomer.ShortName;
             string poNumber = (UpdateComponent.Equals("Table")) ? TempCustomer.PoBox : TempDetailCustomer.PoBox;
@@ -1320,6 +671,7 @@ namespace WpfApp.ViewModel
             string fax = (UpdateComponent.Equals("Table")) ? TempCustomer.Fax : TempDetailCustomer.Fax;
             string email = (UpdateComponent.Equals("Table")) ? TempCustomer.Email : TempDetailCustomer.Email;
             bool active = (UpdateComponent.Equals("Table")) ? TempCustomer.Active : TempDetailCustomer.Active;
+            int customerID = (UpdateComponent.Equals("Table")) ? TempCustomer.ID : TempDetailCustomer.ID;
 
             if (!string.IsNullOrEmpty(fullName))
             {
@@ -1337,43 +689,10 @@ namespace WpfApp.ViewModel
                         }
                     }
                 }
-                using (cmd = new SqlCommand(sqlquery, dbConnection.Connection))
-                {
-                    if (!string.IsNullOrEmpty(fullName))
-                        cmd.Parameters.AddWithValue("@FullName", fullName);
-                    if (!string.IsNullOrEmpty(shortName))
-                        cmd.Parameters.AddWithValue("@ShortName", shortName);
-                    else cmd.Parameters.AddWithValue("@ShortName", DBNull.Value);
-                    if (!string.IsNullOrEmpty(poNumber))
-                        cmd.Parameters.AddWithValue("@PoNumber", poNumber);
-                    else cmd.Parameters.AddWithValue("@PoNumber", DBNull.Value);
-                    if (!string.IsNullOrEmpty(address))
-                        cmd.Parameters.AddWithValue("@Address", address);
-                    else cmd.Parameters.AddWithValue("@Address", DBNull.Value);
-                    if (!string.IsNullOrEmpty(city))
-                        cmd.Parameters.AddWithValue("@City", city);
-                    else cmd.Parameters.AddWithValue("@City", DBNull.Value);
-                    if (!string.IsNullOrEmpty(state))
-                        cmd.Parameters.AddWithValue("@State", state);
-                    else cmd.Parameters.AddWithValue("@State", DBNull.Value);
-                    if (!string.IsNullOrEmpty(zip))
-                        cmd.Parameters.AddWithValue("@Zip", zip);
-                    else cmd.Parameters.AddWithValue("@Zip", DBNull.Value);
-                    if (!string.IsNullOrEmpty(phone))
-                        cmd.Parameters.AddWithValue("@Phone", phone);
-                    else cmd.Parameters.AddWithValue("@Phone", DBNull.Value);
-                    if (!string.IsNullOrEmpty(fax))
-                        cmd.Parameters.AddWithValue("@Fax", fax);
-                    else cmd.Parameters.AddWithValue("@Fax", DBNull.Value);
-                    if (!string.IsNullOrEmpty(email))
-                        cmd.Parameters.AddWithValue("@Email", email);
-                    else cmd.Parameters.AddWithValue("@Email", DBNull.Value);
-                    cmd.Parameters.AddWithValue("@Active", active);
-                    cmd.Parameters.AddWithValue("@CustomerID", customerID);
 
-                    int rowsAffected = cmd.ExecuteNonQuery();
-                    ActionState = "UpdateRow";
-                }
+                cmd = dbConnection.RunQueryToUpdateCustomer(sqlquery, fullName, shortName, poNumber, address, city, state, zip, phone, fax, email, active, customerID);
+                int rowsAffected = cmd.ExecuteNonQuery();
+                ActionState = "UpdateRow";
                 ActionCustState = "";
             }
             else
@@ -1389,53 +708,23 @@ namespace WpfApp.ViewModel
             {
                 sqlquery = "INSERT INTO tblCustomers(Short_Name, Full_Name, PO_Box, Address, City, State, ZIP, Phone, FAX, Email, Active) OUTPUT INSERTED.Customer_ID VALUES (@ShortName, @FullName, @PoNumber, @Address, @City, @State, @Zip, @Phone, @Fax, @Email, @Active)";
 
-                using (cmd = new SqlCommand(sqlquery, dbConnection.Connection))
-                {
-                    if (!string.IsNullOrEmpty(TempCreateCustomer.FullName))
-                        cmd.Parameters.AddWithValue("@FullName", TempCreateCustomer.FullName);
-                    else cmd.Parameters.AddWithValue("@FullName", DBNull.Value);
-                    if (!string.IsNullOrEmpty(TempCreateCustomer.ShortName))
-                        cmd.Parameters.AddWithValue("@ShortName", TempCreateCustomer.ShortName);
-                    else cmd.Parameters.AddWithValue("@ShortName", DBNull.Value);
-                    if (!string.IsNullOrEmpty(TempCreateCustomer.PoBox))
-                        cmd.Parameters.AddWithValue("@PoNumber", TempCreateCustomer.PoBox);
-                    else cmd.Parameters.AddWithValue("@PoNumber", DBNull.Value);
-                    if (!string.IsNullOrEmpty(TempCreateCustomer.Address))
-                        cmd.Parameters.AddWithValue("@Address", TempCreateCustomer.Address);
-                    else cmd.Parameters.AddWithValue("@Address", DBNull.Value);
-                    if (!string.IsNullOrEmpty(TempCreateCustomer.City))
-                        cmd.Parameters.AddWithValue("@City", TempCreateCustomer.City);
-                    else cmd.Parameters.AddWithValue("@City", DBNull.Value);
-                    if (!string.IsNullOrEmpty(TempCreateCustomer.State))
-                        cmd.Parameters.AddWithValue("@State", TempCreateCustomer.State);
-                    else cmd.Parameters.AddWithValue("@State", DBNull.Value);
-                    if (!string.IsNullOrEmpty(TempCreateCustomer.Zip))
-                        cmd.Parameters.AddWithValue("@Zip", TempCreateCustomer.Zip);
-                    else cmd.Parameters.AddWithValue("@Zip", DBNull.Value);
-                    if (!string.IsNullOrEmpty(TempCreateCustomer.Phone))
-                        cmd.Parameters.AddWithValue("@Phone", TempCreateCustomer.Phone);
-                    else cmd.Parameters.AddWithValue("@Phone", DBNull.Value);
-                    if (!string.IsNullOrEmpty(TempCreateCustomer.Fax))
-                        cmd.Parameters.AddWithValue("@Fax", TempCreateCustomer.Fax);
-                    else cmd.Parameters.AddWithValue("@Fax", DBNull.Value);
-                    if (!string.IsNullOrEmpty(TempCreateCustomer.Email))
-                        cmd.Parameters.AddWithValue("@Email", TempCreateCustomer.Email);
-                    else cmd.Parameters.AddWithValue("@Email", DBNull.Value);
-                    cmd.Parameters.AddWithValue("@Active", TempCreateCustomer.Active);
+                string fullName = TempCreateCustomer.FullName;
+                string shortName = TempCreateCustomer.ShortName;
+                string poNumber = TempCreateCustomer.PoBox;
+                string address = TempCreateCustomer.Address;
+                string city = TempCreateCustomer.City;
+                string state = TempCreateCustomer.State;
+                string zip = TempCreateCustomer.Zip;
+                string phone = TempCreateCustomer.Phone;
+                string fax = TempCreateCustomer.Fax;
+                string email = TempCreateCustomer.Email;
+                bool active = TempCreateCustomer.Active;
 
-                    try
-                    {
-                        int insertedCustomerId = (int)cmd.ExecuteScalar();
-                        SelectedCustomerID = insertedCustomerId;
-                        TempDetailCustomer = TempCreateCustomer;
-                        TempDetailCustomer.ID = SelectedCustomerID;
-                        UpdateComponent = "Detail";
-                    }
-                    catch (SqlException e)
-                    {
-                        Console.WriteLine(e);
-                    }
-                }
+                int insertedCustomerId = dbConnection.RunQueryToCreateCustomer(sqlquery, fullName, shortName, poNumber, address, city, state, zip, phone, fax, email, active);
+                SelectedCustomerID = insertedCustomerId;
+                TempDetailCustomer = TempCreateCustomer;
+                TempDetailCustomer.ID = SelectedCustomerID;
+                UpdateComponent = "Detail";
             }
             else
             {
@@ -1492,7 +781,7 @@ namespace WpfApp.ViewModel
         public void ViewManuf(int manufID)
         {
             sqlquery = "SELECT * FROM tblManufacturers WHERE Manuf_ID=" + manufID;
-            cmd = new SqlCommand(sqlquery, dbConnection.Connection);
+            cmd = dbConnection.RunQuryNoParameters(sqlquery);
             sda = new SqlDataAdapter(cmd);
             ds = new DataSet();
             sda.Fill(ds);
@@ -1538,7 +827,7 @@ namespace WpfApp.ViewModel
             TempDetailManuf.ID = manufID;
 
             sqlquery = "SELECT * FROM tblNotes WHERE Notes_PK_Desc='Manuf' AND Notes_PK=" + manufID;
-            cmd = new SqlCommand(sqlquery, dbConnection.Connection);
+            cmd = dbConnection.RunQuryNoParameters(sqlquery);
             sda = new SqlDataAdapter(cmd);
             ds = new DataSet();
             sda.Fill(ds);
@@ -1586,7 +875,7 @@ namespace WpfApp.ViewModel
         public void ViewCustomer(int customerID)
         {
             sqlquery = "SELECT * FROM tblCustomers WHERE Customer_ID=" + customerID;
-            cmd = new SqlCommand(sqlquery, dbConnection.Connection);
+            cmd = dbConnection.RunQuryNoParameters(sqlquery);
             sda = new SqlDataAdapter(cmd);
             ds = new DataSet();
             sda.Fill(ds);
@@ -1630,7 +919,7 @@ namespace WpfApp.ViewModel
             TempDetailCustomer.Active = firstRow.Field<Boolean>("Active");
             
             sqlquery = "SELECT * FROM tblNotes WHERE Notes_PK_Desc='Customer' AND Notes_PK=" + customerID;
-            cmd = new SqlCommand(sqlquery, dbConnection.Connection);
+            cmd = dbConnection.RunQuryNoParameters(sqlquery);
             sda = new SqlDataAdapter(cmd);
             ds = new DataSet();
             sda.Fill(ds);
@@ -1676,7 +965,7 @@ namespace WpfApp.ViewModel
 
             // Project Managers for customers
             sqlquery = "select * from tblProjectManagers WHERE Customer_ID=" + customerID;
-            cmd = new SqlCommand(sqlquery, dbConnection.Connection);
+            cmd = dbConnection.RunQuryNoParameters(sqlquery);
             sda = new SqlDataAdapter(cmd);
             ds = new DataSet();
             sda.Fill(ds);
@@ -1726,7 +1015,7 @@ namespace WpfApp.ViewModel
 
             // Project Manager Notes
             sqlquery = "SELECT * FROM tblNotes INNER JOIN (SELECT * FROM tblProjectManagers WHERE Customer_ID = " + customerID + ") AS tblProjManager ON tblNotes.Notes_PK = tblProjManager.PM_ID WHERE Notes_PK_Desc = 'ProjectManager'";
-            cmd = new SqlCommand(sqlquery, dbConnection.Connection);
+            cmd = dbConnection.RunQuryNoParameters(sqlquery);
             sda = new SqlDataAdapter(cmd);
             ds = new DataSet();
             sda.Fill(ds);
@@ -1772,7 +1061,7 @@ namespace WpfApp.ViewModel
 
             // Superintendents Notes
             sqlquery = "SELECT * FROM tblNotes INNER JOIN (SELECT * FROM tblSuperintendents WHERE Customer_ID = " + customerID + ") AS tblSupt ON tblNotes.Notes_PK = tblSupt.Sup_ID WHERE Notes_PK_Desc = 'Superintendent'";
-            cmd = new SqlCommand(sqlquery, dbConnection.Connection);
+            cmd = dbConnection.RunQuryNoParameters(sqlquery);
             sda = new SqlDataAdapter(cmd);
             ds = new DataSet();
             sda.Fill(ds);
@@ -1818,7 +1107,7 @@ namespace WpfApp.ViewModel
 
             // CustomerContacts Notes
             sqlquery = "SELECT * FROM tblNotes INNER JOIN (SELECT * FROM tblCustomerContacts WHERE Customer_ID = " + customerID + ") AS tblSupt ON tblNotes.Notes_PK = tblSupt.CC_ID WHERE Notes_PK_Desc = 'CustomerContact'";
-            cmd = new SqlCommand(sqlquery, dbConnection.Connection);
+            cmd = dbConnection.RunQuryNoParameters(sqlquery);
             sda = new SqlDataAdapter(cmd);
             ds = new DataSet();
             sda.Fill(ds);
@@ -1864,7 +1153,7 @@ namespace WpfApp.ViewModel
 
             // Superintendents
             sqlquery = "SELECT * FROM tblSuperintendents WHERE Customer_ID=" + customerID;
-            cmd = new SqlCommand(sqlquery, dbConnection.Connection);
+            cmd = dbConnection.RunQuryNoParameters(sqlquery);
             sda = new SqlDataAdapter(cmd);
             ds = new DataSet();
             sda.Fill(ds);
@@ -1915,7 +1204,7 @@ namespace WpfApp.ViewModel
 
             // Customer Contacts
             sqlquery = "SELECT * FROM tblCustomerContacts WHERE Customer_ID=" + customerID;
-            cmd = new SqlCommand(sqlquery, dbConnection.Connection);
+            cmd = dbConnection.RunQuryNoParameters(sqlquery);
             sda = new SqlDataAdapter(cmd);
             ds = new DataSet();
             sda.Fill(ds);
@@ -1969,7 +1258,7 @@ namespace WpfApp.ViewModel
         {
             // Projects
             sqlquery = "SELECT * FROM tblScheduleOfValues ORDER BY SOV_Acronym";
-            cmd = new SqlCommand(sqlquery, dbConnection.Connection);
+            cmd = dbConnection.RunQuryNoParameters(sqlquery);
             sda = new SqlDataAdapter(cmd);
             ds = new DataSet();
             sda.Fill(ds);
@@ -1988,7 +1277,7 @@ namespace WpfApp.ViewModel
 
             // Material
             sqlquery = "SELECT * FROM tblMaterials ORDER BY Material_Desc";
-            cmd = new SqlCommand(sqlquery, dbConnection.Connection);
+            cmd = dbConnection.RunQuryNoParameters(sqlquery);
             sda = new SqlDataAdapter(cmd);
             ds = new DataSet();
             sda.Fill(ds);
@@ -2008,7 +1297,7 @@ namespace WpfApp.ViewModel
 
             // Labor
             sqlquery = "SELECT * FROM tblLabor ORDER BY Labor_Desc";
-            cmd = new SqlCommand(sqlquery, dbConnection.Connection);
+            cmd = dbConnection.RunQuryNoParameters(sqlquery);
             sda = new SqlDataAdapter(cmd);
             ds = new DataSet();
             sda.Fill(ds);
@@ -2032,7 +1321,7 @@ namespace WpfApp.ViewModel
 
             // Salesmen
             sqlquery = "SELECT * FROM tblSalesmen ORDER BY Salesman_Name";
-            cmd = new SqlCommand(sqlquery, dbConnection.Connection);
+            cmd = dbConnection.RunQuryNoParameters(sqlquery);
             sda = new SqlDataAdapter(cmd);
             ds = new DataSet();
             sda.Fill(ds);
@@ -2056,7 +1345,7 @@ namespace WpfApp.ViewModel
 
             // Crew
             sqlquery = "SELECT * FROM tblInstallCrew ORDER BY Crew_Name";
-            cmd = new SqlCommand(sqlquery, dbConnection.Connection);
+            cmd = dbConnection.RunQuryNoParameters(sqlquery);
             sda = new SqlDataAdapter(cmd);
             ds = new DataSet();
             sda.Fill(ds);
@@ -2079,7 +1368,7 @@ namespace WpfApp.ViewModel
 
             // User
             sqlquery = "SELECT * FROM tblUsers ORDER BY User_Name";
-            cmd = new SqlCommand(sqlquery, dbConnection.Connection);
+            cmd = dbConnection.RunQuryNoParameters(sqlquery);
             sda = new SqlDataAdapter(cmd);
             ds = new DataSet();
             sda.Fill(ds);
@@ -2107,7 +1396,7 @@ namespace WpfApp.ViewModel
 
             // Architect
             sqlquery = "SELECT * FROM tblArchitects ORDER BY Arch_Company";
-            cmd = new SqlCommand(sqlquery, dbConnection.Connection);
+            cmd = dbConnection.RunQuryNoParameters(sqlquery);
             sda = new SqlDataAdapter(cmd);
             ds = new DataSet();
             sda.Fill(ds);
@@ -2136,7 +1425,7 @@ namespace WpfApp.ViewModel
 
             // Freight CO
             sqlquery = "SELECT * FROM tblFreightCo ORDER BY FreightCo_Name;";
-            cmd = new SqlCommand(sqlquery, dbConnection.Connection);
+            cmd = dbConnection.RunQuryNoParameters(sqlquery);
             sda = new SqlDataAdapter(cmd);
             ds = new DataSet();
             sda.Fill(ds);
@@ -2160,7 +1449,7 @@ namespace WpfApp.ViewModel
 
             // House Installer
             sqlquery = "SELECT * FROM tblInHouseInstallers ORDER BY Installer_Name";
-            cmd = new SqlCommand(sqlquery, dbConnection.Connection);
+            cmd = dbConnection.RunQuryNoParameters(sqlquery);
             sda = new SqlDataAdapter(cmd);
             ds = new DataSet();
             sda.Fill(ds);
@@ -2208,7 +1497,7 @@ namespace WpfApp.ViewModel
 
             // Customer
             sqlquery = "SELECT * FROM tblCustomers ORDER BY Short_Name";
-            cmd = new SqlCommand(sqlquery, dbConnection.Connection);
+            cmd = dbConnection.RunQuryNoParameters(sqlquery);
             sda = new SqlDataAdapter(cmd);
             ds = new DataSet();
             sda.Fill(ds);
@@ -2235,7 +1524,7 @@ namespace WpfApp.ViewModel
 
             // Manafacturer
             sqlquery = "SELECT * FROM tblManufacturers ORDER BY Manuf_Name";
-            cmd = new SqlCommand(sqlquery, dbConnection.Connection);
+            cmd = dbConnection.RunQuryNoParameters(sqlquery);
             sda = new SqlDataAdapter(cmd);
             ds = new DataSet();
             sda.Fill(ds);
@@ -2262,7 +1551,7 @@ namespace WpfApp.ViewModel
 
             // Project Managers
             sqlquery = "SELECT * FROM tblProjectManagers ORDER BY PM_Name;";
-            cmd = new SqlCommand(sqlquery, dbConnection.Connection);
+            cmd = dbConnection.RunQuryNoParameters(sqlquery);
             sda = new SqlDataAdapter(cmd);
             ds = new DataSet();
             sda.Fill(ds);
@@ -2283,7 +1572,7 @@ namespace WpfApp.ViewModel
 
             // Superintendents
             sqlquery = "SELECT * FROM tblSuperintendents ORDER BY Sup_Name";
-            cmd = new SqlCommand(sqlquery, dbConnection.Connection);
+            cmd = dbConnection.RunQuryNoParameters(sqlquery);
             sda = new SqlDataAdapter(cmd);
             ds = new DataSet();
             sda.Fill(ds);
@@ -2304,7 +1593,7 @@ namespace WpfApp.ViewModel
 
             // FormOnOpen
             sqlquery = "SELECT * FROM tblApplOptions WHERE OptCat = 'FormOnOpen';";
-            cmd = new SqlCommand(sqlquery, dbConnection.Connection);
+            cmd = dbConnection.RunQuryNoParameters(sqlquery);
             sda = new SqlDataAdapter(cmd);
             ds = new DataSet();
             sda.Fill(ds);
@@ -2325,7 +1614,7 @@ namespace WpfApp.ViewModel
 
             // OHSA Level
             sqlquery = "SELECT DISTINCT OSHA_Level FROM tblInHouseInstallers;";
-            cmd = new SqlCommand(sqlquery, dbConnection.Connection);
+            cmd = dbConnection.RunQuryNoParameters(sqlquery);
             sda = new SqlDataAdapter(cmd);
             ds = new DataSet();
             sda.Fill(ds);

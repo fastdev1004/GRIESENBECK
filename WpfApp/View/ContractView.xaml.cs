@@ -25,13 +25,11 @@ namespace WpfApp.View
             InitializeComponent();
             ContractVM = new ContractViewModel();
             dbConnection = new DatabaseConnection();
-            dbConnection.Open();
             this.DataContext = ContractVM;
         }
 
         private void GoBack(object sender, RoutedEventArgs e)
         {
-            dbConnection.Close();
             this.NavigationService.Navigate(new Uri("View/Start.xaml", UriKind.Relative));
         }
     }

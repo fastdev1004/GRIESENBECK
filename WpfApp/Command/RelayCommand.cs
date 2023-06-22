@@ -19,7 +19,7 @@ namespace WpfApp.Command
         private Predicate<object> _canExecute;
 
         public RelayCommand(Action<object> execute, Predicate<object> canExecute = null)
-        {
+        { 
             if (execute == null)
             {
                 throw new NullReferenceException();

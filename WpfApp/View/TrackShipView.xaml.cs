@@ -27,13 +27,11 @@ namespace WpfApp.View
             InitializeComponent();
             TrackShipVM = new TrackShipViewModel();
             dbConnection = new DatabaseConnection();
-            dbConnection.Open();
             this.DataContext = TrackShipVM;
         }
 
         private void GoBack(object sender, RoutedEventArgs e)
         {
-            dbConnection.Close();
             this.NavigationService.Navigate(new Uri("View/Start.xaml", UriKind.Relative));
         }
     }

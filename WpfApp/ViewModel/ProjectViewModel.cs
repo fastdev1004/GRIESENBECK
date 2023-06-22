@@ -20,7 +20,7 @@ namespace WpfApp.ViewModel
     class ProjectViewModel : ViewModelBase
     {
         private DatabaseConnection dbConnection;
-        public SqlCommand cmd;
+        public SqlCommand cmd = null;
         public SqlDataAdapter sda;
         public DataSet ds;
         private string sqlquery;
@@ -28,7 +28,6 @@ namespace WpfApp.ViewModel
         public ProjectViewModel()
         {
             dbConnection = new DatabaseConnection();
-            dbConnection.Open();
             LoadProjects();
             ProjectManagerList = new ObservableCollection<ProjectManager>();
             SuperintendentList = new ObservableCollection<Superintendent>();
@@ -118,7 +117,7 @@ namespace WpfApp.ViewModel
         {
             sqlquery = "SELECT tblProjects.Project_ID, tblProjects.Project_Name, tblCustomers.Full_Name FROM tblProjects LEFT JOIN tblCustomers ON tblProjects.Customer_ID = tblCustomers.Customer_ID ORDER BY Project_Name ASC;";
 
-            cmd = new SqlCommand(sqlquery, dbConnection.Connection);
+            cmd = dbConnection.RunQuryNoParameters(sqlquery);
             sda = new SqlDataAdapter(cmd);
             ds = new DataSet();
             sda.Fill(ds);
@@ -150,7 +149,7 @@ namespace WpfApp.ViewModel
 
             // Customer Address
             sqlquery = "SELECT Customer_ID, Full_Name, Address FROM tblCustomers Order by Short_Name";
-            cmd = new SqlCommand(sqlquery, dbConnection.Connection);
+            cmd = dbConnection.RunQuryNoParameters(sqlquery);
             sda = new SqlDataAdapter(cmd);
             ds = new DataSet();
             sda.Fill(ds);
@@ -176,7 +175,7 @@ namespace WpfApp.ViewModel
 
             // Architect
             sqlquery = "SELECT Architect_ID, Arch_Company FROM tblArchitects;";
-            cmd = new SqlCommand(sqlquery, dbConnection.Connection);
+            cmd = dbConnection.RunQuryNoParameters(sqlquery);
             sda = new SqlDataAdapter(cmd);
             ds = new DataSet();
             sda.Fill(ds);
@@ -199,7 +198,7 @@ namespace WpfApp.ViewModel
 
             //Crew
             sqlquery = "SELECT Crew_ID, Crew_Name FROM tblInstallCrew;";
-            cmd = new SqlCommand(sqlquery, dbConnection.Connection);
+            cmd = dbConnection.RunQuryNoParameters(sqlquery);
             sda = new SqlDataAdapter(cmd);
             ds = new DataSet();
             sda.Fill(ds);
@@ -222,7 +221,7 @@ namespace WpfApp.ViewModel
 
             // Salesman
             sqlquery = "SELECT Salesman_ID, Salesman_Name FROM tblSalesmen;";
-            cmd = new SqlCommand(sqlquery, dbConnection.Connection);
+            cmd = dbConnection.RunQuryNoParameters(sqlquery);
             sda = new SqlDataAdapter(cmd);
             ds = new DataSet();
             sda.Fill(ds);
@@ -245,7 +244,7 @@ namespace WpfApp.ViewModel
 
             // Estimator
             sqlquery = "SELECT Estimator_ID, Estimator_Name FROM tblEstimators;";
-            cmd = new SqlCommand(sqlquery, dbConnection.Connection);
+            cmd = dbConnection.RunQuryNoParameters(sqlquery);
             sda = new SqlDataAdapter(cmd);
             ds = new DataSet();
             sda.Fill(ds);
@@ -268,7 +267,7 @@ namespace WpfApp.ViewModel
 
             // ArchRep
             sqlquery = "SELECT Arch_Rep_ID, Arch_Rep_Name FROM tblArchRep;";
-            cmd = new SqlCommand(sqlquery, dbConnection.Connection);
+            cmd = dbConnection.RunQuryNoParameters(sqlquery);
             sda = new SqlDataAdapter(cmd);
             ds = new DataSet();
             sda.Fill(ds);
@@ -291,7 +290,7 @@ namespace WpfApp.ViewModel
 
             // Customer Contacts
             sqlquery = "SELECT CC_ID, Customer_ID, CC_Name FROM tblCustomerContacts;";
-            cmd = new SqlCommand(sqlquery, dbConnection.Connection);
+            cmd = dbConnection.RunQuryNoParameters(sqlquery);
             sda = new SqlDataAdapter(cmd);
             ds = new DataSet();
             sda.Fill(ds);
@@ -309,7 +308,7 @@ namespace WpfApp.ViewModel
 
             // PC
             sqlquery = "SELECT PC_ID, PC_Name FROM tblPCs;";
-            cmd = new SqlCommand(sqlquery, dbConnection.Connection);
+            cmd = dbConnection.RunQuryNoParameters(sqlquery);
             sda = new SqlDataAdapter(cmd);
             ds = new DataSet();
             sda.Fill(ds);
@@ -327,7 +326,7 @@ namespace WpfApp.ViewModel
 
             // Superintendent
             sqlquery = "SELECT * FROM tblSuperintendents";
-            cmd = new SqlCommand(sqlquery, dbConnection.Connection);
+            cmd = dbConnection.RunQuryNoParameters(sqlquery);
             sda = new SqlDataAdapter(cmd);
             ds = new DataSet();
             sda.Fill(ds);
@@ -346,7 +345,7 @@ namespace WpfApp.ViewModel
 
             // ReturnedViaNames
             sqlquery = "SELECT * FROM tblReturnedVia";
-            cmd = new SqlCommand(sqlquery, dbConnection.Connection);
+            cmd = dbConnection.RunQuryNoParameters(sqlquery);
             sda = new SqlDataAdapter(cmd);
             ds = new DataSet();
             sda.Fill(ds);
@@ -363,7 +362,7 @@ namespace WpfApp.ViewModel
 
             // ProjectManager
             sqlquery = "select * from tblProjectManagers";
-            cmd = new SqlCommand(sqlquery, dbConnection.Connection);
+            cmd = dbConnection.RunQuryNoParameters(sqlquery);
             sda = new SqlDataAdapter(cmd);
             ds = new DataSet();
             sda.Fill(ds);
@@ -387,7 +386,7 @@ namespace WpfApp.ViewModel
 
             // Manufacturer
             sqlquery = "SELECT Manuf_ID, Manuf_Name FROM tblManufacturers;";
-            cmd = new SqlCommand(sqlquery, dbConnection.Connection);
+            cmd = dbConnection.RunQuryNoParameters(sqlquery);
             sda = new SqlDataAdapter(cmd);
             ds = new DataSet();
             sda.Fill(ds);
@@ -409,7 +408,7 @@ namespace WpfApp.ViewModel
             ObservableCollection<FreightCo> sb_freightCo = new ObservableCollection<FreightCo>();
 
             sqlquery = "SELECT FreightCo_ID, FreightCo_Name FROM tblFreightCo ORDER BY FreightCo_Name;";
-            cmd = new SqlCommand(sqlquery, dbConnection.Connection);
+            cmd = dbConnection.RunQuryNoParameters(sqlquery);
             sda = new SqlDataAdapter(cmd);
             ds = new DataSet();
             sda.Fill(ds);
@@ -431,7 +430,7 @@ namespace WpfApp.ViewModel
             ObservableCollection<Material> st_material = new ObservableCollection<Material>();
 
             sqlquery = "Select * from tblMaterials";
-            cmd = new SqlCommand(sqlquery, dbConnection.Connection);
+            cmd = dbConnection.RunQuryNoParameters(sqlquery);
             sda = new SqlDataAdapter(cmd);
             ds = new DataSet();
             sda.Fill(ds);
@@ -453,7 +452,7 @@ namespace WpfApp.ViewModel
             ObservableCollection<Acronym> st_acronym = new ObservableCollection<Acronym>();
 
             sqlquery = "SELECT * from tblScheduleOfValues";
-            cmd = new SqlCommand(sqlquery, dbConnection.Connection);
+            cmd = dbConnection.RunQuryNoParameters(sqlquery);
             sda = new SqlDataAdapter(cmd);
             ds = new DataSet();
             sda.Fill(ds);
@@ -479,7 +478,7 @@ namespace WpfApp.ViewModel
             ObservableCollection<string> st_cip = new ObservableCollection<string>();
 
             sqlquery = "SELECT DISTINCT CIPType FROM tblCIPs";
-            cmd = new SqlCommand(sqlquery, dbConnection.Connection);
+            cmd = dbConnection.RunQuryNoParameters(sqlquery);
             sda = new SqlDataAdapter(cmd);
             ds = new DataSet();
             sda.Fill(ds);
@@ -500,7 +499,7 @@ namespace WpfApp.ViewModel
             ObservableCollection<string> st_crewEnroll = new ObservableCollection<string>();
 
             sqlquery = "SELECT DISTINCT CrewEnrolled FROM tblCIPs ";
-            cmd = new SqlCommand(sqlquery, dbConnection.Connection);
+            cmd = dbConnection.RunQuryNoParameters(sqlquery);
             sda = new SqlDataAdapter(cmd);
             ds = new DataSet();
             sda.Fill(ds);
@@ -521,7 +520,7 @@ namespace WpfApp.ViewModel
             ObservableCollection<string> st_apprDen = new ObservableCollection<string>();
 
             sqlquery = "SELECT DISTINCT CO_AppDEn FROM tblProjectChangeOrders";
-            cmd = new SqlCommand(sqlquery, dbConnection.Connection);
+            cmd = dbConnection.RunQuryNoParameters(sqlquery);
             sda = new SqlDataAdapter(cmd);
             ds = new DataSet();
             sda.Fill(ds);
@@ -542,15 +541,12 @@ namespace WpfApp.ViewModel
             st_masterContracts.Add("Yes");
             st_masterContracts.Add("No");
             MasterContracts = st_masterContracts;
-
-            cmd.Dispose();
-            dbConnection.Close();
         }
 
         private void ChangeProject()
         {
             string sqlquery = "SELECT tblProjects.*, tblCustomers.Full_Name, tblCustomers.Customer_ID FROM tblProjects LEFT JOIN tblCustomers ON tblProjects.Customer_ID = tblCustomers.Customer_ID WHERE tblProjects.Project_ID = " + ProjectID.ToString() + ";";
-            SqlCommand cmd = new SqlCommand(sqlquery, dbConnection.Connection);
+            SqlCommand cmd = dbConnection.RunQuryNoParameters(sqlquery);
             SqlDataAdapter sda = new SqlDataAdapter(cmd);
             DataSet ds = new DataSet();
             sda.Fill(ds);
@@ -676,7 +672,7 @@ namespace WpfApp.ViewModel
             ObservableCollection<TrackShipRecv> st_TrackShipRecv = new ObservableCollection<TrackShipRecv>();
 
             sqlquery = "Select tblMat.*, tblMaterials.Material_Desc from(Select tblSOV.SOV_Acronym, tblSOV.CO_ItemNo, tblSOV.Material_Only, tblSOV.SOV_Desc, tblProjectMaterials.ProjMat_ID, tblProjectMaterials.Mat_Phase, tblProjectMaterials.Mat_Type,tblProjectMaterials.Color_Selected, tblProjectMaterials.Qty_Reqd, tblProjectMaterials.TotalCost, Material_ID from(Select tblSOV.*, tblProjectChangeOrders.CO_ItemNo from(Select tblSOV.*, tblScheduleOfValues.SOV_Desc from tblScheduleOfValues Right JOIN(SELECT tblProjectSOV.* From tblProjects LEFT Join tblProjectSOV ON tblProjects.Project_ID = tblProjectSOV.Project_ID where tblProjects.Project_ID = " + ProjectID.ToString() + ") AS tblSOV ON tblSOV.SOV_Acronym = tblScheduleOfValues.SOV_Acronym Where tblScheduleOfValues.Active = 'true') AS tblSOV LEFT JOIN tblProjectChangeOrders ON tblProjectChangeOrders.CO_ID = tblSOV.CO_ID) AS tblSOV LEFT JOIN tblProjectMaterials ON tblSOV.ProjSOV_ID = tblProjectMaterials.ProjSOV_ID) AS tblMat LEFT JOIN tblMaterials ON tblMat.Material_ID = tblMaterials.Material_ID ORDER BY tblMaterials.Material_Desc;";
-            cmd = new SqlCommand(sqlquery, dbConnection.Connection);
+            cmd = dbConnection.RunQuryNoParameters(sqlquery);
             sda = new SqlDataAdapter(cmd);
             ds = new DataSet();
             sda.Fill(ds);
@@ -716,7 +712,7 @@ namespace WpfApp.ViewModel
             // Project WorkOrders List
             sqlquery = " SELECT tblWorkOrdersMat.Mat_Qty, tblMat.* FROM tblWorkOrdersMat RIGHT JOIN ( SELECT tblProjectSOV.SOV_Acronym, tblMat.* FROM tblProjectSOV RIGHT JOIN ( SELECT tblMat.*, tblProjectMaterialsShip.Qty_Recvd, tblProjectMaterialsShip.ProjMS_ID FROM tblProjectMaterialsShip RIGHT JOIN ( SELECT tblManufacturers.Manuf_Name, tblMat.* FROM tblManufacturers RIGHT JOIN (  SELECT tblMaterials.Material_Desc,tblMat.* FROM tblMaterials RIGHT JOIN (SELECT tblProjectMaterialsTrack.MatReqdDate, tblProjectMaterialsTrack.TakeFromStock, tblMat.*, tblProjectMaterialsTrack.ProjMT_ID, tblProjectMaterialsTrack.Manuf_ID, tblProjectMaterialsTrack.Qty_Ord  FROM tblProjectMaterialsTrack RIGHT JOIN (SELECT Project_ID, ProjMat_ID, ProjSOV_ID ,Material_ID, Qty_Reqd FROM tblProjectMaterials WHERE Project_ID = " + ProjectID.ToString() + ") AS tblMat ON tblProjectMaterialsTrack.ProjMat_ID = tblMat.ProjMat_ID) AS tblMat ON tblMaterials.Material_ID = tblMat.Material_ID) AS tblMat ON tblMat.Manuf_ID = tblManufacturers.Manuf_ID) AS tblMat ON tblMat.ProjMT_ID = tblProjectMaterialsShip.ProjMT_ID) AS tblMat ON tblMat.ProjSOV_ID = tblProjectSOV.ProjSOV_ID) AS tblMat ON tblWorkOrdersMat.ProjMS_ID = tblMat.ProjMS_ID ORDER BY Material_Desc";
 
-            cmd = new SqlCommand(sqlquery, dbConnection.Connection);
+            cmd = dbConnection.RunQuryNoParameters(sqlquery);
             sda = new SqlDataAdapter(cmd);
             ds = new DataSet();
             sda.Fill(ds);
@@ -775,7 +771,7 @@ namespace WpfApp.ViewModel
             // Project Labor List
             sqlquery = "SELECT CO_ItemNo, tblLab.* FROM tblProjectChangeOrders RIGHT JOIN(SELECT tblProjectSOV.SOV_Acronym, tblProjectSOV.CO_ID, tblLab.Labor_Desc, tblLab.Qty_Reqd, tblLab.UnitPrice, tblLab.Lab_Phase, tblLab.Complete FROM tblProjectSOV RIGHT JOIN (SELECT tblLabor.Labor_Desc, tblLab.* FROM tblLabor RIGHT JOIN (SELECT* FROM tblProjectLabor WHERE Project_ID = " + ProjectID.ToString() + ") AS tblLab ON tblLabor.Labor_ID = tblLab.Labor_ID) AS tblLab ON tblProjectSOV.ProjSOV_ID = tblLab.ProjSOV_ID) AS tblLab ON tblProjectChangeOrders.CO_ID = tblLab.CO_ID ORDER BY tblLab.SOV_Acronym Desc";
 
-            cmd = new SqlCommand(sqlquery, dbConnection.Connection);
+            cmd = dbConnection.RunQuryNoParameters(sqlquery);
             sda = new SqlDataAdapter(cmd);
             ds = new DataSet();
             sda.Fill(ds);
@@ -823,7 +819,7 @@ namespace WpfApp.ViewModel
             // work orders
             sqlquery = "SELECT tblWO.WO_ID, tblWO.Wo_Nbr, tblInstallCrew.Crew_ID, tblInstallCrew.Crew_Name, tblWO.SchedStartDate, tblWO.SchedComplDate, tblWO.Sup_ID, tblWO.Date_Started, tblWO.Date_Completed FROM tblInstallCrew RIGHT JOIN (SELECT * FROM tblWorkOrders WHERE Project_ID = " + ProjectID.ToString() + ") AS tblWO ON tblInstallCrew.Crew_ID = tblWO.Crew_ID; ";
 
-            cmd = new SqlCommand(sqlquery, dbConnection.Connection);
+            cmd = dbConnection.RunQuryNoParameters(sqlquery);
             sda = new SqlDataAdapter(cmd);
             ds = new DataSet();
             sda.Fill(ds);
@@ -878,7 +874,7 @@ namespace WpfApp.ViewModel
 
             // Tracking Report1
             sqlquery = "Select MatReqdDate, tblManufacturers.Manuf_Name, Qty_Ord, tblProjMat.Mat_Phase, tblProjMat.Mat_Type, Manuf_LeadTime, PO_Number, ShopReqDate, ShopRecvdDate, SubmitIssue, Resubmit_Date, SubmitAppr,tblProjMat.Color_Selected, Guar_Dim, Field_Dim, ReleasedForFab, LaborComplete from tblManufacturers RIGHT JOIN(Select tblProjectMaterialsTrack.*, tblMat.Color_Selected, tblMat.Mat_Phase, tblMat.Mat_Type from tblProjectMaterialsTrack INNER JOIN(SELECT * FROM tblProjectMaterials WHERE tblProjectMaterials.Project_ID = " + ProjectID.ToString() + ") AS tblMat ON tblMat.ProjMat_ID = tblProjectMaterialsTrack.ProjMat_ID) AS tblProjMat ON tblManufacturers.Manuf_ID = tblProjMat.Manuf_ID ORDER BY MatReqdDate;";
-            cmd = new SqlCommand(sqlquery, dbConnection.Connection);
+            cmd = dbConnection.RunQuryNoParameters(sqlquery);
             sda = new SqlDataAdapter(cmd);
             ds = new DataSet();
             sda.Fill(ds);
@@ -968,7 +964,7 @@ namespace WpfApp.ViewModel
             // Track Labor Report
             sqlquery = "SELECT tblLab.SOV_Acronym, tblLab.Labor_Desc, tblProjectChangeOrders.CO_ItemNo, tblLab.Lab_Phase, tblLab.Complete FROM tblProjectChangeOrders RIGHT JOIN (SELECT tblSOV.SOV_Acronym, tblLabor.Labor_Desc, tblSOV.CO_ID, tblSOV.Lab_Phase, tblSOV.Complete FROM tblLabor RIGHT JOIN (SELECT  tblProjectLabor.Labor_ID, tblProjectLabor.Lab_Phase, tblSOV.ProjSOV_ID, tblSOV.SOV_Acronym, tblSOV.CO_ID, tblProjectLabor.Complete FROM tblProjectLabor RIGHT JOIN (SELECT * FROM tblProjectSOV WHERE Project_ID = " + ProjectID.ToString() + ") AS tblSOV ON tblProjectLabor.ProjSOV_ID = tblSOV.ProjSOV_ID) AS tblSOV ON tblSOV.Labor_ID = tblLabor.Labor_ID) AS tblLab ON tblLab.CO_ID = tblProjectChangeOrders.CO_ID; ";
 
-            cmd = new SqlCommand(sqlquery, dbConnection.Connection);
+            cmd = dbConnection.RunQuryNoParameters(sqlquery);
             sda = new SqlDataAdapter(cmd);
             ds = new DataSet();
             sda.Fill(ds);
@@ -1008,7 +1004,7 @@ namespace WpfApp.ViewModel
 
             // SOV Grid 1
             sqlquery = "Select tblSOV.*, tblProjectChangeOrders.CO_ItemNo from (Select tblSOV.*, tblScheduleOfValues.SOV_Desc from tblScheduleOfValues Right JOIN (SELECT tblProjectSOV.* From tblProjects LEFT Join tblProjectSOV ON tblProjects.Project_ID = tblProjectSOV.Project_ID where tblProjects.Project_ID = " + ProjectID.ToString() + ") AS tblSOV ON tblSOV.SOV_Acronym = tblScheduleOfValues.SOV_Acronym Where tblScheduleOfValues.Active = 'true') AS tblSOV LEFT JOIN tblProjectChangeOrders ON tblProjectChangeOrders.CO_ID = tblSOV.CO_ID ORDER BY tblSOV.SOV_Acronym;";
-            cmd = new SqlCommand(sqlquery, dbConnection.Connection);
+            cmd = dbConnection.RunQuryNoParameters(sqlquery);
             sda = new SqlDataAdapter(cmd);
             ds = new DataSet();
             sda.Fill(ds);
@@ -1044,7 +1040,7 @@ namespace WpfApp.ViewModel
 
             // Project Change Orders
             sqlquery = "select * from tblProjectChangeOrders where Project_ID = " + ProjectID.ToString();
-            cmd = new SqlCommand(sqlquery, dbConnection.Connection);
+            cmd = dbConnection.RunQuryNoParameters(sqlquery);
             sda = new SqlDataAdapter(cmd);
             ds = new DataSet();
             sda.Fill(ds);
@@ -1091,7 +1087,7 @@ namespace WpfApp.ViewModel
 
             // SOVGrid2
             sqlquery = "Select tblSOV.SOV_Acronym, tblSOV.CO_ItemNo, tblSOV.Material_Only, tblSOV.SOV_Desc, tblProjectMaterials.Mat_Phase, tblProjectMaterials.Mat_Type, tblProjectMaterials.Color_Selected, tblProjectMaterials.Qty_Reqd, tblProjectMaterials.TotalCost from(Select tblSOV.*, tblProjectChangeOrders.CO_ItemNo from(Select tblSOV.*, tblScheduleOfValues.SOV_Desc from tblScheduleOfValues Right JOIN(SELECT tblProjectSOV.* From tblProjects LEFT Join tblProjectSOV ON tblProjects.Project_ID = tblProjectSOV.Project_ID where tblProjects.Project_ID = " + ProjectID.ToString() + " ) AS tblSOV ON tblSOV.SOV_Acronym = tblScheduleOfValues.SOV_Acronym Where tblScheduleOfValues.Active = 'true') AS tblSOV LEFT JOIN tblProjectChangeOrders ON tblProjectChangeOrders.CO_ID = tblSOV.CO_ID) AS tblSOV LEFT JOIN tblProjectMaterials ON tblSOV.ProjSOV_ID = tblProjectMaterials.ProjSOV_ID ORDER BY tblSOV.SOV_Acronym DESC";
-            cmd = new SqlCommand(sqlquery, dbConnection.Connection);
+            cmd = dbConnection.RunQuryNoParameters(sqlquery);
             sda = new SqlDataAdapter(cmd);
             ds = new DataSet();
             sda.Fill(ds);
@@ -1146,7 +1142,7 @@ namespace WpfApp.ViewModel
 
             // Labor
             sqlquery = "SELECT * FROM tblLabor ORDER BY Labor_Desc";
-            cmd = new SqlCommand(sqlquery, dbConnection.Connection);
+            cmd = dbConnection.RunQuryNoParameters(sqlquery);
             sda = new SqlDataAdapter(cmd);
             ds = new DataSet();
             sda.Fill(ds);
@@ -1167,7 +1163,7 @@ namespace WpfApp.ViewModel
             // Installation Notes
             sqlquery = "SELECT * FROM tblInstallNotes WHERE Project_ID = " + ProjectID.ToString();
 
-            cmd = new SqlCommand(sqlquery, dbConnection.Connection);
+            cmd = dbConnection.RunQuryNoParameters(sqlquery);
             sda = new SqlDataAdapter(cmd);
             ds = new DataSet();
             sda.Fill(ds);
@@ -1196,7 +1192,7 @@ namespace WpfApp.ViewModel
             // Contracts
             sqlquery = "SELECT tblProj.Job_No, Contractnumber, ChangeOrder, ChangeOrderNo, DateRecD, DateProcessed, AmtOfcontract, SignedoffbySales, Signedoffbyoperations, GivenAcctingforreview, Givenforfinalsignature, Scope, ReturnedVia, ReturnedtoDawn, Comments FROM tblSC RIGHT JOIN (SELECT Project_ID, Job_No FROM tblProjects WHERE Project_ID = " + ProjectID.ToString() + ") AS tblProj ON tblSC.ProjectID = tblProj.Project_ID";
 
-            cmd = new SqlCommand(sqlquery, dbConnection.Connection);
+            cmd = dbConnection.RunQuryNoParameters(sqlquery);
             sda = new SqlDataAdapter(cmd);
             ds = new DataSet();
             sda.Fill(ds);
@@ -1275,7 +1271,7 @@ namespace WpfApp.ViewModel
             // Project Manager List
             sqlquery = "select * from tblProjectManagers RIGHT JOIN (Select PM_ID from tblProjectPMs where Project_ID = "+ ProjectID.ToString() +") AS tblProject ON tblProjectManagers.PM_ID = tblProject.PM_ID";
 
-            cmd = new SqlCommand(sqlquery, dbConnection.Connection);
+            cmd = dbConnection.RunQuryNoParameters(sqlquery);
             sda = new SqlDataAdapter(cmd);
             ds = new DataSet();
             sda.Fill(ds);
@@ -1301,7 +1297,7 @@ namespace WpfApp.ViewModel
             // Superintendent List
             sqlquery = "SELECT * FROM tblSuperintendents RIGHT JOIN (SELECT * FROM tblProjectSups WHERE Project_ID = " + ProjectID.ToString() + ") AS tblProject ON tblSuperintendents.Sup_ID = tblProject.Sup_ID";
 
-            cmd = new SqlCommand(sqlquery, dbConnection.Connection);
+            cmd = dbConnection.RunQuryNoParameters(sqlquery);
             sda = new SqlDataAdapter(cmd);
             ds = new DataSet();
             sda.Fill(ds);
@@ -1343,7 +1339,7 @@ namespace WpfApp.ViewModel
 
             // ProjectNote Grid
             sqlquery = "SELECT * FROM tblNotes WHERE Notes_PK_Desc = 'Project' AND Notes_PK =" + ProjectID.ToString();
-            cmd = new SqlCommand(sqlquery, dbConnection.Connection);
+            cmd = dbConnection.RunQuryNoParameters(sqlquery);
             sda = new SqlDataAdapter(cmd);
             ds = new DataSet();
             sda.Fill(ds);
@@ -1391,7 +1387,7 @@ namespace WpfApp.ViewModel
             // CIPGrid
             sqlquery = "SELECT Job_No, CIPType, TargetDate, OriginalContractAmt, FinalContractAmt, FormsRecD, FormsSent, CertRecD, ExemptionApproved, ExemptionAppDate, CrewEnrolled, Notes FROM tblCIPs RIGHT JOIN (SELECT Project_ID, Job_No FROM tblProjects WHERE Project_ID = " + ProjectID .ToString() + ") AS tblProjs ON tblCIPs.Project_ID = tblProjs.Project_ID";
 
-            cmd = new SqlCommand(sqlquery, dbConnection.Connection);
+            cmd = dbConnection.RunQuryNoParameters(sqlquery);
             sda = new SqlDataAdapter(cmd);
             ds = new DataSet();
             sda.Fill(ds);
@@ -1459,7 +1455,7 @@ namespace WpfApp.ViewModel
             // Project Link
             sqlquery = "SELECT * FROM tblProjectLinks WHERE Project_ID = " + ProjectID.ToString();
 
-            cmd = new SqlCommand(sqlquery, dbConnection.Connection);
+            cmd = dbConnection.RunQuryNoParameters(sqlquery);
             sda = new SqlDataAdapter(cmd);
             ds = new DataSet();
             sda.Fill(ds);
@@ -1497,7 +1493,7 @@ namespace WpfApp.ViewModel
             // Path Desc
             sqlquery = "SELECT DISTINCT PathDesc FROM tblProjectLinks ORDER BY PathDesc";
 
-            cmd = new SqlCommand(sqlquery, dbConnection.Connection);
+            cmd = dbConnection.RunQuryNoParameters(sqlquery);
             sda = new SqlDataAdapter(cmd);
             ds = new DataSet();
             sda.Fill(ds);
@@ -1510,9 +1506,6 @@ namespace WpfApp.ViewModel
             }
 
             PathDescritpions = sb_pathDesc;
-
-            cmd.Dispose();
-            dbConnection.Close();
         }
 
         private ObservableCollection<Payment> _payments;
@@ -2488,7 +2481,7 @@ namespace WpfApp.ViewModel
 
             // Work Order Notes
             sqlquery = "SELECT * FROM tblNotes WHERE Notes_PK = " + WorkOrderID + " AND Notes_PK_Desc = 'WorkOrder';";
-            cmd = new SqlCommand(sqlquery, dbConnection.Connection);
+            cmd = dbConnection.RunQuryNoParameters(sqlquery);
             sda = new SqlDataAdapter(cmd);
             ds = new DataSet();
             sda.Fill(ds);
@@ -2538,7 +2531,7 @@ namespace WpfApp.ViewModel
         {
             // ProjectMatTracking 
             sqlquery = "Select MatReqdDate, Qty_Ord, tblManufacturers.Manuf_ID, TakeFromStock, Manuf_LeadTime, Manuf_Order_No, PO_Number, ShopReqDate, ShopRecvdDate, SubmitIssue, Resubmit_Date, SubmitAppr, No_Sub_Needed, Ship_to_Job, FM_Needed, Guar_Dim, Field_Dim, Finals_Rev,  ReleasedForFab, MatComplete, LaborComplete from tblManufacturers RIGHT JOIN(Select * from tblProjectMaterialsTrack where ProjMat_ID = " + ProjMatID.ToString() + ") AS tblProjMat ON tblManufacturers.Manuf_ID = tblProjMat.Manuf_ID;";
-            cmd = new SqlCommand(sqlquery, dbConnection.Connection);
+            cmd = dbConnection.RunQuryNoParameters(sqlquery);
             sda = new SqlDataAdapter(cmd);
             ds = new DataSet();
             sda.Fill(ds);
@@ -2623,7 +2616,7 @@ namespace WpfApp.ViewModel
 
             // Project Ship
             sqlquery = "SELECT * FROM tblProjectMaterialsShip RIGHT JOIN (SELECT ProjMT_ID FROM tblProjectMaterialsTrack WHERE ProjMat_ID = " + ProjMatID.ToString() + ") AS tblMat ON tblProjectMaterialsShip.ProjMT_ID = tblMat.ProjMT_ID;";
-            cmd = new SqlCommand(sqlquery, dbConnection.Connection);
+            cmd = dbConnection.RunQuryNoParameters(sqlquery);
             sda = new SqlDataAdapter(cmd);
             ds = new DataSet();
             sda.Fill(ds);

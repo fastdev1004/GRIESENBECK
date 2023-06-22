@@ -17,15 +17,14 @@ namespace WpfApp.ViewModel
     class ReportViewModel : ViewModelBase
     {
         private DatabaseConnection dbConnection;
-        public SqlCommand cmd;
-        public SqlDataAdapter sda;
-        public DataSet ds;
-        public string sqlquery;
+        private SqlCommand cmd = null;
+        private SqlDataAdapter sda;
+        private DataSet ds;
+        private string sqlquery;
        
         public ReportViewModel()
         {
             dbConnection = new DatabaseConnection();
-            dbConnection.Open();
             LoadReports();
             Complete = 2;
         }
@@ -34,7 +33,7 @@ namespace WpfApp.ViewModel
         {
             // Reports
             sqlquery = "SELECT * FROM tblReportsList WHERE Active = 1 ORDER BY Report_Name";
-            cmd = new SqlCommand(sqlquery, dbConnection.Connection);
+            cmd = dbConnection.RunQuryNoParameters(sqlquery);
             sda = new SqlDataAdapter(cmd);
             ds = new DataSet();
             sda.Fill(ds);
@@ -54,7 +53,7 @@ namespace WpfApp.ViewModel
 
             // Project
             sqlquery = "SELECT * FROM tblProjects ORDER BY Project_Name";
-            cmd = new SqlCommand(sqlquery, dbConnection.Connection);
+            cmd = dbConnection.RunQuryNoParameters(sqlquery);
             sda = new SqlDataAdapter(cmd);
             ds = new DataSet();
             sda.Fill(ds);
@@ -74,7 +73,7 @@ namespace WpfApp.ViewModel
 
             // SalesMan
             sqlquery = "SELECT * FROM tblSalesmen ORDER BY Salesman_Name";
-            cmd = new SqlCommand(sqlquery, dbConnection.Connection);
+            cmd = dbConnection.RunQuryNoParameters(sqlquery);
             sda = new SqlDataAdapter(cmd);
             ds = new DataSet();
             sda.Fill(ds);
@@ -91,7 +90,7 @@ namespace WpfApp.ViewModel
 
             // Arch Rep
             sqlquery = "SELECT * FROM tblArchRep ORDER BY Arch_Rep_Name";
-            cmd = new SqlCommand(sqlquery, dbConnection.Connection);
+            cmd = dbConnection.RunQuryNoParameters(sqlquery);
             sda = new SqlDataAdapter(cmd);
             ds = new DataSet();
             sda.Fill(ds);
@@ -108,7 +107,7 @@ namespace WpfApp.ViewModel
 
             // Customers
             sqlquery = "SELECT * FROM tblCustomers ORDER BY Full_Name";
-            cmd = new SqlCommand(sqlquery, dbConnection.Connection);
+            cmd = dbConnection.RunQuryNoParameters(sqlquery);
             sda = new SqlDataAdapter(cmd);
             ds = new DataSet();
             sda.Fill(ds);
@@ -125,7 +124,7 @@ namespace WpfApp.ViewModel
 
             // Manufacturer
             sqlquery = "SELECT * FROM tblManufacturers ORDER BY Manuf_Name";
-            cmd = new SqlCommand(sqlquery, dbConnection.Connection);
+            cmd = dbConnection.RunQuryNoParameters(sqlquery);
             sda = new SqlDataAdapter(cmd);
             ds = new DataSet();
             sda.Fill(ds);
@@ -142,7 +141,7 @@ namespace WpfApp.ViewModel
 
             // Architect
             sqlquery = "SELECT * FROM tblArchitects ORDER BY Arch_Company";
-            cmd = new SqlCommand(sqlquery, dbConnection.Connection);
+            cmd = dbConnection.RunQuryNoParameters(sqlquery);
             sda = new SqlDataAdapter(cmd);
             ds = new DataSet();
             sda.Fill(ds);
@@ -159,7 +158,7 @@ namespace WpfApp.ViewModel
 
             // Material
             sqlquery = "SELECT * FROM tblMaterials ORDER BY Material_Desc";
-            cmd = new SqlCommand(sqlquery, dbConnection.Connection);
+            cmd = dbConnection.RunQuryNoParameters(sqlquery);
             sda = new SqlDataAdapter(cmd);
             ds = new DataSet();
             sda.Fill(ds);
@@ -176,7 +175,7 @@ namespace WpfApp.ViewModel
 
             // Crew
             sqlquery = "SELECT Crew_ID, Crew_Name FROM tblInstallCrew;";
-            cmd = new SqlCommand(sqlquery, dbConnection.Connection);
+            cmd = dbConnection.RunQuryNoParameters(sqlquery);
             sda = new SqlDataAdapter(cmd);
             ds = new DataSet();
             sda.Fill(ds);
@@ -200,7 +199,7 @@ namespace WpfApp.ViewModel
             // Job No
             sqlquery = "SELECT Job_No FROM tblProjects ORDER BY Job_No";
 
-            cmd = new SqlCommand(sqlquery, dbConnection.Connection);
+            cmd = dbConnection.RunQuryNoParameters(sqlquery);
             sda = new SqlDataAdapter(cmd);
             ds = new DataSet();
             sda.Fill(ds);
@@ -216,7 +215,7 @@ namespace WpfApp.ViewModel
             // ReportSelection
             sqlquery = "SELECT * FROM tblReportsSelections";
 
-            cmd = new SqlCommand(sqlquery, dbConnection.Connection);
+            cmd = dbConnection.RunQuryNoParameters(sqlquery);
             sda = new SqlDataAdapter(cmd);
             ds = new DataSet();
             sda.Fill(ds);
@@ -242,7 +241,6 @@ namespace WpfApp.ViewModel
             CompleteCB = st_completeCB;
 
             cmd.Dispose();
-            dbConnection.Close();
         }
 
         private void ChangeReportItem()

@@ -13,16 +13,15 @@ namespace WpfApp.ViewModel
 {
     class CloseOutViewModel:ViewModelBase
     {
-        public SqlCommand cmd;
+        private DatabaseConnection dbConnection;
+        public SqlCommand cmd = null;
         public SqlDataAdapter sda;
         public DataSet ds;
         public string sqlquery;
-        private DatabaseConnection dbConnection;
 
         public CloseOutViewModel()
         {
             dbConnection = new DatabaseConnection();
-            dbConnection.Open();
             LoadCloseOuts();
         }
 
@@ -30,7 +29,8 @@ namespace WpfApp.ViewModel
         {
             // Projects
             sqlquery = "SELECT tblProjects.Project_ID, tblProjects.Project_Name, tblCustomers.Full_Name FROM tblProjects LEFT JOIN tblCustomers ON tblProjects.Customer_ID = tblCustomers.Customer_ID ORDER BY Project_Name ASC;";
-            cmd = new SqlCommand(sqlquery, dbConnection.Connection);
+
+            cmd = dbConnection.RunQuryNoParameters(sqlquery);
             sda = new SqlDataAdapter(cmd);
             ds = new DataSet();
             sda.Fill(ds);
@@ -51,7 +51,7 @@ namespace WpfApp.ViewModel
 
             // ReturnedViaNames
             sqlquery = "SELECT * FROM tblReturnedVia";
-            cmd = new SqlCommand(sqlquery, dbConnection.Connection);
+            cmd = dbConnection.RunQuryNoParameters(sqlquery);
             sda = new SqlDataAdapter(cmd);
             ds = new DataSet();
             sda.Fill(ds);
@@ -64,16 +64,13 @@ namespace WpfApp.ViewModel
                 st_returnedVia.Add(new ReturnedVia { ID = viaID, ReturnedViaName = viaName });
             }
             ReturnedViaNames = st_returnedVia;
-
-            cmd.Dispose();
-            dbConnection.Close();
         }
 
         private void ChangeProject()
         {
             sqlquery = "SELECT * FROM tblWarranties WHERE ProjectId = " + ProjectID.ToString();
 
-            cmd = new SqlCommand(sqlquery, dbConnection.Connection);
+            cmd = dbConnection.RunQuryNoParameters(sqlquery);
             sda = new SqlDataAdapter(cmd);
             ds = new DataSet();
             sda.Fill(ds);

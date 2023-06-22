@@ -14,7 +14,7 @@ namespace WpfApp.ViewModel
     class ImportViewModel:ViewModelBase
     {
         private DatabaseConnection dbConnection;
-        public SqlCommand cmd;
+        public SqlCommand cmd = null;
         public SqlDataAdapter sda;
         public DataSet ds;
         public string sqlquery;
@@ -22,7 +22,6 @@ namespace WpfApp.ViewModel
         public ImportViewModel()
         {
             dbConnection = new DatabaseConnection();
-            dbConnection.Open();
             LoadData();
         }
 
@@ -30,7 +29,7 @@ namespace WpfApp.ViewModel
         {
             // Customer
             sqlquery = "SELECT * FROM tblCustomers ORDER BY Full_Name";
-            cmd = new SqlCommand(sqlquery, dbConnection.Connection);
+            cmd = dbConnection.RunQuryNoParameters(sqlquery);
             sda = new SqlDataAdapter(cmd);
             ds = new DataSet();
             sda.Fill(ds);
@@ -57,7 +56,7 @@ namespace WpfApp.ViewModel
 
             // Manafacturer
             sqlquery = "SELECT * FROM tblManufacturers ORDER BY Manuf_Name";
-            cmd = new SqlCommand(sqlquery, dbConnection.Connection);
+            cmd = dbConnection.RunQuryNoParameters(sqlquery);
             sda = new SqlDataAdapter(cmd);
             ds = new DataSet();
             sda.Fill(ds);
@@ -81,9 +80,6 @@ namespace WpfApp.ViewModel
                 st_manufacturers.Add(new Manufacturer { ID = id, ManufacturerName = manufName, Address = address, Address2 = address2, City = city, State = state, Zip = zip, Phone = phone, Fax = fax, ContactName = contactName, ContactEmail = contactEmail, Active = active });
             }
             Manufacturers = st_manufacturers;
-
-            cmd.Dispose();
-            dbConnection.Close();
         }
 
         private ObservableCollection<Customer> _customer;

@@ -14,7 +14,7 @@ namespace WpfApp.ViewModel
     class ContractViewModel:ViewModelBase
     {
         private DatabaseConnection dbConnection;
-        public SqlCommand cmd;
+        public SqlCommand cmd = null;
         public SqlDataAdapter sda;
         public DataSet ds;
         public string sqlquery;
@@ -22,7 +22,6 @@ namespace WpfApp.ViewModel
         public ContractViewModel()
         {
             dbConnection = new DatabaseConnection();
-            dbConnection.Open();
             LoadContracts();
         }
 
@@ -30,7 +29,7 @@ namespace WpfApp.ViewModel
         {
             // Projects
             sqlquery = "SELECT tblProjects.Project_ID, tblProjects.Project_Name, tblCustomers.Full_Name FROM tblProjects LEFT JOIN tblCustomers ON tblProjects.Customer_ID = tblCustomers.Customer_ID ORDER BY Project_Name ASC;";
-            cmd = new SqlCommand(sqlquery, dbConnection.Connection);
+            cmd = dbConnection.RunQuryNoParameters(sqlquery);
             sda = new SqlDataAdapter(cmd);
             ds = new DataSet();
             sda.Fill(ds);
@@ -51,7 +50,7 @@ namespace WpfApp.ViewModel
 
             // ReturnedViaNames
             sqlquery = "SELECT * FROM tblReturnedVia";
-            cmd = new SqlCommand(sqlquery, dbConnection.Connection);
+            cmd = dbConnection.RunQuryNoParameters(sqlquery);
             sda = new SqlDataAdapter(cmd);
             ds = new DataSet();
             sda.Fill(ds);
@@ -65,10 +64,7 @@ namespace WpfApp.ViewModel
             }
 
             ReturnedViaNames = st_returnedVia;
-
-            cmd.Dispose();
-            dbConnection.Close();
-        }
+       }
 
         
 
@@ -93,8 +89,8 @@ namespace WpfApp.ViewModel
         {
             // Contracts
             sqlquery = "SELECT tblProj.Job_No, Contractnumber, ChangeOrder, ChangeOrderNo, DateRecD, DateProcessed, AmtOfcontract, SignedoffbySales, Signedoffbyoperations, GivenAcctingforreview, Givenforfinalsignature, Scope, ReturnedVia, ReturnedtoDawn, Comments FROM tblSC RIGHT JOIN (SELECT Project_ID, Job_No FROM tblProjects WHERE Project_ID = " + ProjectID.ToString() + ") AS tblProj ON tblSC.ProjectID = tblProj.Project_ID";
-
-            cmd = new SqlCommand(sqlquery, dbConnection.Connection);
+            
+            cmd = dbConnection.RunQuryNoParameters(sqlquery);
             sda = new SqlDataAdapter(cmd);
             ds = new DataSet();
             sda.Fill(ds);
@@ -172,7 +168,7 @@ namespace WpfApp.ViewModel
 
             // Project Change Orders
             sqlquery = "select * from tblProjectChangeOrders where Project_ID = " + ProjectID.ToString();
-            cmd = new SqlCommand(sqlquery, dbConnection.Connection);
+            cmd = dbConnection.RunQuryNoParameters(sqlquery);
             sda = new SqlDataAdapter(cmd);
             ds = new DataSet();
             sda.Fill(ds);

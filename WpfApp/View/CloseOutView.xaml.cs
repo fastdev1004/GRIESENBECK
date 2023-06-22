@@ -23,14 +23,12 @@ namespace WpfApp.View
         {
             InitializeComponent();
             dbConnection = new DatabaseConnection();
-            dbConnection.Open();
             CloseOutVM = new CloseOutViewModel();
             this.DataContext = CloseOutVM;
         }
 
         private void GoBack(object sender, RoutedEventArgs e)
         {
-            dbConnection.Close();
             this.NavigationService.Navigate(new Uri("View/Start.xaml", UriKind.Relative));
         }
     }

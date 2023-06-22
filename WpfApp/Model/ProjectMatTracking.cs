@@ -130,7 +130,7 @@ namespace WpfApp.Model
             set
             {
                 if (value == _acronym) return;
-                _acronym = value;
+                _color = value;
                 OnPropertyChanged();
             }
         }
