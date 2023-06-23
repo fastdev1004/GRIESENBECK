@@ -17,14 +17,12 @@ namespace WpfApp.View
     /// </summary>
     public partial class ContractView : Page
     {
-        private DatabaseConnection dbConnection;
         private ContractViewModel ContractVM;
 
         public ContractView()
         {
             InitializeComponent();
             ContractVM = new ContractViewModel();
-            dbConnection = new DatabaseConnection();
             this.DataContext = ContractVM;
         }
 

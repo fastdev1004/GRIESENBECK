@@ -691,7 +691,6 @@ namespace WpfApp.ViewModel
                 }
 
                 cmd = dbConnection.RunQueryToUpdateCustomer(sqlquery, fullName, shortName, poNumber, address, city, state, zip, phone, fax, email, active, customerID);
-                int rowsAffected = cmd.ExecuteNonQuery();
                 ActionState = "UpdateRow";
                 ActionCustState = "";
             }

@@ -19,14 +19,12 @@ namespace WpfApp.View
     /// </summary>
     public partial class TrackShipView : Page
     {
-        private DatabaseConnection dbConnection;
         private  TrackShipViewModel TrackShipVM;
 
         public TrackShipView()
         {
             InitializeComponent();
             TrackShipVM = new TrackShipViewModel();
-            dbConnection = new DatabaseConnection();
             this.DataContext = TrackShipVM;
         }
 

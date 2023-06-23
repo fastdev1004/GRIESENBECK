@@ -21,14 +21,12 @@ namespace WpfApp
     /// </summary>
     public partial class ProjectView : Page
     {
-        private DatabaseConnection dbConnection;
         private NoteHelper noteHelper;
 
         private ProjectViewModel ProjectVM;
         public ProjectView()
         {
             InitializeComponent();
-            dbConnection = new DatabaseConnection();
             noteHelper = new NoteHelper();
             ProjectVM = new ProjectViewModel();
             this.DataContext = ProjectVM;

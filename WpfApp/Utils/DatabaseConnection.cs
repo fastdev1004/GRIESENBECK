@@ -21,19 +21,20 @@ namespace WpfApp.Utils
         {
             this.connectionString = ConfigurationManager.ConnectionStrings["MyDBConnection"].ConnectionString;
             connection = new SqlConnection(this.connectionString);
-            connection.Open();
         }
 
         public SqlCommand RunQuryNoParameters(string query)
         {
             try
             {
+                connection.Open();
                 if (connection != null)
                 {
                     cmd = connection.CreateCommand();
                     cmd.CommandType = CommandType.Text;
                     cmd.CommandText = query;
                     cmd.ExecuteNonQuery();
+                    connection.Close();
                 }
             }
             catch (Exception e)
@@ -48,6 +49,7 @@ namespace WpfApp.Utils
         {
             try
             {
+                connection.Open();
                 if (connection != null)
                 {
                     cmd = connection.CreateCommand();
@@ -83,6 +85,7 @@ namespace WpfApp.Utils
                     else cmd.Parameters.AddWithValue("@FacCert", DBNull.Value);
                     cmd.Parameters.AddWithValue("@Active", active);
                     insertedID = (int)cmd.ExecuteScalar();
+                    connection.Close();
                 }
             }
             catch (Exception ex)
@@ -97,6 +100,7 @@ namespace WpfApp.Utils
         {
             try
             {
+                connection.Open();
                 if (connection != null)
                 {
                     cmd = connection.CreateCommand();
@@ -133,6 +137,7 @@ namespace WpfApp.Utils
                     cmd.Parameters.AddWithValue("@Active", active);
                     cmd.Parameters.AddWithValue("@InstallerID", id);
                     cmd.ExecuteNonQuery();
+                    connection.Close();
                 }
             }
             catch (Exception ex)
@@ -147,6 +152,7 @@ namespace WpfApp.Utils
         {
             try
             {
+                connection.Open();
                 if (connection != null)
                 {
                     cmd = connection.CreateCommand();
@@ -171,6 +177,7 @@ namespace WpfApp.Utils
                     cmd.Parameters.AddWithValue("@Active", active);
 
                     insertedID = (int)cmd.ExecuteScalar();
+                    connection.Close();
                 }
             }
             catch (Exception ex)
@@ -185,6 +192,7 @@ namespace WpfApp.Utils
         {
             try
             {
+                connection.Open();
                 if (connection != null)
                 {
                     cmd = connection.CreateCommand();
@@ -209,6 +217,7 @@ namespace WpfApp.Utils
                     cmd.Parameters.AddWithValue("@UserID", userID);
                     cmd.Parameters.AddWithValue("@Active", active);
                     cmd.ExecuteNonQuery();
+                    connection.Close();
                 }
             }
             catch (Exception ex)
@@ -223,6 +232,7 @@ namespace WpfApp.Utils
         {
             try
             {
+                connection.Open();
                 if (connection != null)
                 {
                     cmd = connection.CreateCommand();
@@ -247,6 +257,7 @@ namespace WpfApp.Utils
                     cmd.Parameters.AddWithValue("@Active", active);
 
                     insertedID = (int)cmd.ExecuteScalar();
+                    connection.Close();
                 }
             }
             catch (Exception ex)
@@ -261,6 +272,7 @@ namespace WpfApp.Utils
         {
             try
             {
+                connection.Open();
                 if (connection != null)
                 {
                     cmd = connection.CreateCommand();
@@ -286,6 +298,7 @@ namespace WpfApp.Utils
                     cmd.Parameters.AddWithValue("@FreightCoID", freightID);
 
                     cmd.ExecuteNonQuery();
+                    connection.Close();
                 }
             }
             catch (Exception ex)
@@ -300,6 +313,7 @@ namespace WpfApp.Utils
         {
             try
             {
+                connection.Open();
                 if (connection != null)
                 {
                     cmd = connection.CreateCommand();
@@ -340,6 +354,7 @@ namespace WpfApp.Utils
                     cmd.Parameters.AddWithValue("@ArchitectID", archID);
 
                     cmd.ExecuteNonQuery();
+                    connection.Close();
                 }
             }
             catch (Exception ex)
@@ -354,6 +369,7 @@ namespace WpfApp.Utils
         {
             try
             {
+                connection.Open();
                 if (connection != null)
                 {
                     cmd = connection.CreateCommand();
@@ -393,6 +409,7 @@ namespace WpfApp.Utils
                     cmd.Parameters.AddWithValue("@Active", active);
 
                     insertedID = (int)cmd.ExecuteScalar();
+                    connection.Close();
                 }
             }
             catch (Exception ex)
@@ -407,6 +424,7 @@ namespace WpfApp.Utils
         {
             try
             {
+                connection.Open();
                 if (connection != null)
                 {
                     cmd = connection.CreateCommand();
@@ -429,6 +447,7 @@ namespace WpfApp.Utils
                     cmd.Parameters.AddWithValue("@CrewID", crewID);
 
                     cmd.ExecuteNonQuery();
+                    connection.Close();
                 }
             }
             catch (Exception ex)
@@ -443,6 +462,7 @@ namespace WpfApp.Utils
         {
             try
             {
+                connection.Open();
                 if (connection != null)
                 {
                     cmd = connection.CreateCommand();
@@ -463,8 +483,8 @@ namespace WpfApp.Utils
                     else cmd.Parameters.AddWithValue("@Email", DBNull.Value);
                     cmd.Parameters.AddWithValue("@Active", active);
 
-
                     insertedID = (int)cmd.ExecuteScalar();
+                    connection.Close();
                 }
             }
             catch (Exception ex)
@@ -479,6 +499,7 @@ namespace WpfApp.Utils
         {
             try
             {
+                connection.Open();
                 if (connection != null)
                 {
                     cmd = connection.CreateCommand();
@@ -504,6 +525,7 @@ namespace WpfApp.Utils
                     cmd.Parameters.AddWithValue("@SalesID", salesID);
 
                     cmd.ExecuteNonQuery();
+                    connection.Close();
                 }
             }
             catch (Exception ex)
@@ -518,6 +540,7 @@ namespace WpfApp.Utils
         {
             try
             {
+                connection.Open();
                 if (connection != null)
                 {
                     cmd = connection.CreateCommand();
@@ -541,8 +564,8 @@ namespace WpfApp.Utils
                     else cmd.Parameters.AddWithValue("@Email", DBNull.Value);
                     cmd.Parameters.AddWithValue("@Active", active);
 
-
                     insertedID = (int)cmd.ExecuteScalar();
+                    connection.Close();
                 }
             }
             catch (Exception ex)
@@ -557,6 +580,7 @@ namespace WpfApp.Utils
         {
             try
             {
+                connection.Open();
                 if (connection != null)
                 {
                     cmd = connection.CreateCommand();
@@ -573,6 +597,7 @@ namespace WpfApp.Utils
                     cmd.Parameters.AddWithValue("@LaborID", laborID);
 
                     cmd.ExecuteNonQuery();
+                    connection.Close();
                 }
             }
             catch (Exception ex)
@@ -587,6 +612,7 @@ namespace WpfApp.Utils
         {
             try
             {
+                connection.Open();
                 if (connection != null)
                 {
                     cmd = connection.CreateCommand();
@@ -601,8 +627,8 @@ namespace WpfApp.Utils
                     else cmd.Parameters.AddWithValue("@UnitPrice", DBNull.Value);
                     cmd.Parameters.AddWithValue("@Active", active);
 
-
                     insertedID = (int)cmd.ExecuteScalar();
+                    connection.Close();
                 }
             }
             catch (Exception ex)
@@ -617,6 +643,7 @@ namespace WpfApp.Utils
         {
             try
             {
+                connection.Open();
                 if (connection != null)
                 {
                     cmd = connection.CreateCommand();
@@ -630,6 +657,7 @@ namespace WpfApp.Utils
                     cmd.Parameters.AddWithValue("@MatID", matID);
 
                     cmd.ExecuteNonQuery();
+                    connection.Close();
                 }
             }
             catch (Exception ex)
@@ -644,6 +672,7 @@ namespace WpfApp.Utils
         {
             try
             {
+                connection.Open();
                 if (connection != null)
                 {
                     cmd = connection.CreateCommand();
@@ -656,6 +685,7 @@ namespace WpfApp.Utils
                     cmd.Parameters.AddWithValue("@Active", active);
 
                     insertedID = (int)cmd.ExecuteScalar();
+                    connection.Close();
                 }
             }
             catch (Exception ex)
@@ -670,6 +700,7 @@ namespace WpfApp.Utils
         {
             try
             {
+                connection.Open();
                 if (connection != null)
                 {
                     cmd = connection.CreateCommand();
@@ -688,6 +719,7 @@ namespace WpfApp.Utils
                     else cmd.Parameters.AddWithValue("@OriginName", DBNull.Value);
 
                     cmd.ExecuteNonQuery();
+                    connection.Close();
                 }
             }
             catch (Exception ex)
@@ -703,6 +735,7 @@ namespace WpfApp.Utils
             string insertedSovName = "";
             try
             {
+                connection.Open();
                 if (connection != null)
                 {
                     cmd = connection.CreateCommand();
@@ -718,6 +751,7 @@ namespace WpfApp.Utils
                     cmd.Parameters.AddWithValue("@Active", active);
 
                     insertedSovName = (string)cmd.ExecuteScalar();
+                    connection.Close();
                 }
             }
             catch (Exception ex)
@@ -732,6 +766,7 @@ namespace WpfApp.Utils
         {
             try
             {
+                connection.Open();
                 if (connection != null)
                 {
                     cmd = connection.CreateCommand();
@@ -757,6 +792,7 @@ namespace WpfApp.Utils
                     cmd.Parameters.AddWithValue("@ID", infoID);
 
                     cmd.ExecuteNonQuery();
+                    connection.Close();
                 }
             }
             catch (Exception ex)
@@ -771,6 +807,7 @@ namespace WpfApp.Utils
         {
             try
             {
+                connection.Open();
                 if (connection != null)
                 {
                     cmd = connection.CreateCommand();
@@ -795,6 +832,7 @@ namespace WpfApp.Utils
                     cmd.Parameters.AddWithValue("@Active", active);
 
                     insertedID = (int)cmd.ExecuteScalar();
+                    connection.Close();
                 }
             }
             catch (Exception ex)
@@ -809,6 +847,7 @@ namespace WpfApp.Utils
         {
             try
             {
+                connection.Open();
                 if (connection != null)
                 {
                     cmd = connection.CreateCommand();
@@ -854,6 +893,7 @@ namespace WpfApp.Utils
                     else cmd.Parameters.AddWithValue("@ManufID", DBNull.Value);
 
                     cmd.ExecuteNonQuery();
+                    connection.Close();
                 }
             }
             catch (Exception ex)
@@ -868,6 +908,7 @@ namespace WpfApp.Utils
         {
             try
             {
+                connection.Open();
                 if (connection != null)
                 {
                     cmd = connection.CreateCommand();
@@ -909,8 +950,8 @@ namespace WpfApp.Utils
                     else cmd.Parameters.AddWithValue("@ContactEmail", DBNull.Value);
                     cmd.Parameters.AddWithValue("@Active", active);
 
-
                     insertedID = (int)cmd.ExecuteScalar();
+                    connection.Close();
                 }
             }
             catch (Exception ex)
@@ -925,6 +966,7 @@ namespace WpfApp.Utils
         {
             try
             {
+                connection.Open();
                 if (connection != null)
                 {
                     cmd = connection.CreateCommand();
@@ -945,6 +987,7 @@ namespace WpfApp.Utils
                     else cmd.Parameters.AddWithValue("@NotesID", DBNull.Value);
 
                     cmd.ExecuteNonQuery();
+                    connection.Close();
                 }
             }
             catch (Exception ex)
@@ -959,6 +1002,7 @@ namespace WpfApp.Utils
         {
             try
             {
+                connection.Open();
                 if (connection != null)
                 {
                     cmd = connection.CreateCommand();
@@ -982,6 +1026,7 @@ namespace WpfApp.Utils
                     else cmd.Parameters.AddWithValue("@NotesUser", DBNull.Value);
 
                     insertedID = (int)cmd.ExecuteScalar();
+                    connection.Close();
                 }
             }
             catch (Exception ex)
@@ -996,6 +1041,7 @@ namespace WpfApp.Utils
         {
             try
             {
+                connection.Open();
                 if (connection != null)
                 {
                     cmd = connection.CreateCommand();
@@ -1035,6 +1081,7 @@ namespace WpfApp.Utils
                     cmd.Parameters.AddWithValue("@CustomerID", customerID);
 
                     cmd.ExecuteNonQuery();
+                    connection.Close();
                 }
             }
             catch (Exception ex)
@@ -1049,6 +1096,7 @@ namespace WpfApp.Utils
         {
             try
             {
+                connection.Open();
                 if (connection != null)
                 {
                     cmd = connection.CreateCommand();
@@ -1087,6 +1135,7 @@ namespace WpfApp.Utils
                     cmd.Parameters.AddWithValue("@Active", active);
 
                     insertedID = (int)cmd.ExecuteScalar();
+                    connection.Close();
                 }
             }
             catch (Exception ex)

@@ -18,7 +18,6 @@ namespace WpfApp.View
     /// 
     public partial class WorkOrderView : Page
     {
-        private DatabaseConnection dbConnection;
         private NoteHelper noteHelper;
 
         private ObservableCollection<Note> sb_notes;
@@ -29,7 +28,6 @@ namespace WpfApp.View
             InitializeComponent();
             WorkOrderVM = new WorkOrderViewModel();
             sb_notes = new ObservableCollection<Note>();
-            dbConnection = new DatabaseConnection();
             noteHelper = new NoteHelper();
             this.DataContext = WorkOrderVM;
         }

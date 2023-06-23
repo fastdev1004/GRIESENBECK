@@ -16,13 +16,11 @@ namespace WpfApp.View
     /// </summary>
     public partial class CloseOutView : Page
     {
-        private DatabaseConnection dbConnection;
         private CloseOutViewModel CloseOutVM;
 
         public CloseOutView()
         {
             InitializeComponent();
-            dbConnection = new DatabaseConnection();
             CloseOutVM = new CloseOutViewModel();
             this.DataContext = CloseOutVM;
         }
