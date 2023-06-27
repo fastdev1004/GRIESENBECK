@@ -155,6 +155,7 @@ namespace WpfApp.ViewModel
             sda.Fill(ds);
 
             ObservableCollection<Customer> st_customer = new ObservableCollection<Customer>();
+            st_customer.Add(new Customer { ID = 0, FullName = "New" });
             foreach (DataRow row in ds.Tables[0].Rows)
             {
                 var m_test = row["Customer_ID"];
@@ -174,13 +175,14 @@ namespace WpfApp.ViewModel
             Customers = st_customer;
 
             // Architect
-            sqlquery = "SELECT Architect_ID, Arch_Company FROM tblArchitects;";
+            sqlquery = "SELECT Architect_ID, Arch_Company FROM tblArchitects ORDER BY Arch_Company;";
             cmd = dbConnection.RunQuryNoParameters(sqlquery);
             sda = new SqlDataAdapter(cmd);
             ds = new DataSet();
             sda.Fill(ds);
 
             ObservableCollection<Architect> st_architect = new ObservableCollection<Architect>();
+            st_architect.Add(new Architect { ID = 0, ArchCompany = "New" });
             foreach (DataRow row in ds.Tables[0].Rows)
             {
                 int Num;
@@ -243,13 +245,14 @@ namespace WpfApp.ViewModel
             Salesman = st_salesman;
 
             // Estimator
-            sqlquery = "SELECT Estimator_ID, Estimator_Name FROM tblEstimators;";
+            sqlquery = "SELECT * FROM tblEstimators ORDER BY Estimator_Name;";
             cmd = dbConnection.RunQuryNoParameters(sqlquery);
             sda = new SqlDataAdapter(cmd);
             ds = new DataSet();
             sda.Fill(ds);
 
             ObservableCollection<Estimator> st_estimator = new ObservableCollection<Estimator>();
+            st_estimator.Add(new Estimator { ID = 0, Name = "New" });
             foreach (DataRow row in ds.Tables[0].Rows)
             {
                 int Num;
@@ -259,20 +262,25 @@ namespace WpfApp.ViewModel
                 {
                     int estimatorID = int.Parse(row["Estimator_ID"].ToString());
                     string estimatorName = row["Estimator_Name"].ToString();
-                    st_estimator.Add(new Estimator { ID = estimatorID, EstimatorName = estimatorName });
+                    string initial = row["Estimator_Initials"].ToString();
+                    string cell = row["Cell"].ToString();
+                    string email = row["Estimator_Email"].ToString();
+                    bool active = row.Field<Boolean>("Active");
+                    st_estimator.Add(new Estimator { ID = estimatorID, Name = estimatorName, Initial = initial, Cell = cell, Email = email, Active = active });
                 }
 
             }
             Estimators = st_estimator;
 
             // ArchRep
-            sqlquery = "SELECT Arch_Rep_ID, Arch_Rep_Name FROM tblArchRep;";
+            sqlquery = "SELECT Arch_Rep_ID, Arch_Rep_Name FROM tblArchRep ORDER BY Arch_Rep_Name;";
             cmd = dbConnection.RunQuryNoParameters(sqlquery);
             sda = new SqlDataAdapter(cmd);
             ds = new DataSet();
             sda.Fill(ds);
 
             ObservableCollection<ArchRep> st_archRep = new ObservableCollection<ArchRep>();
+            st_archRep.Add(new ArchRep { ID = 0, ArchRepName = "New" });
             foreach (DataRow row in ds.Tables[0].Rows)
             {
                 int Num;
@@ -284,36 +292,36 @@ namespace WpfApp.ViewModel
                     string archRepName = row["Arch_Rep_Name"].ToString();
                     st_archRep.Add(new ArchRep { ID = archRepID, ArchRepName = archRepName });
                 }
-
             }
             ArchReps = st_archRep;
 
             // Customer Contacts
-            sqlquery = "SELECT CC_ID, Customer_ID, CC_Name FROM tblCustomerContacts;";
+            sqlquery = "SELECT CC_ID, Customer_ID, CC_Name FROM tblCustomerContacts ORDER BY CC_Name;";
             cmd = dbConnection.RunQuryNoParameters(sqlquery);
             sda = new SqlDataAdapter(cmd);
             ds = new DataSet();
             sda.Fill(ds);
 
             ObservableCollection<CustomerContact> st_customerContact = new ObservableCollection<CustomerContact>();
+            st_customerContact.Add(new CustomerContact { ID = 0, CCName = "New" });
             foreach (DataRow row in ds.Tables[0].Rows)
             {
                 int ccID = int.Parse(row["CC_ID"].ToString());
                 int customerID = int.Parse(row["Customer_ID"].ToString());
                 string ccName= row["CC_Name"].ToString();
                 st_customerContact.Add(new CustomerContact { ID = ccID, CustomerID = customerID, CCName = ccName});
-
             }
             CustomerContacts = st_customerContact;
 
             // PC
-            sqlquery = "SELECT PC_ID, PC_Name FROM tblPCs;";
+            sqlquery = "SELECT PC_ID, PC_Name FROM tblPCs ORDER BY PC_Name;";
             cmd = dbConnection.RunQuryNoParameters(sqlquery);
             sda = new SqlDataAdapter(cmd);
             ds = new DataSet();
             sda.Fill(ds);
 
             ObservableCollection<PC> st_pc = new ObservableCollection<PC>();
+            st_pc.Add(new PC { ID = 0, PCName = "New" });
             foreach (DataRow row in ds.Tables[0].Rows)
             {
                 int pcID = int.Parse(row["PC_ID"].ToString());
@@ -325,13 +333,14 @@ namespace WpfApp.ViewModel
             PCs = st_pc;
 
             // Superintendent
-            sqlquery = "SELECT * FROM tblSuperintendents";
+            sqlquery = "SELECT * FROM tblSuperintendents ORDER BY Sup_Name;";
             cmd = dbConnection.RunQuryNoParameters(sqlquery);
             sda = new SqlDataAdapter(cmd);
             ds = new DataSet();
             sda.Fill(ds);
 
             ObservableCollection<Superintendent> st_supt = new ObservableCollection<Superintendent>();
+            st_supt.Add(new Superintendent { SupID = 0, SupName = "New" });
             foreach (DataRow row in ds.Tables[0].Rows)
             {
                 int suptID = int.Parse(row["Sup_ID"].ToString());
@@ -367,6 +376,7 @@ namespace WpfApp.ViewModel
             ds = new DataSet();
             sda.Fill(ds);
             ObservableCollection<ProjectManager> st_pm = new ObservableCollection<ProjectManager>();
+            st_pm.Add(new ProjectManager { ID = 0, PMName = "New" });
             foreach (DataRow row in ds.Tables[0].Rows)
             {
                 int pmID = int.Parse(row["PM_ID"].ToString());
@@ -1520,18 +1530,6 @@ namespace WpfApp.ViewModel
                 _projectID = value;
                 OnPropertyChanged();
                 ChangeProject();
-            }
-        }
-
-        private int _selectetPMId;
-
-        public int ProjectManagerID
-        {
-            get { return _selectetPMId; }
-            set
-            {
-                _selectetPMId = value;
-                //ChangePM();
             }
         }
 

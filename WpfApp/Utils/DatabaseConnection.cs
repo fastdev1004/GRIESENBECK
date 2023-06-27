@@ -1145,6 +1145,74 @@ namespace WpfApp.Utils
             return insertedID;
         }
 
+        // Create Estimator
+        public int RunQueryToCreateEstimator(string query, string initial, string name, string cell, string email, bool active)
+        {
+            try
+            {
+                connection.Open();
+                if (connection != null)
+                {
+                    cmd = connection.CreateCommand();
+                    cmd.CommandType = CommandType.Text;
+                    cmd.CommandText = query;
+
+                    if (!string.IsNullOrEmpty(initial))
+                        cmd.Parameters.AddWithValue("@Initial", initial);
+                    else cmd.Parameters.AddWithValue("@Initial", DBNull.Value);
+                    if (!string.IsNullOrEmpty(name))
+                        cmd.Parameters.AddWithValue("@Name", name);
+                    else cmd.Parameters.AddWithValue("@Name", DBNull.Value);
+                    if (!string.IsNullOrEmpty(cell))
+                        cmd.Parameters.AddWithValue("@Cell", cell);
+                    else cmd.Parameters.AddWithValue("@Cell", DBNull.Value);
+                    if (!string.IsNullOrEmpty(email))
+                        cmd.Parameters.AddWithValue("@Email", email);
+                    else cmd.Parameters.AddWithValue("@Email", DBNull.Value);
+                    cmd.Parameters.AddWithValue("@Active", active);
+
+                    insertedID = (int)cmd.ExecuteScalar();
+                    connection.Close();
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex);
+            }
+            return insertedID;
+        }
+
+        // Create Project Coord
+        public int RunQueryToCreatePC(string query, string name, string email, bool active)
+        {
+            try
+            {
+                connection.Open();
+                if (connection != null)
+                {
+                    cmd = connection.CreateCommand();
+                    cmd.CommandType = CommandType.Text;
+                    cmd.CommandText = query;
+
+                    if (!string.IsNullOrEmpty(name))
+                        cmd.Parameters.AddWithValue("@Name", name);
+                    else cmd.Parameters.AddWithValue("@Name", DBNull.Value);
+                    if (!string.IsNullOrEmpty(email))
+                        cmd.Parameters.AddWithValue("@Email", email);
+                    else cmd.Parameters.AddWithValue("@Email", DBNull.Value);
+                    cmd.Parameters.AddWithValue("@Active", active);
+
+                    insertedID = (int)cmd.ExecuteScalar();
+                    connection.Close();
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex);
+            }
+            return insertedID;
+        }
+
         public void Open()
         {
            connection.Open();

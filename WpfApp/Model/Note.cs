@@ -82,6 +82,7 @@ namespace WpfApp.Model
                 OnPropertyChanged();
             }
         }
+
         public string NotesNote
         {
             get => _notesNote;

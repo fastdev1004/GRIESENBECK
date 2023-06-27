@@ -132,6 +132,14 @@
     <Compile Include="ViewModel\AdminViewModel.cs" />
     <Compile Include="ViewModel\CloseOutViewModel.cs" />
     <Compile Include="ViewModel\ContractViewModel.cs" />
+    <Compile Include="ViewModel\Dialog\NewArchitectViewModel.cs" />
+    <Compile Include="ViewModel\Dialog\NewArchRepViewModel.cs" />
+    <Compile Include="ViewModel\Dialog\NewCustomerViewModel.cs" />
+    <Compile Include="ViewModel\Dialog\NewEstViewModel.cs" />
+    <Compile Include="ViewModel\Dialog\NewPmViewModel.cs" />
+    <Compile Include="ViewModel\Dialog\NewProjectCrdViewModel.cs" />
+    <Compile Include="ViewModel\Dialog\NewSCViewModel.cs" />
+    <Compile Include="ViewModel\Dialog\NewSuptViewModel.cs" />
     <Compile Include="ViewModel\ImportViewModel.cs" />
     <Compile Include="ViewModel\ProjectViewModel.cs" />
     <Compile Include="ViewModel\ReportDetailViewModel.cs" />
@@ -147,6 +155,30 @@
     </Compile>
     <Compile Include="View\ContractView.xaml.cs">
       <DependentUpon>ContractView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="View\Dialog\NewArchitectDialog.xaml.cs">
+      <DependentUpon>NewArchitectDialog.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="View\Dialog\NewArchRepDialog.xaml.cs">
+      <DependentUpon>NewArchRepDialog.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="View\Dialog\NewCustomerDialog.xaml.cs">
+      <DependentUpon>NewCustomerDialog.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="View\Dialog\NewEstimatorDialog.xaml.cs">
+      <DependentUpon>NewEstimatorDialog.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="View\Dialog\NewPmDialog.xaml.cs">
+      <DependentUpon>NewPmDialog.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="View\Dialog\NewProjectCrdDialog.xaml.cs">
+      <DependentUpon>NewProjectCrdDialog.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="View\Dialog\NewSCDialog.xaml.cs">
+      <DependentUpon>NewSCDialog.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="View\Dialog\NewSuptDialog.xaml.cs">
+      <DependentUpon>NewSuptDialog.xaml</DependentUpon>
     </Compile>
     <Compile Include="View\ImportView.xaml.cs">
       <DependentUpon>ImportView.xaml</DependentUpon>
@@ -194,6 +226,38 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="View\ContractView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="View\Dialog\NewArchitectDialog.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="View\Dialog\NewArchRepDialog.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="View\Dialog\NewCustomerDialog.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="View\Dialog\NewEstimatorDialog.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="View\Dialog\NewPmDialog.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="View\Dialog\NewProjectCrdDialog.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="View\Dialog\NewSCDialog.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="View\Dialog\NewSuptDialog.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

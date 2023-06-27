@@ -1,0 +1,208 @@
+﻿<Window x:Class="WpfApp.View.Dialog.NewCustomerDialog"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:WpfApp.View.Dialog"
+        mc:Ignorable="d"
+        Title="New Customer" Height="500" Width="600">
+
+    <Window.Resources>
+        <ResourceDictionary>
+            <ContextMenu x:Key="NoteContextMenu">
+                <MenuItem Header="New" Command="{Binding AddNewNoteCommand}"/>
+            </ContextMenu>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="../../Themes/Generic.xaml" />
+            </ResourceDictionary.MergedDictionaries>
+        </ResourceDictionary>
+    </Window.Resources>
+    <Grid Margin="10">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="*" />
+            <RowDefinition Height="Auto" />
+        </Grid.RowDefinitions>
+        <Grid Margin="0,0,0,4">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="1*" />
+                <ColumnDefinition Width="5*" />
+            </Grid.ColumnDefinitions>
+            <Label Content="Full Name:" />
+            <TextBox Grid.Column="1" Text="{Binding TempCustomer.FullName, Mode=TwoWay}" Tag="FullName" />
+        </Grid>
+        <Grid Grid.Row="1" Margin="0,0,0,4">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="1*" />
+                <ColumnDefinition Width="5*" />
+            </Grid.ColumnDefinitions>
+            <Label Content="Short Name:" />
+            <Grid Grid.Column="1">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="3*" />
+                    <ColumnDefinition Width="2*" />
+                </Grid.ColumnDefinitions>
+                <TextBox Text="{Binding TempCustomer.ShortName , Mode=TwoWay}" Tag="ShortName" />
+                <Grid Grid.Column="1">
+                    <WrapPanel HorizontalAlignment="Right">
+                        <Label Content="Active?" />
+                        <CheckBox Grid.Column="1" IsChecked="{Binding TempCustomer.Active, Mode=TwoWay}" VerticalAlignment="Center" />
+                    </WrapPanel>
+                </Grid>
+            </Grid>
+        </Grid>
+        <Grid Grid.Row="2" Margin="0,0,0,4">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="1*" />
+                <ColumnDefinition Width="1*" />
+                <ColumnDefinition Width="4*" />
+            </Grid.ColumnDefinitions>
+            <Label Content="PO Box:" />
+            <TextBox Grid.Column="1" Text="{Binding TempCustomer.PoBox, Mode=TwoWay}" Tag="PoBox" />
+        </Grid>
+        <Grid Grid.Row="3" Margin="0,0,0,4">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="1*" />
+                <ColumnDefinition Width="5*" />
+            </Grid.ColumnDefinitions>
+            <Label Content="Address:" />
+            <TextBox Grid.Column="1" Text="{Binding TempCustomer.Address, Mode=TwoWay}" Tag="Address" />
+        </Grid>
+        <Grid Grid.Row="4" Margin="0,0,0,4">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="1*" />
+                <ColumnDefinition Width="5*" />
+            </Grid.ColumnDefinitions>
+            <Label Content="City:" />
+            <Grid Grid.Column="1">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="1*" />
+                    <ColumnDefinition Width="1*" />
+                </Grid.ColumnDefinitions>
+                <TextBox Text="{Binding TempCustomer.City , Mode=TwoWay}" Tag="City" />
+                <Grid Grid.Column="1">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="1*" />
+                        <ColumnDefinition Width="2*" />
+                    </Grid.ColumnDefinitions>
+                    <Label Content="Phone" />
+                    <TextBox Grid.Column="1" Text="{Binding TempCustomer.Phone, Mode=TwoWay}" Tag="Phone" />
+                </Grid>
+            </Grid>
+        </Grid>
+        <Grid Grid.Row="5" Margin="0,0,0,4">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="1*" />
+                <ColumnDefinition Width="5*" />
+            </Grid.ColumnDefinitions>
+            <Label Content="State:" />
+            <Grid Grid.Column="1">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="1*" />
+                    <ColumnDefinition Width="1*" />
+                </Grid.ColumnDefinitions>
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="1*" />
+                        <ColumnDefinition Width="2*" />
+                    </Grid.ColumnDefinitions>
+                    <TextBox MaxLength="2" Text="{Binding TempCustomer.State, Mode=TwoWay}" Tag="State" />
+                    <Grid Grid.Column="1">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="1*" />
+                            <ColumnDefinition Width="2*" />
+                        </Grid.ColumnDefinitions>
+                        <Label Content="Zip:" />
+                        <TextBox Grid.Column="1" Text="{Binding TempCustomer.Zip, Mode=TwoWay}" Tag="Zip" />
+                    </Grid>
+                </Grid>
+                <Grid Grid.Column="1">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="1*" />
+                        <ColumnDefinition Width="2*" />
+                    </Grid.ColumnDefinitions>
+                    <Label Content="FAX:" />
+                    <TextBox Grid.Column="1" Text="{Binding TempCustomer.Fax, Mode=TwoWay}" Tag="Fax" />
+                </Grid>
+            </Grid>
+        </Grid>
+        <Grid Grid.Row="6" Margin="0,0,0,4">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="1*" />
+                <ColumnDefinition Width="5*" />
+            </Grid.ColumnDefinitions>
+            <Label Content="Email:" />
+            <TextBox Grid.Column="1" Text="{Binding TempCustomer.Email, Mode=TwoWay}" Tag="Email" />
+        </Grid>
+        <Grid Grid.Row="7">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="1*" />
+                <ColumnDefinition Width="5*" />
+            </Grid.ColumnDefinitions>
+            <Label Content="Notes:" />
+            <Grid Grid.Column="1" Background="#F5FFAF">
+                <DataGrid Margin="4,0" Padding="10" Grid.Column="1" ItemsSource="{Binding CustomerNotes, Mode=TwoWay}" GridLinesVisibility="None" AutoGenerateColumns="False" HeadersVisibility="None" BorderThickness="0" Background="#F5FFAF" CanUserAddRows="False"  ContextMenu="{StaticResource NoteContextMenu}">
+                    <DataGrid.Resources>
+                        <Style TargetType="TextBox">
+                            <Setter Property="TextWrapping" Value="Wrap" />
+                        </Style>
+                        <Style TargetType="Label">
+                            <Setter Property="HorizontalAlignment" Value="Right" />
+                        </Style>
+                        <Style TargetType="DataGridRow">
+                            <Setter Property="Height" Value="Auto" />
+                            <Setter Property="BorderThickness" Value="0" />
+                            <Setter Property="Margin" Value="0,4" />
+                        </Style>
+                    </DataGrid.Resources>
+                    <DataGrid.Columns>
+                        <DataGridTemplateColumn Width="*">
+                            <DataGridTemplateColumn.CellTemplate>
+                                <DataTemplate>
+                                    <Grid>
+                                        <Grid.RowDefinitions>
+                                            <RowDefinition Height="Auto" />
+                                            <RowDefinition Height="Auto" />
+                                        </Grid.RowDefinitions>
+                                        <Grid>
+                                            <Grid.ColumnDefinitions>
+                                                <ColumnDefinition Width="1*" />
+                                                <ColumnDefinition Width="1*" />
+                                            </Grid.ColumnDefinitions>
+                                            <TextBlock Text="{Binding NotesDateAdded , Mode=TwoWay}" />
+                                            <TextBlock Grid.Column="1" Text="{Binding NoteUserName, Mode=TwoWay}" HorizontalAlignment="Right" />
+                                        </Grid>
+                                        <Grid Grid.Row="1">
+                                            <TextBox Text="{Binding NotesNote, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" AcceptsReturn="True" ScrollViewer.VerticalScrollBarVisibility="Auto" Height="40" Tag="Customer" />
+                                        </Grid>
+                                    </Grid>
+                                </DataTemplate>
+                            </DataGridTemplateColumn.CellTemplate>
+                        </DataGridTemplateColumn>
+                    </DataGrid.Columns>
+                </DataGrid>
+            </Grid>
+        </Grid>
+        <Grid Grid.Row="8">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="6*" />
+                <ColumnDefinition Width="4*" />
+            </Grid.ColumnDefinitions>
+            <Grid Grid.Column="1">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="2*" />
+                    <ColumnDefinition Width="1*" />
+                    <ColumnDefinition Width="2*" />
+                </Grid.ColumnDefinitions>
+                <Button Width="80" Content="Save" Command="{Binding SaveCommand}" />
+                <Button Width="80" Grid.Column="2" Content="Cancel" Click="Close_NewCustomerDlg" />
+            </Grid>
+        </Grid>
+    </Grid>
+</Window>

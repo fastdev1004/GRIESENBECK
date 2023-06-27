@@ -13,6 +13,7 @@ using WpfApp.Controls;
 using System.Drawing;
 using System.Windows.Media;
 using WpfApp.Utils;
+using WpfApp.View.Dialog;
 
 namespace WpfApp
 {
@@ -145,6 +146,154 @@ namespace WpfApp
         private void SelectPaymentCheckBox(object sender, MouseButtonEventArgs e)
         {
             e.Handled = true;
+        }
+
+        private void CustomerCB_Changed(object sender, SelectionChangedEventArgs e)
+        {
+            ComboBox comboBox = sender as ComboBox;
+            int selectedIndex = comboBox.SelectedIndex;
+            if (selectedIndex == 0)
+            {
+                NewCustomerDialog newCustomerDlg = new NewCustomerDialog();
+                newCustomerDlg.WindowStartupLocation = WindowStartupLocation.CenterScreen;
+                CustomerName_CB.SelectedIndex = 1;
+                newCustomerDlg.ShowDialog();
+            }
+        }
+
+        private void EstimatorCB_Changed(object sender, SelectionChangedEventArgs e)
+        {
+            ComboBox comboBox = sender as ComboBox;
+            int selectedIndex = comboBox.SelectedIndex;
+            if (selectedIndex == 0)
+            {
+                NewEstimatorDialog newEstimatorDlg = new NewEstimatorDialog();
+                newEstimatorDlg.WindowStartupLocation = WindowStartupLocation.CenterScreen;
+                comboBox.SelectedIndex = 1;
+                newEstimatorDlg.ShowDialog();
+            }
+        }
+
+        private void SubContactCB_Changed(object sender, SelectionChangedEventArgs e)
+        {
+            ComboBox comboBox = sender as ComboBox;
+            int selectedIndex = comboBox.SelectedIndex;
+            if (selectedIndex == 0)
+            {
+                NewSCDialog newSCDlg = new NewSCDialog();
+                newSCDlg.CustomerID = ProjectVM.CustomerID;
+                newSCDlg.WindowStartupLocation = WindowStartupLocation.CenterScreen;
+                comboBox.SelectedIndex = 1;
+                newSCDlg.ShowDialog();
+            }
+        }
+
+        private void ArchCB_Changed(object sender, SelectionChangedEventArgs e)
+        {
+            ComboBox comboBox = sender as ComboBox;
+            int selectedIndex = comboBox.SelectedIndex;
+            if (selectedIndex == 0)
+            {
+                NewArchitectDialog newArchDlg = new NewArchitectDialog();
+                newArchDlg.WindowStartupLocation = WindowStartupLocation.CenterScreen;
+                comboBox.SelectedIndex = 1;
+                newArchDlg.ShowDialog();
+            }
+        }
+
+        private void PmCB_Changed(object sender, SelectionChangedEventArgs e)
+        {
+            ComboBox comboBox = sender as ComboBox;
+            int selectedIndex = comboBox.SelectedIndex;
+            if (selectedIndex == 0)
+            {
+                NewPmDialog newPmDlg = new NewPmDialog();
+                newPmDlg.CustomerID = ProjectVM.CustomerID;
+                newPmDlg.WindowStartupLocation = WindowStartupLocation.CenterScreen;
+                comboBox.SelectedIndex = 1;
+                newPmDlg.ShowDialog();
+            }
+        }
+
+        private void SuptCB_Changed(object sender, SelectionChangedEventArgs e)
+        {
+            ComboBox comboBox = sender as ComboBox;
+            int selectedIndex = comboBox.SelectedIndex;
+            if (selectedIndex == 0)
+            {
+                NewSuptDialog newSuptDlg = new NewSuptDialog();
+                newSuptDlg.CustomerID = ProjectVM.CustomerID;
+                newSuptDlg.WindowStartupLocation = WindowStartupLocation.CenterScreen;
+                comboBox.SelectedIndex = 1;
+                newSuptDlg.ShowDialog();
+            }
+        }
+
+        private void ProjectCrdCB_Changed(object sender, SelectionChangedEventArgs e)
+        {
+            ComboBox comboBox = sender as ComboBox;
+            int selectedIndex = comboBox.SelectedIndex;
+            if (selectedIndex == 0)
+            {
+                NewProjectCrdDialog newProjectCrdDlg = new NewProjectCrdDialog();
+                newProjectCrdDlg.WindowStartupLocation = WindowStartupLocation.CenterScreen;
+                comboBox.SelectedIndex = 1;
+                newProjectCrdDlg.ShowDialog();
+            }
+        }
+
+        private void ArchRepCB_Changed(object sender, SelectionChangedEventArgs e)
+        {
+            ComboBox comboBox = sender as ComboBox;
+            int selectedIndex = comboBox.SelectedIndex;
+            if (selectedIndex == 0)
+            {
+                NewArchRepDialog newArchRepDlg = new NewArchRepDialog();
+                newArchRepDlg.WindowStartupLocation = WindowStartupLocation.CenterScreen;
+                comboBox.SelectedIndex = 1;
+                newArchRepDlg.ShowDialog();
+            }
+        }
+
+        private void CustomerCombo_Loaded(object sender, RoutedEventArgs e)
+        {
+            CustomerName_CB.SelectionChanged += CustomerCB_Changed;
+            ComboBoxItem newItem = CustomerName_CB.ItemContainerGenerator.ContainerFromIndex(0) as ComboBoxItem;
+            if (newItem != null)
+            {
+                newItem.IsEnabled = false;
+            }
+            CustomerName_CB.SelectedIndex = 1;
+        }
+
+        private void EstCombo_Loaded(object sender, RoutedEventArgs e)
+        {
+            Estimator_CB.SelectionChanged += EstimatorCB_Changed;
+            Estimator_CB.SelectedIndex = 1;
+        }
+
+        private void ScCombo_Loaded(object sender, RoutedEventArgs e)
+        {
+            SubContact_CB.SelectionChanged += SubContactCB_Changed;
+            SubContact_CB.SelectedIndex = 1;
+        }
+
+        private void ArchCombo_Loaded(object sender, RoutedEventArgs e)
+        {
+            Architect_CB.SelectionChanged += ArchCB_Changed;
+            Architect_CB.SelectedIndex = 1;
+        }
+
+        private void PcCombo_Loaded(object sender, RoutedEventArgs e)
+        {
+            ProjectCoord_CB.SelectionChanged += ProjectCrdCB_Changed;
+            ProjectCoord_CB.SelectedIndex = 1;
+        }
+
+        private void ArchRepCombo_Loaded(object sender, RoutedEventArgs e)
+        {
+            ArchRep_CB.SelectionChanged += ArchRepCB_Changed;
+            ArchRep_CB.SelectedIndex = 1;
         }
     }
 }

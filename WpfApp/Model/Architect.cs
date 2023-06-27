@@ -89,6 +89,7 @@ namespace WpfApp.Model
                 OnPropertyChanged();
             }
         }
+
         public string Zip
         {
             get => _archZip;
@@ -99,6 +100,7 @@ namespace WpfApp.Model
                 OnPropertyChanged();
             }
         }
+
         public string Phone
         {
             get => _archPhone;
@@ -109,6 +111,7 @@ namespace WpfApp.Model
                 OnPropertyChanged();
             }
         }
+
         public string Fax
         {
             get => _archFax;
@@ -119,6 +122,7 @@ namespace WpfApp.Model
                 OnPropertyChanged();
             }
         }
+
         public string Cell
         {
             get => _archCell;
@@ -129,6 +133,7 @@ namespace WpfApp.Model
                 OnPropertyChanged();
             }
         }
+
         public string Email
         {
             get => _archEmail;
