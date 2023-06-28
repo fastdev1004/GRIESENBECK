@@ -14,6 +14,9 @@
             </Style>
         </Style.Resources>
     </Style>
+    <Style TargetType="TextBox">
+        <Setter Property="VerticalContentAlignment" Value="Center" />
+    </Style>
     <Style x:Key="GridColumnHeaderBase" TargetType="DataGridColumnHeader">
         <Setter Property="Background" Value="#648278" />
         <Setter Property="Foreground" Value="White" />

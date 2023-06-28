@@ -12,6 +12,13 @@
             <ContextMenu x:Key="NoteContextMenu">
                 <MenuItem Header="New" Command="{Binding AddNewNoteCommand}"/>
             </ContextMenu>
+            <ContextMenu x:Key="RowContextMenu">
+                <MenuItem Header="Delete" Click="RemoveNoteItem"/>
+            </ContextMenu>
+            <Style x:Key="NoteRowStyle" TargetType="{x:Type DataGridRow}">
+                <Setter Property="ContextMenu" Value="{StaticResource RowContextMenu}" />
+                <Setter Property="Margin" Value="0, 4" />
+            </Style>
             <ResourceDictionary.MergedDictionaries>
                 <ResourceDictionary Source="../../Themes/Generic.xaml" />
             </ResourceDictionary.MergedDictionaries>
@@ -147,7 +154,7 @@
             </Grid.ColumnDefinitions>
             <Label Content="Notes:" />
             <Grid Grid.Column="1" Background="#F5FFAF">
-                <DataGrid Margin="4,0" Padding="10" Grid.Column="1" ItemsSource="{Binding CustomerNotes, Mode=TwoWay}" GridLinesVisibility="None" AutoGenerateColumns="False" HeadersVisibility="None" BorderThickness="0" Background="#F5FFAF" CanUserAddRows="False"  ContextMenu="{StaticResource NoteContextMenu}">
+                <DataGrid x:Name="CustomerNote_DataGrid" Margin="4,0" Padding="10" Grid.Column="1" ItemsSource="{Binding CustomerNotes, Mode=TwoWay}" GridLinesVisibility="None" AutoGenerateColumns="False" HeadersVisibility="None" BorderThickness="0" Background="#F5FFAF" CanUserAddRows="False" ContextMenu="{StaticResource NoteContextMenu}" RowStyle="{StaticResource NoteRowStyle}">
                     <DataGrid.Resources>
                         <Style TargetType="TextBox">
                             <Setter Property="TextWrapping" Value="Wrap" />

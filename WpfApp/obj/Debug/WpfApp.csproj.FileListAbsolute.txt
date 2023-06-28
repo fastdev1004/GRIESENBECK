@@ -97,3 +97,5 @@ G:\GRIESENBECK\WpfApp\obj\Debug\View\Dialog\NewManufDialog.g.cs
 G:\GRIESENBECK\WpfApp\obj\Debug\View\Dialog\NewManufDialog.baml
 G:\GRIESENBECK\WpfApp\obj\Debug\View\Dialog\NewFreightDialog.g.cs
 G:\GRIESENBECK\WpfApp\obj\Debug\View\Dialog\NewFreightDialog.baml
+G:\GRIESENBECK\WpfApp\obj\Debug\View\Dialog\NewCrewDialog.g.cs
+G:\GRIESENBECK\WpfApp\obj\Debug\View\Dialog\NewCrewDialog.baml

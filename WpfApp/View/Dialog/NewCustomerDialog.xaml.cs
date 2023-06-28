@@ -35,5 +35,11 @@ namespace WpfApp.View.Dialog
         {
             this.Close();
         }
+
+        private void RemoveNoteItem(object sender, RoutedEventArgs e)
+        {
+            int selectedIndex = CustomerNote_DataGrid.SelectedIndex;
+            NewCustomerVM.CustomerNotes.RemoveAt(selectedIndex);
+        }
     }
 }

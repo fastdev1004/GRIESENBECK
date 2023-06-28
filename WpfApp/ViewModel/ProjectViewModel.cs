@@ -206,6 +206,7 @@ namespace WpfApp.ViewModel
             sda.Fill(ds);
 
             ObservableCollection<Crew> st_crew = new ObservableCollection<Crew>();
+            st_crew.Add(new Crew { ID = 0, CrewName = "New" });
             foreach (DataRow row in ds.Tables[0].Rows)
             {
                 int Num;
@@ -217,7 +218,6 @@ namespace WpfApp.ViewModel
                     string crewName = row["Crew_Name"].ToString();
                     st_crew.Add(new Crew { ID = crewID, CrewName = crewName });
                 }
-
             }
             Crews = st_crew;
 

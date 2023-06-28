@@ -11,33 +11,26 @@ using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
-using WpfApp.Model;
 using WpfApp.ViewModel.Dialog;
 
 namespace WpfApp.View.Dialog
 {
     /// <summary>
-    /// Interaction logic for NewManufDialog.xaml
+    /// Interaction logic for NewCrewDialog.xaml
     /// </summary>
-    public partial class NewManufDialog : Window
+    public partial class NewCrewDialog : Window
     {
-        private NewManufViewModel NewManufVM;
-        public NewManufDialog()
+        private NewCrewViewModel NewCrewVM;
+        public NewCrewDialog()
         {
             InitializeComponent();
-            NewManufVM = new NewManufViewModel();
-            this.DataContext = NewManufVM;
+            NewCrewVM = new NewCrewViewModel();
+            this.DataContext = NewCrewVM;
         }
 
         private void Close_Dlg(object sender, RoutedEventArgs e)
         {
             this.Close();
-        }
-
-        private void RemoveNoteItem(object sender, RoutedEventArgs e)
-        {
-            int selectedIndex = ManufNote_DataGrid.SelectedIndex;
-            NewManufVM.ManufNotes.RemoveAt(selectedIndex);
         }
     }
 }

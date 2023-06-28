@@ -134,6 +134,7 @@
     <Compile Include="ViewModel\ContractViewModel.cs" />
     <Compile Include="ViewModel\Dialog\NewArchitectViewModel.cs" />
     <Compile Include="ViewModel\Dialog\NewArchRepViewModel.cs" />
+    <Compile Include="ViewModel\Dialog\NewCrewViewModel.cs" />
     <Compile Include="ViewModel\Dialog\NewCustomerViewModel.cs" />
     <Compile Include="ViewModel\Dialog\NewEstViewModel.cs" />
     <Compile Include="ViewModel\Dialog\NewFreightViewModel.cs" />
@@ -165,6 +166,9 @@
     </Compile>
     <Compile Include="View\Dialog\NewArchRepDialog.xaml.cs">
       <DependentUpon>NewArchRepDialog.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="View\Dialog\NewCrewDialog.xaml.cs">
+      <DependentUpon>NewCrewDialog.xaml</DependentUpon>
     </Compile>
     <Compile Include="View\Dialog\NewCustomerDialog.xaml.cs">
       <DependentUpon>NewCustomerDialog.xaml</DependentUpon>
@@ -250,6 +254,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="View\Dialog\NewArchRepDialog.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="View\Dialog\NewCrewDialog.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

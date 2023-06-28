@@ -34,38 +34,38 @@ namespace WpfApp
             Loaded += LoadPage;
         }
         
-        private void ProjectNote_PreviewKeyUp(object sender, KeyEventArgs e)
-        {
-            TextBox NotesNote = sender as TextBox;
-            if (NotesNote != null)
-            {
-                DataGrid dataGrid = noteHelper.FindDataGrid(NotesNote);
+        //private void ProjectNote_PreviewKeyUp(object sender, KeyEventArgs e)
+        //{
+        //    TextBox NotesNote = sender as TextBox;
+        //    if (NotesNote != null)
+        //    {
+        //        DataGrid dataGrid = noteHelper.FindDataGrid(NotesNote);
 
-                if (dataGrid != null)
-                {
-                    TextBox lastRowTextBox = noteHelper.GetLastRowTextBox(dataGrid);
-                    if (lastRowTextBox != null)
-                    {
-                        string lastRowText = lastRowTextBox.Text;
-                        if (!string.IsNullOrEmpty(lastRowText))
-                        {
-                            ObservableCollection<Note> notes = ProjectVM.ProjectNotes;
-                            Grid parentGrid = NotesNote.Parent as Grid;
-                            Grid grandParentGrid = parentGrid.Parent as Grid;
-                            Grid firstChildGrid = grandParentGrid.Children[0] as Grid;
-                            TextBlock NotesDateAdded = firstChildGrid.Children[0] as TextBlock;
-                            TextBlock NoteUserName = firstChildGrid.Children[1] as TextBlock;
-                            NotesDateAdded.Text = DateTime.Now.ToString();
-                            NoteUserName.Text = "smile";
+        //        if (dataGrid != null)
+        //        {
+        //            TextBox lastRowTextBox = noteHelper.GetLastRowTextBox(dataGrid);
+        //            if (lastRowTextBox != null)
+        //            {
+        //                string lastRowText = lastRowTextBox.Text;
+        //                if (!string.IsNullOrEmpty(lastRowText))
+        //                {
+        //                    ObservableCollection<Note> notes = ProjectVM.ProjectNotes;
+        //                    Grid parentGrid = NotesNote.Parent as Grid;
+        //                    Grid grandParentGrid = parentGrid.Parent as Grid;
+        //                    Grid firstChildGrid = grandParentGrid.Children[0] as Grid;
+        //                    TextBlock NotesDateAdded = firstChildGrid.Children[0] as TextBlock;
+        //                    TextBlock NoteUserName = firstChildGrid.Children[1] as TextBlock;
+        //                    NotesDateAdded.Text = DateTime.Now.ToString();
+        //                    NoteUserName.Text = "smile";
 
-                            Note item = new Note();
-                            notes.Add(item);
-                            e.Handled = true;
-                        }
-                    }
-                }
-            }
-        }
+        //                    Note item = new Note();
+        //                    notes.Add(item);
+        //                    e.Handled = true;
+        //                }
+        //            }
+        //        }
+        //    }
+        //}
 
         private void WorkOrderNote_PreviewKeyUp(object sender, KeyEventArgs e)
         {
@@ -346,6 +346,40 @@ namespace WpfApp
                 comboBox.SelectedIndex = 1;
                 newFreightDlg.ShowDialog();
             }
+        }
+
+        private void CrewCombo_Loaded(object sender, RoutedEventArgs e)
+        {
+            WorkCrew_CB.SelectionChanged += CrewCB_Changed;
+            WorkCrew_CB.SelectedIndex = 1;
+            Crew_CB.SelectionChanged += CrewCB_Changed;
+            Crew_CB.SelectedIndex = 1;
+        }
+
+        private void CrewCB_Changed(object sender, SelectionChangedEventArgs e)
+        {
+            ComboBox comboBox = sender as ComboBox;
+            int selectedIndex = comboBox.SelectedIndex;
+            if (selectedIndex == 0)
+            {
+                NewCrewDialog newCrewDlg = new NewCrewDialog();
+                newCrewDlg.WindowStartupLocation = WindowStartupLocation.CenterScreen;
+                comboBox.SelectedIndex = 1;
+                newCrewDlg.ShowDialog();
+            }
+        }
+
+        private void SuptCombo_Loaded(object sender, RoutedEventArgs e)
+        {
+            WorkSupt_CB.SelectionChanged += SuptCB_Changed;
+            WorkSupt_CB.SelectedIndex = 1;
+        }
+
+        private void RemoveNoteItem(object sender, RoutedEventArgs e)
+        {
+            Note selectedItem = ProjectNote_DataGrid.SelectedItem as Note;
+            int selectedIndex = ProjectNote_DataGrid.SelectedIndex;
+            ProjectVM.ProjectNotes.RemoveAt(selectedIndex);
         }
     }
 }

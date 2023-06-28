@@ -42,5 +42,11 @@ namespace WpfApp.View.Dialog
         {
             this.Close();
         }
+
+        private void RemoveNoteItem(object sender, RoutedEventArgs e)
+        {
+            int selectedIndex = SubContact_CB.SelectedIndex;
+            NewScVM.ScNotes.RemoveAt(selectedIndex);
+        }
     }
 }

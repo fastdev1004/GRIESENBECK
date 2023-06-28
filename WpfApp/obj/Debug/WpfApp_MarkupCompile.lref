@@ -1,14 +1,23 @@
-﻿
+﻿G:\GRIESENBECK\WpfApp\obj\Debug\GeneratedInternalTypeHelper.g.cs
 
 FG:\GRIESENBECK\WpfApp\MainWindow.xaml;;
 FG:\GRIESENBECK\WpfApp\Themes\Generic.xaml;;
 FG:\GRIESENBECK\WpfApp\View\AdminView.xaml;;
 FG:\GRIESENBECK\WpfApp\View\CloseOutView.xaml;;
 FG:\GRIESENBECK\WpfApp\View\ContractView.xaml;;
+FG:\GRIESENBECK\WpfApp\View\Dialog\NewArchitectDialog.xaml;;
+FG:\GRIESENBECK\WpfApp\View\Dialog\NewArchRepDialog.xaml;;
+FG:\GRIESENBECK\WpfApp\View\Dialog\NewCrewDialog.xaml;;
 FG:\GRIESENBECK\WpfApp\View\Dialog\NewCustomerDialog.xaml;;
 FG:\GRIESENBECK\WpfApp\View\Dialog\NewEstimatorDialog.xaml;;
+FG:\GRIESENBECK\WpfApp\View\Dialog\NewFreightDialog.xaml;;
+FG:\GRIESENBECK\WpfApp\View\Dialog\NewManufDialog.xaml;;
+FG:\GRIESENBECK\WpfApp\View\Dialog\NewMaterialDialog.xaml;;
 FG:\GRIESENBECK\WpfApp\View\Dialog\NewPmDialog.xaml;;
+FG:\GRIESENBECK\WpfApp\View\Dialog\NewProjectCrdDialog.xaml;;
 FG:\GRIESENBECK\WpfApp\View\Dialog\NewSCDialog.xaml;;
+FG:\GRIESENBECK\WpfApp\View\Dialog\NewSovDialog.xaml;;
+FG:\GRIESENBECK\WpfApp\View\Dialog\NewSuptDialog.xaml;;
 FG:\GRIESENBECK\WpfApp\View\ImportView.xaml;;
 FG:\GRIESENBECK\WpfApp\View\ReportDetailView.xaml;;
 FG:\GRIESENBECK\WpfApp\View\ReportView.xaml;;
@@ -16,12 +25,4 @@ FG:\GRIESENBECK\WpfApp\View\Start.xaml;;
 FG:\GRIESENBECK\WpfApp\View\ProjectView.xaml;;
 FG:\GRIESENBECK\WpfApp\View\TrackShipView.xaml;;
 FG:\GRIESENBECK\WpfApp\View\WorkOrderView.xaml;;
-FG:\GRIESENBECK\WpfApp\View\Dialog\NewArchitectDialog.xaml;;
-FG:\GRIESENBECK\WpfApp\View\Dialog\NewSuptDialog.xaml;;
-FG:\GRIESENBECK\WpfApp\View\Dialog\NewProjectCrdDialog.xaml;;
-FG:\GRIESENBECK\WpfApp\View\Dialog\NewArchRepDialog.xaml;;
-FG:\GRIESENBECK\WpfApp\View\Dialog\NewSovDialog.xaml;;
-FG:\GRIESENBECK\WpfApp\View\Dialog\NewMaterialDialog.xaml;;
-FG:\GRIESENBECK\WpfApp\View\Dialog\NewManufDialog.xaml;;
-FG:\GRIESENBECK\WpfApp\View\Dialog\NewFreightDialog.xaml;;
 

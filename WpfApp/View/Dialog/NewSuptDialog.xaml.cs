@@ -41,5 +41,11 @@ namespace WpfApp.View.Dialog
         {
             this.Close();
         }
+
+        private void RemoveNoteItem(object sender, RoutedEventArgs e)
+        {
+            int selectedIndex = SuptNote_DataGrid.SelectedIndex;
+            NewSuptVM.SuptNotes.RemoveAt(selectedIndex);
+        }
     }
 }
