@@ -13,6 +13,9 @@
         <ResourceDictionary>
             <converter:ApprDenToValueConverter x:Key="ApprDenToValueConverter" />
             <converter:ZeroToEmptyStringConverter x:Key="ZeroToEmptyStringConverter" />
+            <ContextMenu x:Key="NoteContextMenu">
+                <MenuItem Header="New" Command="{Binding AddNewNoteCommand}"/>
+            </ContextMenu>
             <ResourceDictionary.MergedDictionaries>
                 <ResourceDictionary Source="../Themes/Generic.xaml" />
             </ResourceDictionary.MergedDictionaries>
@@ -127,7 +130,7 @@
                                             <ColumnDefinition Width="*" />
                                         </Grid.ColumnDefinitions>
                                         <Label Grid.Row="1">Customer:</Label>
-                                        <ComboBox x:Name="CustomerName_CB" ItemsSource="{Binding Customers}" Grid.Row="1" Grid.Column="1" Margin="0,0,64,0" DisplayMemberPath="FullName" SelectedValuePath="ID" SelectedValue="{Binding CustomerID, Mode=TwoWay}" Loaded="CustomerCombo_Loaded" IsEditable="True"></ComboBox>
+                                        <ComboBox x:Name="CustomerName_CB" ItemsSource="{Binding Customers}" Grid.Row="1" Grid.Column="1" Margin="0,0,64,0" DisplayMemberPath="FullName" SelectedValuePath="ID" SelectedValue="{Binding CustomerID, Mode=TwoWay}" Loaded="CustomerCombo_Loaded" IsEditable="False"></ComboBox>
                                     </Grid>
                                     <Grid Grid.Row="2" Style="{StaticResource ParentGridStyle}">
                                         <Grid.ColumnDefinitions>
@@ -369,7 +372,7 @@
                                     </Grid>
                                 </Grid>
                             </Grid>
-                            <DataGrid Margin="4,0" Padding="10" Grid.Column="1" ItemsSource="{Binding ProjectNotes, Mode=TwoWay}" GridLinesVisibility="None" AutoGenerateColumns="False" HeadersVisibility="None" BorderThickness="0" Background="#F5FFAF" CanUserAddRows="False">
+                            <DataGrid Margin="4,0" Padding="10" Grid.Column="1" ItemsSource="{Binding ProjectNotes, Mode=TwoWay}" GridLinesVisibility="None" AutoGenerateColumns="False" HeadersVisibility="None" BorderThickness="0" Background="#F5FFAF" CanUserAddRows="False" ContextMenu="{StaticResource NoteContextMenu}">
                                 <DataGrid.Resources>
                                     <Style TargetType="DataGridColumnHeader" BasedOn="{StaticResource GridColumnHeaderBase}">
                                         <Setter Property="Background" Value="#4BACC6" />
@@ -466,7 +469,7 @@
                                                                         <RowDefinition Height="Auto" />
                                                                         <RowDefinition Height="Auto" />
                                                                     </Grid.RowDefinitions>
-                                                                    <ComboBox x:Name="PmName_CB" Height="26" ItemsSource="{Binding DataContext.ProjectManagers, RelativeSource={RelativeSource AncestorType=local:ProjectView}}" DisplayMemberPath="PMName" SelectedValuePath="ID" IsEditable="True" SelectedValue="{Binding ID, Mode=TwoWay}" SelectionChanged="PmCB_Changed" />
+                                                                    <ComboBox x:Name="PmName_CB" Height="26" ItemsSource="{Binding DataContext.ProjectManagers, RelativeSource={RelativeSource AncestorType=local:ProjectView}}" DisplayMemberPath="PMName" SelectedValuePath="ID" IsEditable="False" SelectedValue="{Binding ID, Mode=TwoWay}" SelectionChanged="PmCB_Changed" />
                                                                     <Grid Grid.Row="1">
                                                                         <Grid.ColumnDefinitions>
                                                                             <ColumnDefinition Width="1.5*" />
@@ -515,7 +518,7 @@
                                                                         <RowDefinition Height="Auto" />
                                                                         <RowDefinition Height="Auto" />
                                                                     </Grid.RowDefinitions>
-                                                                    <ComboBox Height="26" ItemsSource="{Binding DataContext.Superintendents, RelativeSource={RelativeSource AncestorType=local:ProjectView}}" DisplayMemberPath="SupName" SelectedValuePath="SupID" IsEditable="True" SelectedValue="{Binding SupID, Mode=TwoWay}" SelectionChanged="SuptCB_Changed"  />
+                                                                    <ComboBox Height="26" ItemsSource="{Binding DataContext.Superintendents, RelativeSource={RelativeSource AncestorType=local:ProjectView}}" DisplayMemberPath="SupName" SelectedValuePath="SupID" IsEditable="False" SelectedValue="{Binding SupID, Mode=TwoWay}" SelectionChanged="SuptCB_Changed"  />
                                                                     <Grid Grid.Row="1">
                                                                         <Grid.ColumnDefinitions>
                                                                             <ColumnDefinition Width="1.5*" />
@@ -680,16 +683,13 @@
                                         <Setter Property="BorderThickness" Value="0,0,0,1" />
                                         <Setter Property="IsEditable" Value="True" />
                                     </Style>
-                                    <Style TargetType="DataGridCell">
-                                        <Setter Property="Padding" Value="4,0" />
-                                    </Style>
                                 </DataGrid.Resources>
                                 <DataGrid.Columns>
                                     <DataGridTemplateColumn Header="Acronym" Width="2*">
                                         <DataGridTemplateColumn.CellTemplate>
                                             <DataTemplate>
                                                 <ComboBox ItemsSource="{Binding DataContext.Acronyms, RelativeSource={RelativeSource AncestorType=local:ProjectView}}"
-                SelectedValuePath="AcronymName" SelectedValue="{Binding SovAcronym, Mode=TwoWay}" DisplayMemberPath="AcronymName">
+                SelectedValuePath="AcronymName" SelectedValue="{Binding SovAcronym, Mode=TwoWay}" DisplayMemberPath="AcronymName" IsEditable="False" SelectionChanged="SovCB_Changed">
                                                 </ComboBox>
                                             </DataTemplate>
                                         </DataGridTemplateColumn.CellTemplate>
@@ -772,8 +772,8 @@
                                             <DataGridTemplateColumn Header="Acronym" Width="2*">
                                                 <DataGridTemplateColumn.CellTemplate>
                                                     <DataTemplate>
-                                                        <ComboBox ItemsSource="{Binding DataContext.Acronyms, RelativeSource={RelativeSource AncestorType=local:ProjectView}}"
-                SelectedValuePath="AcronymName" SelectedValue="{Binding AcronymName, Mode=TwoWay}" DisplayMemberPath="AcronymName">
+                                                        <ComboBox ItemsSource="{Binding DataContext.Acronyms, RelativeSource={RelativeSource AncestorType=local:ProjectView}}" IsEditable="False"
+                SelectedValuePath="AcronymName" SelectedValue="{Binding AcronymName, Mode=TwoWay}" DisplayMemberPath="AcronymName" SelectionChanged="SovCB_Changed">
                                                         </ComboBox>
                                                     </DataTemplate>
                                                 </DataGridTemplateColumn.CellTemplate>
@@ -801,8 +801,8 @@
                                             <DataGridTemplateColumn Header="Material" Width="4*">
                                                 <DataGridTemplateColumn.CellTemplate>
                                                     <DataTemplate>
-                                                        <ComboBox ItemsSource="{Binding DataContext.Materials, RelativeSource={RelativeSource AncestorType=local:ProjectView}}"
-                SelectedValuePath="MatDesc" SelectedValue="{Binding AcronymDesc, Mode=TwoWay}" DisplayMemberPath="MatDesc">
+                                                        <ComboBox ItemsSource="{Binding DataContext.Materials, RelativeSource={RelativeSource AncestorType=local:ProjectView}}" IsEditable="False"
+                SelectedValuePath="MatDesc" SelectedValue="{Binding AcronymDesc, Mode=TwoWay}" DisplayMemberPath="MatDesc" SelectionChanged="MaterialCB_Changed">
                                                         </ComboBox>
                                                     </DataTemplate>
                                                 </DataGridTemplateColumn.CellTemplate>
@@ -1045,7 +1045,7 @@
                                     <DataGridTemplateColumn Header="Manafacturer" Width="3*">
                                         <DataGridTemplateColumn.CellTemplate>
                                             <DataTemplate>
-                                                <ComboBox ItemsSource="{Binding DataContext.Manufacturers, RelativeSource={RelativeSource AncestorType=local:ProjectView}}"
+                                                <ComboBox ItemsSource="{Binding DataContext.Manufacturers, RelativeSource={RelativeSource AncestorType=local:ProjectView}}" IsEditable="False" SelectionChanged="ManufCB_Changed"
                 SelectedValuePath="ID" SelectedValue="{Binding ManufacturerID, Mode=TwoWay}" DisplayMemberPath="ManufacturerName">
                                                 </ComboBox>
                                             </DataTemplate>
@@ -1285,7 +1285,7 @@
                                     <DataGridTemplateColumn Header="Freight CO" Width="3*">
                                         <DataGridTemplateColumn.CellTemplate>
                                             <DataTemplate>
-                                                <ComboBox ItemsSource="{Binding DataContext.FreightCos, RelativeSource={RelativeSource AncestorType=local:ProjectView}}"
+                                                <ComboBox ItemsSource="{Binding DataContext.FreightCos, RelativeSource={RelativeSource AncestorType=local:ProjectView}}" IsEditable="False" SelectionChanged="FreightCB_Changed"
                 SelectedValuePath="ID" SelectedValue="{Binding FreightCoID, Mode=TwoWay}" DisplayMemberPath="FreightName">
                                                 </ComboBox>
                                             </DataTemplate>

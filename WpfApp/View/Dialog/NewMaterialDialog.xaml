@@ -1,16 +1,13 @@
-﻿<Window x:Class="WpfApp.View.Dialog.NewArchRepDialog"
+﻿<Window x:Class="WpfApp.View.Dialog.NewMaterialDialog"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:WpfApp.View.Dialog"
         mc:Ignorable="d"
-        Title="New ArchRep" Height="150" Width="600">
+        Title="New Material" Height="150" Width="600">
     <Window.Resources>
         <ResourceDictionary>
-            <ContextMenu x:Key="NoteContextMenu">
-                <MenuItem Header="New" Command="{Binding AddNewNoteCommand}"/>
-            </ContextMenu>
             <ResourceDictionary.MergedDictionaries>
                 <ResourceDictionary Source="../../Themes/Generic.xaml" />
             </ResourceDictionary.MergedDictionaries>
@@ -28,17 +25,17 @@
                 <ColumnDefinition Width="1*" />
                 <ColumnDefinition Width="5*" />
             </Grid.ColumnDefinitions>
-            <Label Content="Name:" />
+            <Label Content="Material Code:" />
             <Grid Grid.Column="1">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="3*" />
                     <ColumnDefinition Width="2*" />
                 </Grid.ColumnDefinitions>
-                <TextBox Text="{Binding TempArchRep.ArchRepName, Mode=TwoWay}" Tag="ShortName" />
+                <TextBox Text="{Binding TempMat.MatCode, Mode=TwoWay}" Tag="ShortName" />
                 <Grid Grid.Column="1">
                     <WrapPanel HorizontalAlignment="Right">
                         <Label Content="Active?" />
-                        <CheckBox Grid.Column="1" IsChecked="{Binding TempProjectCrd.Active, Mode=TwoWay}" VerticalAlignment="Center" />
+                        <CheckBox Grid.Column="1" IsChecked="{Binding TempMat.Active, Mode=TwoWay}" VerticalAlignment="Center" />
                     </WrapPanel>
                 </Grid>
             </Grid>
@@ -48,13 +45,13 @@
                 <ColumnDefinition Width="1*" />
                 <ColumnDefinition Width="5*" />
             </Grid.ColumnDefinitions>
-            <Label Content="Email:" />
+            <Label Content="Material Desc:" />
             <Grid Grid.Column="1">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="3*" />
                     <ColumnDefinition Width="2*" />
                 </Grid.ColumnDefinitions>
-                <TextBox Text="{Binding TempArchRep.ArchRepEmail, Mode=TwoWay}" Tag="Email" />
+                <TextBox Text="{Binding TempMat.MatDesc, Mode=TwoWay}" Tag="Email" />
             </Grid>
         </Grid>
         <Grid Grid.Row="4">
@@ -68,8 +65,8 @@
                     <ColumnDefinition Width="1*" />
                     <ColumnDefinition Width="2*" />
                 </Grid.ColumnDefinitions>
-                <Button Width="60" Content="Save" Command="{Binding SaveCommand}" />
-                <Button Width="60" Grid.Column="2" Content="Cancel" Click="Close_NewArchRepDlg" />
+                <Button Width="80" Content="Save" Command="{Binding SaveCommand}" />
+                <Button Width="80" Grid.Column="2" Content="Cancel" Click="Close_Dlg" />
             </Grid>
         </Grid>
     </Grid>

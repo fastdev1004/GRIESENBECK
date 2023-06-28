@@ -37,15 +37,15 @@ namespace WpfApp.ViewModel
             ProjectMatTrackings = new ObservableCollection<ProjectMatTracking>();
             ProjectMtShips = new ObservableCollection<ProjectMatShip>();
             ProjectSelectionEnable = true;
-            Note noteItem = new Note();
+            //Note noteItem = new Note();
             ProjectNotes = new ObservableCollection<Note>();
-            ProjectNotes.Add(noteItem);
+            //ProjectNotes.Add(noteItem);
 
             WorkOrderNotes = new ObservableCollection<Note>();
-            WorkOrderNotes.Add(noteItem);
-
+            //WorkOrderNotes.Add(noteItem);
 
             this.NewProjectCommand = new RelayCommand((e)=> this.ClearProject());
+            this.AddNewNoteCommand = new RelayCommand((e) => this.AddNewNote());
         }
 
         private void ClearProject()
@@ -401,6 +401,7 @@ namespace WpfApp.ViewModel
             ds = new DataSet();
             sda.Fill(ds);
             ObservableCollection<Manufacturer> st_manufacturers = new ObservableCollection<Manufacturer>();
+            st_manufacturers.Add(new Manufacturer { ID = 0, ManufacturerName = "New" });
             foreach (DataRow row in ds.Tables[0].Rows)
             {
                 int manufID = int.Parse(row["Manuf_ID"].ToString());
@@ -415,9 +416,10 @@ namespace WpfApp.ViewModel
             Manufacturers = st_manufacturers;
 
             // FreightCo_Name
-            ObservableCollection<FreightCo> sb_freightCo = new ObservableCollection<FreightCo>();
-
             sqlquery = "SELECT FreightCo_ID, FreightCo_Name FROM tblFreightCo ORDER BY FreightCo_Name;";
+
+            ObservableCollection<FreightCo> st_freightCo = new ObservableCollection<FreightCo>();
+            st_freightCo.Add(new FreightCo { ID = 0, FreightName = "New" });
             cmd = dbConnection.RunQuryNoParameters(sqlquery);
             sda = new SqlDataAdapter(cmd);
             ds = new DataSet();
@@ -427,24 +429,24 @@ namespace WpfApp.ViewModel
             {
                 int freightID = int.Parse(row["FreightCo_ID"].ToString());
                 string freightName = row["FreightCo_Name"].ToString();
-                sb_freightCo.Add(new FreightCo
+                st_freightCo.Add(new FreightCo
                 {
                     ID = freightID,
                     FreightName = freightName,
                 });
             }
 
-            FreightCos = sb_freightCo;
+            FreightCos = st_freightCo;
 
             // Materials
-            ObservableCollection<Material> st_material = new ObservableCollection<Material>();
-
-            sqlquery = "Select * from tblMaterials";
+            sqlquery = "Select * from tblMaterials ORDER BY Material_Desc";
             cmd = dbConnection.RunQuryNoParameters(sqlquery);
             sda = new SqlDataAdapter(cmd);
             ds = new DataSet();
             sda.Fill(ds);
 
+            ObservableCollection<Material> st_material = new ObservableCollection<Material>();
+            st_material.Add(new Material { ID = 0, MatDesc = "New" });
             foreach (DataRow row in ds.Tables[0].Rows)
             {
                 int matID = int.Parse(row["Material_ID"].ToString());
@@ -459,14 +461,14 @@ namespace WpfApp.ViewModel
             Materials = st_material;
 
             // Acronym
-            ObservableCollection<Acronym> st_acronym = new ObservableCollection<Acronym>();
-
             sqlquery = "SELECT * from tblScheduleOfValues";
             cmd = dbConnection.RunQuryNoParameters(sqlquery);
             sda = new SqlDataAdapter(cmd);
             ds = new DataSet();
             sda.Fill(ds);
 
+            ObservableCollection<Acronym> st_acronym = new ObservableCollection<Acronym>();
+            st_acronym.Add(new Acronym { AcronymName = "New" });
             foreach (DataRow row in ds.Tables[0].Rows)
             {
                 string acronymName = "";
@@ -1390,8 +1392,8 @@ namespace WpfApp.ViewModel
                     NoteUserName = _notesUserName
                 });
             }
-            Note noteItem = new Note();
-            sb_projectnotes.Add(noteItem);
+            //Note noteItem = new Note();
+            //sb_projectnotes.Add(noteItem);
             ProjectNotes = sb_projectnotes;
 
             // CIPGrid
@@ -2465,6 +2467,7 @@ namespace WpfApp.ViewModel
 
         // Command
         public RelayCommand NewProjectCommand { get; set; }
+        public RelayCommand AddNewNoteCommand { get; set; }
 
         private void ChangeWorkOrder()
         {
@@ -2694,6 +2697,15 @@ namespace WpfApp.ViewModel
                 });
             }
             ProjectMtShips = sb_projectMtShip;
+        }
+
+        private void AddNewNote()
+        {
+            Note _note = new Note();
+            _note.NotesDateAdded = DateTime.Now;
+            _note.NoteUser = "smile";
+            _note.NotesNote = "";
+            ProjectNotes.Add(_note);
         }
     }
 

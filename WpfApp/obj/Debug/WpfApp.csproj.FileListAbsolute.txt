@@ -89,3 +89,11 @@ G:\GRIESENBECK\WpfApp\obj\Debug\View\Dialog\NewProjectCrdDialog.g.cs
 G:\GRIESENBECK\WpfApp\obj\Debug\View\Dialog\NewProjectCrdDialog.baml
 G:\GRIESENBECK\WpfApp\obj\Debug\View\Dialog\NewArchRepDialog.g.cs
 G:\GRIESENBECK\WpfApp\obj\Debug\View\Dialog\NewArchRepDialog.baml
+G:\GRIESENBECK\WpfApp\obj\Debug\View\Dialog\NewSovDialog.g.cs
+G:\GRIESENBECK\WpfApp\obj\Debug\View\Dialog\NewSovDialog.baml
+G:\GRIESENBECK\WpfApp\obj\Debug\View\Dialog\NewMaterialDialog.g.cs
+G:\GRIESENBECK\WpfApp\obj\Debug\View\Dialog\NewMaterialDialog.baml
+G:\GRIESENBECK\WpfApp\obj\Debug\View\Dialog\NewManufDialog.g.cs
+G:\GRIESENBECK\WpfApp\obj\Debug\View\Dialog\NewManufDialog.baml
+G:\GRIESENBECK\WpfApp\obj\Debug\View\Dialog\NewFreightDialog.g.cs
+G:\GRIESENBECK\WpfApp\obj\Debug\View\Dialog\NewFreightDialog.baml

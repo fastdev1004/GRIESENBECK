@@ -136,9 +136,13 @@
     <Compile Include="ViewModel\Dialog\NewArchRepViewModel.cs" />
     <Compile Include="ViewModel\Dialog\NewCustomerViewModel.cs" />
     <Compile Include="ViewModel\Dialog\NewEstViewModel.cs" />
+    <Compile Include="ViewModel\Dialog\NewFreightViewModel.cs" />
+    <Compile Include="ViewModel\Dialog\NewManufViewModel.cs" />
+    <Compile Include="ViewModel\Dialog\NewMaterialViewModel.cs" />
     <Compile Include="ViewModel\Dialog\NewPmViewModel.cs" />
     <Compile Include="ViewModel\Dialog\NewProjectCrdViewModel.cs" />
     <Compile Include="ViewModel\Dialog\NewSCViewModel.cs" />
+    <Compile Include="ViewModel\Dialog\NewSovViewModel.cs" />
     <Compile Include="ViewModel\Dialog\NewSuptViewModel.cs" />
     <Compile Include="ViewModel\ImportViewModel.cs" />
     <Compile Include="ViewModel\ProjectViewModel.cs" />
@@ -168,6 +172,15 @@
     <Compile Include="View\Dialog\NewEstimatorDialog.xaml.cs">
       <DependentUpon>NewEstimatorDialog.xaml</DependentUpon>
     </Compile>
+    <Compile Include="View\Dialog\NewFreightDialog.xaml.cs">
+      <DependentUpon>NewFreightDialog.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="View\Dialog\NewManufDialog.xaml.cs">
+      <DependentUpon>NewManufDialog.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="View\Dialog\NewMaterialDialog.xaml.cs">
+      <DependentUpon>NewMaterialDialog.xaml</DependentUpon>
+    </Compile>
     <Compile Include="View\Dialog\NewPmDialog.xaml.cs">
       <DependentUpon>NewPmDialog.xaml</DependentUpon>
     </Compile>
@@ -176,6 +189,9 @@
     </Compile>
     <Compile Include="View\Dialog\NewSCDialog.xaml.cs">
       <DependentUpon>NewSCDialog.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="View\Dialog\NewSovDialog.xaml.cs">
+      <DependentUpon>NewSovDialog.xaml</DependentUpon>
     </Compile>
     <Compile Include="View\Dialog\NewSuptDialog.xaml.cs">
       <DependentUpon>NewSuptDialog.xaml</DependentUpon>
@@ -245,6 +261,18 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
+    <Page Include="View\Dialog\NewFreightDialog.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="View\Dialog\NewManufDialog.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="View\Dialog\NewMaterialDialog.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="View\Dialog\NewPmDialog.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -254,6 +282,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="View\Dialog\NewSCDialog.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="View\Dialog\NewSovDialog.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

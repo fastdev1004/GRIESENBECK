@@ -357,11 +357,12 @@ namespace WpfApp.ViewModel
         {
             sqlquery = "INSERT INTO tblMaterials(Material_Desc, Active) OUTPUT INSERTED.Material_ID VALUES (@MatDesc, @Active)";
 
+            string matCode = TempMaterial.MatCode;
             string matDesc = TempMaterial.MatDesc;
             bool active = TempMaterial.Active;
 
             
-            int insertedMatID = dbConnection.RunQueryToCreateMaterial(sqlquery, matDesc, active);
+            int insertedMatID = dbConnection.RunQueryToCreateMaterial(sqlquery, matCode, matDesc, active);
             SelectedMaterialID = insertedMatID;
             int totalCount = Materials.Count;
             CurrentIndex = totalCount - 2;

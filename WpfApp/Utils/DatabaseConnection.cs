@@ -668,7 +668,7 @@ namespace WpfApp.Utils
         }
 
         // Create Material
-        public int RunQueryToCreateMaterial(string query, string matDesc, bool active)
+        public int RunQueryToCreateMaterial(string query, string matCode, string matDesc, bool active)
         {
             try
             {
@@ -679,9 +679,12 @@ namespace WpfApp.Utils
                     cmd.CommandType = CommandType.Text;
                     cmd.CommandText = query;
 
+                    if (!string.IsNullOrEmpty(matCode))
+                        cmd.Parameters.AddWithValue("@Code", matCode);
+                    else cmd.Parameters.AddWithValue("@Code", DBNull.Value);
                     if (!string.IsNullOrEmpty(matDesc))
-                        cmd.Parameters.AddWithValue("@MatDesc", matDesc);
-                    else cmd.Parameters.AddWithValue("@MatDesc", DBNull.Value);
+                        cmd.Parameters.AddWithValue("@Desc", matDesc);
+                    else cmd.Parameters.AddWithValue("@Desc", DBNull.Value);
                     cmd.Parameters.AddWithValue("@Active", active);
 
                     insertedID = (int)cmd.ExecuteScalar();
@@ -1200,6 +1203,109 @@ namespace WpfApp.Utils
                     if (!string.IsNullOrEmpty(email))
                         cmd.Parameters.AddWithValue("@Email", email);
                     else cmd.Parameters.AddWithValue("@Email", DBNull.Value);
+                    cmd.Parameters.AddWithValue("@Active", active);
+
+                    insertedID = (int)cmd.ExecuteScalar();
+                    connection.Close();
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex);
+            }
+            return insertedID;
+        }
+
+        // Create SOV
+        public string RunQueryToCreateSOV(string query, string name, string desc, bool active)
+        {
+            string insertedSovName = "";
+            try
+            {
+                connection.Open();
+                if (connection != null)
+                {
+                    cmd = connection.CreateCommand();
+                    cmd.CommandType = CommandType.Text;
+                    cmd.CommandText = query;
+
+                    if (!string.IsNullOrEmpty(name))
+                        cmd.Parameters.AddWithValue("@Name", name);
+                    else cmd.Parameters.AddWithValue("@Name", DBNull.Value);
+                    if (!string.IsNullOrEmpty(desc))
+                        cmd.Parameters.AddWithValue("@Desc", desc);
+                    else cmd.Parameters.AddWithValue("@Desc", DBNull.Value);
+                    cmd.Parameters.AddWithValue("@Active", active);
+
+                    insertedSovName = (string)cmd.ExecuteScalar();
+                    connection.Close();
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex);
+            }
+            return insertedSovName;
+        }
+
+        // Create Material
+        public int RunQueryToCreateMat(string query, string code, string desc, bool active)
+        {
+            try
+            {
+                connection.Open();
+                if (connection != null)
+                {
+                    cmd = connection.CreateCommand();
+                    cmd.CommandType = CommandType.Text;
+                    cmd.CommandText = query;
+
+                    if (!string.IsNullOrEmpty(code))
+                        cmd.Parameters.AddWithValue("@Code", code);
+                    else cmd.Parameters.AddWithValue("@Code", DBNull.Value);
+                    if (!string.IsNullOrEmpty(desc))
+                        cmd.Parameters.AddWithValue("@Desc", desc);
+                    else cmd.Parameters.AddWithValue("@Desc", DBNull.Value);
+                    cmd.Parameters.AddWithValue("@Active", active);
+
+                    insertedID = (int)cmd.ExecuteScalar();
+                    connection.Close();
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex);
+            }
+            return insertedID;
+        }
+
+        // Create Freight CO
+        public int RunQueryToCreateFreight(string query, string name, string phone, string cell, string email, string contact, bool active)
+        {
+            try
+            {
+                connection.Open();
+                if (connection != null)
+                {
+                    cmd = connection.CreateCommand();
+                    cmd.CommandType = CommandType.Text;
+                    cmd.CommandText = query;
+
+                    if (!string.IsNullOrEmpty(name))
+                        cmd.Parameters.AddWithValue("@Name", name);
+                    else cmd.Parameters.AddWithValue("@Name", DBNull.Value);
+                    if (!string.IsNullOrEmpty(phone))
+                        cmd.Parameters.AddWithValue("@Phone", phone);
+                    else cmd.Parameters.AddWithValue("@Phone", DBNull.Value);
+                    if (!string.IsNullOrEmpty(cell))
+                        cmd.Parameters.AddWithValue("@Cell", cell);
+                    else cmd.Parameters.AddWithValue("@Cell", DBNull.Value);
+                    if (!string.IsNullOrEmpty(email))
+                        cmd.Parameters.AddWithValue("@Email", email);
+                    else cmd.Parameters.AddWithValue("@Email", DBNull.Value);
+                    if (!string.IsNullOrEmpty(contact))
+                        cmd.Parameters.AddWithValue("@Contact", contact);
+                    else cmd.Parameters.AddWithValue("@Contact", DBNull.Value);
                     cmd.Parameters.AddWithValue("@Active", active);
 
                     insertedID = (int)cmd.ExecuteScalar();

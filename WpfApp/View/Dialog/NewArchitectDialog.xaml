@@ -150,8 +150,8 @@
                     <ColumnDefinition Width="1*" />
                     <ColumnDefinition Width="2*" />
                 </Grid.ColumnDefinitions>
-                <Button Width="80" Content="Save" Command="{Binding SaveCommand}" />
-                <Button Width="80" Grid.Column="2" Content="Cancel" Click="Close_NewArchitectDlg" />
+                <Button Width="60" Content="Save" Command="{Binding SaveCommand}" />
+                <Button Width="60" Grid.Column="2" Content="Cancel" Click="Close_NewArchitectDlg" />
             </Grid>
         </Grid>
     </Grid>

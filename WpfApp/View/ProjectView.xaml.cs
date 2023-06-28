@@ -255,6 +255,19 @@ namespace WpfApp
             }
         }
 
+        private void SovCB_Changed(object sender, SelectionChangedEventArgs e)
+        {
+            ComboBox comboBox = sender as ComboBox;
+            int selectedIndex = comboBox.SelectedIndex;
+            if (selectedIndex == 0)
+            {
+                NewSovDialog newSovDlg = new NewSovDialog();
+                newSovDlg.WindowStartupLocation = WindowStartupLocation.CenterScreen;
+                comboBox.SelectedIndex = 1;
+                newSovDlg.ShowDialog();
+            }
+        }
+
         private void CustomerCombo_Loaded(object sender, RoutedEventArgs e)
         {
             CustomerName_CB.SelectionChanged += CustomerCB_Changed;
@@ -294,6 +307,45 @@ namespace WpfApp
         {
             ArchRep_CB.SelectionChanged += ArchRepCB_Changed;
             ArchRep_CB.SelectedIndex = 1;
+        }
+
+        private void MaterialCB_Changed(object sender, SelectionChangedEventArgs e)
+        {
+            ComboBox comboBox = sender as ComboBox;
+            int selectedIndex = comboBox.SelectedIndex;
+            if (selectedIndex == 0)
+            {
+                NewMaterialDialog newMatDlg = new NewMaterialDialog();
+                newMatDlg.WindowStartupLocation = WindowStartupLocation.CenterScreen;
+                comboBox.SelectedIndex = 1;
+                newMatDlg.ShowDialog();
+            }
+        }
+
+        private void ManufCB_Changed(object sender, SelectionChangedEventArgs e)
+        {
+            ComboBox comboBox = sender as ComboBox;
+            int selectedIndex = comboBox.SelectedIndex;
+            if (selectedIndex == 0)
+            {
+                NewManufDialog newManufDlg = new NewManufDialog();
+                newManufDlg.WindowStartupLocation = WindowStartupLocation.CenterScreen;
+                comboBox.SelectedIndex = 1;
+                newManufDlg.ShowDialog();
+            }
+        }
+
+        private void FreightCB_Changed(object sender, SelectionChangedEventArgs e)
+        {
+            ComboBox comboBox = sender as ComboBox;
+            int selectedIndex = comboBox.SelectedIndex;
+            if (selectedIndex == 0)
+            {
+                NewFreightDialog newFreightDlg = new NewFreightDialog();
+                newFreightDlg.WindowStartupLocation = WindowStartupLocation.CenterScreen;
+                comboBox.SelectedIndex = 1;
+                newFreightDlg.ShowDialog();
+            }
         }
     }
 }

@@ -11,21 +11,9 @@ namespace WpfApp.Model
 {
     class Acronym:ViewModelBase
     {
-        private int _acronymID;
         private string _acronymName;
         private string _acronymDesc;
         private bool _active;
-
-        public int ID
-        {
-            get => _acronymID;
-            set
-            {
-                if (value == _acronymID) return;
-                _acronymID = value;
-                OnPropertyChanged();
-            }
-        }
 
         public string AcronymName
         {

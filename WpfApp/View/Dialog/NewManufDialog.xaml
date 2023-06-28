@@ -1,12 +1,11 @@
-﻿<Window x:Class="WpfApp.View.Dialog.NewCustomerDialog"
+﻿<Window x:Class="WpfApp.View.Dialog.NewManufDialog"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:WpfApp.View.Dialog"
         mc:Ignorable="d"
-        Title="New Customer" Height="500" Width="600">
-
+        Title="New Manufacturer" Height="450" Width="600">
     <Window.Resources>
         <ResourceDictionary>
             <ContextMenu x:Key="NoteContextMenu">
@@ -29,52 +28,47 @@
             <RowDefinition Height="*" />
             <RowDefinition Height="Auto" />
         </Grid.RowDefinitions>
+        <WrapPanel HorizontalAlignment="Right" Margin="0,0,0,4">
+            <Label Content="Active?" />
+            <CheckBox IsChecked="{Binding TempManuf.Active, Mode=TwoWay}" />
+        </WrapPanel>
         <Grid Margin="0,0,0,4">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="1*" />
                 <ColumnDefinition Width="5*" />
             </Grid.ColumnDefinitions>
-            <Label Content="Full Name:" />
-            <TextBox Grid.Column="1" Text="{Binding TempCustomer.FullName, Mode=TwoWay}" Tag="FullName" />
+            <Label Content="Name:" />
+            <Grid Grid.Column="1">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="3*" />
+                    <ColumnDefinition Width="2*" />
+                </Grid.ColumnDefinitions>
+                <TextBox Text="{Binding TempManuf.ManufacturerName, Mode=TwoWay}" Tag="ShortName" />
+                <Grid Grid.Column="1">
+                    <WrapPanel HorizontalAlignment="Right">
+                        <Label Content="Active?" />
+                        <CheckBox Grid.Column="1" IsChecked="{Binding TempManuf.Active, Mode=TwoWay}" VerticalAlignment="Center" />
+                    </WrapPanel>
+                </Grid>
+            </Grid>
         </Grid>
         <Grid Grid.Row="1" Margin="0,0,0,4">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="1*" />
                 <ColumnDefinition Width="5*" />
             </Grid.ColumnDefinitions>
-            <Label Content="Short Name:" />
-            <Grid Grid.Column="1">
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="3*" />
-                    <ColumnDefinition Width="2*" />
-                </Grid.ColumnDefinitions>
-                <TextBox Text="{Binding TempCustomer.ShortName , Mode=TwoWay}" Tag="ShortName" />
-                <Grid Grid.Column="1">
-                    <WrapPanel HorizontalAlignment="Right">
-                        <Label Content="Active?" />
-                        <CheckBox Grid.Column="1" IsChecked="{Binding TempCustomer.Active, Mode=TwoWay}" VerticalAlignment="Center" />
-                    </WrapPanel>
-                </Grid>
-            </Grid>
+            <Label Content="Address:" />
+            <TextBox Grid.Column="1" Text="{Binding TempManuf.Address, Mode=TwoWay}" Tag="Address" />
         </Grid>
         <Grid Grid.Row="2" Margin="0,0,0,4">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="1*" />
-                <ColumnDefinition Width="1*" />
-                <ColumnDefinition Width="4*" />
-            </Grid.ColumnDefinitions>
-            <Label Content="PO Box:" />
-            <TextBox Grid.Column="1" Text="{Binding TempCustomer.PoBox, Mode=TwoWay}" Tag="PoBox" />
-        </Grid>
-        <Grid Grid.Row="3" Margin="0,0,0,4">
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="1*" />
                 <ColumnDefinition Width="5*" />
             </Grid.ColumnDefinitions>
-            <Label Content="Address:" />
-            <TextBox Grid.Column="1" Text="{Binding TempCustomer.Address, Mode=TwoWay}" Tag="Address" />
+            <Label Content="" />
+            <TextBox Grid.Column="1" Text="{Binding TempManuf.Address2, Mode=TwoWay}" Tag="Address2" />
         </Grid>
-        <Grid Grid.Row="4" Margin="0,0,0,4">
+        <Grid Grid.Row="3" Margin="0,0,0,4">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="1*" />
                 <ColumnDefinition Width="5*" />
@@ -84,15 +78,46 @@
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="1*" />
                     <ColumnDefinition Width="1*" />
+                    <ColumnDefinition Width="1*" />
                 </Grid.ColumnDefinitions>
-                <TextBox Text="{Binding TempCustomer.City , Mode=TwoWay}" Tag="City" />
+                <TextBox Margin="0,0,10,0" Text="{Binding TempManuf.City, Mode=TwoWay}" Tag="City" />
                 <Grid Grid.Column="1">
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="1*" />
-                        <ColumnDefinition Width="2*" />
+                        <ColumnDefinition Width="1*" />
                     </Grid.ColumnDefinitions>
-                    <Label Content="Phone" />
-                    <TextBox Grid.Column="1" Text="{Binding TempCustomer.Phone, Mode=TwoWay}" Tag="Phone" />
+                    <Label Content="State:" />
+                    <TextBox Grid.Column="1" Text="{Binding TempManuf.State, Mode=TwoWay}" MaxLength="2" Tag="State" />
+                </Grid>
+                <Grid Grid.Column="2">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="1*" />
+                        <ColumnDefinition Width="1*" />
+                    </Grid.ColumnDefinitions>
+                    <Label Content="Zip:" />
+                    <TextBox Grid.Column="1" Text="{Binding TempManuf.Zip, Mode=TwoWay}" Tag="Zip" />
+                </Grid>
+            </Grid>
+        </Grid>
+        <Grid Grid.Row="4" Margin="0,0,0,4">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="1*" />
+                <ColumnDefinition Width="5*" />
+            </Grid.ColumnDefinitions>
+            <Label Content="Phone:" />
+            <Grid Grid.Column="1">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="1*" />
+                    <ColumnDefinition Width="2*" />
+                </Grid.ColumnDefinitions>
+                <TextBox Margin="0,0,10,0" Text="{Binding TempManuf.Phone, Mode=TwoWay}" Tag="Phone" />
+                <Grid Grid.Column="1">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="1*" />
+                        <ColumnDefinition Width="3*" />
+                    </Grid.ColumnDefinitions>
+                    <Label Content="Fax:" />
+                    <TextBox Grid.Column="1" Text="{Binding TempManuf.Fax, Mode=TwoWay}" Tag="Fax" />
                 </Grid>
             </Grid>
         </Grid>
@@ -101,44 +126,30 @@
                 <ColumnDefinition Width="1*" />
                 <ColumnDefinition Width="5*" />
             </Grid.ColumnDefinitions>
-            <Label Content="State:" />
+            <Label Content="Contact:" />
             <Grid Grid.Column="1">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="1*" />
-                    <ColumnDefinition Width="1*" />
+                    <ColumnDefinition Width="2*" />
                 </Grid.ColumnDefinitions>
-                <Grid>
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="1*" />
-                        <ColumnDefinition Width="2*" />
-                    </Grid.ColumnDefinitions>
-                    <TextBox MaxLength="2" Text="{Binding TempCustomer.State, Mode=TwoWay}" Tag="State" />
-                    <Grid Grid.Column="1">
-                        <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="1*" />
-                            <ColumnDefinition Width="2*" />
-                        </Grid.ColumnDefinitions>
-                        <Label Content="Zip:" />
-                        <TextBox Grid.Column="1" Text="{Binding TempCustomer.Zip, Mode=TwoWay}" Tag="Zip" />
-                    </Grid>
-                </Grid>
+                <TextBox Text="{Binding TempManuf.ContactName, Mode=TwoWay}" Tag="ContactName" />
                 <Grid Grid.Column="1">
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="1*" />
                         <ColumnDefinition Width="2*" />
                     </Grid.ColumnDefinitions>
-                    <Label Content="FAX:" />
-                    <TextBox Grid.Column="1" Text="{Binding TempCustomer.Fax, Mode=TwoWay}" Tag="Fax" />
+                    <Label Content="Phone:" />
+                    <TextBox Grid.Column="1" Text="{Binding TempManuf.ContactPhone, Mode=TwoWay}" Tag="ContactPhone" />
                 </Grid>
             </Grid>
         </Grid>
-        <Grid Grid.Row="6" Margin="0,0,0,4">
+        <Grid Grid.Row="6">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="1*" />
                 <ColumnDefinition Width="5*" />
             </Grid.ColumnDefinitions>
             <Label Content="Email:" />
-            <TextBox Grid.Column="1" Text="{Binding TempCustomer.Email, Mode=TwoWay}" Tag="Email" />
+            <TextBox Grid.Column="1" Text="{Binding TempManuf.ContactEmail, Mode=TwoWay}" Tag="ContactEmail" />
         </Grid>
         <Grid Grid.Row="7">
             <Grid.ColumnDefinitions>
@@ -147,7 +158,7 @@
             </Grid.ColumnDefinitions>
             <Label Content="Notes:" />
             <Grid Grid.Column="1" Background="#F5FFAF">
-                <DataGrid Margin="4,0" Padding="10" Grid.Column="1" ItemsSource="{Binding CustomerNotes, Mode=TwoWay}" GridLinesVisibility="None" AutoGenerateColumns="False" HeadersVisibility="None" BorderThickness="0" Background="#F5FFAF" CanUserAddRows="False"  ContextMenu="{StaticResource NoteContextMenu}">
+                <DataGrid Margin="4,0" Padding="10" Grid.Column="1" ItemsSource="{Binding ManufNotes, Mode=TwoWay}" GridLinesVisibility="None" AutoGenerateColumns="False" HeadersVisibility="None" BorderThickness="0" Background="#F5FFAF" CanUserAddRows="False"  ContextMenu="{StaticResource NoteContextMenu}">
                     <DataGrid.Resources>
                         <Style TargetType="TextBox">
                             <Setter Property="TextWrapping" Value="Wrap" />
@@ -201,7 +212,7 @@
                     <ColumnDefinition Width="2*" />
                 </Grid.ColumnDefinitions>
                 <Button Width="60" Content="Save" Command="{Binding SaveCommand}" />
-                <Button Width="60" Grid.Column="2" Content="Cancel" Click="Close_NewCustomerDlg" />
+                <Button Width="60" Grid.Column="2" Content="Cancel" Click="Close_Dlg" />
             </Grid>
         </Grid>
     </Grid>

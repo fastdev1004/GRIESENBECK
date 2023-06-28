@@ -12,6 +12,7 @@ namespace WpfApp.Model
     class Material:ViewModelBase
     {
         private int _materialID;
+        private string _materialCode;
         private string _materialDesc;
         private bool _active;
 
@@ -22,6 +23,17 @@ namespace WpfApp.Model
             {
                 if (value == _materialID) return;
                 _materialID = value;
+                OnPropertyChanged();
+            }
+        }
+
+        public string MatCode
+        {
+            get => _materialCode;
+            set
+            {
+                if (value == _materialCode) return;
+                _materialCode = value;
                 OnPropertyChanged();
             }
         }
