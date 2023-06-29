@@ -9,7 +9,7 @@ using System.Windows.Media;
 
 namespace WpfApp.Utils
 {
-    class NoteHelper
+    class FindComponentHelper
     {
         public TextBox GetLastRowTextBox(DataGrid dataGrid)
         {

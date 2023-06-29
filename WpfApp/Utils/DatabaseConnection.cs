@@ -1319,6 +1319,221 @@ namespace WpfApp.Utils
             return insertedID;
         }
 
+        // Create Project
+        public int RunQueryToCreateProject(string query, string name, string jobNo, int estimatorID, int pcID, int customerID, int ccID, int architectID, int crewID, string address, string city, string state, string zip, DateTime dateCompleted, DateTime targetDate, bool backgroundCheck, bool cip, bool certPayReqd, bool pnpBond, bool gapBid, bool gapEst, bool onHold, bool complete, bool payReqd, string payReqdNote, string addInfo, bool storedMat, int billingDate, bool c3, bool lcpTracker, string safetyBadging, int archRepID, string masterContract)
+        {
+            try
+            {
+                connection.Open();
+                if (connection != null)
+                {
+                    cmd = connection.CreateCommand();
+                    cmd.CommandType = CommandType.Text;
+                    cmd.CommandText = query;
+
+                    if (!string.IsNullOrEmpty(name))
+                        cmd.Parameters.AddWithValue("@ProjectName", name);
+                    else cmd.Parameters.AddWithValue("@ProjectName", DBNull.Value);
+                    if (!string.IsNullOrEmpty(jobNo))
+                        cmd.Parameters.AddWithValue("@JobNo", jobNo);
+                    else cmd.Parameters.AddWithValue("@JobNo", DBNull.Value);
+                    if(estimatorID != 0)
+                        cmd.Parameters.AddWithValue("@EstimatorID", estimatorID);
+                    else cmd.Parameters.AddWithValue("@EstimatorID", DBNull.Value);
+                    if (pcID != 0)
+                        cmd.Parameters.AddWithValue("@PcID", pcID);
+                    else cmd.Parameters.AddWithValue("@PcID", DBNull.Value);
+                    if (customerID != 0)
+                        cmd.Parameters.AddWithValue("@CustomerID", customerID);
+                    else cmd.Parameters.AddWithValue("@CustomerID", DBNull.Value);
+                    if (ccID != 0)
+                        cmd.Parameters.AddWithValue("@CcID", ccID);
+                    else cmd.Parameters.AddWithValue("@CcID", DBNull.Value);
+                    if (architectID != 0)
+                        cmd.Parameters.AddWithValue("@ArchitectID", architectID);
+                    else cmd.Parameters.AddWithValue("@ArchitectID", DBNull.Value);
+                    if (crewID != 0)
+                        cmd.Parameters.AddWithValue("@CrewID", crewID);
+                    else cmd.Parameters.AddWithValue("@CrewID", DBNull.Value);
+                    if (!string.IsNullOrEmpty(address))
+                        cmd.Parameters.AddWithValue("@Address", address);
+                    else cmd.Parameters.AddWithValue("@Address", DBNull.Value);
+                    if (!string.IsNullOrEmpty(city))
+                        cmd.Parameters.AddWithValue("@City", city);
+                    else cmd.Parameters.AddWithValue("@City", DBNull.Value);
+                    if (!string.IsNullOrEmpty(state))
+                        cmd.Parameters.AddWithValue("@State", state);
+                    else cmd.Parameters.AddWithValue("@State", DBNull.Value);
+                    if (!string.IsNullOrEmpty(zip))
+                        cmd.Parameters.AddWithValue("@Zip", zip);
+                    else cmd.Parameters.AddWithValue("@Zip", DBNull.Value);
+                    if (dateCompleted.Equals(DateTime.MinValue))
+                        cmd.Parameters.AddWithValue("@DateCompleted", dateCompleted);
+                    else cmd.Parameters.AddWithValue("@DateCompleted", DBNull.Value);
+                    if (targetDate.Equals(DateTime.MinValue))
+                        cmd.Parameters.AddWithValue("@TargetDate", dateCompleted);
+                    else cmd.Parameters.AddWithValue("@TargetDate", DBNull.Value);
+                    cmd.Parameters.AddWithValue("@BackgroundCheck", backgroundCheck);
+                    cmd.Parameters.AddWithValue("@CipProject", cip);
+                    cmd.Parameters.AddWithValue("@CertPayReqd", certPayReqd);
+                    cmd.Parameters.AddWithValue("@PnpBond", pnpBond);
+                    cmd.Parameters.AddWithValue("@GapBid", gapBid);
+                    cmd.Parameters.AddWithValue("@GapEst", gapEst);
+                    cmd.Parameters.AddWithValue("@OnHold", onHold);
+                    cmd.Parameters.AddWithValue("@Complete", complete);
+                    cmd.Parameters.AddWithValue("@PayReqd", payReqd);
+                    if (!string.IsNullOrEmpty(payReqdNote))
+                        cmd.Parameters.AddWithValue("@PayReqdNote", payReqdNote);
+                    else cmd.Parameters.AddWithValue("@PayReqdNote", DBNull.Value);
+                    if (!string.IsNullOrEmpty(addInfo))
+                        cmd.Parameters.AddWithValue("@AddInfo", addInfo);
+                    else cmd.Parameters.AddWithValue("@AddInfo", DBNull.Value);
+                    cmd.Parameters.AddWithValue("@StoredMaterial", storedMat);
+                    if (billingDate != 0)
+                        cmd.Parameters.AddWithValue("@BillingDate", billingDate);
+                    else cmd.Parameters.AddWithValue("@BillingDate", DBNull.Value);
+                    cmd.Parameters.AddWithValue("@C3", c3);
+                    cmd.Parameters.AddWithValue("@LcpTracker", lcpTracker);
+                    if (!string.IsNullOrEmpty(safetyBadging))
+                        cmd.Parameters.AddWithValue("@SafetyBadging", safetyBadging);
+                    else cmd.Parameters.AddWithValue("@SafetyBadging", DBNull.Value);
+                    if (archRepID != 0)
+                        cmd.Parameters.AddWithValue("@ArchRepID", archRepID);
+                    else cmd.Parameters.AddWithValue("@ArchRepID", DBNull.Value);
+                    if (!string.IsNullOrEmpty(masterContract))
+                        cmd.Parameters.AddWithValue("@MasterContract", masterContract);
+                    else cmd.Parameters.AddWithValue("@MasterContract", DBNull.Value);
+
+                    insertedID = (int)cmd.ExecuteScalar();
+                    connection.Close();
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex);
+            }
+            return insertedID;
+        }
+
+        // Update Project
+        public SqlCommand RunQueryToUpdateProject(string query, string name, string jobNo, int estimatorID, int pcID, int customerID, int ccID, int architectID, int crewID, string address, string city, string state, string zip, DateTime dateCompleted, DateTime targetDate, bool backgroundCheck, bool cip, bool certPayReqd, bool pnpBond, bool gapBid, bool gapEst, bool onHold, bool complete, bool payReqd, string payReqdNote, string addInfo, bool storedMat, int billingDate, bool c3, bool lcpTracker, string safetyBadging, int archRepID, string masterContract, int projectID)
+        {
+            try
+            {
+                connection.Open();
+                if (connection != null)
+                {
+                    cmd = connection.CreateCommand();
+                    cmd.CommandType = CommandType.Text;
+                    cmd.CommandText = query;
+
+                    if (!string.IsNullOrEmpty(name))
+                        cmd.Parameters.AddWithValue("@ProjectName", name);
+                    else cmd.Parameters.AddWithValue("@ProjectName", DBNull.Value);
+                    if (!string.IsNullOrEmpty(jobNo))
+                        cmd.Parameters.AddWithValue("@JobNo", jobNo);
+                    else cmd.Parameters.AddWithValue("@JobNo", DBNull.Value);
+                    if (estimatorID != -1)
+                        cmd.Parameters.AddWithValue("@EstimatorID", estimatorID);
+                    else cmd.Parameters.AddWithValue("@EstimatorID", DBNull.Value);
+                    if (pcID != -1)
+                        cmd.Parameters.AddWithValue("@PcID", pcID);
+                    else cmd.Parameters.AddWithValue("@PcID", DBNull.Value);
+                    if (customerID != -1)
+                        cmd.Parameters.AddWithValue("@CustomerID", customerID);
+                    else cmd.Parameters.AddWithValue("@CustomerID", DBNull.Value);
+                    if (ccID != -1)
+                        cmd.Parameters.AddWithValue("@CcID", ccID);
+                    else cmd.Parameters.AddWithValue("@CcID", DBNull.Value);
+                    if (architectID != -1)
+                        cmd.Parameters.AddWithValue("@ArchitectID", architectID);
+                    else cmd.Parameters.AddWithValue("@ArchitectID", DBNull.Value);
+                    if (crewID != -1)
+                        cmd.Parameters.AddWithValue("@CrewID", crewID);
+                    else cmd.Parameters.AddWithValue("@CrewID", DBNull.Value);
+                    if (!string.IsNullOrEmpty(address))
+                        cmd.Parameters.AddWithValue("@Address", address);
+                    else cmd.Parameters.AddWithValue("@Address", DBNull.Value);
+                    if (!string.IsNullOrEmpty(city))
+                        cmd.Parameters.AddWithValue("@City", city);
+                    else cmd.Parameters.AddWithValue("@City", DBNull.Value);
+                    if (!string.IsNullOrEmpty(state))
+                        cmd.Parameters.AddWithValue("@State", state);
+                    else cmd.Parameters.AddWithValue("@State", DBNull.Value);
+                    if (!string.IsNullOrEmpty(zip))
+                        cmd.Parameters.AddWithValue("@Zip", zip);
+                    else cmd.Parameters.AddWithValue("@Zip", DBNull.Value);
+                    if (dateCompleted.Equals(DateTime.MinValue))
+                        cmd.Parameters.AddWithValue("@DateCompleted", dateCompleted);
+                    else cmd.Parameters.AddWithValue("@DateCompleted", DBNull.Value);
+                    if (targetDate.Equals(DateTime.MinValue))
+                        cmd.Parameters.AddWithValue("@TargetDate", dateCompleted);
+                    else cmd.Parameters.AddWithValue("@TargetDate", DBNull.Value);
+                    if(backgroundCheck)
+                        cmd.Parameters.AddWithValue("@BackgroundCheck", 1);
+                    else cmd.Parameters.AddWithValue("@BackgroundCheck", 0);
+                    if(cip)
+                        cmd.Parameters.AddWithValue("@CipProject", 1);
+                    else cmd.Parameters.AddWithValue("@CipProject", 0);
+                    if (certPayReqd)
+                        cmd.Parameters.AddWithValue("@CertPayReqd", 1);
+                    else cmd.Parameters.AddWithValue("@CertPayReqd", 0);
+                    if (pnpBond)
+                        cmd.Parameters.AddWithValue("@PnpBond", 1);
+                    else cmd.Parameters.AddWithValue("@PnpBond", 0);
+                    if (gapBid)
+                        cmd.Parameters.AddWithValue("@GapBid", 1);
+                    else cmd.Parameters.AddWithValue("@GapBid", 0);
+                    if (gapEst)
+                        cmd.Parameters.AddWithValue("@GapEst", 1);
+                    else cmd.Parameters.AddWithValue("@GapEst", 0);
+                    if (onHold)
+                        cmd.Parameters.AddWithValue("@OnHold", 1);
+                    else cmd.Parameters.AddWithValue("@OnHold", 0);
+                    if (complete)
+                        cmd.Parameters.AddWithValue("@Complete", 1);
+                    else cmd.Parameters.AddWithValue("@Complete", 0);
+                    if (payReqd)
+                        cmd.Parameters.AddWithValue("@PayReqd", 1);
+                    else cmd.Parameters.AddWithValue("@PayReqd", 0);
+                    if (!string.IsNullOrEmpty(payReqdNote))
+                        cmd.Parameters.AddWithValue("@PayReqdNote", payReqdNote);
+                    else cmd.Parameters.AddWithValue("@PayReqdNote", DBNull.Value);
+                    if (!string.IsNullOrEmpty(addInfo))
+                        cmd.Parameters.AddWithValue("@AddInfo", addInfo);
+                    else cmd.Parameters.AddWithValue("@AddInfo", DBNull.Value);
+                    cmd.Parameters.AddWithValue("@StoredMaterial", storedMat);
+                    if (billingDate != 0)
+                        cmd.Parameters.AddWithValue("@BillingDate", billingDate);
+                    else cmd.Parameters.AddWithValue("@BillingDate", DBNull.Value);
+                    if (c3)
+                        cmd.Parameters.AddWithValue("@C3", 1);
+                    else cmd.Parameters.AddWithValue("@C3", 0);
+                    if (lcpTracker)
+                        cmd.Parameters.AddWithValue("@LcpTracker", 1);
+                    else cmd.Parameters.AddWithValue("@LcpTracker", 0);
+                    if (!string.IsNullOrEmpty(safetyBadging))
+                        cmd.Parameters.AddWithValue("@SafetyBadging", safetyBadging);
+                    else cmd.Parameters.AddWithValue("@SafetyBadging", DBNull.Value);
+                    if (archRepID != -1)
+                        cmd.Parameters.AddWithValue("@ArchRepID", archRepID);
+                    else cmd.Parameters.AddWithValue("@ArchRepID", DBNull.Value);
+                    if (!string.IsNullOrEmpty(masterContract))
+                        cmd.Parameters.AddWithValue("@MasterContract", masterContract);
+                    else cmd.Parameters.AddWithValue("@MasterContract", DBNull.Value);
+                    cmd.Parameters.AddWithValue("@ProjectID", projectID);
+
+                    cmd.ExecuteNonQuery();
+                    connection.Close();
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex);
+            }
+            return cmd;
+        }
+
         public void Open()
         {
            connection.Open();

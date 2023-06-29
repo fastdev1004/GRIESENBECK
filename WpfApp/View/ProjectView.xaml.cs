@@ -22,61 +22,28 @@ namespace WpfApp
     /// </summary>
     public partial class ProjectView : Page
     {
-        private NoteHelper noteHelper;
+        private FindComponentHelper findComponentHelper;
 
         private ProjectViewModel ProjectVM;
         public ProjectView()
         {
             InitializeComponent();
-            noteHelper = new NoteHelper();
+            findComponentHelper = new FindComponentHelper();
             ProjectVM = new ProjectViewModel();
             this.DataContext = ProjectVM;
             Loaded += LoadPage;
         }
-        
-        //private void ProjectNote_PreviewKeyUp(object sender, KeyEventArgs e)
-        //{
-        //    TextBox NotesNote = sender as TextBox;
-        //    if (NotesNote != null)
-        //    {
-        //        DataGrid dataGrid = noteHelper.FindDataGrid(NotesNote);
-
-        //        if (dataGrid != null)
-        //        {
-        //            TextBox lastRowTextBox = noteHelper.GetLastRowTextBox(dataGrid);
-        //            if (lastRowTextBox != null)
-        //            {
-        //                string lastRowText = lastRowTextBox.Text;
-        //                if (!string.IsNullOrEmpty(lastRowText))
-        //                {
-        //                    ObservableCollection<Note> notes = ProjectVM.ProjectNotes;
-        //                    Grid parentGrid = NotesNote.Parent as Grid;
-        //                    Grid grandParentGrid = parentGrid.Parent as Grid;
-        //                    Grid firstChildGrid = grandParentGrid.Children[0] as Grid;
-        //                    TextBlock NotesDateAdded = firstChildGrid.Children[0] as TextBlock;
-        //                    TextBlock NoteUserName = firstChildGrid.Children[1] as TextBlock;
-        //                    NotesDateAdded.Text = DateTime.Now.ToString();
-        //                    NoteUserName.Text = "smile";
-
-        //                    Note item = new Note();
-        //                    notes.Add(item);
-        //                    e.Handled = true;
-        //                }
-        //            }
-        //        }
-        //    }
-        //}
 
         private void WorkOrderNote_PreviewKeyUp(object sender, KeyEventArgs e)
         {
             TextBox NotesNote = sender as TextBox;
             if (NotesNote != null)
             {
-                DataGrid dataGrid = noteHelper.FindDataGrid(NotesNote);
+                DataGrid dataGrid = findComponentHelper.FindDataGrid(NotesNote);
 
                 if (dataGrid != null)
                 {
-                    TextBox lastRowTextBox = noteHelper.GetLastRowTextBox(dataGrid);
+                    TextBox lastRowTextBox = findComponentHelper.GetLastRowTextBox(dataGrid);
                     if (lastRowTextBox != null)
                     {
                         string lastRowText = lastRowTextBox.Text;
@@ -136,10 +103,11 @@ namespace WpfApp
         private void SelectPaymentComboBoxItem(object sender, MouseButtonEventArgs e)
         {
             ComboBoxItem item = sender as ComboBoxItem;
-            Payment Payment = new Payment();
-            Payment dataObject = item.DataContext as Payment;
-            dataObject.IsChecked = !dataObject.IsChecked;
-            
+            //Payment Payment = new Payment();
+            //CheckBox checkBox = FindComponentHelper.FindVisualParent<CheckBox>
+            //Payment dataObject = item.DataContext as Payment;
+            //dataObject.IsChecked = !dataObject.IsChecked;
+
             e.Handled = true;
         }
 
@@ -181,7 +149,7 @@ namespace WpfApp
             if (selectedIndex == 0)
             {
                 NewSCDialog newSCDlg = new NewSCDialog();
-                newSCDlg.CustomerID = ProjectVM.CustomerID;
+                newSCDlg.CustomerID = ProjectVM.TempProject.CustomerID;
                 newSCDlg.WindowStartupLocation = WindowStartupLocation.CenterScreen;
                 comboBox.SelectedIndex = 1;
                 newSCDlg.ShowDialog();
@@ -208,7 +176,7 @@ namespace WpfApp
             if (selectedIndex == 0)
             {
                 NewPmDialog newPmDlg = new NewPmDialog();
-                newPmDlg.CustomerID = ProjectVM.CustomerID;
+                newPmDlg.CustomerID = ProjectVM.TempProject.CustomerID;
                 newPmDlg.WindowStartupLocation = WindowStartupLocation.CenterScreen;
                 comboBox.SelectedIndex = 1;
                 newPmDlg.ShowDialog();
@@ -222,7 +190,7 @@ namespace WpfApp
             if (selectedIndex == 0)
             {
                 NewSuptDialog newSuptDlg = new NewSuptDialog();
-                newSuptDlg.CustomerID = ProjectVM.CustomerID;
+                newSuptDlg.CustomerID = ProjectVM.TempProject.CustomerID;
                 newSuptDlg.WindowStartupLocation = WindowStartupLocation.CenterScreen;
                 comboBox.SelectedIndex = 1;
                 newSuptDlg.ShowDialog();
@@ -380,6 +348,12 @@ namespace WpfApp
             Note selectedItem = ProjectNote_DataGrid.SelectedItem as Note;
             int selectedIndex = ProjectNote_DataGrid.SelectedIndex;
             ProjectVM.ProjectNotes.RemoveAt(selectedIndex);
+        }
+
+        private void PaymentCB_Changed(object sender, SelectionChangedEventArgs e)
+        {
+            //Payment_CB.Text = "111";
+            //Console.WriteLine("12345678");
         }
     }
 }

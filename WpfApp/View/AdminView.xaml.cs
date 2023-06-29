@@ -24,12 +24,12 @@ namespace WpfApp.View
     public partial class AdminView : Page
     {
         private AdminViewModel AdminVM;
-        private NoteHelper noteHelper;
+        private FindComponentHelper noteHelper;
         public AdminView()
         {
             InitializeComponent();
             AdminVM = new AdminViewModel();
-            noteHelper = new NoteHelper();
+            noteHelper = new FindComponentHelper();
             this.DataContext = AdminVM;
         }
 

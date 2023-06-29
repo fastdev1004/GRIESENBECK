@@ -18,7 +18,7 @@ namespace WpfApp.View
     /// 
     public partial class WorkOrderView : Page
     {
-        private NoteHelper noteHelper;
+        private FindComponentHelper noteHelper;
 
         private ObservableCollection<Note> sb_notes;
         private WorkOrderViewModel WorkOrderVM;
@@ -28,7 +28,7 @@ namespace WpfApp.View
             InitializeComponent();
             WorkOrderVM = new WorkOrderViewModel();
             sb_notes = new ObservableCollection<Note>();
-            noteHelper = new NoteHelper();
+            noteHelper = new FindComponentHelper();
             this.DataContext = WorkOrderVM;
         }
 

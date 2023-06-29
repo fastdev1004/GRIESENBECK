@@ -37,57 +37,170 @@ namespace WpfApp.ViewModel
             ProjectMatTrackings = new ObservableCollection<ProjectMatTracking>();
             ProjectMtShips = new ObservableCollection<ProjectMatShip>();
             ProjectSelectionEnable = true;
+            TempProject = new Project();
+            InstallationNotes = new ObservableCollection<InstallationNote>();
+            ProjectCIPs = new ObservableCollection<CIP>();
+            Contracts = new ObservableCollection<Contract>();
+            TrackReports = new ObservableCollection<TrackReport>();
+            ChangeOrders = new ObservableCollection<ChangeOrder>();
+            TrackShipRecvs = new ObservableCollection<TrackShipRecv>();
+            TrackLaborReports = new ObservableCollection<TrackLaborReport>();
+            ProjectWorkOrders = new ObservableCollection<ProjectWorkOrder>();
+            WorkOrders = new ObservableCollection<WorkOrder>();
+
             //Note noteItem = new Note();
             ProjectNotes = new ObservableCollection<Note>();
             //ProjectNotes.Add(noteItem);
-
             WorkOrderNotes = new ObservableCollection<Note>();
             //WorkOrderNotes.Add(noteItem);
 
             this.NewProjectCommand = new RelayCommand((e)=> this.ClearProject());
             this.AddNewNoteCommand = new RelayCommand((e) => this.AddNewNote());
+            this.SaveCommand = new RelayCommand((e) => this.SaveProject());
+
+            ActionState = "New";
+        }
+
+        private void SaveProject()
+        {
+            if(ActionState.Equals("New"))
+            {
+                sqlquery = "INSERT INTO tblProjects(Project_Name, Job_No, Estimator_ID, PC_ID, Customer_ID, CC_ID, Architect_ID, Crew_ID, Address, City, State, Zip, Date_Completed, Target_Date, BackGroundCheck, CIP_Project, CertPay_Reqd, PnP_Bond, GapBid_Incl, GapEst_Incl, On_Hold, Complete, Pay_Reqd, Pay_Reqd_Note, Addtl_Info, Stored_Materials, Billing_Date, C3, LCPTracker, Safety_Badging, Arch_Rep_ID, Master_Contract) OUTPUT INSERTED.Project_ID VALUES (@ProjectName, @JobNo, @EstimatorID, @PcID, @CustomerID, @CcID, @ArchitectID, @CrewID, @Address, @City, @State, @Zip, @DateCompleted, @TargetDate, @BackGroundCheck, @CipProject, @CertPayReqd, @PnpBond, @GapBid, @GapEst, @OnHold, @Complete, @PayReqd, @PayReqdNote, @AddInfo, @StoredMaterial, @BillingDate, @C3, @LcpTracker, @SafetyBadging, @ArchRepID, @MasterContract)";
+
+                string name = TempProject.ProjectName;
+                string jobNo = TempProject.JobNo;
+                int estimatorID = TempProject.EstimatorID;
+                int pcID = TempProject.ProjectCoordID;
+                int customerID = TempProject.CustomerID;
+                int ccID = TempProject.SubmittalContactID;
+                int architectID = TempProject.ArchitectID;
+                int crewID = TempProject.CrewID;
+                string address = TempProject.Address;
+                string city = TempProject.City;
+                string state = TempProject.State;
+                string zip = TempProject.Zip;
+                DateTime dateCompleted = TempProject.DateCompleted;
+                DateTime targetDate = TempProject.TargetDate;
+                bool backgroundCheck = TempProject.BackgroundChk;
+                bool cip = TempProject.Cip;
+                bool certPayReqd = TempProject.CertPayRoll;
+                bool pnpBond = TempProject.PnpBond;
+                bool gapBid = TempProject.GapBid;
+                bool gapEst = TempProject.GapEst;
+                bool onHold = TempProject.OnHold;
+                bool complete = TempProject.Complete;
+                bool payReqd = TempProject.PayReqd;
+                string payReqdNote = TempProject.PayReqdNote;
+                string addInfo = TempProject.AddtlInfo;
+                bool storedMat = TempProject.StoredMat;
+                int billingDate = TempProject.BillingDate;
+                bool c3 = TempProject.C3;
+                bool lcpTracker = TempProject.LcpTracker;
+                string safetyBadging = TempProject.SafetyBadging;
+                int archRepID = TempProject.ArchRepID;
+                string masterContract = TempProject.MasterContract;
+
+                int insertedProjectID = dbConnection.RunQueryToCreateProject(sqlquery, name, jobNo, estimatorID, pcID, customerID, ccID, architectID, crewID, address, city, state, zip, dateCompleted, targetDate, backgroundCheck, cip, certPayReqd, pnpBond, gapBid, gapEst, onHold, complete, payReqd, payReqdNote, addInfo, storedMat, billingDate, c3, lcpTracker, safetyBadging, archRepID, masterContract);
+
+                TempProject.ID = insertedProjectID;
+
+                foreach (Note _note in ProjectNotes)
+                {
+                    sqlquery = "INSERT INTO tblNotes(Notes_PK, Notes_PK_Desc, Notes_Note, Notes_DateAdded, Notes_User) OUTPUT INSERTED.Notes_ID VALUES (@NotesPK, @NotesDesc, @NotesNote, @NotesDateAdded, @NotesUser)";
+
+                    int notesPK = insertedProjectID;
+                    string notesPkDesc = "Project";
+                    string notesNote = _note.NotesNote;
+                    DateTime notesDateAdded = _note.NotesDateAdded;
+                    string user = "smile";
+
+                    int insertedNoteId = dbConnection.RunQueryToCreateNote(sqlquery, notesPK, notesPkDesc, notesNote, notesDateAdded, user);
+                }
+
+                ActionState = "Update";
+            } else
+            {
+                Console.WriteLine("Update Project");
+                sqlquery = "UPDATE tblProjects SET Project_Name=@ProjectName, Job_No=@JobNo, Estimator_ID=@EstimatorID, PC_ID=@PcID, Customer_ID=@CustomerID, CC_ID=@CcID, Architect_ID=@ArchitectID, Crew_ID=@CrewID, Address=@Address, City=@City, State=@State, Zip=@Zip, Date_Completed=@DateCompleted, Target_Date=@TargetDate, BackgroundCheck=@BackgroundCheck, CIP_Project=@CipProject, CertPay_Reqd=@CertPayReqd, PnP_Bond=@PnpBond, GapBid_Incl=@GapBid, GapEst_Incl=@GapEst, On_Hold=@OnHold, Complete=@Complete, Pay_Reqd=@PayReqd, Pay_Reqd_Note=@PayReqdNote, Addtl_Info=@AddInfo, Stored_Materials=@StoredMaterial, Billing_Date=@BillingDate, C3=@C3, LCPTracker=@LcpTracker, Safety_Badging=@SafetyBadging, Arch_Rep_ID=@ArchRepID, Master_Contract=@MasterContract WHERE Project_ID=@ProjectID";
+
+                string name = TempProject.ProjectName;
+                string jobNo = TempProject.JobNo;
+                int estimatorID = TempProject.EstimatorID;
+                int pcID = TempProject.ProjectCoordID;
+                int customerID = TempProject.CustomerID;
+                int ccID = TempProject.SubmittalContactID;
+                int architectID = TempProject.ArchitectID;
+                int crewID = TempProject.CrewID;
+                string address = TempProject.Address;
+                string city = TempProject.City;
+                string state = TempProject.State;
+                string zip = TempProject.Zip;
+                DateTime dateCompleted = TempProject.DateCompleted;
+                DateTime targetDate = TempProject.TargetDate;
+                bool backgroundCheck = TempProject.BackgroundChk;
+                bool cip = TempProject.Cip;
+                bool certPayReqd = TempProject.CertPayRoll;
+                bool pnpBond = TempProject.PnpBond;
+                bool gapBid = TempProject.GapBid;
+                bool gapEst = TempProject.GapEst;
+                bool onHold = TempProject.OnHold;
+                bool complete = TempProject.Complete;
+                bool payReqd = TempProject.PayReqd;
+                string payReqdNote = TempProject.PayReqdNote;
+                string addInfo = TempProject.AddtlInfo;
+                bool storedMat = TempProject.StoredMat;
+                int billingDate = TempProject.BillingDate;
+                bool c3 = TempProject.C3;
+                bool lcpTracker = TempProject.LcpTracker;
+                string safetyBadging = TempProject.SafetyBadging;
+                int archRepID = TempProject.ArchRepID;
+                string masterContract = TempProject.MasterContract;
+                int projectID = TempProject.ID;
+
+                cmd = dbConnection.RunQueryToUpdateProject(sqlquery, name, jobNo, estimatorID, pcID, customerID, ccID, architectID, crewID, address, city, state, zip, dateCompleted, targetDate, backgroundCheck, cip, certPayReqd, pnpBond, gapBid, gapEst, onHold, complete, payReqd, payReqdNote, addInfo, storedMat, billingDate, c3, lcpTracker, safetyBadging, archRepID, masterContract, projectID);
+
+                foreach (Note _note in ProjectNotes)
+                {
+                    Console.WriteLine("_note id->" + _note.NoteID);
+                    if(_note.NoteID == 0)
+                    {
+                        sqlquery = "INSERT INTO tblNotes(Notes_PK, Notes_PK_Desc, Notes_Note, Notes_DateAdded, Notes_User) OUTPUT INSERTED.Notes_ID VALUES (@NotesPK, @NotesDesc, @NotesNote, @NotesDateAdded, @NotesUser)";
+
+                        int notesPK = TempProject.ID;
+                        string notesPkDesc = "Project";
+                        string notesNote = _note.NotesNote;
+                        DateTime notesDateAdded = _note.NotesDateAdded;
+                        string user = "smile";
+
+                        int insertedNoteId = dbConnection.RunQueryToCreateNote(sqlquery, notesPK, notesPkDesc, notesNote, notesDateAdded, user);
+                    } else
+                    {
+                        sqlquery = "UPDATE tblNotes SET Notes_Note=@NotesNote, Notes_DateAdded=@NotesDateAdded WHERE Notes_ID=@NotesID";
+
+                        string notesNote = _note.NotesNote;
+                        DateTime notesDateAdded = _note.NotesDateAdded;
+                        string user = "smile";
+                        int notesID = _note.NoteID;
+                        cmd = dbConnection.RunQueryToUpdateNote(sqlquery, notesNote, notesDateAdded, user, notesID);
+
+                    }
+                }
+            }
         }
 
         private void ClearProject()
         {
             ProjectID = -1;
-            ProjectName = "";
-            CustomerID = -1;
-            Proj_TargetDate = new DateTime();
-            Proj_CompletedDate = new DateTime();
-            Payments.Clear();
-            PaymentNote = "";
-            AdditionalInfoNote = "";
-            BillingDate = "";
-            MasterContractID = "";
-            SelectedCrewID = -1;
-            JobNo = "";
-            OnHold = false;
-            Address = "";
-            City = "";
-            State = "";
-            Zip = "";
-            OrigTaxAmt = "";
-            OrigProfit = "";
-            OrigTotalMatCost = "";
+
             ProjectManagerList.Clear();
             SuperintendentList.Clear();
-            EstimatorID = -1;
-            ArchitectID = -1;
-            ProjectCoordID = -1;
-            ArchRepID = -1;
-            CCID = -1;
-            ArchitectID = -1;
             ProjectNotes.Clear();
             ProjectLinks.Clear();
-            Proj_Complete = false;
-            SafetyBadging = "";
             InstallationNotes.Clear();
             ProjectCIPs.Clear();
             Contracts.Clear();
             ChangeOrders.Clear();
 
-            //ProjectSelectionEnable = false;
             // SOV
             SovCOs.Clear();
             SovMaterials.Clear();
@@ -102,15 +215,44 @@ namespace WpfApp.ViewModel
             ProjectWorkOrders.Clear();
             WorkOrders.Clear();
 
-            ObservableCollection<Payment> _paymentItems = new ObservableCollection<Payment>();
-            Payments = new ObservableCollection<Payment>();
-            string[] paymentItems = { "Background Check", "Cert Pay Reqd", "CIP Project", "C3 Project", "P&P Bond", "GAP Bid Incl", "GAP Est Incl", "LCP Tracker", "Down Payment" };
-
-            foreach (string item in paymentItems)
-            {
-                _paymentItems.Add(new Payment { Name = item, IsChecked = false });
-            }
-            Payments = _paymentItems;
+            // Project
+            TempProject.ID = 0;
+            TempProject.ProjectName = "";
+            TempProject.TargetDate = DateTime.Now;
+            TempProject.DateCompleted = DateTime.Now;
+            TempProject.PayReqdNote = "";
+            TempProject.JobNo = "";
+            TempProject.Address = "";
+            TempProject.City = "";
+            TempProject.State = "";
+            TempProject.Zip = "";
+            TempProject.OnHold = false;
+            TempProject.BillingDate = 0;
+            TempProject.EstimatorID = -1;
+            TempProject.ProjectCoordID = -1;
+            TempProject.ArchRepID = -1;
+            TempProject.SubmittalContactID = -1;
+            TempProject.ArchitectID = -1;
+            TempProject.CrewID = -1;
+            TempProject.MasterContract = "Yes";
+            TempProject.CustomerID = -1;
+            TempProject.AddtlInfo = "";
+            TempProject.SafetyBadging = "";
+            TempProject.Complete = false;
+            TempProject.BackgroundChk = false;
+            TempProject.CertPayRoll = false;
+            TempProject.Cip = false;
+            TempProject.C3 = false;
+            TempProject.PnpBond = false;
+            TempProject.GapBid = false;
+            TempProject.GapEst = false;
+            TempProject.LcpTracker = false;
+            TempProject.PayReqd = false;
+            TempProject.OrigContractAmt = 0;
+            TempProject.TotalChangerOrder = 0;
+            TempProject.TotalContractAmt = 0;
+            TempProject.PayReqdNote = "";
+            TempProject.AddtlInfo = "";
         }
 
         private void LoadProjects()
@@ -131,21 +273,10 @@ namespace WpfApp.ViewModel
                     string projectName = row["Project_Name"].ToString();
 
                     string fullName = row["Full_Name"].ToString();
-                    st_mb.Add(new Project { ID = projectID, ProjectName = projectName, CustomerName = fullName });
+                    st_mb.Add(new Project { ID = projectID, ProjectName = projectName });
                 }
-
             }
             Projects = st_mb;
-            // Payment
-            ObservableCollection<Payment> _paymentItems = new ObservableCollection<Payment>();
-            Payments = new ObservableCollection<Payment>();
-            string[] paymentItems = { "Background Check", "Cert Pay Reqd", "CIP Project", "C3 Project", "P&P Bond", "GAP Bid Incl", "GAP Est Incl", "LCP Tracker", "Down Payment" };
-
-            foreach (string item in paymentItems)
-            {
-                _paymentItems.Add(new Payment { Name = item, IsChecked = false });
-            }
-            Payments = _paymentItems;
 
             // Customer Address
             sqlquery = "SELECT Customer_ID, Full_Name, Address FROM tblCustomers Order by Short_Name";
@@ -557,129 +688,98 @@ namespace WpfApp.ViewModel
 
         private void ChangeProject()
         {
-            string sqlquery = "SELECT tblProjects.*, tblCustomers.Full_Name, tblCustomers.Customer_ID FROM tblProjects LEFT JOIN tblCustomers ON tblProjects.Customer_ID = tblCustomers.Customer_ID WHERE tblProjects.Project_ID = " + ProjectID.ToString() + ";";
+            ActionState = "Update";
+            sqlquery = "SELECT tblProjects.*, tblCustomers.Full_Name, tblCustomers.Customer_ID FROM tblProjects LEFT JOIN tblCustomers ON tblProjects.Customer_ID = tblCustomers.Customer_ID WHERE tblProjects.Project_ID = " + ProjectID.ToString() + ";";
             SqlCommand cmd = dbConnection.RunQuryNoParameters(sqlquery);
             SqlDataAdapter sda = new SqlDataAdapter(cmd);
             DataSet ds = new DataSet();
             sda.Fill(ds);
 
             DataRow firstRow = ds.Tables[0].Rows[0];
-            ProjectName = "";
-            Proj_TargetDate = new DateTime();
-            Proj_CompletedDate = new DateTime();
-            PaymentNote = "";
-            JobNo = "";
-            Address = "";
-            City = "";
-            State = "";
-            Zip = "";
-            OrigTaxAmt = "";
-            OrigProfit = "";
-            OrigTotalMatCost = "";
-            OnHold = false;
-            BillingDate = "";
-            EstimatorID = -1;
-            ProjectCoordID = -1;
-            ArchRepID = -1;
-            ArchitectID = -1;
-            CCID = -1;
-            SelectedCrewID = -1;
-            MasterContractID = "";
-            AdditionalInfoNote = "";
-            Proj_Complete = false;
+            TempProject.CustomerID = -1;
+            TempProject.EstimatorID = -1;
+            TempProject.ProjectCoordID = -1;
+            TempProject.ArchRepID = -1;
+            TempProject.SubmittalContactID = -1;
+            TempProject.ArchitectID = -1;
+            TempProject.CrewID = -1;
+
+            TempProject.ID = int.Parse(firstRow["Project_ID"].ToString());
             if (!firstRow.IsNull("Project_Name"))
-                ProjectName = firstRow["Project_Name"].ToString();
+                TempProject.ProjectName = firstRow["Project_Name"].ToString();
             if (!firstRow.IsNull("Target_Date"))
-                Proj_TargetDate = firstRow.Field<DateTime>("Target_Date");
+                TempProject.TargetDate = firstRow.Field<DateTime>("Target_Date");
             if (!firstRow.IsNull("Date_Completed"))
-                Proj_CompletedDate = firstRow.Field<DateTime>("Date_Completed");
+                TempProject.DateCompleted = firstRow.Field<DateTime>("Date_Completed");
             if (!firstRow.IsNull("Pay_Reqd_Note"))
-                PaymentNote = firstRow["Pay_Reqd_Note"].ToString();
+                TempProject.PayReqdNote = firstRow["Pay_Reqd_Note"].ToString();
             if (!firstRow.IsNull("Job_No"))
-                JobNo = firstRow["Job_No"].ToString();
+                TempProject.JobNo = firstRow["Job_No"].ToString();
             if (!firstRow.IsNull("Address"))
-                Address = firstRow["Address"].ToString();
+                TempProject.Address = firstRow["Address"].ToString();
             if (!firstRow.IsNull("City"))
-                City = firstRow["City"].ToString();
+                TempProject.City = firstRow["City"].ToString();
             if (!firstRow.IsNull("State"))
-                State = firstRow["State"].ToString();
+                TempProject.State = firstRow["State"].ToString();
             if (!firstRow.IsNull("Zip"))
-                Zip = firstRow["Zip"].ToString();
-            if (!firstRow.IsNull("OrigTaxAmt"))
-                OrigTaxAmt = firstRow["OrigTaxAmt"].ToString();
-            if (!firstRow.IsNull("OrigProfit"))
-                OrigProfit = firstRow["OrigProfit"].ToString();
-            if (!firstRow.IsNull("OrigTotalMatCost"))
-                OrigTotalMatCost = firstRow["OrigTotalMatCost"].ToString();
+                TempProject.Zip = firstRow["Zip"].ToString();
             if (!firstRow.IsNull("On_Hold"))
-                OnHold = firstRow.Field<Boolean>("On_Hold");
+                TempProject.OnHold = firstRow.Field<Boolean>("On_Hold");
             if (!firstRow.IsNull("Billing_Date"))
-                BillingDate = firstRow["Billing_Date"].ToString();
+                TempProject.BillingDate = int.Parse(firstRow["Billing_Date"].ToString());
             if (!firstRow.IsNull("Estimator_ID"))
-                EstimatorID = firstRow.Field<int>("Estimator_ID");
+                TempProject.EstimatorID = firstRow.Field<int>("Estimator_ID");
             if (!firstRow.IsNull("PC_ID"))
-                ProjectCoordID = firstRow.Field<int>("PC_ID");
+                TempProject.ProjectCoordID = firstRow.Field<int>("PC_ID");
             if (!firstRow.IsNull("Arch_Rep_ID"))
-                ArchRepID = firstRow.Field<int>("Arch_Rep_ID");
+                TempProject.ArchRepID = firstRow.Field<int>("Arch_Rep_ID");
             if (!firstRow.IsNull("CC_ID"))
-                CCID = firstRow.Field<int>("CC_ID");
+                TempProject.SubmittalContactID = firstRow.Field<int>("CC_ID");
             if (!firstRow.IsNull("Architect_ID"))
-                ArchitectID = firstRow.Field<int>("Architect_ID");
+                TempProject.ArchitectID = firstRow.Field<int>("Architect_ID");
             if (!firstRow.IsNull("Crew_ID"))
-                SelectedCrewID = firstRow.Field<int>("Crew_ID");
+                TempProject.CrewID = firstRow.Field<int>("Crew_ID");
             if (!firstRow.IsNull("Master_Contract"))
-                MasterContractID = firstRow["Master_Contract"].ToString();
+                TempProject.MasterContract = firstRow["Master_Contract"].ToString();
             if (!firstRow.IsNull("Customer_ID"))
-                CustomerID = firstRow.Field<int>("Customer_ID");
+                TempProject.CustomerID = firstRow.Field<int>("Customer_ID");
             if (!firstRow.IsNull("Addtl_Info"))
-                AdditionalInfoNote = firstRow["Addtl_Info"].ToString();
+                TempProject.AddtlInfo = firstRow["Addtl_Info"].ToString();
             if (!firstRow.IsNull("Safety_Badging"))
-                SafetyBadging = firstRow["Safety_Badging"].ToString();
+                TempProject.SafetyBadging = firstRow["Safety_Badging"].ToString();
             if(!firstRow.IsNull("Complete"))
-                Proj_Complete = firstRow.Field<Boolean>("Complete");
+                TempProject.Complete = firstRow.Field<Boolean>("Complete");
+            TempProject.BackgroundChk = bool.Parse(firstRow["BackGroundCheck"].ToString());
+            TempProject.CertPayRoll = bool.Parse(firstRow["CertPay_Reqd"].ToString());
+            TempProject.Cip = bool.Parse(firstRow["CIP_Project"].ToString());
+            TempProject.C3 = bool.Parse(firstRow["C3"].ToString());
+            TempProject.PnpBond = bool.Parse(firstRow["PnP_Bond"].ToString());
+            TempProject.GapBid = bool.Parse(firstRow["GapBid_Incl"].ToString());
+            TempProject.GapEst = bool.Parse(firstRow["GapEst_Incl"].ToString());
+            TempProject.LcpTracker = bool.Parse(firstRow["LCPTracker"].ToString());
+            TempProject.PayReqd = bool.Parse(firstRow["Pay_Reqd"].ToString());
+            
+            sqlquery = "SELECT SUM(AmtOfCO) FROM tblCOTracking WHERE ProjectID = " + ProjectID.ToString();
+            cmd = dbConnection.RunQuryNoParameters(sqlquery);
+            sda = new SqlDataAdapter(cmd);
+            ds = new DataSet();
+            sda.Fill(ds);
+            firstRow = ds.Tables[0].Rows[0];
+            if(firstRow[0] != DBNull.Value)
+                TempProject.OrigContractAmt = Convert.ToInt32(firstRow[0]);
+            else TempProject.OrigContractAmt = 0;
 
-            string[] paymentItems = { "Background Check", "Cert Pay Reqd", "CIP Project", "C3 Project", "P&P Bond", "GAP Bid Incl", "GAP Est Incl", "LCP Tracker", "Down Payment" };
+            sqlquery = "SELECT SUM(AmtOfcontract) FROM tblSC WHERE ProjectID = " + ProjectID.ToString();
+            cmd = dbConnection.RunQuryNoParameters(sqlquery);
+            sda = new SqlDataAdapter(cmd);
+            ds = new DataSet();
+            sda.Fill(ds);
+            firstRow = ds.Tables[0].Rows[0];
+            if (firstRow[0] != DBNull.Value)
+                TempProject.TotalChangerOrder = Convert.ToInt32(firstRow[0]);
+            else TempProject.TotalChangerOrder = 0;
 
-            //PaymentItem
-            DataTemplate myDataTemplate = new DataTemplate();
-            FrameworkElementFactory checkBoxFactory = new FrameworkElementFactory(typeof(CheckBox));
-
-            ObservableCollection<Payment> _paymentItems = new ObservableCollection<Payment>();
-            foreach (string item in paymentItems)
-            {
-                switch(item)
-                {
-                    case "Background Check":
-                        _paymentItems.Add(new Payment { Name = item, IsChecked = bool.Parse(firstRow["BackGroundCheck"].ToString()) });
-                        break;
-                    case "Cert Pay Reqd":
-                        _paymentItems.Add(new Payment { Name = item, IsChecked = bool.Parse(firstRow["CertPay_Reqd"].ToString()) });
-                        break;
-                    case "CIP Project":
-                        _paymentItems.Add(new Payment { Name = item, IsChecked = bool.Parse(firstRow["CIP_Project"].ToString()) });
-                        break;
-                    case "C3 Project":
-                        _paymentItems.Add(new Payment { Name = item, IsChecked = bool.Parse(firstRow["C3"].ToString()) });
-                        break;
-                    case "P&P Bond":
-                        _paymentItems.Add(new Payment { Name = item, IsChecked = bool.Parse(firstRow["PnP_Bond"].ToString()) });
-                        break;
-                    case "GAP Bid Incl":
-                        _paymentItems.Add(new Payment { Name = item, IsChecked = bool.Parse(firstRow["GapBid_Incl"].ToString()) });
-                        break;
-                    case "GAP Est Incl":
-                        _paymentItems.Add(new Payment { Name = item, IsChecked = bool.Parse(firstRow["GapEst_Incl"].ToString()) });
-                        break;
-                    case "LCP Tracker":
-                        _paymentItems.Add(new Payment { Name = item, IsChecked = bool.Parse(firstRow["LCPTracker"].ToString()) });
-                        break;
-                    case "Down Payment":
-                        _paymentItems.Add(new Payment { Name = item, IsChecked = bool.Parse(firstRow["Pay_Reqd"].ToString()) });
-                        break;
-                }
-            }
-            Payments = _paymentItems;
-
+            TempProject.TotalContractAmt = TempProject.OrigContractAmt + TempProject.TotalChangerOrder;
             // TrackShipRecv
             ObservableCollection<TrackShipRecv> st_TrackShipRecv = new ObservableCollection<TrackShipRecv>();
 
@@ -732,7 +832,7 @@ namespace WpfApp.ViewModel
             ObservableCollection<ProjectWorkOrder> sb_projectWorkOrder = new ObservableCollection<ProjectWorkOrder>();
             foreach (DataRow row in ds.Tables[0].Rows)
             {
-                int _projectID = 0;
+                int _projectID = -1;
                 string _sovAcronym = "";
                 string _matName = "";
                 string _manufName = "";
@@ -1520,18 +1620,57 @@ namespace WpfApp.ViewModel
             PathDescritpions = sb_pathDesc;
         }
 
-        private ObservableCollection<Payment> _payments;
-        
         private int _projectID;
+        
         public int ProjectID
         {
             get { return _projectID; }
             set
             {
-                if (value == _projectID || value == -1) return;
+                if (value == _projectID ) return;
                 _projectID = value;
                 OnPropertyChanged();
-                ChangeProject();
+                if(_projectID != -1)
+                    ChangeProject();
+            }
+        }
+
+        private string _actionState;
+
+        public string ActionState
+        {
+            get { return _actionState; }
+            set
+            {
+                if (value == _actionState) return;
+                _actionState = value;
+                OnPropertyChanged();
+            }
+        }
+
+        private string _safetyBadging;
+
+        public string SafetyBadging
+        {
+            get { return _safetyBadging; }
+            set
+            {
+                if (value == _safetyBadging) return;
+                _safetyBadging = value;
+                OnPropertyChanged();
+            }
+        }
+
+        private Project _tempProject;
+
+        public Project TempProject
+        {
+            get => _tempProject;
+            set
+            {
+                if (value == _tempProject) return;
+                _tempProject = value;
+                OnPropertyChanged();
             }
         }
 
@@ -1553,17 +1692,6 @@ namespace WpfApp.ViewModel
             set;
         }
 
-        public ObservableCollection<Payment> Payments
-        {
-            get => _payments;
-            set
-            {
-                if (value == _payments) return;
-                _payments = value;
-                OnPropertyChanged();
-            }
-        }
-
         public ObservableCollection<Customer> Customers
         {
             get;
@@ -1576,12 +1704,6 @@ namespace WpfApp.ViewModel
             set;
         }
 
-
-        public ObservableCollection<string> JobNos
-        {
-            get;
-            set;
-        }
         private ObservableCollection<ProjectManager> _projectManagers;
 
         public ObservableCollection<ProjectManager> ProjectManagers
@@ -1993,41 +2115,7 @@ namespace WpfApp.ViewModel
             }
         }
 
-        
-        private string _paymentNote;
-        private DateTime _targetDate;
-        private DateTime _completedDate;
-        private string _jobNo;
-        private Boolean _onHold;
-        private string _address;
-        private string _city;
-        private string _state;
-        private string _zip;
-        private string _origTaxAmt;
-        private string _origProfit;
-        private string _origTotalMatCost;
-        private string _billingDate;
-        private int _customerID;
-        private int _estimatorID;
-        private int _projectCoordID;
-        private int _archRepID;
-        private int _CCID;
-        private int _architectID;
-        private int _selectedCrewID;
         private string _masterContractID;
-
-        private string _projectName;
-
-        public string ProjectName
-        {
-            get => _projectName;
-            set
-            {
-                if (value == _projectName) return;
-                _projectName = value;
-                OnPropertyChanged();
-            }
-        }
 
         private string _customerName;
 
@@ -2042,211 +2130,7 @@ namespace WpfApp.ViewModel
             }
         }
 
-        public string PaymentNote
-        {
-            get => _paymentNote;
-            set
-            {
-                if (value == _paymentNote) return;
-                _paymentNote = value;
-                OnPropertyChanged();
-            }
-        }
-        public DateTime Proj_TargetDate
-        {
-            get { return _targetDate; }
-            set
-            {
-                if (_targetDate != value)
-                {
-                    _targetDate = value;
-                    OnPropertyChanged(nameof(Proj_TargetDate));
-                }
-            }
-        }
-        public DateTime Proj_CompletedDate
-        {
-            get { return _completedDate; }
-            set
-            {
-                if (_completedDate != value)
-                {
-                    _completedDate = value;
-                    OnPropertyChanged(nameof(Proj_CompletedDate));
-                }
-            }
-        }
-        public string JobNo
-        {
-            get => _jobNo;
-            set
-            {
-                if (value == _jobNo) return;
-                _jobNo = value;
-                OnPropertyChanged();
-            }
-        }
-        public Boolean OnHold
-        {
-            get => _onHold;
-            set
-            {
-                if (value == _onHold) return;
-                _onHold = value;
-                OnPropertyChanged();
-            }
-        }
-        public String Address
-        {
-            get => _address;
-            set
-            {
-                if (value == _address) return;
-                _address = value;
-                OnPropertyChanged();
-            }
-        }
-        public String City
-        {
-            get => _city;
-            set
-            {
-                if (value == _city) return;
-                _city = value;
-                OnPropertyChanged();
-            }
-        }
-        public String State
-        {
-            get => _state;
-            set
-            {
-                if (value == _state) return;
-                _state = value;
-                OnPropertyChanged();
-            }
-        }
-        public string Zip
-        {
-            get => _zip;
-            set
-            {
-                if (value == _zip) return;
-                _zip = value;
-                OnPropertyChanged();
-            }
-        }
-        public string OrigTaxAmt
-        {
-            get => _origTaxAmt;
-            set
-            {
-                if (value == _origTaxAmt) return;
-                _origTaxAmt = value;
-                OnPropertyChanged();
-            }
-        }
-        public string OrigProfit
-        {
-            get => _origProfit;
-            set
-            {
-                if (value == _origProfit) return;
-                _origProfit = value;
-                OnPropertyChanged();
-            }
-        }
-        public string OrigTotalMatCost
-        {
-            get => _origTotalMatCost;
-            set
-            {
-                if (value == _origTotalMatCost) return;
-                _origTotalMatCost = value;
-                OnPropertyChanged();
-            }
-        }
-        public string BillingDate
-        {
-            get => _billingDate;
-            set
-            {
-                if (value == _billingDate) return;
-                _billingDate = value;
-                OnPropertyChanged();
-            }
-        }
-        public int CustomerID
-        {
-            get => _customerID;
-            set
-            {
-                if (value == _customerID) return;
-                _customerID = value;
-                OnPropertyChanged();
-            }
-        }
-        public int EstimatorID
-        {
-            get => _estimatorID;
-            set
-            {
-                if (value == _estimatorID) return;
-                _estimatorID = value;
-                OnPropertyChanged();
-            }
-        }
-        public int ProjectCoordID
-        {
-            get => _projectCoordID;
-            set
-            {
-                if (value == _projectCoordID) return;
-                _projectCoordID = value;
-                OnPropertyChanged();
-            }
-        }
-        public int ArchRepID
-        {
-            get => _archRepID;
-            set
-            {
-                if (value == _archRepID) return;
-                _archRepID = value;
-                OnPropertyChanged();
-            }
-        }
-        public int CCID
-        {
-            get => _CCID;
-            set
-            {
-                if (value == _CCID) return;
-                _CCID = value;
-                OnPropertyChanged();
-            }
-        }
-        public int ArchitectID
-        {
-            get => _architectID;
-            set
-            {
-                if (value == _architectID) return;
-                _architectID = value;
-                OnPropertyChanged();
-            }
-        }
-        public int SelectedCrewID
-        {
-            get => _selectedCrewID;
-            set
-            {
-                if (value == _selectedCrewID) return;
-                _selectedCrewID = value;
-                OnPropertyChanged();
-            }
-        }
-        public string MasterContractID
+        public string MasterContract
         {
             get => _masterContractID;
             set
@@ -2377,36 +2261,6 @@ namespace WpfApp.ViewModel
             }
         }
 
-        private string _additionalInfoNote;
-
-        public string AdditionalInfoNote
-        {
-            get { return _additionalInfoNote; }
-            set
-            {
-                if (_additionalInfoNote != value)
-                {
-                    _additionalInfoNote = value;
-                    OnPropertyChanged();
-                }
-            }
-        }
-
-        private string _safetyBadging;
-
-        public string SafetyBadging
-        {
-            get { return _safetyBadging; }
-            set
-            {
-                if (_safetyBadging != value)
-                {
-                    _safetyBadging = value;
-                    OnPropertyChanged();
-                }
-            }
-        }
-
         private string _coAppDen;
 
         public string CoAppDen
@@ -2468,6 +2322,7 @@ namespace WpfApp.ViewModel
         // Command
         public RelayCommand NewProjectCommand { get; set; }
         public RelayCommand AddNewNoteCommand { get; set; }
+        public RelayCommand SaveCommand { get; set; }
 
         private void ChangeWorkOrder()
         {

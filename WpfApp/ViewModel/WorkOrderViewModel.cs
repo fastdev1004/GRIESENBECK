@@ -48,7 +48,7 @@ namespace WpfApp.ViewModel
                     string projectName = row["Project_Name"].ToString();
 
                     string fullName = row["Full_Name"].ToString();
-                    st_mb.Add(new Project { ID = projectID, ProjectName = projectName, CustomerName = fullName });
+                    st_mb.Add(new Project { ID = projectID, ProjectName = projectName });
                 }
             }
             Projects = st_mb;
