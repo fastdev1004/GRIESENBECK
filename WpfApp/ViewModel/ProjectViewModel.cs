@@ -37,7 +37,7 @@ namespace WpfApp.ViewModel
             ProjectMatTrackings = new ObservableCollection<ProjectMatTracking>();
             ProjectMtShips = new ObservableCollection<ProjectMatShip>();
             ProjectSelectionEnable = true;
-            TempProject = new Project();
+           
             InstallationNotes = new ObservableCollection<InstallationNote>();
             ProjectCIPs = new ObservableCollection<CIP>();
             Contracts = new ObservableCollection<Contract>();
@@ -47,133 +47,123 @@ namespace WpfApp.ViewModel
             TrackLaborReports = new ObservableCollection<TrackLaborReport>();
             ProjectWorkOrders = new ObservableCollection<ProjectWorkOrder>();
             WorkOrders = new ObservableCollection<WorkOrder>();
+            TempProject = new Project();
+            TempProject.EstimatorID = -1;
+            TempProject.ProjectCoordID = -1;
+            TempProject.ArchRepID = -1;
+            TempProject.SubmittalContactID = -1;
+            TempProject.ArchitectID = -1;
+            TempProject.CrewID = -1;
+            TempProject.CustomerID = -1;
+            TempProject.MasterContract = "";
 
             //Note noteItem = new Note();
             ProjectNotes = new ObservableCollection<Note>();
             //ProjectNotes.Add(noteItem);
             WorkOrderNotes = new ObservableCollection<Note>();
             //WorkOrderNotes.Add(noteItem);
+            ProjectLinks = new ObservableCollection<ProjectLink>();
 
             this.NewProjectCommand = new RelayCommand((e)=> this.ClearProject());
             this.AddNewNoteCommand = new RelayCommand((e) => this.AddNewNote());
+            this.AddNewPmCommand = new RelayCommand((e) => this.AddNewProjectManager());
+            this.AddNewSuptCommand = new RelayCommand((e) => this.AddNewSuperintendent());
+            this.AddNewProjectLinkCommand = new RelayCommand((e) => this.AddNewProjectLink());
             this.SaveCommand = new RelayCommand((e) => this.SaveProject());
 
             ActionState = "New";
         }
 
+        private void AddNewProjectLink()
+        {
+            ProjectLinks.Add(new ProjectLink());
+        }
+
+        private void AddNewProjectManager()
+        {
+            ProjectManagerList.Add(new ProjectManager());
+        }
+
+        private void AddNewSuperintendent()
+        {
+            SuperintendentList.Add(new Superintendent());
+        }
+
         private void SaveProject()
         {
-            if(ActionState.Equals("New"))
+            int projectID = TempProject.ID;
+            string name = TempProject.ProjectName;
+            string jobNo = TempProject.JobNo;
+            int estimatorID = TempProject.EstimatorID;
+            int pcID = TempProject.ProjectCoordID;
+            int customerID = TempProject.CustomerID;
+            int ccID = TempProject.SubmittalContactID;
+            int architectID = TempProject.ArchitectID;
+            int crewID = TempProject.CrewID;
+            string address = TempProject.Address;
+            string city = TempProject.City;
+            string state = TempProject.State;
+            string zip = TempProject.Zip;
+            DateTime dateCompleted = TempProject.DateCompleted;
+            DateTime targetDate = TempProject.TargetDate;
+            bool backgroundCheck = TempProject.BackgroundChk;
+            bool cip = TempProject.Cip;
+            bool certPayReqd = TempProject.CertPayRoll;
+            bool pnpBond = TempProject.PnpBond;
+            bool gapBid = TempProject.GapBid;
+            bool gapEst = TempProject.GapEst;
+            bool onHold = TempProject.OnHold;
+            bool complete = TempProject.Complete;
+            bool payReqd = TempProject.PayReqd;
+            string payReqdNote = TempProject.PayReqdNote;
+            string addInfo = TempProject.AddtlInfo;
+            bool storedMat = TempProject.StoredMat;
+            int billingDate = TempProject.BillingDate;
+            bool c3 = TempProject.C3;
+            bool lcpTracker = TempProject.LcpTracker;
+            string safetyBadging = TempProject.SafetyBadging;
+            int archRepID = TempProject.ArchRepID;
+            string masterContract = TempProject.MasterContract;
+
+            if (!string.IsNullOrEmpty(name))
             {
-                sqlquery = "INSERT INTO tblProjects(Project_Name, Job_No, Estimator_ID, PC_ID, Customer_ID, CC_ID, Architect_ID, Crew_ID, Address, City, State, Zip, Date_Completed, Target_Date, BackGroundCheck, CIP_Project, CertPay_Reqd, PnP_Bond, GapBid_Incl, GapEst_Incl, On_Hold, Complete, Pay_Reqd, Pay_Reqd_Note, Addtl_Info, Stored_Materials, Billing_Date, C3, LCPTracker, Safety_Badging, Arch_Rep_ID, Master_Contract) OUTPUT INSERTED.Project_ID VALUES (@ProjectName, @JobNo, @EstimatorID, @PcID, @CustomerID, @CcID, @ArchitectID, @CrewID, @Address, @City, @State, @Zip, @DateCompleted, @TargetDate, @BackGroundCheck, @CipProject, @CertPayReqd, @PnpBond, @GapBid, @GapEst, @OnHold, @Complete, @PayReqd, @PayReqdNote, @AddInfo, @StoredMaterial, @BillingDate, @C3, @LcpTracker, @SafetyBadging, @ArchRepID, @MasterContract)";
-
-                string name = TempProject.ProjectName;
-                string jobNo = TempProject.JobNo;
-                int estimatorID = TempProject.EstimatorID;
-                int pcID = TempProject.ProjectCoordID;
-                int customerID = TempProject.CustomerID;
-                int ccID = TempProject.SubmittalContactID;
-                int architectID = TempProject.ArchitectID;
-                int crewID = TempProject.CrewID;
-                string address = TempProject.Address;
-                string city = TempProject.City;
-                string state = TempProject.State;
-                string zip = TempProject.Zip;
-                DateTime dateCompleted = TempProject.DateCompleted;
-                DateTime targetDate = TempProject.TargetDate;
-                bool backgroundCheck = TempProject.BackgroundChk;
-                bool cip = TempProject.Cip;
-                bool certPayReqd = TempProject.CertPayRoll;
-                bool pnpBond = TempProject.PnpBond;
-                bool gapBid = TempProject.GapBid;
-                bool gapEst = TempProject.GapEst;
-                bool onHold = TempProject.OnHold;
-                bool complete = TempProject.Complete;
-                bool payReqd = TempProject.PayReqd;
-                string payReqdNote = TempProject.PayReqdNote;
-                string addInfo = TempProject.AddtlInfo;
-                bool storedMat = TempProject.StoredMat;
-                int billingDate = TempProject.BillingDate;
-                bool c3 = TempProject.C3;
-                bool lcpTracker = TempProject.LcpTracker;
-                string safetyBadging = TempProject.SafetyBadging;
-                int archRepID = TempProject.ArchRepID;
-                string masterContract = TempProject.MasterContract;
-
-                int insertedProjectID = dbConnection.RunQueryToCreateProject(sqlquery, name, jobNo, estimatorID, pcID, customerID, ccID, architectID, crewID, address, city, state, zip, dateCompleted, targetDate, backgroundCheck, cip, certPayReqd, pnpBond, gapBid, gapEst, onHold, complete, payReqd, payReqdNote, addInfo, storedMat, billingDate, c3, lcpTracker, safetyBadging, archRepID, masterContract);
-
-                TempProject.ID = insertedProjectID;
-
-                foreach (Note _note in ProjectNotes)
+                if (ActionState.Equals("New"))
                 {
-                    sqlquery = "INSERT INTO tblNotes(Notes_PK, Notes_PK_Desc, Notes_Note, Notes_DateAdded, Notes_User) OUTPUT INSERTED.Notes_ID VALUES (@NotesPK, @NotesDesc, @NotesNote, @NotesDateAdded, @NotesUser)";
+                    sqlquery = "INSERT INTO tblProjects(Project_Name, Job_No, Estimator_ID, PC_ID, Customer_ID, CC_ID, Architect_ID, Crew_ID, Address, City, State, Zip, Date_Completed, Target_Date, BackGroundCheck, CIP_Project, CertPay_Reqd, PnP_Bond, GapBid_Incl, GapEst_Incl, On_Hold, Complete, Pay_Reqd, Pay_Reqd_Note, Addtl_Info, Stored_Materials, Billing_Date, C3, LCPTracker, Safety_Badging, Arch_Rep_ID, Master_Contract) OUTPUT INSERTED.Project_ID VALUES (@ProjectName, @JobNo, @EstimatorID, @PcID, @CustomerID, @CcID, @ArchitectID, @CrewID, @Address, @City, @State, @Zip, @DateCompleted, @TargetDate, @BackGroundCheck, @CipProject, @CertPayReqd, @PnpBond, @GapBid, @GapEst, @OnHold, @Complete, @PayReqd, @PayReqdNote, @AddInfo, @StoredMaterial, @BillingDate, @C3, @LcpTracker, @SafetyBadging, @ArchRepID, @MasterContract)";
 
-                    int notesPK = insertedProjectID;
-                    string notesPkDesc = "Project";
-                    string notesNote = _note.NotesNote;
-                    DateTime notesDateAdded = _note.NotesDateAdded;
-                    string user = "smile";
+                    int insertedProjectID = dbConnection.RunQueryToCreateProject(sqlquery, name, jobNo, estimatorID, pcID, customerID, ccID, architectID, crewID, address, city, state, zip, dateCompleted, targetDate, backgroundCheck, cip, certPayReqd, pnpBond, gapBid, gapEst, onHold, complete, payReqd, payReqdNote, addInfo, storedMat, billingDate, c3, lcpTracker, safetyBadging, archRepID, masterContract);
 
-                    int insertedNoteId = dbConnection.RunQueryToCreateNote(sqlquery, notesPK, notesPkDesc, notesNote, notesDateAdded, user);
+                    TempProject.ID = insertedProjectID;
+
+                    MessageBox.Show("New Project is added successfully", "Save", MessageBoxButton.OK, MessageBoxImage.Information);
+                    ActionState = "Update";
                 }
+                else
+                {
+                    sqlquery = "UPDATE tblProjects SET Project_Name=@ProjectName, Job_No=@JobNo, Estimator_ID=@EstimatorID, PC_ID=@PcID, Customer_ID=@CustomerID, CC_ID=@CcID, Architect_ID=@ArchitectID, Crew_ID=@CrewID, Address=@Address, City=@City, State=@State, Zip=@Zip, Date_Completed=@DateCompleted, Target_Date=@TargetDate, BackgroundCheck=@BackgroundCheck, CIP_Project=@CipProject, CertPay_Reqd=@CertPayReqd, PnP_Bond=@PnpBond, GapBid_Incl=@GapBid, GapEst_Incl=@GapEst, On_Hold=@OnHold, Complete=@Complete, Pay_Reqd=@PayReqd, Pay_Reqd_Note=@PayReqdNote, Addtl_Info=@AddInfo, Stored_Materials=@StoredMaterial, Billing_Date=@BillingDate, C3=@C3, LCPTracker=@LcpTracker, Safety_Badging=@SafetyBadging, Arch_Rep_ID=@ArchRepID, Master_Contract=@MasterContract WHERE Project_ID=@ProjectID";
 
-                ActionState = "Update";
-            } else
-            {
-                Console.WriteLine("Update Project");
-                sqlquery = "UPDATE tblProjects SET Project_Name=@ProjectName, Job_No=@JobNo, Estimator_ID=@EstimatorID, PC_ID=@PcID, Customer_ID=@CustomerID, CC_ID=@CcID, Architect_ID=@ArchitectID, Crew_ID=@CrewID, Address=@Address, City=@City, State=@State, Zip=@Zip, Date_Completed=@DateCompleted, Target_Date=@TargetDate, BackgroundCheck=@BackgroundCheck, CIP_Project=@CipProject, CertPay_Reqd=@CertPayReqd, PnP_Bond=@PnpBond, GapBid_Incl=@GapBid, GapEst_Incl=@GapEst, On_Hold=@OnHold, Complete=@Complete, Pay_Reqd=@PayReqd, Pay_Reqd_Note=@PayReqdNote, Addtl_Info=@AddInfo, Stored_Materials=@StoredMaterial, Billing_Date=@BillingDate, C3=@C3, LCPTracker=@LcpTracker, Safety_Badging=@SafetyBadging, Arch_Rep_ID=@ArchRepID, Master_Contract=@MasterContract WHERE Project_ID=@ProjectID";
+                    cmd = dbConnection.RunQueryToUpdateProject(sqlquery, name, jobNo, estimatorID, pcID, customerID, ccID, architectID, crewID, address, city, state, zip, dateCompleted, targetDate, backgroundCheck, cip, certPayReqd, pnpBond, gapBid, gapEst, onHold, complete, payReqd, payReqdNote, addInfo, storedMat, billingDate, c3, lcpTracker, safetyBadging, archRepID, masterContract, projectID);
 
-                string name = TempProject.ProjectName;
-                string jobNo = TempProject.JobNo;
-                int estimatorID = TempProject.EstimatorID;
-                int pcID = TempProject.ProjectCoordID;
-                int customerID = TempProject.CustomerID;
-                int ccID = TempProject.SubmittalContactID;
-                int architectID = TempProject.ArchitectID;
-                int crewID = TempProject.CrewID;
-                string address = TempProject.Address;
-                string city = TempProject.City;
-                string state = TempProject.State;
-                string zip = TempProject.Zip;
-                DateTime dateCompleted = TempProject.DateCompleted;
-                DateTime targetDate = TempProject.TargetDate;
-                bool backgroundCheck = TempProject.BackgroundChk;
-                bool cip = TempProject.Cip;
-                bool certPayReqd = TempProject.CertPayRoll;
-                bool pnpBond = TempProject.PnpBond;
-                bool gapBid = TempProject.GapBid;
-                bool gapEst = TempProject.GapEst;
-                bool onHold = TempProject.OnHold;
-                bool complete = TempProject.Complete;
-                bool payReqd = TempProject.PayReqd;
-                string payReqdNote = TempProject.PayReqdNote;
-                string addInfo = TempProject.AddtlInfo;
-                bool storedMat = TempProject.StoredMat;
-                int billingDate = TempProject.BillingDate;
-                bool c3 = TempProject.C3;
-                bool lcpTracker = TempProject.LcpTracker;
-                string safetyBadging = TempProject.SafetyBadging;
-                int archRepID = TempProject.ArchRepID;
-                string masterContract = TempProject.MasterContract;
-                int projectID = TempProject.ID;
-
-                cmd = dbConnection.RunQueryToUpdateProject(sqlquery, name, jobNo, estimatorID, pcID, customerID, ccID, architectID, crewID, address, city, state, zip, dateCompleted, targetDate, backgroundCheck, cip, certPayReqd, pnpBond, gapBid, gapEst, onHold, complete, payReqd, payReqdNote, addInfo, storedMat, billingDate, c3, lcpTracker, safetyBadging, archRepID, masterContract, projectID);
+                    MessageBox.Show("Project is updated successfully", "Save", MessageBoxButton.OK, MessageBoxImage.Information);
+                }
+                projectID = TempProject.ID;
 
                 foreach (Note _note in ProjectNotes)
                 {
-                    Console.WriteLine("_note id->" + _note.NoteID);
-                    if(_note.NoteID == 0)
+                    if (_note.NoteID == 0)
                     {
                         sqlquery = "INSERT INTO tblNotes(Notes_PK, Notes_PK_Desc, Notes_Note, Notes_DateAdded, Notes_User) OUTPUT INSERTED.Notes_ID VALUES (@NotesPK, @NotesDesc, @NotesNote, @NotesDateAdded, @NotesUser)";
 
-                        int notesPK = TempProject.ID;
+                        int notesPK = projectID;
                         string notesPkDesc = "Project";
                         string notesNote = _note.NotesNote;
                         DateTime notesDateAdded = _note.NotesDateAdded;
                         string user = "smile";
 
                         int insertedNoteId = dbConnection.RunQueryToCreateNote(sqlquery, notesPK, notesPkDesc, notesNote, notesDateAdded, user);
-                    } else
+                        _note.NoteID = insertedNoteId;
+                    }
+                    else
                     {
                         sqlquery = "UPDATE tblNotes SET Notes_Note=@NotesNote, Notes_DateAdded=@NotesDateAdded WHERE Notes_ID=@NotesID";
 
@@ -182,16 +172,78 @@ namespace WpfApp.ViewModel
                         string user = "smile";
                         int notesID = _note.NoteID;
                         cmd = dbConnection.RunQueryToUpdateNote(sqlquery, notesNote, notesDateAdded, user, notesID);
-
                     }
                 }
+
+                foreach (ProjectManager _pm in ProjectManagerList)
+                {
+                    int pmID = _pm.ID;
+                    int projPmID = _pm.ProjPmID;
+                    if (projPmID == 0)
+                    {
+                        sqlquery = "INSERT INTO tblProjectPMs(Project_ID, PM_ID) OUTPUT INSERTED.ProjPM_ID VALUES (@ProjectID, @PmID)";
+
+                        int insertedProjPmId = dbConnection.RunQueryToCreateProjPM(sqlquery, projectID, pmID);
+                        _pm.ProjPmID = insertedProjPmId;
+                    }
+                    else
+                    {
+                        sqlquery = "UPDATE tblProjectPMs SET Project_ID=@ProjectID, PM_ID=@PmID WHERE ProjPM_ID=@ProjPmID";
+
+                        cmd = dbConnection.RunQueryToUpdateProjPM(sqlquery, projectID, pmID, projPmID);
+                    }
+                }
+
+                foreach (Superintendent _supt in SuperintendentList)
+                {
+                    int supID = _supt.SupID;
+                    int projSupID = _supt.ProjSupID;
+                    if (projSupID == 0)
+                    {
+                        sqlquery = "INSERT INTO tblProjectSups(Project_ID, Sup_ID) OUTPUT INSERTED.ProjSup_ID VALUES (@ProjectID, @SupID)";
+
+                        int insertedProjSupId = dbConnection.RunQueryToCreateProjSup(sqlquery, projectID, supID);
+                        _supt.ProjSupID = insertedProjSupId;
+                    }
+                    else
+                    {
+                        sqlquery = "UPDATE tblProjectSups SET Project_ID=@ProjectID, Sup_ID=@SupID WHERE ProjSup_ID=@ProjSupID";
+
+                        cmd = dbConnection.RunQueryToUpdateProjSup(sqlquery, projectID, supID, projSupID);
+                    }
+                }
+
+                foreach (ProjectLink _projectLink in ProjectLinks)
+                {
+                    string pathDesc = _projectLink.PathDesc;
+                    string pathName = _projectLink.PathName;
+                    int linkID = _projectLink.LinkID;
+
+                    if (linkID == 0)
+                    {
+                        sqlquery = "INSERT INTO tblProjectLinks(Project_ID, PathDesc, PathName) OUTPUT INSERTED.Link_ID VALUES (@ProjectID, @PathDesc, @PathName)";
+
+                        int insertedProjLinkId = dbConnection.RunQueryToCreateProjectLink(sqlquery, projectID, pathDesc, pathName);
+                        _projectLink.LinkID = insertedProjLinkId;
+                    }
+                    else
+                    {
+                        sqlquery = "UPDATE tblProjectLinks SET Project_ID=@ProjectID, PathDesc=@PathDesc, PathName=@PathName WHERE Link_ID=@LinkID";
+
+                        cmd = dbConnection.RunQueryToUpdateProjectLink(sqlquery, projectID, pathDesc, pathName, linkID);
+                    }
+                }
+            }
+            else
+            {
+                MessageBox.Show("Project Name is required", "Warning", MessageBoxButton.OK, MessageBoxImage.Warning);
             }
         }
 
         private void ClearProject()
         {
             ProjectID = -1;
-
+            ActionState = "New";
             ProjectManagerList.Clear();
             SuperintendentList.Clear();
             ProjectNotes.Clear();
@@ -253,6 +305,7 @@ namespace WpfApp.ViewModel
             TempProject.TotalContractAmt = 0;
             TempProject.PayReqdNote = "";
             TempProject.AddtlInfo = "";
+            TempProject.MasterContract = "";
         }
 
         private void LoadProjects()
@@ -471,7 +524,8 @@ namespace WpfApp.ViewModel
             sda.Fill(ds);
 
             ObservableCollection<Superintendent> st_supt = new ObservableCollection<Superintendent>();
-            st_supt.Add(new Superintendent { SupID = 0, SupName = "New" });
+            ObservableCollection<Superintendent> st_workSupt = new ObservableCollection<Superintendent>();
+            st_workSupt.Add(new Superintendent { SupID = 0, SupName = "New" });
             foreach (DataRow row in ds.Tables[0].Rows)
             {
                 int suptID = int.Parse(row["Sup_ID"].ToString());
@@ -479,9 +533,11 @@ namespace WpfApp.ViewModel
                 string suptCellPhone = row["Sup_CellPhone"].ToString();
                 string suptEmail = row["Sup_Email"].ToString();
                 st_supt.Add(new Superintendent { SupID = suptID, SupName = suptName, SupCellPhone = suptCellPhone, SupEmail = suptEmail });
+                st_workSupt.Add(new Superintendent { SupID = suptID, SupName = suptName, SupCellPhone = suptCellPhone, SupEmail = suptEmail });
             }
 
             Superintendents = st_supt;
+            WorkSuperintendents = st_workSupt;
 
             // ReturnedViaNames
             sqlquery = "SELECT * FROM tblReturnedVia";
@@ -507,7 +563,7 @@ namespace WpfApp.ViewModel
             ds = new DataSet();
             sda.Fill(ds);
             ObservableCollection<ProjectManager> st_pm = new ObservableCollection<ProjectManager>();
-            st_pm.Add(new ProjectManager { ID = 0, PMName = "New" });
+            //st_pm.Add(new ProjectManager { ID = 0, PMName = "New" });
             foreach (DataRow row in ds.Tables[0].Rows)
             {
                 int pmID = int.Parse(row["PM_ID"].ToString());
@@ -684,6 +740,24 @@ namespace WpfApp.ViewModel
             st_masterContracts.Add("Yes");
             st_masterContracts.Add("No");
             MasterContracts = st_masterContracts;
+
+            // Path Desc
+            sqlquery = "SELECT DISTINCT PathDesc FROM tblProjectLinks ORDER BY PathDesc";
+
+            cmd = dbConnection.RunQuryNoParameters(sqlquery);
+            sda = new SqlDataAdapter(cmd);
+            ds = new DataSet();
+            sda.Fill(ds);
+
+            ObservableCollection<PathDescription> sb_pathDesc = new ObservableCollection<PathDescription>();
+
+            foreach (DataRow row in ds.Tables[0].Rows)
+            {
+                string pathDesc = row["PathDesc"].ToString();
+                sb_pathDesc.Add(new PathDescription { PathDesc = pathDesc });
+            }
+
+            PathDescritpions = sb_pathDesc;
         }
 
         private void ChangeProject()
@@ -1381,7 +1455,7 @@ namespace WpfApp.ViewModel
             Contracts = sb_contract;
 
             // Project Manager List
-            sqlquery = "select * from tblProjectManagers RIGHT JOIN (Select PM_ID from tblProjectPMs where Project_ID = "+ ProjectID.ToString() +") AS tblProject ON tblProjectManagers.PM_ID = tblProject.PM_ID";
+            sqlquery = "select tblProjectManagers.*, tblProject.ProjPM_ID from tblProjectManagers RIGHT JOIN (Select * from tblProjectPMs where Project_ID = " + ProjectID.ToString() +") AS tblProject ON tblProjectManagers.PM_ID = tblProject.PM_ID";
 
             cmd = dbConnection.RunQuryNoParameters(sqlquery);
             sda = new SqlDataAdapter(cmd);
@@ -1395,12 +1469,15 @@ namespace WpfApp.ViewModel
                 string pmName = row["PM_Name"].ToString();
                 string pmCellPhone = row["PM_CellPhone"].ToString();
                 string pmEmail = row["PM_Email"].ToString();
+                int projPmID = int.Parse(row["ProjPM_ID"].ToString());
+
                 sb_pm.Add(new ProjectManager
                 {
                     ID = pmID,
                     PMName = pmName,
                     PMCellPhone = pmCellPhone,
-                    PMEmail = pmEmail
+                    PMEmail = pmEmail,
+                    ProjPmID = projPmID
                 });
             }
 
@@ -1423,6 +1500,7 @@ namespace WpfApp.ViewModel
                 string _cellPhone = "";
                 string _email = "";
                 bool _active = false;
+                int _projSupID = 0;
 
                 if (!row.IsNull("Sup_ID"))
                     _supID = int.Parse(row["Sup_ID"].ToString());
@@ -1436,6 +1514,7 @@ namespace WpfApp.ViewModel
                     _email = row["Sup_Email"].ToString();
                 if (!row.IsNull("Active"))
                     _active = row.Field<Boolean>("Active");
+                _projSupID = int.Parse(row["ProjSup_ID"].ToString());
 
                 sb_supt.Add(new Superintendent
                 {
@@ -1444,7 +1523,8 @@ namespace WpfApp.ViewModel
                    SupPhone = _supPhone,
                    SupCellPhone = _cellPhone,
                    SupEmail = _email,
-                   Active = _active
+                   Active = _active,
+                   ProjSupID = _projSupID,
                 });
             }
             SuperintendentList = sb_supt;
@@ -1601,23 +1681,19 @@ namespace WpfApp.ViewModel
             {
                 ProjectLinks = sb_projectLinks;
             }
+        }
 
-            // Path Desc
-            sqlquery = "SELECT DISTINCT PathDesc FROM tblProjectLinks ORDER BY PathDesc";
+        private PathDescription _pathDesc;
 
-            cmd = dbConnection.RunQuryNoParameters(sqlquery);
-            sda = new SqlDataAdapter(cmd);
-            ds = new DataSet();
-            sda.Fill(ds);
-
-            ObservableCollection<string> sb_pathDesc= new ObservableCollection<string>();
-
-            foreach (DataRow row in ds.Tables[0].Rows)
+        public PathDescription PathDesc
+        {
+            get { return _pathDesc; }
+            set
             {
-                sb_pathDesc.Add(row["PathDesc"].ToString());
+                if (value == _pathDesc) return;
+                _pathDesc = value;
+                OnPropertyChanged();
             }
-
-            PathDescritpions = sb_pathDesc;
         }
 
         private int _projectID;
@@ -1657,6 +1733,19 @@ namespace WpfApp.ViewModel
             {
                 if (value == _safetyBadging) return;
                 _safetyBadging = value;
+                OnPropertyChanged();
+            }
+        }
+
+        private ProjectManager _tempPM;
+
+        public ProjectManager TempPM
+        {
+            get { return _tempPM; }
+            set
+            {
+                if (value == _tempPM) return;
+                _tempPM = value;
                 OnPropertyChanged();
             }
         }
@@ -1718,6 +1807,12 @@ namespace WpfApp.ViewModel
         }
 
         public ObservableCollection<Superintendent> Superintendents
+        {
+            get;
+            set;
+        }
+
+        public ObservableCollection<Superintendent> WorkSuperintendents
         {
             get;
             set;
@@ -2004,11 +2099,9 @@ namespace WpfApp.ViewModel
             get { return _projectManagerList; }
             set
             {
-                if (_projectManagerList != value)
-                {
-                    _projectManagerList = value;
-                    OnPropertyChanged();
-                }
+                if (_projectManagerList == value) return;
+                _projectManagerList = value;
+                OnPropertyChanged();
             }
         }
 
@@ -2084,21 +2177,21 @@ namespace WpfApp.ViewModel
             }
         }
 
-        private ObservableCollection<string> _pathDesc;
+        private ObservableCollection<PathDescription> _pathDescriptions;
 
-        public ObservableCollection<string> PathDescritpions
+        public ObservableCollection<PathDescription> PathDescritpions
         {
-            get { return _pathDesc; }
+            get { return _pathDescriptions; }
             set
             {
-                if (_pathDesc != value)
+                if (_pathDescriptions != value)
                 {
-                    _pathDesc = value;
+                    _pathDescriptions = value;
                     OnPropertyChanged();
                 }
             }
         }
-
+        
         private int _workOrderID;
 
         public int WorkOrderID
@@ -2323,6 +2416,9 @@ namespace WpfApp.ViewModel
         public RelayCommand NewProjectCommand { get; set; }
         public RelayCommand AddNewNoteCommand { get; set; }
         public RelayCommand SaveCommand { get; set; }
+        public RelayCommand AddNewPmCommand { get; set; }
+        public RelayCommand AddNewSuptCommand { get; set; }
+        public RelayCommand AddNewProjectLinkCommand { get; set; }
 
         private void ChangeWorkOrder()
         {

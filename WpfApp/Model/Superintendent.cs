@@ -15,6 +15,18 @@ namespace WpfApp.Model
         private string _cellPhone;
         private string _email;
         private bool _active;
+        private int _projSupID;
+
+        public int ProjSupID
+        {
+            get => _projSupID;
+            set
+            {
+                if (value == _projSupID) return;
+                _projSupID = value;
+                OnPropertyChanged();
+            }
+        }
 
         public int SupID
         {

@@ -14,6 +14,9 @@ using System.Drawing;
 using System.Windows.Media;
 using WpfApp.Utils;
 using WpfApp.View.Dialog;
+using Microsoft.Win32;
+using System.IO;
+using System.Linq;
 
 namespace WpfApp
 {
@@ -103,12 +106,31 @@ namespace WpfApp
         private void SelectPaymentComboBoxItem(object sender, MouseButtonEventArgs e)
         {
             ComboBoxItem item = sender as ComboBoxItem;
-            //Payment Payment = new Payment();
-            //CheckBox checkBox = FindComponentHelper.FindVisualParent<CheckBox>
-            //Payment dataObject = item.DataContext as Payment;
-            //dataObject.IsChecked = !dataObject.IsChecked;
+            CheckBox checkBox = FindChild<CheckBox>(item);
 
+            checkBox.IsChecked = !checkBox.IsChecked;
             e.Handled = true;
+        }
+
+        private static T FindChild<T>(DependencyObject parent) where T : DependencyObject
+        {
+            for (int i = 0; i < VisualTreeHelper.GetChildrenCount(parent); i++)
+            {
+                var child = VisualTreeHelper.GetChild(parent, i);
+
+                if (child is T result)
+                {
+                    return result;
+                }
+
+                var descendant = FindChild<T>(child);
+                if (descendant != null)
+                {
+                    return descendant;
+                }
+            }
+
+            return null;
         }
 
         private void SelectPaymentCheckBox(object sender, MouseButtonEventArgs e)
@@ -124,7 +146,7 @@ namespace WpfApp
             {
                 NewCustomerDialog newCustomerDlg = new NewCustomerDialog();
                 newCustomerDlg.WindowStartupLocation = WindowStartupLocation.CenterScreen;
-                CustomerName_CB.SelectedIndex = 1;
+                CustomerName_CB.SelectedIndex = -1;
                 newCustomerDlg.ShowDialog();
             }
         }
@@ -137,7 +159,7 @@ namespace WpfApp
             {
                 NewEstimatorDialog newEstimatorDlg = new NewEstimatorDialog();
                 newEstimatorDlg.WindowStartupLocation = WindowStartupLocation.CenterScreen;
-                comboBox.SelectedIndex = 1;
+                comboBox.SelectedIndex = -1;
                 newEstimatorDlg.ShowDialog();
             }
         }
@@ -151,7 +173,7 @@ namespace WpfApp
                 NewSCDialog newSCDlg = new NewSCDialog();
                 newSCDlg.CustomerID = ProjectVM.TempProject.CustomerID;
                 newSCDlg.WindowStartupLocation = WindowStartupLocation.CenterScreen;
-                comboBox.SelectedIndex = 1;
+                comboBox.SelectedIndex = -1;
                 newSCDlg.ShowDialog();
             }
         }
@@ -164,7 +186,7 @@ namespace WpfApp
             {
                 NewArchitectDialog newArchDlg = new NewArchitectDialog();
                 newArchDlg.WindowStartupLocation = WindowStartupLocation.CenterScreen;
-                comboBox.SelectedIndex = 1;
+                comboBox.SelectedIndex = -1;
                 newArchDlg.ShowDialog();
             }
         }
@@ -172,28 +194,63 @@ namespace WpfApp
         private void PmCB_Changed(object sender, SelectionChangedEventArgs e)
         {
             ComboBox comboBox = sender as ComboBox;
-            int selectedIndex = comboBox.SelectedIndex;
-            if (selectedIndex == 0)
-            {
-                NewPmDialog newPmDlg = new NewPmDialog();
-                newPmDlg.CustomerID = ProjectVM.TempProject.CustomerID;
-                newPmDlg.WindowStartupLocation = WindowStartupLocation.CenterScreen;
-                comboBox.SelectedIndex = 1;
-                newPmDlg.ShowDialog();
-            }
+            //int selectedIndex = comboBox.SelectedIndex;
+            //if (selectedIndex == 0)
+            //{
+            //    NewPmDialog newPmDlg = new NewPmDialog();
+            //    newPmDlg.CustomerID = ProjectVM.TempProject.CustomerID;
+            //    newPmDlg.WindowStartupLocation = WindowStartupLocation.CenterScreen;
+            //    comboBox.SelectedIndex = -1;
+            //    newPmDlg.ShowDialog();
+            //}
+            //else
+            //{
+                ProjectManager pm = comboBox.SelectedItem as ProjectManager;
+                if (PM_DataGrid.SelectedIndex >= 0)
+                {
+                    ProjectManager originPM = ProjectVM.ProjectManagerList[PM_DataGrid.SelectedIndex];
+                    pm.ProjPmID = originPM.ProjPmID;
+                    ProjectVM.ProjectManagerList[PM_DataGrid.SelectedIndex] = pm;
+                }
+            //}
         }
 
         private void SuptCB_Changed(object sender, SelectionChangedEventArgs e)
         {
             ComboBox comboBox = sender as ComboBox;
             int selectedIndex = comboBox.SelectedIndex;
+
+            Superintendent supt = comboBox.SelectedItem as Superintendent;
+            if (Supt_DataGrid.SelectedIndex >= 0)
+            {
+                Superintendent originSupt = ProjectVM.SuperintendentList[Supt_DataGrid.SelectedIndex];
+                supt.ProjSupID = originSupt.ProjSupID;
+                ProjectVM.SuperintendentList[Supt_DataGrid.SelectedIndex] = supt;
+            }
+        }
+
+        private void WorkSuptCB_Changed(object sender, SelectionChangedEventArgs e)
+        {
+            ComboBox comboBox = sender as ComboBox;
+            int selectedIndex = comboBox.SelectedIndex;
+
             if (selectedIndex == 0)
             {
                 NewSuptDialog newSuptDlg = new NewSuptDialog();
                 newSuptDlg.CustomerID = ProjectVM.TempProject.CustomerID;
                 newSuptDlg.WindowStartupLocation = WindowStartupLocation.CenterScreen;
-                comboBox.SelectedIndex = 1;
+                comboBox.SelectedIndex = -1;
                 newSuptDlg.ShowDialog();
+            }
+            else
+            {
+                Superintendent supt = comboBox.SelectedItem as Superintendent;
+                if (Supt_DataGrid.SelectedIndex >= 0)
+                {
+                    Superintendent originSupt = ProjectVM.SuperintendentList[Supt_DataGrid.SelectedIndex];
+                    supt.ProjSupID = originSupt.ProjSupID;
+                    ProjectVM.SuperintendentList[Supt_DataGrid.SelectedIndex] = supt;
+                }
             }
         }
 
@@ -205,7 +262,7 @@ namespace WpfApp
             {
                 NewProjectCrdDialog newProjectCrdDlg = new NewProjectCrdDialog();
                 newProjectCrdDlg.WindowStartupLocation = WindowStartupLocation.CenterScreen;
-                comboBox.SelectedIndex = 1;
+                comboBox.SelectedIndex = -1;
                 newProjectCrdDlg.ShowDialog();
             }
         }
@@ -218,7 +275,7 @@ namespace WpfApp
             {
                 NewArchRepDialog newArchRepDlg = new NewArchRepDialog();
                 newArchRepDlg.WindowStartupLocation = WindowStartupLocation.CenterScreen;
-                comboBox.SelectedIndex = 1;
+                comboBox.SelectedIndex = -1;
                 newArchRepDlg.ShowDialog();
             }
         }
@@ -231,7 +288,7 @@ namespace WpfApp
             {
                 NewSovDialog newSovDlg = new NewSovDialog();
                 newSovDlg.WindowStartupLocation = WindowStartupLocation.CenterScreen;
-                comboBox.SelectedIndex = 1;
+                comboBox.SelectedIndex = -1;
                 newSovDlg.ShowDialog();
             }
         }
@@ -244,37 +301,37 @@ namespace WpfApp
             {
                 newItem.IsEnabled = false;
             }
-            CustomerName_CB.SelectedIndex = 1;
+            CustomerName_CB.SelectedIndex = -1;
         }
 
         private void EstCombo_Loaded(object sender, RoutedEventArgs e)
         {
             Estimator_CB.SelectionChanged += EstimatorCB_Changed;
-            Estimator_CB.SelectedIndex = 1;
+            Estimator_CB.SelectedIndex = -1;
         }
 
         private void ScCombo_Loaded(object sender, RoutedEventArgs e)
         {
             SubContact_CB.SelectionChanged += SubContactCB_Changed;
-            SubContact_CB.SelectedIndex = 1;
+            SubContact_CB.SelectedIndex = -1;
         }
 
         private void ArchCombo_Loaded(object sender, RoutedEventArgs e)
         {
             Architect_CB.SelectionChanged += ArchCB_Changed;
-            Architect_CB.SelectedIndex = 1;
+            Architect_CB.SelectedIndex = -1;
         }
 
         private void PcCombo_Loaded(object sender, RoutedEventArgs e)
         {
             ProjectCoord_CB.SelectionChanged += ProjectCrdCB_Changed;
-            ProjectCoord_CB.SelectedIndex = 1;
+            ProjectCoord_CB.SelectedIndex = -1;
         }
 
         private void ArchRepCombo_Loaded(object sender, RoutedEventArgs e)
         {
             ArchRep_CB.SelectionChanged += ArchRepCB_Changed;
-            ArchRep_CB.SelectedIndex = 1;
+            ArchRep_CB.SelectedIndex = -1;
         }
 
         private void MaterialCB_Changed(object sender, SelectionChangedEventArgs e)
@@ -285,7 +342,7 @@ namespace WpfApp
             {
                 NewMaterialDialog newMatDlg = new NewMaterialDialog();
                 newMatDlg.WindowStartupLocation = WindowStartupLocation.CenterScreen;
-                comboBox.SelectedIndex = 1;
+                comboBox.SelectedIndex = -1;
                 newMatDlg.ShowDialog();
             }
         }
@@ -298,7 +355,7 @@ namespace WpfApp
             {
                 NewManufDialog newManufDlg = new NewManufDialog();
                 newManufDlg.WindowStartupLocation = WindowStartupLocation.CenterScreen;
-                comboBox.SelectedIndex = 1;
+                comboBox.SelectedIndex = -1;
                 newManufDlg.ShowDialog();
             }
         }
@@ -311,7 +368,7 @@ namespace WpfApp
             {
                 NewFreightDialog newFreightDlg = new NewFreightDialog();
                 newFreightDlg.WindowStartupLocation = WindowStartupLocation.CenterScreen;
-                comboBox.SelectedIndex = 1;
+                comboBox.SelectedIndex = -1;
                 newFreightDlg.ShowDialog();
             }
         }
@@ -319,9 +376,9 @@ namespace WpfApp
         private void CrewCombo_Loaded(object sender, RoutedEventArgs e)
         {
             WorkCrew_CB.SelectionChanged += CrewCB_Changed;
-            WorkCrew_CB.SelectedIndex = 1;
+            WorkCrew_CB.SelectedIndex = -1;
             Crew_CB.SelectionChanged += CrewCB_Changed;
-            Crew_CB.SelectedIndex = 1;
+            Crew_CB.SelectedIndex = -1;
         }
 
         private void CrewCB_Changed(object sender, SelectionChangedEventArgs e)
@@ -332,15 +389,15 @@ namespace WpfApp
             {
                 NewCrewDialog newCrewDlg = new NewCrewDialog();
                 newCrewDlg.WindowStartupLocation = WindowStartupLocation.CenterScreen;
-                comboBox.SelectedIndex = 1;
+                comboBox.SelectedIndex = -1;
                 newCrewDlg.ShowDialog();
             }
         }
 
         private void SuptCombo_Loaded(object sender, RoutedEventArgs e)
         {
-            WorkSupt_CB.SelectionChanged += SuptCB_Changed;
-            WorkSupt_CB.SelectedIndex = 1;
+            WorkSupt_CB.SelectionChanged += WorkSuptCB_Changed;
+            WorkSupt_CB.SelectedIndex = -1;
         }
 
         private void RemoveNoteItem(object sender, RoutedEventArgs e)
@@ -350,10 +407,69 @@ namespace WpfApp
             ProjectVM.ProjectNotes.RemoveAt(selectedIndex);
         }
 
-        private void PaymentCB_Changed(object sender, SelectionChangedEventArgs e)
+        private void RemoveDescItem(object sender, RoutedEventArgs e)
         {
-            //Payment_CB.Text = "111";
-            //Console.WriteLine("12345678");
+            int selectedIndex = ProjectLink_DataGrid.SelectedIndex;
+            if (selectedIndex != -1)
+            {
+                ProjectVM.ProjectLinks.RemoveAt(selectedIndex);
+            }
+        }
+
+        private void RemovePmItem(object sender, RoutedEventArgs e)
+        {
+            int selectedIndex = PM_DataGrid.SelectedIndex;
+            if (selectedIndex != -1)
+            {
+                ProjectVM.ProjectManagerList.RemoveAt(selectedIndex);
+            }
+        }
+
+        private void RemoveSupItem(object sender, RoutedEventArgs e)
+        {
+            int selectedIndex = Supt_DataGrid.SelectedIndex;
+            if (selectedIndex != -1)
+            {
+                ProjectVM.SuperintendentList.RemoveAt(selectedIndex);
+            }
+        }
+
+        private void Project_FolderSelector(object sender, RoutedEventArgs e)
+        {
+            System.Windows.Forms.FolderBrowserDialog folderDialog = new System.Windows.Forms.FolderBrowserDialog();
+            System.Windows.Forms.DialogResult result = folderDialog.ShowDialog();
+            ProjectLink projectLink = ProjectLink_DataGrid.SelectedItem as ProjectLink;
+
+            string currentFilePath = Path.GetDirectoryName(System.Reflection.Assembly.GetExecutingAssembly().Location);
+
+            if (result == System.Windows.Forms.DialogResult.OK)
+            {
+                string selectedFolder = folderDialog.SelectedPath;
+                projectLink.PathName = selectedFolder;
+            }
+        }
+
+        private void Project_FileSelector(object sender, RoutedEventArgs e)
+        {
+            Button button = sender as Button;
+            ProjectLink projectLink = ProjectLink_DataGrid.SelectedItem as ProjectLink;
+            OpenFileDialog openFileDialog = new OpenFileDialog();
+
+            if (openFileDialog.ShowDialog() == true)
+            {
+                string selectedFileName = openFileDialog.FileName;
+                projectLink.PathName = selectedFileName;
+            }
+        }
+       
+        private void CheckBox_HandleEvent(object sender, RoutedEventArgs e)
+        {
+            e.Handled = false;
+        }
+
+        private void CheckBox_PreviewClick(object sender, MouseButtonEventArgs e)
+        {
+            e.Handled = true;
         }
     }
 }

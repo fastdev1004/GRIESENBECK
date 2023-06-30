@@ -1337,22 +1337,22 @@ namespace WpfApp.Utils
                     if (!string.IsNullOrEmpty(jobNo))
                         cmd.Parameters.AddWithValue("@JobNo", jobNo);
                     else cmd.Parameters.AddWithValue("@JobNo", DBNull.Value);
-                    if(estimatorID != 0)
+                    if(estimatorID != -1)
                         cmd.Parameters.AddWithValue("@EstimatorID", estimatorID);
                     else cmd.Parameters.AddWithValue("@EstimatorID", DBNull.Value);
-                    if (pcID != 0)
+                    if (pcID != -1)
                         cmd.Parameters.AddWithValue("@PcID", pcID);
                     else cmd.Parameters.AddWithValue("@PcID", DBNull.Value);
-                    if (customerID != 0)
+                    if (customerID != -1)
                         cmd.Parameters.AddWithValue("@CustomerID", customerID);
                     else cmd.Parameters.AddWithValue("@CustomerID", DBNull.Value);
-                    if (ccID != 0)
+                    if (ccID != -1)
                         cmd.Parameters.AddWithValue("@CcID", ccID);
                     else cmd.Parameters.AddWithValue("@CcID", DBNull.Value);
-                    if (architectID != 0)
+                    if (architectID != -1)
                         cmd.Parameters.AddWithValue("@ArchitectID", architectID);
                     else cmd.Parameters.AddWithValue("@ArchitectID", DBNull.Value);
-                    if (crewID != 0)
+                    if (crewID != -1)
                         cmd.Parameters.AddWithValue("@CrewID", crewID);
                     else cmd.Parameters.AddWithValue("@CrewID", DBNull.Value);
                     if (!string.IsNullOrEmpty(address))
@@ -1397,7 +1397,7 @@ namespace WpfApp.Utils
                     if (!string.IsNullOrEmpty(safetyBadging))
                         cmd.Parameters.AddWithValue("@SafetyBadging", safetyBadging);
                     else cmd.Parameters.AddWithValue("@SafetyBadging", DBNull.Value);
-                    if (archRepID != 0)
+                    if (archRepID != -1)
                         cmd.Parameters.AddWithValue("@ArchRepID", archRepID);
                     else cmd.Parameters.AddWithValue("@ArchRepID", DBNull.Value);
                     if (!string.IsNullOrEmpty(masterContract))
@@ -1522,6 +1522,171 @@ namespace WpfApp.Utils
                         cmd.Parameters.AddWithValue("@MasterContract", masterContract);
                     else cmd.Parameters.AddWithValue("@MasterContract", DBNull.Value);
                     cmd.Parameters.AddWithValue("@ProjectID", projectID);
+
+                    cmd.ExecuteNonQuery();
+                    connection.Close();
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex);
+            }
+            return cmd;
+        }
+
+        // Create ProjPM
+        public int RunQueryToCreateProjPM(string query, int projectID, int pmID)
+        {
+            try
+            {
+                connection.Open();
+                if (connection != null)
+                {
+                    cmd = connection.CreateCommand();
+                    cmd.CommandType = CommandType.Text;
+                    cmd.CommandText = query;
+
+                    cmd.Parameters.AddWithValue("@ProjectID", projectID);
+                    cmd.Parameters.AddWithValue("@PmID", pmID);
+
+                    insertedID = (int)cmd.ExecuteScalar();
+                    connection.Close();
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex);
+            }
+            return insertedID;
+        }
+
+        // Update ProjPM
+        public SqlCommand RunQueryToUpdateProjPM(string query, int projectID, int pmID, int projPmID)
+        {
+            try
+            {
+                connection.Open();
+                if (connection != null)
+                {
+                    cmd = connection.CreateCommand();
+                    cmd.CommandType = CommandType.Text;
+                    cmd.CommandText = query;
+
+                    cmd.Parameters.AddWithValue("@ProjectID", projectID);
+                    cmd.Parameters.AddWithValue("@PmID", pmID);
+                    cmd.Parameters.AddWithValue("@ProjPmID", projPmID);
+
+                    cmd.ExecuteNonQuery();
+                    connection.Close();
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex);
+            }
+            return cmd;
+        }
+
+        // Create ProjSup
+        public int RunQueryToCreateProjSup(string query, int projectID, int supID)
+        {
+            try
+            {
+                connection.Open();
+                if (connection != null)
+                {
+                    cmd = connection.CreateCommand();
+                    cmd.CommandType = CommandType.Text;
+                    cmd.CommandText = query;
+
+                    cmd.Parameters.AddWithValue("@ProjectID", projectID);
+                    cmd.Parameters.AddWithValue("@SupID", supID);
+
+                    insertedID = (int)cmd.ExecuteScalar();
+                    connection.Close();
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex);
+            }
+            return insertedID;
+        }
+
+        // Update ProjSup
+        public SqlCommand RunQueryToUpdateProjSup(string query, int projectID, int supID, int projSupID)
+        {
+            try
+            {
+                connection.Open();
+                if (connection != null)
+                {
+                    cmd = connection.CreateCommand();
+                    cmd.CommandType = CommandType.Text;
+                    cmd.CommandText = query;
+
+                    cmd.Parameters.AddWithValue("@ProjectID", projectID);
+                    cmd.Parameters.AddWithValue("@SupID", supID);
+                    cmd.Parameters.AddWithValue("@ProjSupID", projSupID);
+
+                    cmd.ExecuteNonQuery();
+                    connection.Close();
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex);
+            }
+            return cmd;
+        }
+
+        // Create ProjectLink
+        public int RunQueryToCreateProjectLink(string query, int projectID, string pathDesc, string pathName)
+        {
+            try
+            {
+                connection.Open();
+                if (connection != null)
+                {
+                    cmd = connection.CreateCommand();
+                    cmd.CommandType = CommandType.Text;
+                    cmd.CommandText = query;
+
+                    cmd.Parameters.AddWithValue("@ProjectID", projectID);
+                    if(!string.IsNullOrEmpty(pathDesc))
+                        cmd.Parameters.AddWithValue("@PathDesc", pathDesc);
+                    else cmd.Parameters.AddWithValue("@PathDesc", DBNull.Value);
+                    if(!string.IsNullOrEmpty(pathName))
+                        cmd.Parameters.AddWithValue("@PathName", pathName);
+                    else cmd.Parameters.AddWithValue("@PathName", DBNull.Value);
+
+                    insertedID = (int)cmd.ExecuteScalar();
+                    connection.Close();
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex);
+            }
+            return insertedID;
+        }
+
+        // Update ProjectLink
+        public SqlCommand RunQueryToUpdateProjectLink(string query, int projectID, string pathDesc, string pathName, int linkID)
+        {
+            try
+            {
+                connection.Open();
+                if (connection != null)
+                {
+                    cmd = connection.CreateCommand();
+                    cmd.CommandType = CommandType.Text;
+                    cmd.CommandText = query;
+
+                    cmd.Parameters.AddWithValue("@ProjectID", projectID);
+                    cmd.Parameters.AddWithValue("@PathDesc", pathDesc);
+                    cmd.Parameters.AddWithValue("@PathName", pathName);
+                    cmd.Parameters.AddWithValue("@LinkID", linkID);
 
                     cmd.ExecuteNonQuery();
                     connection.Close();

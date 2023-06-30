@@ -1023,10 +1023,8 @@ namespace WpfApp.View
                             }
                             else
                             {
-                                //Console.WriteLine("Labor Desc is existed.");
                                 MessageBox.Show("Labor Desc is existed.");
                             }
-
                         }
                         else
                         {
