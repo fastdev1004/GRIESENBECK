@@ -24,12 +24,6 @@
                 <Setter Property="ContextMenu" Value="{StaticResource RowContextMenu}" />
                 <Setter Property="Margin" Value="0, 4" />
             </Style>
-            <ContextMenu x:Key="PmContextMenu">
-                <MenuItem Header="New" Command="{Binding AddNewPmCommand}"/>
-            </ContextMenu>
-            <ContextMenu x:Key="SuptContextMenu">
-                <MenuItem Header="New" Command="{Binding AddNewSuptCommand}" />
-            </ContextMenu>
             <ContextMenu x:Key="ProjectLinkContextMenu">
                 <MenuItem Header="New" Command="{Binding AddNewProjectLinkCommand}"/>
             </ContextMenu>
@@ -40,6 +34,9 @@
                 <Setter Property="ContextMenu" Value="{StaticResource DescRowContextMenu}" />
                 <Setter Property="Margin" Value="0, 4" />
             </Style>
+            <ContextMenu x:Key="PmContextMenu">
+                <MenuItem Header="New" Command="{Binding AddNewPmCommand}"/>
+            </ContextMenu>
             <ContextMenu x:Key="PmRowContextMenu">
                 <MenuItem Header="Delete" Click="RemovePmItem"/>
             </ContextMenu>
@@ -47,6 +44,9 @@
                 <Setter Property="ContextMenu" Value="{StaticResource PmRowContextMenu}" />
                 <Setter Property="Margin" Value="0, 4" />
             </Style>
+            <ContextMenu x:Key="SuptContextMenu">
+                <MenuItem Header="New" Command="{Binding AddNewSuptCommand }" />
+            </ContextMenu>
             <ContextMenu x:Key="SupRowContextMenu">
                 <MenuItem Header="Delete" Click="RemoveSupItem" />
             </ContextMenu>
@@ -87,7 +87,7 @@
                 </Grid.ColumnDefinitions>
                 <WrapPanel>
                     <Label>Select Project:</Label>
-                    <ComboBox IsEditable="True" Width="400" ItemsSource="{Binding Projects, Mode=TwoWay}" DisplayMemberPath="ProjectName" SelectedValuePath="ID" SelectedValue="{Binding ProjectID, Mode=TwoWay}" IsEnabled="{Binding ProjectSelectionEnable}" />
+                    <ComboBox IsEditable="True" Width="400" ItemsSource="{Binding Projects, Mode=TwoWay}" DisplayMemberPath="ProjectName" SelectedValuePath="ID" SelectedValue="{Binding ProjectID, Mode=TwoWay}" IsEnabled="{Binding ProjectSelectionEnable}" Validation.ErrorTemplate="{x:Null}" />
                 </WrapPanel>
                 <WrapPanel Grid.Column="1" HorizontalAlignment="Left">
                     <Button Content="New" Command="{Binding NewProjectCommand}" />
@@ -563,7 +563,7 @@
                                             <RowDefinition Height="*" />
                                         </Grid.RowDefinitions>
                                         <Label Content="Project Manager" HorizontalAlignment="Left" />
-                                        <DataGrid x:Name="PM_DataGrid" Grid.Row="1" ItemsSource="{Binding ProjectManagerList, Mode=TwoWay}" GridLinesVisibility="None" AutoGenerateColumns="False" HeadersVisibility="None" BorderThickness="0" Background="White" Padding="4,0" CanUserAddRows="False" ContextMenu="{StaticResource PmContextMenu}" RowStyle="{StaticResource PmRowStyle}">
+                                        <DataGrid x:Name="PM_DataGrid" Grid.Row="1" ItemsSource="{Binding ProjectManagerList, Mode=TwoWay}" GridLinesVisibility="None" AutoGenerateColumns="False" HeadersVisibility="None" BorderThickness="0" Background="White" CanUserAddRows="False" ContextMenu="{StaticResource PmContextMenu}" RowStyle="{StaticResource PmRowStyle}">
                                             <DataGrid.Resources>
                                                 <Style TargetType="DataGridColumnHeader" BasedOn="{StaticResource GridColumnHeaderBase}">
                                                     <Setter Property="Background" Value="#4BACC6" />
@@ -583,21 +583,19 @@
                                                 <DataGridTemplateColumn Header="Installation Notes" Width="*">
                                                     <DataGridTemplateColumn.CellTemplate>
                                                         <DataTemplate>
-                                                            <Grid>
-                                                                <Grid Style="{StaticResource ParentGridStyle}">
-                                                                    <Grid.RowDefinitions>
-                                                                        <RowDefinition Height="Auto" />
-                                                                        <RowDefinition Height="Auto" />
-                                                                    </Grid.RowDefinitions>
-                                                                    <ComboBox x:Name="PmName_CB" Height="26" ItemsSource="{Binding DataContext.ProjectManagers, Mode=TwoWay, RelativeSource={RelativeSource AncestorType=local:ProjectView}}" DisplayMemberPath="PMName" SelectedValuePath="ID" IsEditable="False" SelectedValue="{Binding ID, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" SelectionChanged="PmCB_Changed" Validation.ErrorTemplate="{x:Null}" />
-                                                                    <Grid Grid.Row="1">
-                                                                        <Grid.ColumnDefinitions>
-                                                                            <ColumnDefinition Width="1.5*" />
-                                                                            <ColumnDefinition Width="4*" />
-                                                                        </Grid.ColumnDefinitions>
-                                                                        <Label Content="{Binding PMCellPhone, Mode=TwoWay}" HorizontalAlignment="Left" />
-                                                                        <Label Grid.Column="1" Content="{Binding PMEmail, Mode=TwoWay}" />
-                                                                    </Grid>
+                                                            <Grid Style="{StaticResource ParentGridStyle}">
+                                                                <Grid.RowDefinitions>
+                                                                    <RowDefinition Height="Auto" />
+                                                                    <RowDefinition Height="Auto" />
+                                                                </Grid.RowDefinitions>
+                                                                <ComboBox x:Name="PmName_CB" Height="26" ItemsSource="{Binding DataContext.ProjectManagers, RelativeSource={RelativeSource AncestorType=local:ProjectView}}" DisplayMemberPath="PMName" SelectedValuePath="ID" IsEditable="False" SelectedValue="{Binding ID, Mode=TwoWay}" Validation.ErrorTemplate="{x:Null}" Loaded="PmCombo_Loaded" SelectionChanged="PmCB_Changed" />
+                                                                <Grid Grid.Row="1">
+                                                                    <Grid.ColumnDefinitions>
+                                                                        <ColumnDefinition Width="1.5*" />
+                                                                        <ColumnDefinition Width="4*" />
+                                                                    </Grid.ColumnDefinitions>
+                                                                    <Label Content="{Binding PMCellPhone, Mode=TwoWay}" HorizontalAlignment="Left" />
+                                                                    <Label Grid.Column="1" Content="{Binding PMEmail, Mode=TwoWay}" />
                                                                 </Grid>
                                                             </Grid>
                                                         </DataTemplate>
@@ -632,21 +630,19 @@
                                                 <DataGridTemplateColumn Header="Installation Notes" Width="*">
                                                     <DataGridTemplateColumn.CellTemplate>
                                                         <DataTemplate>
-                                                            <Grid>
-                                                                <Grid Style="{StaticResource ParentGridStyle}">
-                                                                    <Grid.RowDefinitions>
-                                                                        <RowDefinition Height="Auto" />
-                                                                        <RowDefinition Height="Auto" />
-                                                                    </Grid.RowDefinitions>
-                                                                    <ComboBox x:Name="Supt_CB" Height="26" ItemsSource="{Binding DataContext.Superintendents, RelativeSource={RelativeSource AncestorType=local:ProjectView}}" DisplayMemberPath="SupName" SelectedValuePath="SupID" IsEditable="False" SelectedValue="{Binding SupID, Mode=TwoWay}" Validation.ErrorTemplate="{x:Null}" Loaded="SuptCombo_Loaded" SelectionChanged="SuptCB_Changed" />
-                                                                    <Grid Grid.Row="1">
-                                                                        <Grid.ColumnDefinitions>
-                                                                            <ColumnDefinition Width="1.5*" />
-                                                                            <ColumnDefinition Width="4*" />
-                                                                        </Grid.ColumnDefinitions>
-                                                                        <Label Content="{Binding SupCellPhone, Mode=TwoWay}" HorizontalAlignment="Left" />
-                                                                        <Label Grid.Column="1" Content="{Binding SupEmail, Mode=TwoWay}" />
-                                                                    </Grid>
+                                                            <Grid Style="{StaticResource ParentGridStyle}">
+                                                                <Grid.RowDefinitions>
+                                                                    <RowDefinition Height="Auto" />
+                                                                    <RowDefinition Height="Auto" />
+                                                                </Grid.RowDefinitions>
+                                                                <ComboBox x:Name="Supt_CB" Height="26" ItemsSource="{Binding DataContext.Superintendents, RelativeSource={RelativeSource AncestorType=local:ProjectView}}" DisplayMemberPath="SupName" SelectedValuePath="SupID" IsEditable="False" SelectedValue="{Binding SupID, Mode=TwoWay}" Validation.ErrorTemplate="{x:Null}" Loaded="SuptCombo_Loaded" SelectionChanged="SuptCB_Changed" />
+                                                                <Grid Grid.Row="1">
+                                                                    <Grid.ColumnDefinitions>
+                                                                        <ColumnDefinition Width="1.5*" />
+                                                                        <ColumnDefinition Width="4*" />
+                                                                    </Grid.ColumnDefinitions>
+                                                                    <Label Content="{Binding SupCellPhone, Mode=TwoWay}" HorizontalAlignment="Left" />
+                                                                    <Label Grid.Column="1" Content="{Binding SupEmail, Mode=TwoWay}" />
                                                                 </Grid>
                                                             </Grid>
                                                         </DataTemplate>
@@ -792,7 +788,7 @@
                                 <ColumnDefinition Width="1*" />
                                 <ColumnDefinition Width="1*" />
                             </Grid.ColumnDefinitions>
-                            <DataGrid ItemsSource="{Binding SovCOs, Mode=TwoWay}" GridLinesVisibility="None" AutoGenerateColumns="False" HeadersVisibility="Column" BorderThickness="0" Background="White">
+                            <DataGrid ItemsSource="{Binding SovCOs, Mode=TwoWay}" GridLinesVisibility="None" AutoGenerateColumns="False" HeadersVisibility="Column" BorderThickness="0" Background="White" CanUserAddRows="False">
                                 <DataGrid.Resources>
                                     <Style TargetType="DataGridColumnHeader" BasedOn="{StaticResource GridColumnHeaderBase}">
                                         <Setter Property="Background" Value="#5C83B4" />
@@ -876,7 +872,7 @@
                                     </Style>
                                 </TabControl.Resources>
                                 <TabItem Header="Materials" HorizontalAlignment="Left" Width="114">
-                                    <DataGrid Margin="10" ItemsSource="{Binding SovMaterials, Mode=TwoWay}" GridLinesVisibility="None" AutoGenerateColumns="False" HeadersVisibility="Column" BorderThickness="0" Background="White">
+                                    <DataGrid Margin="10" ItemsSource="{Binding SovMaterials, Mode=TwoWay}" GridLinesVisibility="None" AutoGenerateColumns="False" HeadersVisibility="Column" BorderThickness="0" Background="White" CanUserAddRows="False">
                                         <DataGrid.Resources>
                                             <Style TargetType="DataGridColumnHeader" BasedOn="{StaticResource GridColumnHeaderBase}">
                                                 <Setter Property="Background" Value="#BD623D" />
@@ -982,7 +978,7 @@
                                     </DataGrid>
                                 </TabItem>
                                 <TabItem Header="Labor">
-                                    <DataGrid Margin="10" ItemsSource="{Binding ProjectLabors}" GridLinesVisibility="None" AutoGenerateColumns="False" HeadersVisibility="Column" BorderThickness="0" Background="White">
+                                    <DataGrid Margin="10" ItemsSource="{Binding ProjectLabors}" GridLinesVisibility="None" AutoGenerateColumns="False" HeadersVisibility="Column" BorderThickness="0" Background="White" CanUserAddRows="False">
                                         <DataGrid.Resources>
                                             <Style TargetType="DataGridColumnHeader" BasedOn="{StaticResource GridColumnHeaderBase}">
                                                 <Setter Property="Background" Value="#7A9F35" />
@@ -1857,7 +1853,7 @@
                                         <Label Grid.Row="3" Content="Sched Compl Date:" Margin="0,4,0,4" />
                                         <DatePicker SelectedDate="{Binding WO_SchedComplDate, Mode=TwoWay}" x:Name="SchedComplDate_Datepicker" Grid.Row="3" Grid.Column="1" Width="100" Margin="0,4,0,4" HorizontalAlignment="Left" />
                                         <Label Grid.Row="4" Content="Supt:" Margin="0,4,0,4" />
-                                        <ComboBox x:Name="WorkSupt_CB" SelectedValue="{Binding WO_SuptID, Mode=TwoWay}" ItemsSource="{Binding WorkSuperintendents}" SelectedValuePath="SupID" DisplayMemberPath="SupName" Grid.Row="4" Grid.Column="1" Width="200" HorizontalAlignment="Left" Margin="0,4,0,4" IsEditable="False" Loaded="SuptCombo_Loaded" Validation.ErrorTemplate="{x:Null}" />
+                                        <ComboBox x:Name="WorkSupt_CB" SelectedValue="{Binding WO_SuptID, Mode=TwoWay}" ItemsSource="{Binding NewSuperintendents}" SelectedValuePath="SupID" DisplayMemberPath="SupName" Grid.Row="4" Grid.Column="1" Width="200" HorizontalAlignment="Left" Margin="0,4,0,4" IsEditable="False" Loaded="WorkSuptCombo_Loaded" Validation.ErrorTemplate="{x:Null}" />
                                         <Label Grid.Row="5" Content="Start Date:" Margin="0,4,0,4" />
                                         <DatePicker SelectedDate="{Binding WO_StartDate, Mode=TwoWay}" x:Name="WoStartDate_Datepicker" Grid.Row="5" Grid.Column="1" Width="100" Margin="0,4,0,4" HorizontalAlignment="Left" />
                                         <Label Grid.Row="6" Content="Compl Date:" Margin="0,4,0,4" />

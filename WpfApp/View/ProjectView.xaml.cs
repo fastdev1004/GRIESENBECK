@@ -194,25 +194,33 @@ namespace WpfApp
         private void PmCB_Changed(object sender, SelectionChangedEventArgs e)
         {
             ComboBox comboBox = sender as ComboBox;
-            //int selectedIndex = comboBox.SelectedIndex;
-            //if (selectedIndex == 0)
-            //{
-            //    NewPmDialog newPmDlg = new NewPmDialog();
-            //    newPmDlg.CustomerID = ProjectVM.TempProject.CustomerID;
-            //    newPmDlg.WindowStartupLocation = WindowStartupLocation.CenterScreen;
-            //    comboBox.SelectedIndex = -1;
-            //    newPmDlg.ShowDialog();
-            //}
-            //else
-            //{
-                ProjectManager pm = comboBox.SelectedItem as ProjectManager;
+            int selectedIndex = comboBox.SelectedIndex;
+       
+            ProjectManager pm = comboBox.SelectedItem as ProjectManager;
+
+            if (pm != null)
+            {
                 if (PM_DataGrid.SelectedIndex >= 0)
                 {
                     ProjectManager originPM = ProjectVM.ProjectManagerList[PM_DataGrid.SelectedIndex];
                     pm.ProjPmID = originPM.ProjPmID;
-                    ProjectVM.ProjectManagerList[PM_DataGrid.SelectedIndex] = pm;
+                    if (!string.IsNullOrEmpty(pm.PMName))
+                    {
+                        if (pm.PMName.Equals("New"))
+                        {
+                            NewPmDialog newPmDlg = new NewPmDialog();
+                            newPmDlg.CustomerID = ProjectVM.TempProject.CustomerID;
+                            newPmDlg.WindowStartupLocation = WindowStartupLocation.CenterScreen;
+                            comboBox.SelectedValue = originPM.ID;
+                            newPmDlg.ShowDialog();
+                        }
+                        else
+                        {
+                            ProjectVM.ProjectManagerList[PM_DataGrid.SelectedIndex] = pm;
+                        }
+                    }
                 }
-            //}
+            }
         }
 
         private void SuptCB_Changed(object sender, SelectionChangedEventArgs e)
@@ -221,11 +229,27 @@ namespace WpfApp
             int selectedIndex = comboBox.SelectedIndex;
 
             Superintendent supt = comboBox.SelectedItem as Superintendent;
-            if (Supt_DataGrid.SelectedIndex >= 0)
+            if(supt != null)
             {
-                Superintendent originSupt = ProjectVM.SuperintendentList[Supt_DataGrid.SelectedIndex];
-                supt.ProjSupID = originSupt.ProjSupID;
-                ProjectVM.SuperintendentList[Supt_DataGrid.SelectedIndex] = supt;
+                if (Supt_DataGrid.SelectedIndex >= 0)
+                {
+                    Superintendent originSupt = ProjectVM.SuperintendentList[Supt_DataGrid.SelectedIndex];
+                    supt.ProjSupID = originSupt.ProjSupID;
+                    if (!string.IsNullOrEmpty(supt.SupName))
+                    {
+                        if (supt.SupName.Equals("New"))
+                        {
+                            NewSuptDialog newSuptDlg = new NewSuptDialog();
+                            newSuptDlg.CustomerID = ProjectVM.TempProject.CustomerID;
+                            newSuptDlg.WindowStartupLocation = WindowStartupLocation.CenterScreen;
+                            comboBox.SelectedValue = originSupt.SupID;
+                            newSuptDlg.ShowDialog();
+                        } else
+                        {
+                            ProjectVM.SuperintendentList[Supt_DataGrid.SelectedIndex] = supt;
+                        }
+                    }
+                }
             }
         }
 
@@ -394,7 +418,7 @@ namespace WpfApp
             }
         }
 
-        private void SuptCombo_Loaded(object sender, RoutedEventArgs e)
+        private void WorkSuptCombo_Loaded(object sender, RoutedEventArgs e)
         {
             WorkSupt_CB.SelectionChanged += WorkSuptCB_Changed;
             WorkSupt_CB.SelectedIndex = -1;
@@ -470,6 +494,40 @@ namespace WpfApp
         private void CheckBox_PreviewClick(object sender, MouseButtonEventArgs e)
         {
             e.Handled = true;
+        }
+
+        private void PmCombo_Loaded(object sender, RoutedEventArgs e)
+        {
+            ComboBox comboBox = (ComboBox)sender;
+            DataGridRow row = findComponentHelper.FindDataGridRow(comboBox);
+
+            if (row != null)
+            {
+                ProjectManager data = row.DataContext as ProjectManager;
+
+                if (row.GetIndex() == 0)
+                {
+                    comboBox.ItemsSource = ProjectVM.NewProjectManagers;
+                    comboBox.SelectedValue = data.ID;
+                }
+            }
+        }
+
+        private void SuptCombo_Loaded(object sender, RoutedEventArgs e)
+        {
+            ComboBox comboBox = (ComboBox)sender;
+            DataGridRow row = findComponentHelper.FindDataGridRow(comboBox);
+
+            if (row != null)
+            {
+                Superintendent data = row.DataContext as Superintendent;
+
+                if (row.GetIndex() == 0)
+                {
+                    comboBox.ItemsSource = ProjectVM.NewSuperintendents;
+                    comboBox.SelectedValue = data.SupID;
+                }
+            }
         }
     }
 }

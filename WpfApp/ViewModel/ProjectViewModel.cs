@@ -524,8 +524,8 @@ namespace WpfApp.ViewModel
             sda.Fill(ds);
 
             ObservableCollection<Superintendent> st_supt = new ObservableCollection<Superintendent>();
-            ObservableCollection<Superintendent> st_workSupt = new ObservableCollection<Superintendent>();
-            st_workSupt.Add(new Superintendent { SupID = 0, SupName = "New" });
+            ObservableCollection<Superintendent> st_newSupt = new ObservableCollection<Superintendent>();
+            st_newSupt.Add(new Superintendent { SupID = -1, SupName = "New" });
             foreach (DataRow row in ds.Tables[0].Rows)
             {
                 int suptID = int.Parse(row["Sup_ID"].ToString());
@@ -533,11 +533,11 @@ namespace WpfApp.ViewModel
                 string suptCellPhone = row["Sup_CellPhone"].ToString();
                 string suptEmail = row["Sup_Email"].ToString();
                 st_supt.Add(new Superintendent { SupID = suptID, SupName = suptName, SupCellPhone = suptCellPhone, SupEmail = suptEmail });
-                st_workSupt.Add(new Superintendent { SupID = suptID, SupName = suptName, SupCellPhone = suptCellPhone, SupEmail = suptEmail });
+                st_newSupt.Add(new Superintendent { SupID = suptID, SupName = suptName, SupCellPhone = suptCellPhone, SupEmail = suptEmail });
             }
 
             Superintendents = st_supt;
-            WorkSuperintendents = st_workSupt;
+            NewSuperintendents = st_newSupt;
 
             // ReturnedViaNames
             sqlquery = "SELECT * FROM tblReturnedVia";
@@ -563,7 +563,8 @@ namespace WpfApp.ViewModel
             ds = new DataSet();
             sda.Fill(ds);
             ObservableCollection<ProjectManager> st_pm = new ObservableCollection<ProjectManager>();
-            //st_pm.Add(new ProjectManager { ID = 0, PMName = "New" });
+            ObservableCollection<ProjectManager> st_newPm = new ObservableCollection<ProjectManager>();
+            st_newPm.Add(new ProjectManager { ID = -1, PMName = "New" });
             foreach (DataRow row in ds.Tables[0].Rows)
             {
                 int pmID = int.Parse(row["PM_ID"].ToString());
@@ -577,9 +578,17 @@ namespace WpfApp.ViewModel
                     PMCellPhone = pmCellPhone,
                     PMEmail = pmEmail
                 });
+                st_newPm.Add(new ProjectManager
+                {
+                    ID = pmID,
+                    PMName = pmName,
+                    PMCellPhone = pmCellPhone,
+                    PMEmail = pmEmail
+                });
             }
 
             ProjectManagers = st_pm;
+            NewProjectManagers = st_newPm;
 
             // Manufacturer
             sqlquery = "SELECT Manuf_ID, Manuf_Name FROM tblManufacturers;";
@@ -1793,30 +1802,13 @@ namespace WpfApp.ViewModel
             set;
         }
 
-        private ObservableCollection<ProjectManager> _projectManagers;
+        public ObservableCollection<ProjectManager> ProjectManagers { get; set; }
 
-        public ObservableCollection<ProjectManager> ProjectManagers
-        {
-            get => _projectManagers;
-            set
-            {
-                if (value == _projectManagers) return;
-                _projectManagers = value;
-                OnPropertyChanged();
-            }
-        }
+        public ObservableCollection<ProjectManager> NewProjectManagers { get; set; }
 
-        public ObservableCollection<Superintendent> Superintendents
-        {
-            get;
-            set;
-        }
+        public ObservableCollection<Superintendent> Superintendents { get; set; }
 
-        public ObservableCollection<Superintendent> WorkSuperintendents
-        {
-            get;
-            set;
-        }
+        public ObservableCollection<Superintendent> NewSuperintendents { get; set; }
 
         public ObservableCollection<Manufacturer> Manufacturers
         {
