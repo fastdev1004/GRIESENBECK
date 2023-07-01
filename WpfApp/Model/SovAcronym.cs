@@ -9,14 +9,38 @@ using WpfApp.ViewModel;
 
 namespace WpfApp.Model
 {
-    class SovCO:ViewModelBase
+    class SovAcronym:ViewModelBase
     {
         private string _sovAcronym;
         private int _coItemNo;
         private string _sovDesc;
         private bool _matOnly;
+        private int _projSovID;
+        private int _coID;
 
-        public string SovAcronym
+        public int CoID
+        {
+            get => _coID;
+            set
+            {
+                if (value == _coID) return;
+                _coID = value;
+                OnPropertyChanged();
+            }
+        }
+
+        public int ProjSovID
+        {
+            get => _projSovID;
+            set
+            {
+                if (value == _projSovID) return;
+                _projSovID = value;
+                OnPropertyChanged();
+            }
+        }
+
+        public string SovAcronymName
         {
             get => _sovAcronym;
             set

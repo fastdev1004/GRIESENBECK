@@ -304,19 +304,6 @@ namespace WpfApp
             }
         }
 
-        private void SovCB_Changed(object sender, SelectionChangedEventArgs e)
-        {
-            ComboBox comboBox = sender as ComboBox;
-            int selectedIndex = comboBox.SelectedIndex;
-            if (selectedIndex == 0)
-            {
-                NewSovDialog newSovDlg = new NewSovDialog();
-                newSovDlg.WindowStartupLocation = WindowStartupLocation.CenterScreen;
-                comboBox.SelectedIndex = -1;
-                newSovDlg.ShowDialog();
-            }
-        }
-
         private void CustomerCombo_Loaded(object sender, RoutedEventArgs e)
         {
             CustomerName_CB.SelectionChanged += CustomerCB_Changed;
@@ -526,6 +513,66 @@ namespace WpfApp
                 {
                     comboBox.ItemsSource = ProjectVM.NewSuperintendents;
                     comboBox.SelectedValue = data.SupID;
+                }
+            }
+        }
+
+        private void RemoveSovItem(object sender, RoutedEventArgs e)
+        {
+            int selectedIndex = Sov_DataGird.SelectedIndex;
+            if (selectedIndex != -1)
+            {
+                ProjectVM.SovAcronyms.RemoveAt(selectedIndex);
+            }
+        }
+
+        private void SovCombo_Loaded(object sender, RoutedEventArgs e)
+        {
+            ComboBox comboBox = (ComboBox)sender;
+            DataGridRow row = findComponentHelper.FindDataGridRow(comboBox);
+
+            if (row != null)
+            {
+                SovAcronym data = row.DataContext as SovAcronym;
+
+                if (row.GetIndex() == 0)
+                {
+                    comboBox.ItemsSource = ProjectVM.NewAcronyms;
+                    comboBox.SelectedValue = data.SovAcronymName;
+                }
+            }
+        }
+
+        private void SovCB_Changed(object sender, SelectionChangedEventArgs e)
+        {
+            ComboBox comboBox = sender as ComboBox;
+            int selectedIndex = comboBox.SelectedIndex;
+
+            Acronym acronym = comboBox.SelectedItem as Acronym;
+            DataGridRow row = findComponentHelper.FindDataGridRow(comboBox);
+           
+            if (acronym != null)
+            {
+                
+                if (Sov_DataGird.SelectedIndex >= 0)
+                {
+                    SovAcronym sovAcronym = row.DataContext as SovAcronym;
+                    Acronym originAcronym = ProjectVM.Acronyms[Sov_DataGird.SelectedIndex];
+                    Console.WriteLine("originAcronym.AcronymName->"+ originAcronym.AcronymName);
+                    if (!string.IsNullOrEmpty(originAcronym.AcronymName))
+                    {
+                        if (acronym.AcronymName.Equals("New"))
+                        {
+                            NewSovDialog newSovDlg = new NewSovDialog();
+                            newSovDlg.WindowStartupLocation = WindowStartupLocation.CenterScreen;
+                            comboBox.SelectedValue = sovAcronym.SovAcronymName;
+                            newSovDlg.ShowDialog();
+                        }
+                        else
+                        {
+                            ProjectVM.SovAcronyms[Sov_DataGird.SelectedIndex].SovAcronymName = acronym.AcronymName;
+                        }
+                    }
                 }
             }
         }

@@ -32,7 +32,7 @@ namespace WpfApp.ViewModel
             ProjectManagerList = new ObservableCollection<ProjectManager>();
             SuperintendentList = new ObservableCollection<Superintendent>();
             ProjectLinks = new ObservableCollection<ProjectLink>();
-            SovCOs = new ObservableCollection<SovCO>();
+            SovAcronyms = new ObservableCollection<SovAcronym>();
             SovMaterials = new ObservableCollection<SovMaterial>();
             ProjectMatTrackings = new ObservableCollection<ProjectMatTracking>();
             ProjectMtShips = new ObservableCollection<ProjectMatShip>();
@@ -69,9 +69,15 @@ namespace WpfApp.ViewModel
             this.AddNewPmCommand = new RelayCommand((e) => this.AddNewProjectManager());
             this.AddNewSuptCommand = new RelayCommand((e) => this.AddNewSuperintendent());
             this.AddNewProjectLinkCommand = new RelayCommand((e) => this.AddNewProjectLink());
+            this.AddNewSovCommand = new RelayCommand((e) => this.AddNewSov());
             this.SaveCommand = new RelayCommand((e) => this.SaveProject());
 
             ActionState = "New";
+        }
+
+        private void AddNewSov()
+        {
+            SovAcronyms.Add(new SovAcronym());
         }
 
         private void AddNewProjectLink()
@@ -233,6 +239,42 @@ namespace WpfApp.ViewModel
                         cmd = dbConnection.RunQueryToUpdateProjectLink(sqlquery, projectID, pathDesc, pathName, linkID);
                     }
                 }
+
+                foreach (SovAcronym _sovAcronym in SovAcronyms)
+                {
+                    string sovAcronymName = _sovAcronym.SovAcronymName;
+                    int coID = _sovAcronym.CoID;
+                    string sovDesc = _sovAcronym.SovDesc;
+                    bool matOnly = _sovAcronym.MatOnly;
+                    int projSovID = _sovAcronym.ProjSovID;
+
+                    if (projSovID == 0)
+                    {
+                        sqlquery = "SELECT TOP 1 * FROM tblProjectSOV ORDER BY ProjSOV_ID DESC";
+                        cmd = dbConnection.RunQuryNoParameters(sqlquery);
+                        SqlDataAdapter sda = new SqlDataAdapter(cmd);
+                        DataSet ds = new DataSet();
+                        sda.Fill(ds);
+
+                        DataRow firstRow = ds.Tables[0].Rows[0];
+                        projSovID = int.Parse(firstRow["ProjSOV_ID"].ToString());
+
+                        sqlquery = "INSERT INTO tblProjectSOV(ProjSOV_ID, Project_ID, CO_ID, SOV_Acronym, Material_Only) OUTPUT INSERTED.ProjSOV_ID VALUES (@ProjSovID, @ProjectID, @CoID, @SovAcronymName, @MatOnly)";
+
+                        int insertedProjLinkId = dbConnection.RunQueryToCreateProjectSOV(sqlquery, projSovID, projectID, coID, sovAcronymName, sovDesc, matOnly);
+                        _sovAcronym.ProjSovID = projSovID;
+                    }
+                    else
+                    {
+                        sqlquery = "UPDATE tblProjectSOV SET CO_ID=@CoID, SOV_Acronym=@SovAcronymName, Material_Only=@MatOnly WHERE ProjSOV_ID=@ProjSovID";
+
+                        cmd = dbConnection.RunQueryToUpdateProjectSOV(sqlquery, projSovID, coID, sovAcronymName, sovDesc, matOnly);
+
+                        sqlquery = "UPDATE tblScheduleOfValues SET SOV_Desc=@SovDesc WHERE SOV_Acronym=@SovAcronymName";
+
+                        cmd = dbConnection.RunQueryToUpdateSOV(sqlquery, sovDesc, sovAcronymName);
+                    }
+                }
             }
             else
             {
@@ -254,7 +296,7 @@ namespace WpfApp.ViewModel
             ChangeOrders.Clear();
 
             // SOV
-            SovCOs.Clear();
+            SovAcronyms.Clear();
             SovMaterials.Clear();
             // Track/Ship/Recv
             TrackShipRecvs.Clear();
@@ -664,7 +706,8 @@ namespace WpfApp.ViewModel
             sda.Fill(ds);
 
             ObservableCollection<Acronym> st_acronym = new ObservableCollection<Acronym>();
-            st_acronym.Add(new Acronym { AcronymName = "New" });
+            ObservableCollection<Acronym> st_newAcronym = new ObservableCollection<Acronym>();
+            st_newAcronym.Add(new Acronym { AcronymName = "New" });
             foreach (DataRow row in ds.Tables[0].Rows)
             {
                 string acronymName = "";
@@ -679,9 +722,15 @@ namespace WpfApp.ViewModel
                     AcronymName = acronymName,
                     AcronymDesc = acronymDesc
                 });
+                st_newAcronym.Add(new Acronym
+                {
+                    AcronymName = acronymName,
+                    AcronymDesc = acronymDesc
+                });
             }
             Acronyms = st_acronym;
-            
+            NewAcronyms = st_newAcronym;
+
             // CIP Type
             ObservableCollection<string> st_cip = new ObservableCollection<string>();
 
@@ -1204,34 +1253,36 @@ namespace WpfApp.ViewModel
             ds = new DataSet();
             sda.Fill(ds);
 
-            ObservableCollection<SovCO> sb_sovCO= new ObservableCollection<SovCO>();
+            ObservableCollection<SovAcronym> sb_sovCO= new ObservableCollection<SovAcronym>();
             foreach (DataRow row in ds.Tables[0].Rows)
             {
                 string sovAcronym = "";
-                int coItemNo = -1;
                 string sovDesc = "";
                 bool matOnly = false;
-
+                int projSovID = 0;
+                int coID = -1;
 
                 if (!row.IsNull("SOV_Acronym"))
                     sovAcronym = row["SOV_Acronym"].ToString();
-                if (!row.IsNull("CO_ItemNo"))
-                    coItemNo = int.Parse(row["CO_ItemNo"].ToString());
                 if (!row.IsNull("SOV_Desc"))
                     sovDesc = row["SOV_Desc"].ToString();
                 if (!row.IsNull("Material_Only"))
                     matOnly = row.Field<Boolean>("Material_Only");
-
-                sb_sovCO.Add(new SovCO
+                if (!row.IsNull("ProjSOV_ID"))
+                    projSovID = int.Parse(row["ProjSOV_ID"].ToString());
+                if (!row.IsNull("CO_ID"))
+                    coID = int.Parse(row["CO_ID"].ToString());
+                sb_sovCO.Add(new SovAcronym
                 {
-                    SovAcronym = sovAcronym,
-                    CoItemNo = coItemNo,
+                    SovAcronymName = sovAcronym,
                     SovDesc = sovDesc,
-                    MatOnly = matOnly
+                    MatOnly = matOnly,
+                    ProjSovID = projSovID,
+                    CoID = coID
                 });
             }
 
-            SovCOs = sb_sovCO;
+            SovAcronyms = sb_sovCO;
 
             // Project Change Orders
             sqlquery = "select * from tblProjectChangeOrders where Project_ID = " + ProjectID.ToString();
@@ -1268,9 +1319,9 @@ namespace WpfApp.ViewModel
 
                 sb_changeOrder.Add(new ChangeOrder
                 {
+                    CoID = _coID,
                     CoItemNo = _coItemNo,
                     ProjectID = _projectID,
-                    CoID = _coID,
                     CoDate = _coDate,
                     CoDateAppDen = _coDateAppDen,
                     CoAppDen = _coAppDen,
@@ -1870,6 +1921,12 @@ namespace WpfApp.ViewModel
             set;
         }
 
+        public ObservableCollection<Acronym> NewAcronyms
+        {
+            get;
+            set;
+        }
+
         public ObservableCollection<ReturnedVia> ReturnedViaNames
         {
             get;
@@ -1994,16 +2051,16 @@ namespace WpfApp.ViewModel
             }
         }
 
-        private ObservableCollection<SovCO> _sovCO;
+        private ObservableCollection<SovAcronym> _sovAcronym;
 
-        public ObservableCollection<SovCO> SovCOs
+        public ObservableCollection<SovAcronym> SovAcronyms
         {
-            get { return _sovCO; }
+            get { return _sovAcronym; }
             set
             {
-                if (_sovCO != value)
+                if (_sovAcronym != value)
                 {
-                    _sovCO = value;
+                    _sovAcronym = value;
                     OnPropertyChanged();
                 }
             }
@@ -2411,6 +2468,7 @@ namespace WpfApp.ViewModel
         public RelayCommand AddNewPmCommand { get; set; }
         public RelayCommand AddNewSuptCommand { get; set; }
         public RelayCommand AddNewProjectLinkCommand { get; set; }
+        public RelayCommand AddNewSovCommand { get; set; }
 
         private void ChangeWorkOrder()
         {

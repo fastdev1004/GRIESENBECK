@@ -1699,6 +1699,103 @@ namespace WpfApp.Utils
             return cmd;
         }
 
+        // Create ProjectSOV
+        public int RunQueryToCreateProjectSOV(string query, int projSovID, int projectID, int coID, string sovAcronymName, string sovDesc, bool matOnly)
+        {
+            try
+            {
+                connection.Open();
+                if (connection != null)
+                {
+                    cmd = connection.CreateCommand();
+                    cmd.CommandType = CommandType.Text;
+                    cmd.CommandText = query;
+
+                    cmd.Parameters.AddWithValue("@ProjSovID", projSovID);
+                    cmd.Parameters.AddWithValue("@ProjectID", projectID);
+                    if (coID != 0)
+                        cmd.Parameters.AddWithValue("@CoID", coID);
+                    else cmd.Parameters.AddWithValue("@CoID", DBNull.Value);
+                    if (!string.IsNullOrEmpty(sovAcronymName))
+                        cmd.Parameters.AddWithValue("@SovAcronymName", sovAcronymName);
+                    else cmd.Parameters.AddWithValue("@SovAcronymName", DBNull.Value);
+                    cmd.Parameters.AddWithValue("@MatOnly", matOnly);
+
+                    insertedID = (int)cmd.ExecuteScalar();
+                    connection.Close();
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex);
+            }
+            return insertedID;
+        }
+
+        // Update ProjectSOV
+        public SqlCommand RunQueryToUpdateProjectSOV(string query, int projSovID, int coID, string sovAcronymName, string sovDesc, bool matOnly)
+        {
+            try
+            {
+                connection.Open();
+                if (connection != null)
+                {
+                    cmd = connection.CreateCommand();
+                    cmd.CommandType = CommandType.Text;
+                    cmd.CommandText = query;
+
+                    cmd.Parameters.AddWithValue("@ProjSovID", projSovID);
+                    if(coID != -1)
+                        cmd.Parameters.AddWithValue("@CoID", coID);
+                    else cmd.Parameters.AddWithValue("@CoID", DBNull.Value);
+                    if (!string.IsNullOrEmpty(sovAcronymName))
+                        cmd.Parameters.AddWithValue("@SovAcronymName", sovAcronymName);
+                    else cmd.Parameters.AddWithValue("@SovAcronymName", DBNull.Value);
+                    if (matOnly)
+                        cmd.Parameters.AddWithValue("@MatOnly", 1);
+                    else cmd.Parameters.AddWithValue("@MatOnly", 0);
+
+                    cmd.ExecuteNonQuery();
+                    connection.Close();
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex);
+            }
+            return cmd;
+        }
+        
+        // Update ProjectSOV
+        public SqlCommand RunQueryToUpdateSOV(string query, string sovDesc, string sovAcronymName)
+        {
+            try
+            {
+                connection.Open();
+                if (connection != null)
+                {
+                    cmd = connection.CreateCommand();
+                    cmd.CommandType = CommandType.Text;
+                    cmd.CommandText = query;
+
+                    if (!string.IsNullOrEmpty(sovAcronymName))
+                        cmd.Parameters.AddWithValue("@SovAcronymName", sovAcronymName);
+                    else cmd.Parameters.AddWithValue("@SovAcronymName", DBNull.Value);
+                    if (!string.IsNullOrEmpty(sovDesc))
+                        cmd.Parameters.AddWithValue("@SovDesc", sovDesc);
+                    else cmd.Parameters.AddWithValue("@SovDesc", DBNull.Value);
+
+                    cmd.ExecuteNonQuery();
+                    connection.Close();
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex);
+            }
+            return cmd;
+        }
+
         public void Open()
         {
            connection.Open();

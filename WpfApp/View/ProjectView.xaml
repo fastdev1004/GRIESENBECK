@@ -44,6 +44,7 @@
                 <Setter Property="ContextMenu" Value="{StaticResource PmRowContextMenu}" />
                 <Setter Property="Margin" Value="0, 4" />
             </Style>
+            
             <ContextMenu x:Key="SuptContextMenu">
                 <MenuItem Header="New" Command="{Binding AddNewSuptCommand }" />
             </ContextMenu>
@@ -52,6 +53,17 @@
             </ContextMenu>
             <Style x:Key="SupRowStyle" TargetType="{x:Type DataGridRow}">
                 <Setter Property="ContextMenu" Value="{StaticResource SupRowContextMenu}" />
+                <Setter Property="Margin" Value="0, 4" />
+            </Style>
+
+            <ContextMenu x:Key="SovContextMenu">
+                <MenuItem Header="New" Command="{Binding AddNewSovCommand }" />
+            </ContextMenu>
+            <ContextMenu x:Key="SovRowContextMenu">
+                <MenuItem Header="Delete" Click="RemoveSovItem" />
+            </ContextMenu>
+            <Style x:Key="SovRowStyle" TargetType="{x:Type DataGridRow}">
+                <Setter Property="ContextMenu" Value="{StaticResource SovRowContextMenu}" />
                 <Setter Property="Margin" Value="0, 4" />
             </Style>
             <ControlTemplate x:Key="ComboBoxValidationErrorTemplate">
@@ -788,7 +800,7 @@
                                 <ColumnDefinition Width="1*" />
                                 <ColumnDefinition Width="1*" />
                             </Grid.ColumnDefinitions>
-                            <DataGrid ItemsSource="{Binding SovCOs, Mode=TwoWay}" GridLinesVisibility="None" AutoGenerateColumns="False" HeadersVisibility="Column" BorderThickness="0" Background="White" CanUserAddRows="False">
+                            <DataGrid x:Name="Sov_DataGird" ItemsSource="{Binding SovAcronyms, Mode=TwoWay}" GridLinesVisibility="None" AutoGenerateColumns="False" HeadersVisibility="Column" BorderThickness="0" Background="White" CanUserAddRows="False" ContextMenu="{StaticResource SovContextMenu}" RowStyle="{StaticResource SovRowStyle}">
                                 <DataGrid.Resources>
                                     <Style TargetType="DataGridColumnHeader" BasedOn="{StaticResource GridColumnHeaderBase}">
                                         <Setter Property="Background" Value="#5C83B4" />
@@ -805,19 +817,18 @@
                                     <DataGridTemplateColumn Header="Acronym" Width="2*">
                                         <DataGridTemplateColumn.CellTemplate>
                                             <DataTemplate>
-                                                <ComboBox ItemsSource="{Binding DataContext.Acronyms, RelativeSource={RelativeSource AncestorType=local:ProjectView}}"
-                SelectedValuePath="AcronymName" SelectedValue="{Binding SovAcronym, Mode=TwoWay}" DisplayMemberPath="AcronymName" IsEditable="False" SelectionChanged="SovCB_Changed">
+                                                <ComboBox ItemsSource="{Binding DataContext.Acronyms, RelativeSource={RelativeSource AncestorType=local:ProjectView}}" SelectedValuePath="AcronymName" SelectedValue="{Binding SovAcronymName, Mode=TwoWay}" DisplayMemberPath="AcronymName" IsEditable="False" Loaded="SovCombo_Loaded" SelectionChanged="SovCB_Changed">
                                                 </ComboBox>
                                             </DataTemplate>
                                         </DataGridTemplateColumn.CellTemplate>
                                     </DataGridTemplateColumn>
-                                    <DataGridTemplateColumn IsReadOnly="False" Width="2*">
+                                    <DataGridTemplateColumn IsReadOnly="False" Width="0.8*">
                                         <DataGridTemplateColumn.Header>
                                             <TextBlock Text="Change Order #" TextWrapping="Wrap" />
                                         </DataGridTemplateColumn.Header>
                                         <DataGridTemplateColumn.CellTemplate>
                                             <DataTemplate>
-                                                <ComboBox ItemsSource="{Binding DataContext.ChangeOrders, RelativeSource={RelativeSource AncestorType=local:ProjectView}}" DisplayMemberPath="CoItemNo" SelectedValuePath="CoItemNo" SelectedValue="{Binding CoItemNo, Mode=TwoWay}" HorizontalContentAlignment="Center"></ComboBox>
+                                                <ComboBox ItemsSource="{Binding DataContext.ChangeOrders, RelativeSource={RelativeSource AncestorType=local:ProjectView}}" DisplayMemberPath="CoItemNo" SelectedValuePath="CoID" SelectedValue="{Binding CoID, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" HorizontalContentAlignment="Left"></ComboBox>
                                             </DataTemplate>
                                         </DataGridTemplateColumn.CellTemplate>
                                     </DataGridTemplateColumn>
@@ -827,7 +838,7 @@
                                         </DataGridTemplateColumn.Header>
                                         <DataGridTemplateColumn.CellTemplate>
                                             <DataTemplate>
-                                                <TextBox     Text="{Binding SovDesc}" />
+                                                <TextBox Text="{Binding SovDesc, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
                                             </DataTemplate>
                                         </DataGridTemplateColumn.CellTemplate>
                                     </DataGridTemplateColumn>
@@ -837,7 +848,7 @@
                                         </DataGridTemplateColumn.Header>
                                         <DataGridTemplateColumn.CellTemplate>
                                             <DataTemplate>
-                                                <CheckBox IsChecked="{Binding MatOnly}" />
+                                                <CheckBox IsChecked="{Binding MatOnly, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
                                             </DataTemplate>
                                         </DataGridTemplateColumn.CellTemplate>
                                     </DataGridTemplateColumn>

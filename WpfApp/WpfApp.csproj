@@ -120,7 +120,7 @@
     <Compile Include="Model\ReportVendor.cs" />
     <Compile Include="Model\ReturnedVia.cs" />
     <Compile Include="Model\Salesman.cs" />
-    <Compile Include="Model\SovCO.cs" />
+    <Compile Include="Model\SovAcronym.cs" />
     <Compile Include="Model\SovCOItem.cs" />
     <Compile Include="Model\SovMaterial.cs" />
     <Compile Include="Model\Superintendent.cs" />
