@@ -15,7 +15,7 @@ namespace WpfApp.Utils
         public SqlCommand cmd;
         private readonly string connectionString;
         private int insertedID;
-
+        private int rowsAffected;
 
         public DatabaseConnection()
         {
@@ -1700,7 +1700,7 @@ namespace WpfApp.Utils
         }
 
         // Create ProjectSOV
-        public int RunQueryToCreateProjectSOV(string query, int projSovID, int projectID, int coID, string sovAcronymName, string sovDesc, bool matOnly)
+        public int RunQueryToCreateProjectSOV(string query, int projectID, int coID, string sovAcronymName, bool matOnly)
         {
             try
             {
@@ -1711,7 +1711,7 @@ namespace WpfApp.Utils
                     cmd.CommandType = CommandType.Text;
                     cmd.CommandText = query;
 
-                    cmd.Parameters.AddWithValue("@ProjSovID", projSovID);
+                    //cmd.Parameters.AddWithValue("@ProjSovID", projSovID);
                     cmd.Parameters.AddWithValue("@ProjectID", projectID);
                     if (coID != 0)
                         cmd.Parameters.AddWithValue("@CoID", coID);
@@ -1733,7 +1733,7 @@ namespace WpfApp.Utils
         }
 
         // Update ProjectSOV
-        public SqlCommand RunQueryToUpdateProjectSOV(string query, int projSovID, int coID, string sovAcronymName, string sovDesc, bool matOnly)
+        public SqlCommand RunQueryToUpdateProjectSOV(string query, int projSovID, int coID, string sovAcronymName, bool matOnly)
         {
             try
             {
@@ -1745,7 +1745,7 @@ namespace WpfApp.Utils
                     cmd.CommandText = query;
 
                     cmd.Parameters.AddWithValue("@ProjSovID", projSovID);
-                    if(coID != -1)
+                    if(coID != -1 && coID != 0)
                         cmd.Parameters.AddWithValue("@CoID", coID);
                     else cmd.Parameters.AddWithValue("@CoID", DBNull.Value);
                     if (!string.IsNullOrEmpty(sovAcronymName))
@@ -1795,6 +1795,131 @@ namespace WpfApp.Utils
             }
             return cmd;
         }
+
+        // Create ProjectMat
+        public int RunQueryToCreateProjectMat(string query, int projSovID, int matID, string matPhase, string matType, string color, int qtyReqd, double totalCost, bool matOnly, int projectID)
+        {
+            try
+            {
+                connection.Open();
+                if (connection != null)
+                {
+                    cmd = connection.CreateCommand();
+                    cmd.CommandType = CommandType.Text;
+                    cmd.CommandText = query;
+
+                    cmd.Parameters.AddWithValue("@ProjSovID", projSovID);
+                    cmd.Parameters.AddWithValue("@ProjectID", projectID);
+                    if (matID != 0)
+                        cmd.Parameters.AddWithValue("@MatID", matID);
+                    else cmd.Parameters.AddWithValue("@MatID", DBNull.Value);
+                    if (!string.IsNullOrEmpty(matPhase))
+                        cmd.Parameters.AddWithValue("@MatPhase", matPhase);
+                    else cmd.Parameters.AddWithValue("@MatPhase", DBNull.Value);
+                    if (!string.IsNullOrEmpty(matType))
+                        cmd.Parameters.AddWithValue("@MatType", matType);
+                    else cmd.Parameters.AddWithValue("@MatType", DBNull.Value);
+                    if (!string.IsNullOrEmpty(color))
+                        cmd.Parameters.AddWithValue("@Color", color);
+                    else cmd.Parameters.AddWithValue("@Color", DBNull.Value);
+                    if (qtyReqd != 0)
+                        cmd.Parameters.AddWithValue("@QtyReqd", qtyReqd);
+                    else cmd.Parameters.AddWithValue("@QtyReqd", DBNull.Value);
+                    if (totalCost != 0)
+                        cmd.Parameters.AddWithValue("@TotalCost", totalCost);
+                    else cmd.Parameters.AddWithValue("@TotalCost", DBNull.Value);
+                    cmd.Parameters.AddWithValue("@MatOnly", matOnly);
+
+                    insertedID = (int)cmd.ExecuteScalar();
+                    connection.Close();
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex);
+            }
+            return insertedID;
+        }
+
+        // Update ProjectMat
+        public SqlCommand RunQueryToUpdateProjectMat(string query, int projSovID, int matLine, int matID, string matPhase, string matType, string color, int qtyReqd, double totalCost, bool matLot, double matOrigRate, bool matOnly, int projectID, int projMatID)
+        {
+            try
+            {
+                connection.Open();
+                if (connection != null)
+                {
+                    cmd = connection.CreateCommand();
+                    cmd.CommandType = CommandType.Text;
+                    cmd.CommandText = query;
+
+                    cmd.Parameters.AddWithValue("@ProjSovID", projSovID);
+                    cmd.Parameters.AddWithValue("@ProjectID", projectID);
+                    if (matLine != 0)
+                        cmd.Parameters.AddWithValue("@MatLine", matLine);
+                    else cmd.Parameters.AddWithValue("@MatLine", DBNull.Value);
+                    if (matID != 0)
+                        cmd.Parameters.AddWithValue("@MatID", matID);
+                    else cmd.Parameters.AddWithValue("@MatID", DBNull.Value);
+                    if (!string.IsNullOrEmpty(matPhase))
+                        cmd.Parameters.AddWithValue("@MatPhase", matPhase);
+                    else cmd.Parameters.AddWithValue("@MatPhase", DBNull.Value);
+                    if (!string.IsNullOrEmpty(matType))
+                        cmd.Parameters.AddWithValue("@MatType", matType);
+                    else cmd.Parameters.AddWithValue("@MatType", DBNull.Value);
+                    if (!string.IsNullOrEmpty(color))
+                        cmd.Parameters.AddWithValue("@Color", color);
+                    else cmd.Parameters.AddWithValue("@Color", DBNull.Value);
+                    if (qtyReqd != 0)
+                        cmd.Parameters.AddWithValue("@QtyReqd", qtyReqd);
+                    else cmd.Parameters.AddWithValue("@QtyReqd", DBNull.Value);
+                    if (totalCost != 0)
+                        cmd.Parameters.AddWithValue("@TotalCost", totalCost);
+                    else cmd.Parameters.AddWithValue("@TotalCost", DBNull.Value);
+                    cmd.Parameters.AddWithValue("@MatLot", matLot);
+                    if (matOrigRate != 0)
+                        cmd.Parameters.AddWithValue("@MatOrigRate", matOrigRate);
+                    else cmd.Parameters.AddWithValue("@MatOrigRate", DBNull.Value);
+                    if (projMatID != 0)
+                        cmd.Parameters.AddWithValue("@ProjMatID", projMatID);
+                    else cmd.Parameters.AddWithValue("@ProjMatID", DBNull.Value);
+                    cmd.Parameters.AddWithValue("@MatOnly", matOnly);
+
+                    cmd.ExecuteNonQuery();
+                    connection.Close();
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex);
+            }
+            return cmd;
+        }
+
+        //// Delete ProjectMat
+        //public int RunQueryToDeleteProjectMat(string query, int projectMatID)
+        //{
+        //    try
+        //    {
+        //        connection.Open();
+        //        if (connection != null)
+        //        {
+        //            cmd = connection.CreateCommand();
+        //            cmd.CommandType = CommandType.Text;
+        //            cmd.CommandText = query;
+
+        //            cmd.Parameters.AddWithValue("@ProjMatID", projectMatID);
+
+        //            rowsAffected = (int)cmd.ExecuteNonQuery();
+        //            connection.Close();
+        //        }
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        Console.WriteLine(ex);
+        //    }
+        //    return rowsAffected;
+        //}
 
         public void Open()
         {

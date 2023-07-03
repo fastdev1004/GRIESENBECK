@@ -26,12 +26,14 @@ namespace WpfApp
     public partial class ProjectView : Page
     {
         private FindComponentHelper findComponentHelper;
+        private ValidateFieldHelper validateFieldHelper;
 
         private ProjectViewModel ProjectVM;
         public ProjectView()
         {
             InitializeComponent();
             findComponentHelper = new FindComponentHelper();
+            validateFieldHelper = new ValidateFieldHelper();
             ProjectVM = new ProjectViewModel();
             this.DataContext = ProjectVM;
             Loaded += LoadPage;
@@ -195,7 +197,7 @@ namespace WpfApp
         {
             ComboBox comboBox = sender as ComboBox;
             int selectedIndex = comboBox.SelectedIndex;
-       
+
             ProjectManager pm = comboBox.SelectedItem as ProjectManager;
 
             if (pm != null)
@@ -229,7 +231,7 @@ namespace WpfApp
             int selectedIndex = comboBox.SelectedIndex;
 
             Superintendent supt = comboBox.SelectedItem as Superintendent;
-            if(supt != null)
+            if (supt != null)
             {
                 if (Supt_DataGrid.SelectedIndex >= 0)
                 {
@@ -244,7 +246,8 @@ namespace WpfApp
                             newSuptDlg.WindowStartupLocation = WindowStartupLocation.CenterScreen;
                             comboBox.SelectedValue = originSupt.SupID;
                             newSuptDlg.ShowDialog();
-                        } else
+                        }
+                        else
                         {
                             ProjectVM.SuperintendentList[Supt_DataGrid.SelectedIndex] = supt;
                         }
@@ -343,19 +346,6 @@ namespace WpfApp
         {
             ArchRep_CB.SelectionChanged += ArchRepCB_Changed;
             ArchRep_CB.SelectedIndex = -1;
-        }
-
-        private void MaterialCB_Changed(object sender, SelectionChangedEventArgs e)
-        {
-            ComboBox comboBox = sender as ComboBox;
-            int selectedIndex = comboBox.SelectedIndex;
-            if (selectedIndex == 0)
-            {
-                NewMaterialDialog newMatDlg = new NewMaterialDialog();
-                newMatDlg.WindowStartupLocation = WindowStartupLocation.CenterScreen;
-                comboBox.SelectedIndex = -1;
-                newMatDlg.ShowDialog();
-            }
         }
 
         private void ManufCB_Changed(object sender, SelectionChangedEventArgs e)
@@ -472,7 +462,7 @@ namespace WpfApp
                 projectLink.PathName = selectedFileName;
             }
         }
-       
+
         private void CheckBox_HandleEvent(object sender, RoutedEventArgs e)
         {
             e.Handled = false;
@@ -526,41 +516,63 @@ namespace WpfApp
             }
         }
 
-        private void SovCombo_Loaded(object sender, RoutedEventArgs e)
+        private void SovAcronymCombo_Loaded(object sender, RoutedEventArgs e)
         {
             ComboBox comboBox = (ComboBox)sender;
             DataGridRow row = findComponentHelper.FindDataGridRow(comboBox);
 
+            string tagName = comboBox.Tag as string;
+
             if (row != null)
             {
-                SovAcronym data = row.DataContext as SovAcronym;
-
-                if (row.GetIndex() == 0)
+                if (tagName.Equals("SovAcronym"))
                 {
-                    comboBox.ItemsSource = ProjectVM.NewAcronyms;
-                    comboBox.SelectedValue = data.SovAcronymName;
+                    SovAcronym data = row.DataContext as SovAcronym;
+                    if (row.GetIndex() == 0)
+                    {
+                        comboBox.ItemsSource = ProjectVM.NewAcronyms;
+                        comboBox.SelectedValue = data.SovAcronymName;
+                    }
+                }
+                else if (tagName.Equals("SovMaterial"))
+                {
+                    SovMaterial data = row.DataContext as SovMaterial;
+                    if (row.GetIndex() == 0)
+                    {
+                        comboBox.ItemsSource = ProjectVM.NewAcronyms;
+                        comboBox.SelectedValue = data.SovAcronymName;
+                    }
                 }
             }
         }
 
-        private void SovCB_Changed(object sender, SelectionChangedEventArgs e)
+        private void SovAcronymCB_Changed(object sender, SelectionChangedEventArgs e)
         {
             ComboBox comboBox = sender as ComboBox;
             int selectedIndex = comboBox.SelectedIndex;
 
             Acronym acronym = comboBox.SelectedItem as Acronym;
             DataGridRow row = findComponentHelper.FindDataGridRow(comboBox);
-           
+            int selectedDataGridIndex = 0;
+            string tagName = comboBox.Tag as string;
+            switch (tagName)
+            {
+                case "SovAcronym":
+                    selectedDataGridIndex = Sov_DataGird.SelectedIndex;
+                    break;
+                case "SovMaterial":
+                    selectedDataGridIndex = SovMat_DataGird.SelectedIndex;
+                    break;
+            }
+
             if (acronym != null)
             {
-                
-                if (Sov_DataGird.SelectedIndex >= 0)
+
+                if (selectedDataGridIndex >= 0)
                 {
-                    SovAcronym sovAcronym = row.DataContext as SovAcronym;
-                    Acronym originAcronym = ProjectVM.Acronyms[Sov_DataGird.SelectedIndex];
-                    Console.WriteLine("originAcronym.AcronymName->"+ originAcronym.AcronymName);
-                    if (!string.IsNullOrEmpty(originAcronym.AcronymName))
+                    if (tagName.Equals("SovAcronym"))
                     {
+                        SovAcronym sovAcronym = row.DataContext as SovAcronym;
                         if (acronym.AcronymName.Equals("New"))
                         {
                             NewSovDialog newSovDlg = new NewSovDialog();
@@ -570,10 +582,147 @@ namespace WpfApp
                         }
                         else
                         {
-                            ProjectVM.SovAcronyms[Sov_DataGird.SelectedIndex].SovAcronymName = acronym.AcronymName;
+                            ProjectVM.SovAcronyms[selectedDataGridIndex].SovAcronymName = acronym.AcronymName;
+                            ProjectVM.SovAcronyms[selectedDataGridIndex].SovDesc = acronym.AcronymDesc;
+                        }
+                    }
+                    else if (tagName.Equals("SovMaterial"))
+                    {
+                        SovMaterial sovMat = row.DataContext as SovMaterial;
+                        if (acronym.AcronymName.Equals("New"))
+                        {
+                            NewSovDialog newSovDlg = new NewSovDialog();
+                            newSovDlg.WindowStartupLocation = WindowStartupLocation.CenterScreen;
+                            comboBox.SelectedValue = sovMat.SovAcronymName;
+                            newSovDlg.ShowDialog();
+                        }
+                        else
+                        {
+                            ProjectVM.FetchSovMaterials[selectedDataGridIndex].SovAcronymName = acronym.AcronymName;
                         }
                     }
                 }
+            }
+        }
+
+        private void RemoveSovMatItem(object sender, RoutedEventArgs e)
+        {
+            int selectedIndex = SovMat_DataGird.SelectedIndex;
+            if (selectedIndex != -1)
+            {
+                if (ProjectVM.FetchSovMaterials[selectedIndex].ActionFlag == 1)
+                {
+                    SovMaterial sovMaterial = ProjectVM.SovMaterials.Where(material => material.ID == ProjectVM.FetchSovMaterials[selectedIndex].ID).First();
+                    sovMaterial.ActionFlag = 4;
+                } else
+                {
+                    SovMaterial sovMaterial = ProjectVM.SovMaterials.Where(material => material.ID == ProjectVM.FetchSovMaterials[selectedIndex].ID).First();
+                    sovMaterial.ActionFlag = 3;
+                }
+                ProjectVM.FetchSovMaterials = new ObservableCollection<SovMaterial>();
+                foreach (SovMaterial item in ProjectVM.SovMaterials)
+                {
+                    if (item.ActionFlag != 3 && item.ActionFlag != 4)
+                    {
+                        ProjectVM.FetchSovMaterials.Add(item);
+                    }
+                }
+            }
+        }
+
+        private void SovMaterialCombo_Loaded(object sender, RoutedEventArgs e)
+        {
+            ComboBox comboBox = (ComboBox)sender;
+            DataGridRow row = findComponentHelper.FindDataGridRow(comboBox);
+
+            string tagName = comboBox.Tag as string;
+
+            if (row != null)
+            {
+                if (tagName.Equals("SovMaterial"))
+                {
+                    SovMaterial data = row.DataContext as SovMaterial;
+                    if (row.GetIndex() == 0)
+                    {
+                        comboBox.ItemsSource = ProjectVM.NewMaterials;
+                        comboBox.SelectedValue = data.MatID;
+                    }
+                }
+            }
+        }
+
+        private void MaterialCB_Changed(object sender, SelectionChangedEventArgs e)
+        {
+            ComboBox comboBox = sender as ComboBox;
+            int selectedIndex = comboBox.SelectedIndex;
+
+            Material material = comboBox.SelectedItem as Material;
+            DataGridRow row = findComponentHelper.FindDataGridRow(comboBox);
+            int selectedDataGridIndex = 0;
+            string tagName = comboBox.Tag as string;
+            switch (tagName)
+            {
+                case "SovMaterial":
+                    selectedDataGridIndex = SovMat_DataGird.SelectedIndex;
+                    break;
+            }
+
+            if (material != null)
+            {
+                if (selectedDataGridIndex >= 0)
+                {
+                    if (tagName.Equals("SovMaterial"))
+                    {
+                        SovMaterial sovMat = row.DataContext as SovMaterial;
+                        if (material.MatDesc.Equals("New"))
+                        {
+                            NewMaterialDialog newMatDlg = new NewMaterialDialog();
+                            newMatDlg.WindowStartupLocation = WindowStartupLocation.CenterScreen;
+                            comboBox.SelectedValue = sovMat.MatID;
+                            newMatDlg.ShowDialog();
+                        }
+                        else
+                        {
+                            ProjectVM.SovMaterials[selectedDataGridIndex].MatID = material.ID;
+                            ProjectVM.SovMaterials[selectedDataGridIndex].ActionFlag = 1;
+                        }
+                    }
+                }
+            }
+        }
+
+        private void QtyReqd_PreviewInput(object sender, TextCompositionEventArgs e)
+        {
+            if (!validateFieldHelper.IsNumeric(e.Text))
+            {
+                e.Handled = true;
+            }
+        }
+
+        private void TotalCost_PreviewInput(object sender, TextCompositionEventArgs e)
+        {
+            if (!validateFieldHelper.IsNumeric(e.Text))
+            {
+                e.Handled = true;
+            }
+        }
+
+        private void Billing_PreviewInput(object sender, TextCompositionEventArgs e)
+        {
+            if (!validateFieldHelper.IsNumeric(e.Text))
+            {
+                e.Handled = true;
+            }
+        }
+
+        private void TotalCost_GotFocus(object sender, RoutedEventArgs e)
+        {
+            TextBox textBox = (TextBox)sender;
+            string originalText = textBox.Text;
+
+            if (originalText.StartsWith("$"))
+            {
+                textBox.Text = originalText.Substring(1);
             }
         }
     }

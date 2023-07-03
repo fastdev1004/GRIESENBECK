@@ -132,6 +132,7 @@
     <Compile Include="Model\WorkOrder.cs" />
     <Compile Include="Utils\DatabaseConnection.cs" />
     <Compile Include="Utils\FindComponentHelper.cs" />
+    <Compile Include="Utils\ValidateFieldHelper.cs" />
     <Compile Include="ViewModel\AdminViewModel.cs" />
     <Compile Include="ViewModel\CloseOutViewModel.cs" />
     <Compile Include="ViewModel\ContractViewModel.cs" />

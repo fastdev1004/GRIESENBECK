@@ -9,17 +9,104 @@ namespace WpfApp.Model
 {
     class SovMaterial : ViewModelBase
     {
+        private int _id;
         private string _acronymName;
-        private string _acronymDesc;
+        private int _coID;
         private int _coItemNo;
         private bool _matOnly;
+        private int _matID;
         private string _matPhase;
         private string _matType;
         private string _color;
         private int _qtyReqd;
         private double _totalCost;
+        private int _actionFlag;
+        private int _projSovID;
+        private int _matLineNo;
+        private bool _matLot;
+        private double _matOrigRate;
+        private int _projMatID;
 
-        public string AcronymName
+        public int ProjMatID
+        {
+            get => _projMatID;
+            set
+            {
+                if (value == _projMatID) return;
+                _projMatID = value;
+                OnPropertyChanged();
+            }
+        }
+
+        public double MatOrigRate
+        {
+            get => _matOrigRate;
+            set
+            {
+                if (value == _matOrigRate) return;
+                _matOrigRate = value;
+                OnPropertyChanged();
+            }
+        }
+
+        public bool MatLot
+        {
+            get => _matLot;
+            set
+            {
+                if (value == _matLot) return;
+                _matLot = value;
+                OnPropertyChanged();
+            }
+        }
+
+        public int MatLineNo
+        {
+            get => _matLineNo;
+            set
+            {
+                if (value == _matLineNo) return;
+                _matLineNo = value;
+                OnPropertyChanged();
+            }
+        }
+
+        public int ProjSovID
+        {
+            get => _projSovID;
+            set
+            {
+                if (value == _projSovID) return;
+                _projSovID = value;
+                OnPropertyChanged();
+            }
+        }
+
+
+        public int ID
+        {
+            get => _id;
+            set
+            {
+                if (value == _id) return;
+                _id = value;
+                OnPropertyChanged();
+            }
+        }
+
+        public int ActionFlag
+        {
+            get => _actionFlag;
+            set
+            {
+                // 0: init, 1: insert, 2: update, 3: delete
+                if (value == _actionFlag) return;
+                _actionFlag = value;
+                OnPropertyChanged();
+            }
+        }
+
+        public string SovAcronymName
         {
             get => _acronymName;
             set
@@ -30,13 +117,13 @@ namespace WpfApp.Model
             }
         }
 
-        public string AcronymDesc
+        public int CoID
         {
-            get => _acronymDesc;
+            get => _coID;
             set
             {
-                if (value == _acronymDesc) return;
-                _acronymDesc = value;
+                if (value == _coID) return;
+                _coID = value;
                 OnPropertyChanged();
             }
         }
@@ -59,6 +146,17 @@ namespace WpfApp.Model
             {
                 if (value == _matOnly) return;
                 _matOnly = value;
+                OnPropertyChanged();
+            }
+        }
+
+        public int MatID
+        {
+            get => _matID;
+            set
+            {
+                if (value == _matID) return;
+                _matID = value;
                 OnPropertyChanged();
             }
         }

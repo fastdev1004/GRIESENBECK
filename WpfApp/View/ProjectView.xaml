@@ -66,6 +66,17 @@
                 <Setter Property="ContextMenu" Value="{StaticResource SovRowContextMenu}" />
                 <Setter Property="Margin" Value="0, 4" />
             </Style>
+
+            <ContextMenu x:Key="SovMatContextMenu">
+                <MenuItem Header="New" Command="{Binding AddNewSovMatCommand }" />
+            </ContextMenu>
+            <ContextMenu x:Key="SovMatRowContextMenu">
+                <MenuItem Header="Delete" Click="RemoveSovMatItem" />
+            </ContextMenu>
+            <Style x:Key="SovMatRowStyle" TargetType="{x:Type DataGridRow}">
+                <Setter Property="ContextMenu" Value="{StaticResource SovMatRowContextMenu}" />
+                <Setter Property="Margin" Value="0, 4" />
+            </Style>
             <ControlTemplate x:Key="ComboBoxValidationErrorTemplate">
                 <DockPanel>
                 </DockPanel>
@@ -327,7 +338,7 @@
                                                     <ColumnDefinition Width="1*" />
                                                 </Grid.ColumnDefinitions>
                                                 <Label>Billing Date:</Label>
-                                                <TextBox x:Name="Billing_TB" Text="{Binding TempProject.BillingDate, Mode=TwoWay}" Grid.Column="1" Width="40" HorizontalAlignment="Left" ></TextBox>
+                                                <TextBox x:Name="Billing_TB" Text="{Binding TempProject.BillingDate, Mode=TwoWay}" Grid.Column="1" Width="40" HorizontalAlignment="Left" PreviewTextInput="Billing_PreviewInput"></TextBox>
                                             </Grid>
                                         </Grid>
                                     </Grid>
@@ -817,7 +828,7 @@
                                     <DataGridTemplateColumn Header="Acronym" Width="2*">
                                         <DataGridTemplateColumn.CellTemplate>
                                             <DataTemplate>
-                                                <ComboBox ItemsSource="{Binding DataContext.Acronyms, RelativeSource={RelativeSource AncestorType=local:ProjectView}}" SelectedValuePath="AcronymName" SelectedValue="{Binding SovAcronymName, Mode=TwoWay}" DisplayMemberPath="AcronymName" IsEditable="False" Loaded="SovCombo_Loaded" SelectionChanged="SovCB_Changed">
+                                                <ComboBox ItemsSource="{Binding DataContext.Acronyms, RelativeSource={RelativeSource AncestorType=local:ProjectView}}" SelectedValuePath="AcronymName" SelectedValue="{Binding SovAcronymName, Mode=TwoWay}" DisplayMemberPath="AcronymName" IsEditable="False" Loaded="SovAcronymCombo_Loaded" SelectionChanged="SovAcronymCB_Changed" Tag="SovAcronym">
                                                 </ComboBox>
                                             </DataTemplate>
                                         </DataGridTemplateColumn.CellTemplate>
@@ -838,7 +849,7 @@
                                         </DataGridTemplateColumn.Header>
                                         <DataGridTemplateColumn.CellTemplate>
                                             <DataTemplate>
-                                                <TextBox Text="{Binding SovDesc, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+                                                <TextBox Text="{Binding SovDesc, Mode=TwoWay}" IsReadOnly="True" />
                                             </DataTemplate>
                                         </DataGridTemplateColumn.CellTemplate>
                                     </DataGridTemplateColumn>
@@ -883,7 +894,7 @@
                                     </Style>
                                 </TabControl.Resources>
                                 <TabItem Header="Materials" HorizontalAlignment="Left" Width="114">
-                                    <DataGrid Margin="10" ItemsSource="{Binding SovMaterials, Mode=TwoWay}" GridLinesVisibility="None" AutoGenerateColumns="False" HeadersVisibility="Column" BorderThickness="0" Background="White" CanUserAddRows="False">
+                                    <DataGrid x:Name="SovMat_DataGird" Margin="10" ItemsSource="{Binding FetchSovMaterials}" GridLinesVisibility="None" AutoGenerateColumns="False" HeadersVisibility="Column" BorderThickness="0" Background="White" CanUserAddRows="False" ContextMenu="{StaticResource SovMatContextMenu}" RowStyle="{StaticResource SovMatRowStyle}">
                                         <DataGrid.Resources>
                                             <Style TargetType="DataGridColumnHeader" BasedOn="{StaticResource GridColumnHeaderBase}">
                                                 <Setter Property="Background" Value="#BD623D" />
@@ -901,7 +912,7 @@
                                                 <DataGridTemplateColumn.CellTemplate>
                                                     <DataTemplate>
                                                         <ComboBox ItemsSource="{Binding DataContext.Acronyms, RelativeSource={RelativeSource AncestorType=local:ProjectView}}" IsEditable="False"
-                SelectedValuePath="AcronymName" SelectedValue="{Binding AcronymName, Mode=TwoWay}" DisplayMemberPath="AcronymName" SelectionChanged="SovCB_Changed">
+                SelectedValuePath="AcronymName" SelectedValue="{Binding SovAcronymName, Mode=TwoWay}" DisplayMemberPath="AcronymName" Loaded="SovAcronymCombo_Loaded" SelectionChanged="SovAcronymCB_Changed" Tag="SovMaterial">
                                                         </ComboBox>
                                                     </DataTemplate>
                                                 </DataGridTemplateColumn.CellTemplate>
@@ -912,7 +923,7 @@
                                                 </DataGridTemplateColumn.Header>
                                                 <DataGridTemplateColumn.CellTemplate>
                                                     <DataTemplate>
-                                                        <TextBlock Text="{Binding CoItemNo, Converter={StaticResource ZeroToEmptyStringConverter}}" HorizontalAlignment="Center" />
+                                                        <TextBlock Text="{Binding CoItemNo, Converter={StaticResource ZeroToEmptyStringConverter}, UpdateSourceTrigger=PropertyChanged}" HorizontalAlignment="Center" />
                                                     </DataTemplate>
                                                 </DataGridTemplateColumn.CellTemplate>
                                             </DataGridTemplateColumn>
@@ -922,7 +933,7 @@
                                                 </DataGridTemplateColumn.Header>
                                                 <DataGridTemplateColumn.CellTemplate>
                                                     <DataTemplate>
-                                                        <CheckBox IsChecked="{Binding MatOnly, Mode=TwoWay}" />
+                                                        <CheckBox IsChecked="{Binding MatOnly, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
                                                     </DataTemplate>
                                                 </DataGridTemplateColumn.CellTemplate>
                                             </DataGridTemplateColumn>
@@ -930,7 +941,7 @@
                                                 <DataGridTemplateColumn.CellTemplate>
                                                     <DataTemplate>
                                                         <ComboBox ItemsSource="{Binding DataContext.Materials, RelativeSource={RelativeSource AncestorType=local:ProjectView}}" IsEditable="False"
-                SelectedValuePath="MatDesc" SelectedValue="{Binding AcronymDesc, Mode=TwoWay}" DisplayMemberPath="MatDesc" SelectionChanged="MaterialCB_Changed">
+                SelectedValuePath="ID" SelectedValue="{Binding MatID, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" DisplayMemberPath="MatDesc" SelectionChanged="MaterialCB_Changed" Loaded="SovMaterialCombo_Loaded" Tag="SovMaterial">
                                                         </ComboBox>
                                                     </DataTemplate>
                                                 </DataGridTemplateColumn.CellTemplate>
@@ -941,7 +952,7 @@
                                                 </DataGridTemplateColumn.Header>
                                                 <DataGridTemplateColumn.CellTemplate>
                                                     <DataTemplate>
-                                                        <TextBox Text="{Binding MatPhase, Mode=TwoWay}" />
+                                                        <TextBox Text="{Binding MatPhase, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
                                                     </DataTemplate>
                                                 </DataGridTemplateColumn.CellTemplate>
                                             </DataGridTemplateColumn>
@@ -951,7 +962,7 @@
                                                 </DataGridTemplateColumn.Header>
                                                 <DataGridTemplateColumn.CellTemplate>
                                                     <DataTemplate>
-                                                        <TextBox Text="{Binding MatType, Mode=TwoWay}" />
+                                                        <TextBox Text="{Binding MatType, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
                                                     </DataTemplate>
                                                 </DataGridTemplateColumn.CellTemplate>
                                             </DataGridTemplateColumn>
@@ -961,7 +972,7 @@
                                                 </DataGridTemplateColumn.Header>
                                                 <DataGridTemplateColumn.CellTemplate>
                                                     <DataTemplate>
-                                                        <TextBox Text="{Binding Color, Mode=TwoWay}" />
+                                                        <TextBox Text="{Binding Color, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
                                                     </DataTemplate>
                                                 </DataGridTemplateColumn.CellTemplate>
                                             </DataGridTemplateColumn>
@@ -971,7 +982,7 @@
                                                 </DataGridTemplateColumn.Header>
                                                 <DataGridTemplateColumn.CellTemplate>
                                                     <DataTemplate>
-                                                        <TextBox Text="{Binding QtyReqd, Mode=TwoWay}" />
+                                                        <TextBox Text="{Binding QtyReqd, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" PreviewTextInput="QtyReqd_PreviewInput" />
                                                     </DataTemplate>
                                                 </DataGridTemplateColumn.CellTemplate>
                                             </DataGridTemplateColumn>
@@ -981,7 +992,7 @@
                                                 </DataGridTemplateColumn.Header>
                                                 <DataGridTemplateColumn.CellTemplate>
                                                     <DataTemplate>
-                                                        <TextBox Text="{Binding TotalCost, Mode=TwoWay}" />
+                                                        <TextBox Text="{Binding TotalCost, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged, Converter={StaticResource IntToDollarConverter}}" PreviewTextInput="TotalCost_PreviewInput" Tag="SovMaterial" />
                                                     </DataTemplate>
                                                 </DataGridTemplateColumn.CellTemplate>
                                             </DataGridTemplateColumn>
