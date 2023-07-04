@@ -33,7 +33,9 @@ namespace WpfApp.ViewModel
             SuperintendentList = new ObservableCollection<Superintendent>();
             ProjectLinks = new ObservableCollection<ProjectLink>();
             SovAcronyms = new ObservableCollection<SovAcronym>();
+            ProjectLabors = new ObservableCollection<ProjectLabor>();
             FetchSovMaterials = new ObservableCollection<SovMaterial>();
+            FetchSovAcronyms = new ObservableCollection<SovAcronym>();
             SovMaterials = new ObservableCollection<SovMaterial>();
             ProjectMatTrackings = new ObservableCollection<ProjectMatTracking>();
             ProjectMtShips = new ObservableCollection<ProjectMatShip>();
@@ -72,9 +74,38 @@ namespace WpfApp.ViewModel
             this.AddNewProjectLinkCommand = new RelayCommand((e) => this.AddNewProjectLink());
             this.AddNewSovCommand = new RelayCommand((e) => this.AddNewSov());
             this.AddNewSovMatCommand = new RelayCommand((e) => this.AddNewSovMat());
+            this.AddNewSovLabCommand = new RelayCommand((e) => this.AddNewSovLab());
             this.SaveCommand = new RelayCommand((e) => this.SaveProject());
 
             ActionState = "New";
+        }
+
+        private void AddNewNote()
+        {
+            int itemCount = ProjectNotes.Count;
+            ProjectNotes.Add(new Note { ID = itemCount, NotesDateAdded = DateTime.Now, NoteUser = "smile", NotesNote = "", ActionFlag = 1 });
+            FetchProjectNotes = new ObservableCollection<Note>();
+            foreach (Note item in ProjectNotes)
+            {
+                if (item.ActionFlag != 3 && item.ActionFlag != 4)
+                {
+                    FetchProjectNotes.Add(item);
+                }
+            }
+        }
+
+        private void AddNewSovLab()
+        {
+            int itemCount = ProjectLabors.Count;
+            ProjectLabors.Add(new ProjectLabor{ ID = itemCount, ActionFlag = 1 });
+            FetchSovLabors = new ObservableCollection<ProjectLabor>();
+            foreach (ProjectLabor item in ProjectLabors)
+            {
+                if (item.ActionFlag != 3 && item.ActionFlag != 4)
+                {
+                    FetchSovLabors.Add(item);
+                }
+            }
         }
 
         private void AddNewSovMat()
@@ -93,22 +124,58 @@ namespace WpfApp.ViewModel
 
         private void AddNewSov()
         {
-            SovAcronyms.Add(new SovAcronym());
+            int itemCount = SovAcronyms.Count;
+            SovAcronyms.Add(new SovAcronym { ID = itemCount, ActionFlag = 1 });
+            FetchSovAcronyms = new ObservableCollection<SovAcronym>();
+            foreach (SovAcronym item in SovAcronyms)
+            {
+                if (item.ActionFlag != 3 && item.ActionFlag != 4)
+                {
+                    FetchSovAcronyms.Add(item);
+                }
+            }
         }
 
         private void AddNewProjectLink()
         {
-            ProjectLinks.Add(new ProjectLink());
+            int itemCount = ProjectLinks.Count;
+            ProjectLinks.Add(new ProjectLink { FetchID = itemCount, ActionFlag = 1 });
+            FetchProjectLinks = new ObservableCollection<ProjectLink>();
+            foreach (ProjectLink item in ProjectLinks)
+            {
+                if (item.ActionFlag != 3 && item.ActionFlag != 4)
+                {
+                    FetchProjectLinks.Add(item);
+                }
+            }
         }
 
         private void AddNewProjectManager()
         {
-            ProjectManagerList.Add(new ProjectManager());
+            int itemCount = ProjectManagerList.Count;
+            ProjectManagerList.Add(new ProjectManager { FetchID = itemCount, ActionFlag = 1 });
+            FetchProjectManagerList = new ObservableCollection<ProjectManager>();
+            foreach (ProjectManager item in ProjectManagerList)
+            {
+                if (item.ActionFlag != 3 && item.ActionFlag != 4)
+                {
+                    FetchProjectManagerList.Add(item);
+                }
+            }
         }
 
         private void AddNewSuperintendent()
         {
-            SuperintendentList.Add(new Superintendent());
+            int itemCount = SuperintendentList.Count;
+            SuperintendentList.Add(new Superintendent { FetchID = itemCount, ActionFlag = 1 });
+            FetchSuperintendentList = new ObservableCollection<Superintendent>();
+            foreach (Superintendent item in SuperintendentList)
+            {
+                if (item.ActionFlag != 3 && item.ActionFlag != 4)
+                {
+                    FetchSuperintendentList.Add(item);
+                }
+            }
         }
 
         private void SaveProject()
@@ -149,110 +216,126 @@ namespace WpfApp.ViewModel
 
             if (!string.IsNullOrEmpty(name))
             {
-                //if (ActionState.Equals("New"))
-                //{
-                //    sqlquery = "INSERT INTO tblProjects(Project_Name, Job_No, Estimator_ID, PC_ID, Customer_ID, CC_ID, Architect_ID, Crew_ID, Address, City, State, Zip, Date_Completed, Target_Date, BackGroundCheck, CIP_Project, CertPay_Reqd, PnP_Bond, GapBid_Incl, GapEst_Incl, On_Hold, Complete, Pay_Reqd, Pay_Reqd_Note, Addtl_Info, Stored_Materials, Billing_Date, C3, LCPTracker, Safety_Badging, Arch_Rep_ID, Master_Contract) OUTPUT INSERTED.Project_ID VALUES (@ProjectName, @JobNo, @EstimatorID, @PcID, @CustomerID, @CcID, @ArchitectID, @CrewID, @Address, @City, @State, @Zip, @DateCompleted, @TargetDate, @BackGroundCheck, @CipProject, @CertPayReqd, @PnpBond, @GapBid, @GapEst, @OnHold, @Complete, @PayReqd, @PayReqdNote, @AddInfo, @StoredMaterial, @BillingDate, @C3, @LcpTracker, @SafetyBadging, @ArchRepID, @MasterContract)";
+                if (ActionState.Equals("New"))
+                {
+                    sqlquery = "INSERT INTO tblProjects(Project_Name, Job_No, Estimator_ID, PC_ID, Customer_ID, CC_ID, Architect_ID, Crew_ID, Address, City, State, Zip, Date_Completed, Target_Date, BackGroundCheck, CIP_Project, CertPay_Reqd, PnP_Bond, GapBid_Incl, GapEst_Incl, On_Hold, Complete, Pay_Reqd, Pay_Reqd_Note, Addtl_Info, Stored_Materials, Billing_Date, C3, LCPTracker, Safety_Badging, Arch_Rep_ID, Master_Contract) OUTPUT INSERTED.Project_ID VALUES (@ProjectName, @JobNo, @EstimatorID, @PcID, @CustomerID, @CcID, @ArchitectID, @CrewID, @Address, @City, @State, @Zip, @DateCompleted, @TargetDate, @BackGroundCheck, @CipProject, @CertPayReqd, @PnpBond, @GapBid, @GapEst, @OnHold, @Complete, @PayReqd, @PayReqdNote, @AddInfo, @StoredMaterial, @BillingDate, @C3, @LcpTracker, @SafetyBadging, @ArchRepID, @MasterContract)";
 
-                //    int insertedProjectID = dbConnection.RunQueryToCreateProject(sqlquery, name, jobNo, estimatorID, pcID, customerID, ccID, architectID, crewID, address, city, state, zip, dateCompleted, targetDate, backgroundCheck, cip, certPayReqd, pnpBond, gapBid, gapEst, onHold, complete, payReqd, payReqdNote, addInfo, storedMat, billingDate, c3, lcpTracker, safetyBadging, archRepID, masterContract);
+                    int insertedProjectID = dbConnection.RunQueryToCreateProject(sqlquery, name, jobNo, estimatorID, pcID, customerID, ccID, architectID, crewID, address, city, state, zip, dateCompleted, targetDate, backgroundCheck, cip, certPayReqd, pnpBond, gapBid, gapEst, onHold, complete, payReqd, payReqdNote, addInfo, storedMat, billingDate, c3, lcpTracker, safetyBadging, archRepID, masterContract);
 
-                //    TempProject.ID = insertedProjectID;
+                    TempProject.ID = insertedProjectID;
 
-                //    MessageBox.Show("New Project is added successfully", "Save", MessageBoxButton.OK, MessageBoxImage.Information);
-                //    ActionState = "Update";
-                //}
-                //else
-                //{
-                //    sqlquery = "UPDATE tblProjects SET Project_Name=@ProjectName, Job_No=@JobNo, Estimator_ID=@EstimatorID, PC_ID=@PcID, Customer_ID=@CustomerID, CC_ID=@CcID, Architect_ID=@ArchitectID, Crew_ID=@CrewID, Address=@Address, City=@City, State=@State, Zip=@Zip, Date_Completed=@DateCompleted, Target_Date=@TargetDate, BackgroundCheck=@BackgroundCheck, CIP_Project=@CipProject, CertPay_Reqd=@CertPayReqd, PnP_Bond=@PnpBond, GapBid_Incl=@GapBid, GapEst_Incl=@GapEst, On_Hold=@OnHold, Complete=@Complete, Pay_Reqd=@PayReqd, Pay_Reqd_Note=@PayReqdNote, Addtl_Info=@AddInfo, Stored_Materials=@StoredMaterial, Billing_Date=@BillingDate, C3=@C3, LCPTracker=@LcpTracker, Safety_Badging=@SafetyBadging, Arch_Rep_ID=@ArchRepID, Master_Contract=@MasterContract WHERE Project_ID=@ProjectID";
+                    //MessageBox.Show("New Project is added successfully", "Save", MessageBoxButton.OK, MessageBoxImage.Information);
+                    ActionState = "Update";
+                }
+                else
+                {
+                    sqlquery = "UPDATE tblProjects SET Project_Name=@ProjectName, Job_No=@JobNo, Estimator_ID=@EstimatorID, PC_ID=@PcID, Customer_ID=@CustomerID, CC_ID=@CcID, Architect_ID=@ArchitectID, Crew_ID=@CrewID, Address=@Address, City=@City, State=@State, Zip=@Zip, Date_Completed=@DateCompleted, Target_Date=@TargetDate, BackgroundCheck=@BackgroundCheck, CIP_Project=@CipProject, CertPay_Reqd=@CertPayReqd, PnP_Bond=@PnpBond, GapBid_Incl=@GapBid, GapEst_Incl=@GapEst, On_Hold=@OnHold, Complete=@Complete, Pay_Reqd=@PayReqd, Pay_Reqd_Note=@PayReqdNote, Addtl_Info=@AddInfo, Stored_Materials=@StoredMaterial, Billing_Date=@BillingDate, C3=@C3, LCPTracker=@LcpTracker, Safety_Badging=@SafetyBadging, Arch_Rep_ID=@ArchRepID, Master_Contract=@MasterContract WHERE Project_ID=@ProjectID";
 
-                //    cmd = dbConnection.RunQueryToUpdateProject(sqlquery, name, jobNo, estimatorID, pcID, customerID, ccID, architectID, crewID, address, city, state, zip, dateCompleted, targetDate, backgroundCheck, cip, certPayReqd, pnpBond, gapBid, gapEst, onHold, complete, payReqd, payReqdNote, addInfo, storedMat, billingDate, c3, lcpTracker, safetyBadging, archRepID, masterContract, projectID);
-                //}
-                //projectID = TempProject.ID;
+                    cmd = dbConnection.RunQueryToUpdateProject(sqlquery, name, jobNo, estimatorID, pcID, customerID, ccID, architectID, crewID, address, city, state, zip, dateCompleted, targetDate, backgroundCheck, cip, certPayReqd, pnpBond, gapBid, gapEst, onHold, complete, payReqd, payReqdNote, addInfo, storedMat, billingDate, c3, lcpTracker, safetyBadging, archRepID, masterContract, projectID);
+                }
 
-                //foreach (Note _note in ProjectNotes)
-                //{
-                //    if (_note.NoteID == 0)
-                //    {
-                //        sqlquery = "INSERT INTO tblNotes(Notes_PK, Notes_PK_Desc, Notes_Note, Notes_DateAdded, Notes_User) OUTPUT INSERTED.Notes_ID VALUES (@NotesPK, @NotesDesc, @NotesNote, @NotesDateAdded, @NotesUser)";
+                projectID = TempProject.ID;
 
-                //        int notesPK = projectID;
-                //        string notesPkDesc = "Project";
-                //        string notesNote = _note.NotesNote;
-                //        DateTime notesDateAdded = _note.NotesDateAdded;
-                //        string user = "smile";
+                foreach (Note _note in ProjectNotes)
+                {
+                    int notesPK = projectID;
+                    string notesPkDesc = "Project";
+                    string notesNote = _note.NotesNote;
+                    DateTime notesDateAdded = _note.NotesDateAdded;
+                    string user = "smile";
+                    int notesID = _note.NoteID;
+                    int actionFlag = _note.ActionFlag;
 
-                //        int insertedNoteId = dbConnection.RunQueryToCreateNote(sqlquery, notesPK, notesPkDesc, notesNote, notesDateAdded, user);
-                //        _note.NoteID = insertedNoteId;
-                //    }
-                //    else
-                //    {
-                //        sqlquery = "UPDATE tblNotes SET Notes_Note=@NotesNote, Notes_DateAdded=@NotesDateAdded WHERE Notes_ID=@NotesID";
+                    if(actionFlag == 0)
+                    {
+                        sqlquery = "UPDATE tblNotes SET Notes_Note=@NotesNote, Notes_DateAdded=@NotesDateAdded WHERE Notes_ID=@NotesID";
 
-                //        string notesNote = _note.NotesNote;
-                //        DateTime notesDateAdded = _note.NotesDateAdded;
-                //        string user = "smile";
-                //        int notesID = _note.NoteID;
-                //        cmd = dbConnection.RunQueryToUpdateNote(sqlquery, notesNote, notesDateAdded, user, notesID);
-                //    }
-                //}
+                        
+                        cmd = dbConnection.RunQueryToUpdateNote(sqlquery, notesNote, notesDateAdded, user, notesID);
+                    } else if(actionFlag == 1)
+                    {
+                        sqlquery = "INSERT INTO tblNotes(Notes_PK, Notes_PK_Desc, Notes_Note, Notes_DateAdded, Notes_User) OUTPUT INSERTED.Notes_ID VALUES (@NotesPK, @NotesDesc, @NotesNote, @NotesDateAdded, @NotesUser)";
 
-                //foreach (ProjectManager _pm in ProjectManagerList)
-                //{
-                //    int pmID = _pm.ID;
-                //    int projPmID = _pm.ProjPmID;
-                //    if (projPmID == 0)
-                //    {
-                //        sqlquery = "INSERT INTO tblProjectPMs(Project_ID, PM_ID) OUTPUT INSERTED.ProjPM_ID VALUES (@ProjectID, @PmID)";
+                        int insertedNoteId = dbConnection.RunQueryToCreateNote(sqlquery, notesPK, notesPkDesc, notesNote, notesDateAdded, user);
+                        _note.NoteID = insertedNoteId;
+                    } else if(actionFlag == 3)
+                    {
+                        sqlquery = "DELETE tblNotes WHERE Notes_ID =" + notesID.ToString();
+                        cmd = dbConnection.RunQuryNoParameters(sqlquery);
+                    }
+                }
 
-                //        int insertedProjPmId = dbConnection.RunQueryToCreateProjPM(sqlquery, projectID, pmID);
-                //        _pm.ProjPmID = insertedProjPmId;
-                //    }
-                //    else
-                //    {
-                //        sqlquery = "UPDATE tblProjectPMs SET Project_ID=@ProjectID, PM_ID=@PmID WHERE ProjPM_ID=@ProjPmID";
+                foreach (ProjectManager _pm in ProjectManagerList)
+                {
+                    int pmID = _pm.ID;
+                    int projPmID = _pm.ProjPmID;
+                    int actionFlag = _pm.ActionFlag;
 
-                //        cmd = dbConnection.RunQueryToUpdateProjPM(sqlquery, projectID, pmID, projPmID);
-                //    }
-                //}
+                    if (actionFlag == 0)
+                    {
+                        sqlquery = "UPDATE tblProjectPMs SET Project_ID=@ProjectID, PM_ID=@PmID WHERE ProjPM_ID=@ProjPmID";
+                        cmd = dbConnection.RunQueryToUpdateProjPM(sqlquery, projectID, pmID, projPmID);
+                    } else if(actionFlag == 1)
+                    {
+                        sqlquery = "INSERT INTO tblProjectPMs(Project_ID, PM_ID) OUTPUT INSERTED.ProjPM_ID VALUES (@ProjectID, @PmID)";
+                        int insertedProjPmId = dbConnection.RunQueryToCreateProjPM(sqlquery, projectID, pmID);
+                        _pm.ProjPmID = insertedProjPmId;
+                    } else if(actionFlag == 3)
+                    {
+                        sqlquery = "DELETE tblProjectPMs WHERE ProjPM_ID =" + projPmID.ToString();
+                        cmd = dbConnection.RunQuryNoParameters(sqlquery);
+                    }
+                }
 
-                //foreach (Superintendent _supt in SuperintendentList)
-                //{
-                //    int supID = _supt.SupID;
-                //    int projSupID = _supt.ProjSupID;
-                //    if (projSupID == 0)
-                //    {
-                //        sqlquery = "INSERT INTO tblProjectSups(Project_ID, Sup_ID) OUTPUT INSERTED.ProjSup_ID VALUES (@ProjectID, @SupID)";
+                foreach (Superintendent _supt in SuperintendentList)
+                {
+                    int supID = _supt.SupID;
+                    int projSupID = _supt.ProjSupID;
+                    int actionFlag = _supt.ActionFlag;
 
-                //        int insertedProjSupId = dbConnection.RunQueryToCreateProjSup(sqlquery, projectID, supID);
-                //        _supt.ProjSupID = insertedProjSupId;
-                //    }
-                //    else
-                //    {
-                //        sqlquery = "UPDATE tblProjectSups SET Project_ID=@ProjectID, Sup_ID=@SupID WHERE ProjSup_ID=@ProjSupID";
+                    if (actionFlag == 0)
+                    {
+                        sqlquery = "UPDATE tblProjectSups SET Project_ID=@ProjectID, Sup_ID=@SupID WHERE ProjSup_ID=@ProjSupID";
 
-                //        cmd = dbConnection.RunQueryToUpdateProjSup(sqlquery, projectID, supID, projSupID);
-                //    }
-                //}
+                        cmd = dbConnection.RunQueryToUpdateProjSup(sqlquery, projectID, supID, projSupID);
+                      
+                    } else if(actionFlag == 1)
+                    {
+                        sqlquery = "INSERT INTO tblProjectSups(Project_ID, Sup_ID) OUTPUT INSERTED.ProjSup_ID VALUES (@ProjectID, @SupID)";
 
-                //foreach (ProjectLink _projectLink in ProjectLinks)
-                //{
-                //    string pathDesc = _projectLink.PathDesc;
-                //    string pathName = _projectLink.PathName;
-                //    int linkID = _projectLink.LinkID;
+                        int insertedProjSupId = dbConnection.RunQueryToCreateProjSup(sqlquery, projectID, supID);
+                        _supt.ProjSupID = insertedProjSupId;
+                    } else if(actionFlag == 3)
+                    {
+                        sqlquery = "DELETE tblProjectSups WHERE ProjSup_ID =" + projSupID.ToString();
+                        cmd = dbConnection.RunQuryNoParameters(sqlquery);
+                    }
+                }
 
-                //    if (linkID == 0)
-                //    {
-                //        sqlquery = "INSERT INTO tblProjectLinks(Project_ID, PathDesc, PathName) OUTPUT INSERTED.Link_ID VALUES (@ProjectID, @PathDesc, @PathName)";
+                foreach (ProjectLink _projectLink in ProjectLinks)
+                {
+                    string pathDesc = _projectLink.PathDesc;
+                    string pathName = _projectLink.PathName;
+                    int linkID = _projectLink.LinkID;
+                    int actionFlag = _projectLink.ActionFlag;
 
-                //        int insertedProjLinkId = dbConnection.RunQueryToCreateProjectLink(sqlquery, projectID, pathDesc, pathName);
-                //        _projectLink.LinkID = insertedProjLinkId;
-                //    }
-                //    else
-                //    {
-                //        sqlquery = "UPDATE tblProjectLinks SET Project_ID=@ProjectID, PathDesc=@PathDesc, PathName=@PathName WHERE Link_ID=@LinkID";
+                    if (actionFlag == 0)
+                    {
+                        sqlquery = "UPDATE tblProjectLinks SET Project_ID=@ProjectID, PathDesc=@PathDesc, PathName=@PathName WHERE Link_ID=@LinkID";
 
-                //        cmd = dbConnection.RunQueryToUpdateProjectLink(sqlquery, projectID, pathDesc, pathName, linkID);
-                //    }
-                //}
+                        cmd = dbConnection.RunQueryToUpdateProjectLink(sqlquery, projectID, pathDesc, pathName, linkID);
+                    } else if(actionFlag == 1)
+                    {
+                        sqlquery = "INSERT INTO tblProjectLinks(Project_ID, PathDesc, PathName) OUTPUT INSERTED.Link_ID VALUES (@ProjectID, @PathDesc, @PathName)";
+
+                        int insertedProjLinkId = dbConnection.RunQueryToCreateProjectLink(sqlquery, projectID, pathDesc, pathName);
+                        _projectLink.LinkID = insertedProjLinkId;
+                    } else if(actionFlag == 3)
+                    {
+                        sqlquery = "DELETE tblProjectLinks WHERE Link_ID =" + linkID.ToString();
+                        cmd = dbConnection.RunQuryNoParameters(sqlquery);
+                    }
+                }
 
                 foreach (SovAcronym _sovAcronym in SovAcronyms)
                 {
@@ -264,24 +347,14 @@ namespace WpfApp.ViewModel
 
                     if (projSovID == 0)
                     {
-                        sqlquery = "SELECT TOP 1 * FROM tblProjectSOV ORDER BY ProjSOV_ID DESC";
-                        cmd = dbConnection.RunQuryNoParameters(sqlquery);
-                        SqlDataAdapter sda = new SqlDataAdapter(cmd);
-                        DataSet ds = new DataSet();
-                        sda.Fill(ds);
+                        sqlquery = "INSERT INTO tblProjectSOV(Project_ID, CO_ID, SOV_Acronym, Material_Only) OUTPUT INSERTED.ProjSOV_ID VALUES (@ProjectID, @CoID, @SovAcronymName, @MatOnly)";
 
-                        DataRow firstRow = ds.Tables[0].Rows[0];
-                        projSovID = int.Parse(firstRow["ProjSOV_ID"].ToString());
-
-                        sqlquery = "INSERT INTO tblProjectSOV(ProjSOV_ID, Project_ID, CO_ID, SOV_Acronym, Material_Only) OUTPUT INSERTED.ProjSOV_ID VALUES (@ProjSovID, @ProjectID, @CoID, @SovAcronymName, @MatOnly)";
-
-                        int insertedProjLinkId = dbConnection.RunQueryToCreateProjectSOV(sqlquery, projectID, coID, sovAcronymName, matOnly);
-                        _sovAcronym.ProjSovID = projSovID;
+                        int insertedID = dbConnection.RunQueryToCreateProjectSOV(sqlquery, projectID, coID, sovAcronymName, matOnly);
+                        _sovAcronym.ProjSovID = insertedID;
                     }
                     else
                     {
                         sqlquery = "UPDATE tblProjectSOV SET CO_ID=@CoID, SOV_Acronym=@SovAcronymName, Material_Only=@MatOnly WHERE ProjSOV_ID=@ProjSovID";
-
                         cmd = dbConnection.RunQueryToUpdateProjectSOV(sqlquery, projSovID, coID, sovAcronymName, matOnly);
                     }
                 }
@@ -292,6 +365,7 @@ namespace WpfApp.ViewModel
                     int coID = _sovMaterial.CoID;
                     int coItemNo = _sovMaterial.CoItemNo;
                     bool matOnly = _sovMaterial.MatOnly;
+                    bool sovMatOnly = _sovMaterial.SovMatOnly;
                     int matID = _sovMaterial.MatID;
                     string matPhase = _sovMaterial.MatPhase;
                     string matType = _sovMaterial.MatType;
@@ -304,44 +378,81 @@ namespace WpfApp.ViewModel
                     double matOrigRate = _sovMaterial.MatOrigRate;
                     int projectMatID = _sovMaterial.ProjMatID;
                     int projSovID = _sovMaterial.ProjSovID;
-                   
-                    if (actionFlag == 1)
+
+                    if(matID > 0)
                     {
-                        sqlquery = "INSERT INTO tblProjectSOV (Project_ID, CO_ID, SOV_Acronym, Material_Only) OUTPUT INSERTED.ProjSOV_ID  VALUES (@ProjectID, @CoID, @SovAcronymName, @MatOnly)";
+                        if (actionFlag == 1)
+                        {
+                            sqlquery = "INSERT INTO tblProjectMaterials (ProjSOV_ID, Material_ID, Mat_Phase, Mat_Type, Color_Selected, Qty_Reqd, TotalCost, Mat_Only, Project_ID) OUTPUT INSERTED.ProjMat_ID VALUES (@ProjSovID, @MatID, @MatPhase, @MatType, @Color, @QtyReqd, @TotalCost, @MatOnly, @ProjectID)";
 
-                        int inserted = dbConnection.RunQueryToCreateProjectSOV(sqlquery, projectID, coID, acronymName, matOnly);
-                        _sovMaterial.ProjSovID = inserted;
-                        projSovID = inserted;
+                            int insertProjMatID = dbConnection.RunQueryToCreateProjectMat(sqlquery, projSovID, matID, matPhase, matType, color, qtyReqd, totalCost, matOnly, projectID);
+                            _sovMaterial.ActionFlag = 0;
+                        }
+                        else if (actionFlag == 0)
+                        {
+                            sqlquery = "UPDATE tblProjectMaterials SET ProjSOV_ID=@ProjSovID, Mat_LineNo=@MatLine, Material_ID=@MatID, Mat_Phase=@MatPhase, Mat_Type=@MatType, Color_Selected=@Color, Qty_Reqd=@QtyReqd, TotalCost=@TotalCost, Mat_Lot=@MatLot, Mat_Orig_Rate=@MatOrigRate, Mat_Only=@MatOnly, Project_ID=@ProjectID WHERE ProjMat_ID=@ProjMatID";
 
-                        sqlquery = "INSERT INTO tblProjectMaterials (ProjSOV_ID, Material_ID, Mat_Phase, Mat_Type, Color_Selected, Qty_Reqd, TotalCost, Mat_Only, Project_ID) OUTPUT INSERTED.ProjMat_ID VALUES (@ProjSovID, @MatID, @MatPhase, @MatType, @Color, @QtyReqd, @TotalCost, @MatOnly, @ProjectID)";
+                            cmd = dbConnection.RunQueryToUpdateProjectMat(sqlquery, projSovID, matLine, matID, matPhase, matType, color, qtyReqd, totalCost, matLot, matOrigRate, matOnly, projectID, projectMatID);
+                        }
+                        else if (actionFlag == 3)
+                        {
+                            sqlquery = "DELETE tblProjectMaterialsTrack WHERE ProjMat_ID =" + projectMatID.ToString();
+                            cmd = dbConnection.RunQuryNoParameters(sqlquery);
 
-                        int insertProjMatID = dbConnection.RunQueryToCreateProjectMat(sqlquery, projSovID, matID, matPhase, matType, color, qtyReqd, totalCost, matOnly, projectID);
-                        _sovMaterial.ActionFlag = 0;
-                    }
-                    else if (actionFlag == 0)
-                    {
-                        sqlquery = "UPDATE tblProjectSOV SET CO_ID=@CoID, SOV_Acronym=@SovAcronymName, Material_Only=@MatOnly WHERE ProjSOV_ID=@ProjSovID";
+                            sqlquery = "DELETE tblProjectMaterials WHERE ProjMat_ID =" + projectMatID.ToString();
+                            cmd = dbConnection.RunQuryNoParameters(sqlquery);
 
-                        cmd = dbConnection.RunQueryToUpdateProjectSOV(sqlquery, projSovID, coID, acronymName, matOnly);
-
-                        sqlquery = "UPDATE tblProjectMaterials SET ProjSOV_ID=@ProjSovID, Mat_LineNo=@MatLine, Material_ID=@MatID, Mat_Phase=@MatPhase, Mat_Type=@MatType, Color_Selected=@Color, Qty_Reqd=@QtyReqd, TotalCost=@TotalCost, Mat_Lot=@MatLot, Mat_Orig_Rate=@MatOrigRate, Mat_Only=@MatOnly, Project_ID=@ProjectID WHERE ProjMat_ID=@ProjMatID";
-
-                        cmd = dbConnection.RunQueryToUpdateProjectMat(sqlquery, projSovID, matLine, matID, matPhase, matType, color, qtyReqd, totalCost, matLot, matOrigRate, matOnly, projectID, projectMatID);
-                    }
-                    else if (actionFlag == 3)
-                    {
-                        sqlquery = "DELETE tblProjectMaterialsTrack WHERE ProjMat_ID =" + projectMatID.ToString();
-                        cmd = dbConnection.RunQuryNoParameters(sqlquery);
-
-                        sqlquery = "DELETE tblProjectMaterials WHERE ProjMat_ID =" + projectMatID.ToString();
-                        cmd = dbConnection.RunQuryNoParameters(sqlquery);
-
-                        sqlquery = "DELETE tblProjectSOV WHERE ProjSOV_ID =" + projSovID.ToString();
-                        cmd = dbConnection.RunQuryNoParameters(sqlquery);
+                            sqlquery = "DELETE tblProjectSOV WHERE ProjSOV_ID =" + projSovID.ToString();
+                            cmd = dbConnection.RunQuryNoParameters(sqlquery);
+                        }
                     }
                 }
 
-                MessageBox.Show("Project is updated successfully", "Save", MessageBoxButton.OK, MessageBoxImage.Information);
+                foreach (ProjectLabor _sovLabor in ProjectLabors)
+                {
+                    string acronymName = _sovLabor.SovAcronymName;
+                    int coItemNo = _sovLabor.CoItemNo;
+                    int labLineNo = _sovLabor.LabLineNo;
+                    int laborID = _sovLabor.LaborID;
+                    string phase = _sovLabor.Phase;
+                    double qtyReqd = _sovLabor.QtyReqd;
+                    int projectLabID = _sovLabor.ProjLabID;
+                    bool laborComplete = _sovLabor.Complete;
+                    int projSovID = _sovLabor.ProjSovID;
+                    int laborProjectID = _sovLabor.ProjectID;
+                    double unitPrice = _sovLabor.UnitPrice;
+                    double total = _sovLabor.Total;
+                    int coID = _sovLabor.CoID;
+                    bool matOnly = _sovLabor.MatOnly;
+
+                    int actionFlag = _sovLabor.ActionFlag;
+
+                    if (laborID > 0)
+                    {
+                        if (actionFlag == 1)
+                        {
+                            sqlquery = "INSERT INTO tblProjectLabor (ProjSOV_ID, Project_ID, Lab_LineNo, Labor_ID, Lab_Phase, Qty_Reqd, UnitPrice, Complete) OUTPUT INSERTED.ProjLab_ID VALUES (@ProjSovID, @ProjectID, @LabLineNo, @LaborID, @LabPhase, @QtyReqd, @UnitPrice, @Complete)";
+
+                            int insertProjMatID = dbConnection.RunQueryToCreateProjectLab(sqlquery, projSovID, projectID, labLineNo, laborID, phase, qtyReqd, unitPrice, laborComplete);
+                            _sovLabor.ActionFlag = 0;
+                        }
+                        else if (actionFlag == 0)
+                        {
+                            sqlquery = "UPDATE tblProjectLabor SET ProjSOV_ID=@ProjSovID, Project_ID=@ProjectID, Lab_LineNo=@LabLineNo, Labor_ID=@LaborID, Lab_Phase=@LabPhase, Qty_Reqd=@QtyReqd, UnitPrice=@UnitPrice, Complete=@Complete WHERE ProjLab_ID=@ProjLabID";
+
+                            cmd = dbConnection.RunQueryToUpdateProjectLab(sqlquery, projSovID, projectID, labLineNo, laborID, phase, qtyReqd, unitPrice, laborComplete, projectLabID);
+                        }
+                        else if (actionFlag == 3)
+                        {
+                            sqlquery = "DELETE tblWorkOrdersLab WHERE ProjLab_ID =" + projectLabID.ToString();
+                            cmd = dbConnection.RunQuryNoParameters(sqlquery);
+
+                            sqlquery = "DELETE tblProjectLabor WHERE ProjLab_ID =" + projectLabID.ToString();
+                            cmd = dbConnection.RunQuryNoParameters(sqlquery);
+                        }
+                    }
+                }
+                MessageBox.Show("Project is saved successfully", "Save", MessageBoxButton.OK, MessageBoxImage.Information);
             }
             else
             {
@@ -354,17 +465,24 @@ namespace WpfApp.ViewModel
             ProjectID = -1;
             ActionState = "New";
             ProjectManagerList.Clear();
+            FetchProjectManagerList.Clear();
             SuperintendentList.Clear();
+            FetchSuperintendentList.Clear();
             ProjectNotes.Clear();
+            FetchProjectNotes.Clear();
             ProjectLinks.Clear();
+            FetchProjectLinks.Clear();
             InstallationNotes.Clear();
             ProjectCIPs.Clear();
             Contracts.Clear();
             ChangeOrders.Clear();
-
             // SOV
             SovAcronyms.Clear();
+            FetchSovAcronyms.Clear();
             SovMaterials.Clear();
+            FetchSovMaterials.Clear();
+            ProjectLabors.Clear();
+            FetchSovLabors.Clear();
             // Track/Ship/Recv
             TrackShipRecvs.Clear();
             ProjectMatTrackings.Clear();
@@ -781,6 +899,7 @@ namespace WpfApp.ViewModel
 
             ObservableCollection<Acronym> st_acronym = new ObservableCollection<Acronym>();
             ObservableCollection<Acronym> st_newAcronym = new ObservableCollection<Acronym>();
+
             st_newAcronym.Add(new Acronym { AcronymName = "New" });
             foreach (DataRow row in ds.Tables[0].Rows)
             {
@@ -880,6 +999,7 @@ namespace WpfApp.ViewModel
             sda = new SqlDataAdapter(cmd);
             ds = new DataSet();
             sda.Fill(ds);
+                        
 
             ObservableCollection<PathDescription> sb_pathDesc = new ObservableCollection<PathDescription>();
 
@@ -1087,50 +1207,67 @@ namespace WpfApp.ViewModel
             ProjectWorkOrders = sb_projectWorkOrder;
 
             // Project Labor List
-            sqlquery = "SELECT CO_ItemNo, tblLab.* FROM tblProjectChangeOrders RIGHT JOIN(SELECT tblProjectSOV.SOV_Acronym, tblProjectSOV.CO_ID, tblLab.Labor_Desc, tblLab.Qty_Reqd, tblLab.UnitPrice, tblLab.Lab_Phase, tblLab.Complete FROM tblProjectSOV RIGHT JOIN (SELECT tblLabor.Labor_Desc, tblLab.* FROM tblLabor RIGHT JOIN (SELECT* FROM tblProjectLabor WHERE Project_ID = " + ProjectID.ToString() + ") AS tblLab ON tblLabor.Labor_ID = tblLab.Labor_ID) AS tblLab ON tblProjectSOV.ProjSOV_ID = tblLab.ProjSOV_ID) AS tblLab ON tblProjectChangeOrders.CO_ID = tblLab.CO_ID ORDER BY tblLab.SOV_Acronym Desc";
+            sqlquery = "SELECT CO_ItemNo, tblLab.* FROM tblProjectChangeOrders RIGHT JOIN(SELECT tblProjectSOV.SOV_Acronym, tblProjectSOV.Material_Only, tblProjectSOV.ProjSOV_ID, tblProjectSOV.CO_ID, tblLab.ProjLab_ID, tblLab.Labor_ID, tblLab.Qty_Reqd, tblLab.UnitPrice, tblLab.Lab_Phase, tblLab.Complete FROM tblProjectSOV RIGHT JOIN (SELECT tblLabor.Labor_Desc, tblLab.* FROM tblLabor RIGHT JOIN (SELECT* FROM tblProjectLabor WHERE Project_ID = " + ProjectID.ToString() + ") AS tblLab ON tblLabor.Labor_ID = tblLab.Labor_ID) AS tblLab ON tblProjectSOV.ProjSOV_ID = tblLab.ProjSOV_ID) AS tblLab ON tblProjectChangeOrders.CO_ID = tblLab.CO_ID ORDER BY tblLab.SOV_Acronym Desc";
 
             cmd = dbConnection.RunQuryNoParameters(sqlquery);
             sda = new SqlDataAdapter(cmd);
             ds = new DataSet();
             sda.Fill(ds);
-
+            int id = 0;
             ObservableCollection<ProjectLabor> sb_projectLabor = new ObservableCollection<ProjectLabor>();
             foreach (DataRow row in ds.Tables[0].Rows)
             {
                 string _sovAcronym = "";
-                string _labor = "";
+                int _laborID = 0;
                 double _qtyReqd = 0;
                 double _unitPrice = 0;
                 bool _complete = false;
-                //int    = 0;
-                int _changeOrder = 0;
+                int _coItemNo = 0;
+                int _coID = 0;
+                int _projSovID = 0;
                 string _phase = "";
+                int _projLabID = 0;
+                bool _matOnly = false;
+
                 if (!row.IsNull("SOV_Acronym"))
                     _sovAcronym = row["SOV_Acronym"].ToString();
-                if (!row.IsNull("Labor_Desc"))
-                    _labor = row["Labor_Desc"].ToString();
+                if (!row.IsNull("Labor_ID"))
+                    _laborID = int.Parse(row["Labor_ID"].ToString());
                 if (!row.IsNull("Qty_Reqd"))
                     _qtyReqd = double.Parse(row["Qty_Reqd"].ToString());
                 if (!row.IsNull("UnitPrice"))
                     _unitPrice = row.Field<double>("UnitPrice");
                 if (!row.IsNull("CO_ItemNo"))
-                    _changeOrder = int.Parse(row["CO_ItemNo"].ToString());
+                    _coItemNo = int.Parse(row["CO_ItemNo"].ToString());
+                if (!row.IsNull("CO_ID"))
+                    _coID = int.Parse(row["CO_ID"].ToString());
                 if (!row.IsNull("Lab_Phase"))
                     _phase = row["Lab_Phase"].ToString();
                 if (!row.IsNull("Complete"))
                     _complete = row.Field<Boolean>("Complete");
-
+                if (!row.IsNull("ProjSOV_ID"))
+                    _projSovID = int.Parse(row["ProjSOV_ID"].ToString());
+                if (!row.IsNull("ProjLab_ID"))
+                    _projLabID = int.Parse(row["ProjLab_ID"].ToString());
+                _matOnly = row.Field<bool>("Material_Only");
                 sb_projectLabor.Add(new ProjectLabor
                 {
+                    ID = id,
                     ProjectID = ProjectID,
-                    SovAcronym = _sovAcronym,
-                    Labor = _labor,
+                    SovAcronymName = _sovAcronym,
+                    LaborID = _laborID,
                     QtyReqd = _qtyReqd,
                     UnitPrice = _unitPrice,
-                    ChangeOrder = _changeOrder,
+                    CoItemNo = _coItemNo,
+                    CoID = _coID,
                     Phase = _phase,
-                    Complete = _complete
+                    Complete = _complete,
+                    ProjSovID = _projSovID,
+                    ProjLabID = _projLabID,
+                    MatOnly = _matOnly
                 });
+
+                id += 1;
             }
             ProjectLabors = sb_projectLabor;
 
@@ -1326,6 +1463,7 @@ namespace WpfApp.ViewModel
             sda = new SqlDataAdapter(cmd);
             ds = new DataSet();
             sda.Fill(ds);
+            id = 0;
 
             ObservableCollection<SovAcronym> sb_sovCO= new ObservableCollection<SovAcronym>();
             foreach (DataRow row in ds.Tables[0].Rows)
@@ -1348,12 +1486,14 @@ namespace WpfApp.ViewModel
                     coID = int.Parse(row["CO_ID"].ToString());
                 sb_sovCO.Add(new SovAcronym
                 {
+                    ID = id,
                     SovAcronymName = sovAcronym,
                     SovDesc = sovDesc,
                     MatOnly = matOnly,
                     ProjSovID = projSovID,
                     CoID = coID
                 });
+                id += 1;
             }
 
             SovAcronyms = sb_sovCO;
@@ -1406,7 +1546,7 @@ namespace WpfApp.ViewModel
             ChangeOrders = sb_changeOrder;
 
             // SOVGrid2
-            sqlquery = "SELECT * FROM tblProjectChangeOrders RIGHT JOIN (SELECT tblProjectSOV.CO_ID, tblProjectSOV.SOV_Acronym, tblProjectSOV.Material_Only, tblProjSOV.* FROM tblProjectSOV RIGHT JOIN(SELECT tblProjectMaterials.ProjMat_ID, tblProjectMaterials.ProjSOV_ID, tblProjectMaterials.Mat_LineNo, tblProjectMaterials.Material_ID, tblProjectMaterials.Mat_Phase, tblProjectMaterials.Mat_Type, tblProjectMaterials.Color_Selected, tblProjectMaterials.Qty_Reqd, tblProjectMaterials.TotalCost, tblProjectMaterials.Mat_Lot, tblProjectMaterials.Mat_Orig_Rate FROM tblProjectMaterials INNER JOIN(SELECT * FROM tblProjects WHERE Project_ID = "+ ProjectID.ToString() +") AS tblProjectMat ON tblProjectMat.Project_ID = tblProjectMaterials.Project_ID) AS tblProjSOV ON tblProjSOV.ProjSOV_ID = tblProjectSOV.ProjSOV_ID) AS tblProjSOV ON tblProjSOV.CO_ID = tblProjectChangeOrders.CO_ID;";
+            sqlquery = "SELECT * FROM tblProjectChangeOrders RIGHT JOIN (SELECT tblProjectSOV.CO_ID, tblProjectSOV.SOV_Acronym, tblProjectSOV.Material_Only AS SovMat_Only, tblProjSOV.* FROM tblProjectSOV RIGHT JOIN(SELECT tblProjectMaterials.ProjMat_ID, tblProjectMaterials.ProjSOV_ID, tblProjectMaterials.Mat_Only, tblProjectMaterials.Mat_LineNo, tblProjectMaterials.Material_ID, tblProjectMaterials.Mat_Phase, tblProjectMaterials.Mat_Type, tblProjectMaterials.Color_Selected, tblProjectMaterials.Qty_Reqd, tblProjectMaterials.TotalCost, tblProjectMaterials.Mat_Lot, tblProjectMaterials.Mat_Orig_Rate FROM tblProjectMaterials INNER JOIN(SELECT * FROM tblProjects WHERE Project_ID = " + ProjectID.ToString() +") AS tblProjectMat ON tblProjectMat.Project_ID = tblProjectMaterials.Project_ID) AS tblProjSOV ON tblProjSOV.ProjSOV_ID = tblProjectSOV.ProjSOV_ID) AS tblProjSOV ON tblProjSOV.CO_ID = tblProjectChangeOrders.CO_ID";
             cmd = dbConnection.RunQuryNoParameters(sqlquery);
             sda = new SqlDataAdapter(cmd);
             ds = new DataSet();
@@ -1414,12 +1554,13 @@ namespace WpfApp.ViewModel
 
             ///SovMaterials
             ObservableCollection<SovMaterial> sb_sovMaterial = new ObservableCollection<SovMaterial>();
-            int id = 0;
+            id = 0;
             foreach (DataRow row in ds.Tables[0].Rows)
             {
                 string _acronymName = "";
                 int _coItemNo = 0;
                 bool _matOnly = false;
+                bool _sovMatOnly = false;
                 int _matID = 0;
                 string _matPhase = "";
                 string _matType = "";
@@ -1433,9 +1574,11 @@ namespace WpfApp.ViewModel
                     _acronymName = row["SOV_Acronym"].ToString();
                 if (!row.IsNull("CO_ItemNo"))
                     _coItemNo = int.Parse(row["CO_ItemNo"].ToString());
-                if (!row.IsNull("Material_Only"))
-                    _matOnly = row.Field<Boolean>("Material_Only");
-                if(!row.IsNull("Material_ID"))
+                if (!row.IsNull("Mat_Only"))
+                    _matOnly = row.Field<Boolean>("Mat_Only");
+                if (!row.IsNull("SovMat_Only"))
+                    _sovMatOnly = row.Field<Boolean>("SovMat_Only");
+                if (!row.IsNull("Material_ID"))
                     _matID = int.Parse(row["Material_ID"].ToString());
                 if (!row.IsNull("Mat_Phase"))
                     _matPhase = row["Mat_Phase"].ToString();
@@ -1451,6 +1594,7 @@ namespace WpfApp.ViewModel
                     _projMatID = int.Parse(row["ProjMat_ID"].ToString());
                 if (!row.IsNull("ProjSOV_ID"))
                     _projSovID = int.Parse(row["ProjSOV_ID"].ToString());
+               
                 sb_sovMaterial.Add(new SovMaterial
                 {
                     ID = id,
@@ -1464,13 +1608,39 @@ namespace WpfApp.ViewModel
                     QtyReqd = _qtyReqd,
                     TotalCost = _totalCost,
                     ProjMatID = _projMatID,
-                    ProjSovID = _projSovID
+                    ProjSovID = _projSovID,
+                    SovMatOnly = _sovMatOnly
                 });
 
                 id += 1;
             }
 
             SovMaterials = sb_sovMaterial;
+
+            sqlquery = "SELECT tblProjectChangeOrders.CO_ItemNo, tblProjSOV.* FROM tblProjectChangeOrders RIGHT JOIN(SELECT* FROM tblProjectSOV WHERE Project_ID ="+ ProjectID.ToString() + ") AS tblProjSOV ON tblProjectChangeOrders.CO_ID = tblProjSOV.CO_ID";
+            cmd = dbConnection.RunQuryNoParameters(sqlquery);
+            sda = new SqlDataAdapter(cmd);
+            ds = new DataSet();
+            sda.Fill(ds);
+            ObservableCollection<Acronym> sb_filterAcronyms = new ObservableCollection<Acronym>();
+            foreach (DataRow row in ds.Tables[0].Rows)
+            {
+                int _coItemNo = 0;
+                int _projSovID = 0;
+                string _sovAcronymName = "";
+                bool _matOnly = false;
+                if(!row.IsNull("ProjSOV_ID"))
+                    _projSovID = int.Parse(row["ProjSOV_ID"].ToString());
+                if(!row.IsNull("SOV_Acronym"))
+                    _sovAcronymName = row["SOV_Acronym"].ToString();
+                if(!row.IsNull("CO_ItemNo"))
+                    _coItemNo = int.Parse(row["CO_ItemNo"].ToString());
+                if (!row.IsNull("Material_Only"))
+                    _matOnly = row.Field<bool>("Material_Only");
+
+                sb_filterAcronyms.Add(new Acronym { ProjSovID = _projSovID, AcronymName = _sovAcronymName, CoItemNo = _coItemNo, MatOnly = _matOnly });
+            }
+            FilterAcronyms = sb_filterAcronyms;
 
             // Labor
             sqlquery = "SELECT * FROM tblLabor ORDER BY Labor_Desc";
@@ -1607,6 +1777,7 @@ namespace WpfApp.ViewModel
             sda = new SqlDataAdapter(cmd);
             ds = new DataSet();
             sda.Fill(ds);
+            int _fetchID = 0;
 
             ObservableCollection<ProjectManager> sb_pm = new ObservableCollection<ProjectManager>();
             foreach (DataRow row in ds.Tables[0].Rows)
@@ -1623,8 +1794,11 @@ namespace WpfApp.ViewModel
                     PMName = pmName,
                     PMCellPhone = pmCellPhone,
                     PMEmail = pmEmail,
-                    ProjPmID = projPmID
+                    ProjPmID = projPmID,
+                    FetchID = _fetchID
                 });
+
+                _fetchID += 1;
             }
 
             ProjectManagerList = sb_pm;
@@ -1636,6 +1810,7 @@ namespace WpfApp.ViewModel
             sda = new SqlDataAdapter(cmd);
             ds = new DataSet();
             sda.Fill(ds);
+            _fetchID = 0;
 
             ObservableCollection<Superintendent> sb_supt = new ObservableCollection<Superintendent>();
             foreach (DataRow row in ds.Tables[0].Rows)
@@ -1664,14 +1839,18 @@ namespace WpfApp.ViewModel
 
                 sb_supt.Add(new Superintendent
                 {
-                   SupID = _supID,
-                   SupName = _supName,
-                   SupPhone = _supPhone,
-                   SupCellPhone = _cellPhone,
-                   SupEmail = _email,
-                   Active = _active,
-                   ProjSupID = _projSupID,
+                    FetchID = _fetchID,
+                    SupID = _supID,
+                    SupName = _supName,
+                    SupPhone = _supPhone,
+                    SupCellPhone = _cellPhone,
+                    SupEmail = _email,
+                    Active = _active,
+                    ProjSupID = _projSupID,
+                    ActionFlag = 0
                 });
+
+                _fetchID += 1;
             }
             SuperintendentList = sb_supt;
 
@@ -1681,6 +1860,7 @@ namespace WpfApp.ViewModel
             sda = new SqlDataAdapter(cmd);
             ds = new DataSet();
             sda.Fill(ds);
+            id = 0;
 
             ObservableCollection<Note> sb_projectnotes = new ObservableCollection<Note>();
             foreach (DataRow row in ds.Tables[0].Rows)
@@ -1707,16 +1887,21 @@ namespace WpfApp.ViewModel
                     _notesUser = row["Notes_User"].ToString();
                 if (!row.IsNull("Notes_UserName"))
                     _notesUserName = row["Notes_UserName"].ToString();
+
                 sb_projectnotes.Add(new Note
                 {
+                    ID = id,
                     NoteID = _notesID,
                     NotePK = _notesPK,
                     NotesPKDesc = _notesPKDesc,
                     NotesNote = _notesNote,
                     NotesDateAdded = _notesDateAdded,
                     NoteUser = _notesUser,
-                    NoteUserName = _notesUserName
+                    NoteUserName = _notesUserName,
+                    ActionFlag = 0
                 });
+
+                id += 1;
             }
             //Note noteItem = new Note();
             //sb_projectnotes.Add(noteItem);
@@ -1797,6 +1982,7 @@ namespace WpfApp.ViewModel
             sda = new SqlDataAdapter(cmd);
             ds = new DataSet();
             sda.Fill(ds);
+            _fetchID = 0;
 
             ObservableCollection<ProjectLink> sb_projectLinks = new ObservableCollection<ProjectLink>();
             foreach (DataRow row in ds.Tables[0].Rows)
@@ -1817,11 +2003,15 @@ namespace WpfApp.ViewModel
 
                 sb_projectLinks.Add(new ProjectLink
                 {
+                    FetchID = _fetchID,
                     LinkID = _linkID,
                     ProjectID = _projectID,
                     PathDesc = _pathDesc,
-                    PathName = _pathName
+                    PathName = _pathName,
+                    ActionFlag = 0
                 });
+
+                _fetchID += 1;
             }
             foreach (DataRow row in ds.Tables[0].Rows)
             {
@@ -2019,6 +2209,13 @@ namespace WpfApp.ViewModel
             set;
         }
 
+        
+        public ObservableCollection<Acronym> FilterAcronyms
+        {
+            get;
+            set;
+        }
+
         public ObservableCollection<ReturnedVia> ReturnedViaNames
         {
             get;
@@ -2063,6 +2260,29 @@ namespace WpfApp.ViewModel
                 if (_projectLabor != value)
                 {
                     _projectLabor = value;
+                    FetchSovLabors = new ObservableCollection<ProjectLabor>();
+                    foreach (ProjectLabor item in value)
+                    {
+                        if (item.ActionFlag != 3)
+                        {
+                            FetchSovLabors.Add(item);
+                        }
+                    }
+                    OnPropertyChanged();
+                }
+            }
+        }
+
+        private ObservableCollection<ProjectLabor> _fetchSovLabor;
+
+        public ObservableCollection<ProjectLabor> FetchSovLabors
+        {
+            get { return _fetchSovLabor; }
+            set
+            {
+                if (_fetchSovLabor != value)
+                {
+                    _fetchSovLabor = value;
                     OnPropertyChanged();
                 }
             }
@@ -2153,6 +2373,29 @@ namespace WpfApp.ViewModel
                 if (_sovAcronym != value)
                 {
                     _sovAcronym = value;
+                    FetchSovAcronyms = new ObservableCollection<SovAcronym>();
+                    foreach (SovAcronym item in value)
+                    {
+                        if (item.ActionFlag != 3)
+                        {
+                            FetchSovAcronyms.Add(item);
+                        }
+                    }
+                    OnPropertyChanged();
+                }
+            }
+        }
+
+        private ObservableCollection<SovAcronym> _fetchSovAcronym;
+
+        public ObservableCollection<SovAcronym> FetchSovAcronyms
+        {
+            get { return _fetchSovAcronym; }
+            set
+            {
+                if (_fetchSovAcronym != value)
+                {
+                    _fetchSovAcronym = value;
                     OnPropertyChanged();
                 }
             }
@@ -2262,6 +2505,26 @@ namespace WpfApp.ViewModel
             {
                 if (_projectManagerList == value) return;
                 _projectManagerList = value;
+                FetchProjectManagerList = new ObservableCollection<ProjectManager>();
+                foreach (ProjectManager item in value)
+                {
+                    if (item.ActionFlag != 3)
+                    {
+                        FetchProjectManagerList.Add(item);
+                    }
+                }
+                OnPropertyChanged();
+            }
+        }
+
+        private ObservableCollection<ProjectManager> _fetchProjectManagerList;
+        public ObservableCollection<ProjectManager> FetchProjectManagerList
+        {
+            get { return _fetchProjectManagerList; }
+            set
+            {
+                if (_fetchProjectManagerList == value) return;
+                _fetchProjectManagerList = value;
                 OnPropertyChanged();
             }
         }
@@ -2275,6 +2538,28 @@ namespace WpfApp.ViewModel
                 if (_superintendentLIst != value)
                 {
                     _superintendentLIst = value;
+                    FetchSuperintendentList = new ObservableCollection<Superintendent>();
+                    foreach (Superintendent item in value)
+                    {
+                        if (item.ActionFlag != 3)
+                        {
+                            FetchSuperintendentList.Add(item);
+                        }
+                    }
+                    OnPropertyChanged();
+                }
+            }
+        }
+
+        private ObservableCollection<Superintendent> _fetchSuperintendentList;
+        public ObservableCollection<Superintendent> FetchSuperintendentList
+        {
+            get { return _fetchSuperintendentList; }
+            set
+            {
+                if (_fetchSuperintendentList != value)
+                {
+                    _fetchSuperintendentList = value;
                     OnPropertyChanged();
                 }
             }
@@ -2289,6 +2574,28 @@ namespace WpfApp.ViewModel
                 if (_projectnotes != value)
                 {
                     _projectnotes = value;
+                    FetchProjectNotes = new ObservableCollection<Note>();
+                    foreach (Note item in value)
+                    {
+                        if (item.ActionFlag != 3)
+                        {
+                            FetchProjectNotes.Add(item);
+                        }
+                    }
+                    OnPropertyChanged();
+                }
+            }
+        }
+
+        private ObservableCollection<Note> _fetchProjectNotes;
+        public ObservableCollection<Note> FetchProjectNotes
+        {
+            get { return _fetchProjectNotes; }
+            set
+            {
+                if (_fetchProjectNotes != value)
+                {
+                    _fetchProjectNotes = value;
                     OnPropertyChanged();
                 }
             }
@@ -2333,6 +2640,29 @@ namespace WpfApp.ViewModel
                 if (_projectLinks != value)
                 {
                     _projectLinks = value;
+                    FetchProjectLinks = new ObservableCollection<ProjectLink>();
+                    foreach (ProjectLink item in value)
+                    {
+                        if (item.ActionFlag != 3)
+                        {
+                            FetchProjectLinks.Add(item);
+                        }
+                    }
+                    OnPropertyChanged();
+                }
+            }
+        }
+
+        private ObservableCollection<ProjectLink> _fetchProjectLinks;
+
+        public ObservableCollection<ProjectLink> FetchProjectLinks
+        {
+            get { return _fetchProjectLinks; }
+            set
+            {
+                if (_fetchProjectLinks != value)
+                {
+                    _fetchProjectLinks = value;
                     OnPropertyChanged();
                 }
             }
@@ -2582,6 +2912,7 @@ namespace WpfApp.ViewModel
         public RelayCommand AddNewProjectLinkCommand { get; set; }
         public RelayCommand AddNewSovCommand { get; set; }
         public RelayCommand AddNewSovMatCommand { get; set; }
+        public RelayCommand AddNewSovLabCommand { get; set; }
 
         private void ChangeWorkOrder()
         {
@@ -2811,15 +3142,6 @@ namespace WpfApp.ViewModel
                 });
             }
             ProjectMtShips = sb_projectMtShip;
-        }
-
-        private void AddNewNote()
-        {
-            Note _note = new Note();
-            _note.NotesDateAdded = DateTime.Now;
-            _note.NoteUser = "smile";
-            _note.NotesNote = "";
-            ProjectNotes.Add(_note);
         }
 
         private int _selectedSovMatIndex;

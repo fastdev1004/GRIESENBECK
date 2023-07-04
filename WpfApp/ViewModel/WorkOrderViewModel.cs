@@ -429,7 +429,7 @@ namespace WpfApp.ViewModel
             ProjectWorkOrders = sb_projectWorkOrder;
 
             // Project Labor List
-            sqlquery = " SELECT CO_ItemNo, tblLab.* FROM tblProjectChangeOrders RIGHT JOIN (SELECT tblProjectSOV.SOV_Acronym, tblProjectSOV.CO_ID, tblLab.Labor_Desc, tblLab.Qty_Reqd, tblLab.UnitPrice, tblLab.Lab_Phase FROM tblProjectSOV RIGHT JOIN ( SELECT tblLabor.Labor_Desc, tblLab.*  FROM tblLabor RIGHT JOIN ( SELECT * FROM tblProjectLabor WHERE Project_ID = " + ProjectID.ToString() + ") AS tblLab ON tblLabor.Labor_ID = tblLab.Labor_ID) AS tblLab ON tblProjectSOV.ProjSOV_ID = tblLab.ProjSOV_ID) AS tblLab ON tblProjectChangeOrders.CO_ID = tblLab.CO_ID ORDER BY tblLab.SOV_Acronym";
+            sqlquery = "SELECT CO_ItemNo, tblLab.* FROM tblProjectChangeOrders RIGHT JOIN (SELECT tblProjectSOV.SOV_Acronym, tblProjectSOV.CO_ID, tblLab.Labor_Desc, tblLab.Qty_Reqd, tblLab.UnitPrice, tblLab.Lab_Phase FROM tblProjectSOV RIGHT JOIN ( SELECT tblLabor.Labor_Desc, tblLab.*  FROM tblLabor RIGHT JOIN ( SELECT * FROM tblProjectLabor WHERE Project_ID = " + ProjectID.ToString() + ") AS tblLab ON tblLabor.Labor_ID = tblLab.Labor_ID) AS tblLab ON tblProjectSOV.ProjSOV_ID = tblLab.ProjSOV_ID) AS tblLab ON tblProjectChangeOrders.CO_ID = tblLab.CO_ID ORDER BY tblLab.SOV_Acronym";
 
             cmd = dbConnection.RunQuryNoParameters(sqlquery);
             sda = new SqlDataAdapter(cmd);
@@ -440,18 +440,18 @@ namespace WpfApp.ViewModel
             foreach (DataRow row in ds.Tables[0].Rows)
             {
                 string _sovAcronym = "";
-                string _labor = "";
-                double _qtyReqd = 0;
+                int _laborID = 0;
+                int _qtyReqd = 0;
                 double _unitPrice = 0;
                 //int    = 0;
                 int _changeOrder = 0;
                 string _phase = "";
                 if (!row.IsNull("SOV_Acronym"))
                     _sovAcronym = row["SOV_Acronym"].ToString();
-                if (!row.IsNull("Labor_Desc"))
-                    _labor = row["Labor_Desc"].ToString();
+                if (!row.IsNull("Labor_ID"))
+                    _laborID = int.Parse(row["Labor_ID"].ToString());
                 if (!row.IsNull("Qty_Reqd"))
-                    _qtyReqd = double.Parse(row["Qty_Reqd"].ToString());
+                    _qtyReqd = int.Parse(row["Qty_Reqd"].ToString());
                 if (!row.IsNull("UnitPrice"))
                     _unitPrice = row.Field<double>("UnitPrice");
                 if (!row.IsNull("CO_ItemNo"))
@@ -461,11 +461,11 @@ namespace WpfApp.ViewModel
                 sb_projectLabor.Add(new ProjectLabor
                 {
                     ProjectID = ProjectID,
-                    SovAcronym = _sovAcronym,
-                    Labor = _labor,
+                    SovAcronymName = _sovAcronym,
+                    LaborID = _laborID,
                     QtyReqd = _qtyReqd,
                     UnitPrice = _unitPrice,
-                    ChangeOrder = _changeOrder,
+                    CoItemNo = _changeOrder,
                     Phase = _phase
                 });
             }

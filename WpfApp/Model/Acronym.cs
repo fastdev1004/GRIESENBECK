@@ -13,7 +13,21 @@ namespace WpfApp.Model
     {
         private string _acronymName;
         private string _acronymDesc;
+        private int _projSovID;
         private bool _active;
+        private int _coItemNo;
+        private bool _matOnly;
+
+        public int ProjSovID
+        {
+            get => _projSovID;
+            set
+            {
+                if (value == _projSovID) return;
+                _projSovID = value;
+                OnPropertyChanged();
+            }
+        }
 
         public string AcronymName
         {
@@ -47,5 +61,29 @@ namespace WpfApp.Model
                 OnPropertyChanged();
             }
         }
+
+        public int CoItemNo
+        {
+            get => _coItemNo;
+            set
+            {
+                if (value == _coItemNo) return;
+                _coItemNo = value;
+                OnPropertyChanged();
+            }
+        }
+
+        public bool MatOnly
+        {
+            get => _matOnly;
+            set
+            {
+                if (value == _matOnly) return;
+                _matOnly = value;
+                OnPropertyChanged();
+            }
+        }
+
+     
     }
 }

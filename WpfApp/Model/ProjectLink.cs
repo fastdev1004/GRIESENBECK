@@ -9,10 +9,23 @@ namespace WpfApp.Model
 {
     class ProjectLink : ViewModelBase
     {
+        private int _id;
         private int _linkID;
         private int _projectID;
         private string _pathDesc;
         private string _pathName;
+        private int _actionFlag;
+
+        public int FetchID
+        {
+            get => _id;
+            set
+            {
+                if (value == _id) return;
+                _id = value;
+                OnPropertyChanged();
+            }
+        }
 
         public int LinkID
         {
@@ -54,6 +67,17 @@ namespace WpfApp.Model
             {
                 if (value == _pathName) return;
                 _pathName = value;
+                OnPropertyChanged();
+            }
+        }
+
+        public int ActionFlag
+        {
+            get => _actionFlag;
+            set
+            {
+                if (value == _actionFlag) return;
+                _actionFlag = value;
                 OnPropertyChanged();
             }
         }

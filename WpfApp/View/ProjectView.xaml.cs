@@ -197,28 +197,41 @@ namespace WpfApp
         {
             ComboBox comboBox = sender as ComboBox;
             int selectedIndex = comboBox.SelectedIndex;
+            int selectedDataGridIndex = PM_DataGrid.SelectedIndex;
 
-            ProjectManager pm = comboBox.SelectedItem as ProjectManager;
-
-            if (pm != null)
+            ProjectManager selectedPM = comboBox.SelectedItem as ProjectManager;
+           
+            if (selectedIndex >= 0)
             {
-                if (PM_DataGrid.SelectedIndex >= 0)
+                if (selectedDataGridIndex >= 0)
                 {
-                    ProjectManager originPM = ProjectVM.ProjectManagerList[PM_DataGrid.SelectedIndex];
-                    pm.ProjPmID = originPM.ProjPmID;
-                    if (!string.IsNullOrEmpty(pm.PMName))
+                    int fetchID = ProjectVM.FetchProjectManagerList[selectedDataGridIndex].FetchID;
+                   
+                    ProjectManager originPM = ProjectVM.ProjectManagerList.Where(item => item.FetchID == fetchID).First();
+                    if (!string.IsNullOrEmpty(selectedPM.PMName))
                     {
-                        if (pm.PMName.Equals("New"))
+                        if (selectedPM.PMName.Equals("New"))
                         {
                             NewPmDialog newPmDlg = new NewPmDialog();
                             newPmDlg.CustomerID = ProjectVM.TempProject.CustomerID;
                             newPmDlg.WindowStartupLocation = WindowStartupLocation.CenterScreen;
-                            comboBox.SelectedValue = originPM.ID;
+                            comboBox.SelectedValue = selectedPM.ID;
                             newPmDlg.ShowDialog();
                         }
                         else
                         {
-                            ProjectVM.ProjectManagerList[PM_DataGrid.SelectedIndex] = pm;
+                            selectedPM.FetchID = originPM.FetchID;
+                            selectedPM.ActionFlag = originPM.ActionFlag;
+                            ProjectVM.ProjectManagerList[fetchID] = selectedPM;
+                            ProjectVM.FetchProjectManagerList = new ObservableCollection<ProjectManager>();
+
+                            foreach (ProjectManager item in ProjectVM.ProjectManagerList)
+                            {
+                                if (item.ActionFlag != 3 && item.ActionFlag != 4)
+                                {
+                                    ProjectVM.FetchProjectManagerList.Add(item);
+                                }
+                            }
                         }
                     }
                 }
@@ -229,27 +242,41 @@ namespace WpfApp
         {
             ComboBox comboBox = sender as ComboBox;
             int selectedIndex = comboBox.SelectedIndex;
+            int selectedDataGridIndex = Supt_DataGrid.SelectedIndex;
 
-            Superintendent supt = comboBox.SelectedItem as Superintendent;
-            if (supt != null)
+            Superintendent selectedSup = comboBox.SelectedItem as Superintendent;
+
+            if (selectedIndex >= 0)
             {
-                if (Supt_DataGrid.SelectedIndex >= 0)
+                if (selectedDataGridIndex >= 0)
                 {
-                    Superintendent originSupt = ProjectVM.SuperintendentList[Supt_DataGrid.SelectedIndex];
-                    supt.ProjSupID = originSupt.ProjSupID;
-                    if (!string.IsNullOrEmpty(supt.SupName))
+                    int fetchID = ProjectVM.FetchSuperintendentList[selectedDataGridIndex].FetchID;
+
+                    Superintendent originSup = ProjectVM.SuperintendentList.Where(item => item.FetchID == fetchID).First();
+                    if (!string.IsNullOrEmpty(selectedSup.SupName))
                     {
-                        if (supt.SupName.Equals("New"))
+                        if (selectedSup.SupName.Equals("New"))
                         {
-                            NewSuptDialog newSuptDlg = new NewSuptDialog();
-                            newSuptDlg.CustomerID = ProjectVM.TempProject.CustomerID;
-                            newSuptDlg.WindowStartupLocation = WindowStartupLocation.CenterScreen;
-                            comboBox.SelectedValue = originSupt.SupID;
-                            newSuptDlg.ShowDialog();
+                            NewPmDialog newPmDlg = new NewPmDialog();
+                            newPmDlg.CustomerID = ProjectVM.TempProject.CustomerID;
+                            newPmDlg.WindowStartupLocation = WindowStartupLocation.CenterScreen;
+                            comboBox.SelectedValue = selectedSup.SupID;
+                            newPmDlg.ShowDialog();
                         }
                         else
                         {
-                            ProjectVM.SuperintendentList[Supt_DataGrid.SelectedIndex] = supt;
+                            selectedSup.FetchID = originSup.FetchID;
+                            selectedSup.ActionFlag = originSup.ActionFlag;
+                            ProjectVM.SuperintendentList[fetchID] = selectedSup;
+                            ProjectVM.FetchSuperintendentList = new ObservableCollection<Superintendent>();
+
+                            foreach (Superintendent item in ProjectVM.SuperintendentList)
+                            {
+                                if (item.ActionFlag != 3 && item.ActionFlag != 4)
+                                {
+                                    ProjectVM.FetchSuperintendentList.Add(item);
+                                }
+                            }
                         }
                     }
                 }
@@ -401,11 +428,30 @@ namespace WpfApp
             WorkSupt_CB.SelectedIndex = -1;
         }
 
-        private void RemoveNoteItem(object sender, RoutedEventArgs e)
+        private void RemoveProjectNoteItem(object sender, RoutedEventArgs e)
         {
-            Note selectedItem = ProjectNote_DataGrid.SelectedItem as Note;
             int selectedIndex = ProjectNote_DataGrid.SelectedIndex;
-            ProjectVM.ProjectNotes.RemoveAt(selectedIndex);
+            if (selectedIndex != -1)
+            {
+                if (ProjectVM.FetchProjectNotes[selectedIndex].ActionFlag == 1)
+                {
+                    Note note = ProjectVM.ProjectNotes.Where(item => item.ID == ProjectVM.FetchProjectNotes[selectedIndex].ID).First();
+                    note.ActionFlag = 4;
+                }
+                else
+                {
+                    Note note = ProjectVM.ProjectNotes.Where(item => item.ID == ProjectVM.FetchProjectNotes[selectedIndex].ID).First();
+                    note.ActionFlag = 3;
+                }
+                ProjectVM.FetchProjectNotes = new ObservableCollection<Note>();
+                foreach (Note item in ProjectVM.ProjectNotes)
+                {
+                    if (item.ActionFlag != 3 && item.ActionFlag != 4)
+                    {
+                        ProjectVM.FetchProjectNotes.Add(item);
+                    }
+                }
+            }
         }
 
         private void RemoveDescItem(object sender, RoutedEventArgs e)
@@ -413,7 +459,23 @@ namespace WpfApp
             int selectedIndex = ProjectLink_DataGrid.SelectedIndex;
             if (selectedIndex != -1)
             {
-                ProjectVM.ProjectLinks.RemoveAt(selectedIndex);
+                ProjectLink projectLink = ProjectVM.ProjectLinks.Where(item => item.FetchID == ProjectVM.FetchProjectLinks[selectedIndex].FetchID).First();
+                if (ProjectVM.FetchProjectLinks[selectedIndex].ActionFlag == 1)
+                {
+                    projectLink.ActionFlag = 4;
+                }
+                else
+                {
+                    projectLink.ActionFlag = 3;
+                }
+                ProjectVM.FetchProjectLinks = new ObservableCollection<ProjectLink>();
+                foreach (ProjectLink item in ProjectVM.ProjectLinks)
+                {
+                    if (item.ActionFlag != 3 && item.ActionFlag != 4)
+                    {
+                        ProjectVM.FetchProjectLinks.Add(item);
+                    }
+                }
             }
         }
 
@@ -422,7 +484,23 @@ namespace WpfApp
             int selectedIndex = PM_DataGrid.SelectedIndex;
             if (selectedIndex != -1)
             {
-                ProjectVM.ProjectManagerList.RemoveAt(selectedIndex);
+                ProjectManager pm = ProjectVM.ProjectManagerList.Where(item => item.FetchID == ProjectVM.FetchProjectManagerList[selectedIndex].FetchID).First();
+                if (ProjectVM.FetchProjectManagerList[selectedIndex].ActionFlag == 1)
+                {
+                    pm.ActionFlag = 4;
+                }
+                else
+                {
+                    pm.ActionFlag = 3;
+                }
+                ProjectVM.FetchProjectManagerList = new ObservableCollection<ProjectManager>();
+                foreach (ProjectManager item in ProjectVM.ProjectManagerList)
+                {
+                    if (item.ActionFlag != 3 && item.ActionFlag != 4)
+                    {
+                        ProjectVM.FetchProjectManagerList.Add(item);
+                    }
+                }
             }
         }
 
@@ -431,7 +509,22 @@ namespace WpfApp
             int selectedIndex = Supt_DataGrid.SelectedIndex;
             if (selectedIndex != -1)
             {
-                ProjectVM.SuperintendentList.RemoveAt(selectedIndex);
+                Superintendent sup = ProjectVM.SuperintendentList.Where(item => item.FetchID == ProjectVM.FetchSuperintendentList[selectedIndex].FetchID).First();
+                if (ProjectVM.FetchSuperintendentList[selectedIndex].ActionFlag == 1)
+                {
+                    sup.ActionFlag = 4;
+                } else
+                {
+                    sup.ActionFlag = 3;
+                }
+                ProjectVM.FetchSuperintendentList = new ObservableCollection<Superintendent>();
+                foreach (Superintendent item in ProjectVM.SuperintendentList)
+                {
+                    if (item.ActionFlag != 3 && item.ActionFlag != 4)
+                    {
+                        ProjectVM.FetchSuperintendentList.Add(item);
+                    }
+                }
             }
         }
 
@@ -512,7 +605,24 @@ namespace WpfApp
             int selectedIndex = Sov_DataGird.SelectedIndex;
             if (selectedIndex != -1)
             {
-                ProjectVM.SovAcronyms.RemoveAt(selectedIndex);
+                if (ProjectVM.FetchSovAcronyms[selectedIndex].ActionFlag == 1)
+                {
+                    SovAcronym sovAcronym = ProjectVM.SovAcronyms.Where(acronym => acronym.ID == ProjectVM.FetchSovAcronyms[selectedIndex].ID).First();
+                    sovAcronym.ActionFlag = 4;
+                }
+                else
+                {
+                    SovAcronym sovAcronym = ProjectVM.SovAcronyms.Where(acronym => acronym.ID == ProjectVM.FetchSovAcronyms[selectedIndex].ID).First();
+                    sovAcronym.ActionFlag = 3;
+                }
+                ProjectVM.FetchSovAcronyms = new ObservableCollection<SovAcronym>();
+                foreach (SovAcronym item in ProjectVM.SovAcronyms)
+                {
+                    if (item.ActionFlag != 3 && item.ActionFlag != 4)
+                    {
+                        ProjectVM.FetchSovAcronyms.Add(item);
+                    }
+                }
             }
         }
 
@@ -543,6 +653,15 @@ namespace WpfApp
                         comboBox.SelectedValue = data.SovAcronymName;
                     }
                 }
+                else if (tagName.Equals("SovLabor"))
+                {
+                    ProjectLabor data = row.DataContext as ProjectLabor;
+                    if (row.GetIndex() == 0)
+                    {
+                        comboBox.ItemsSource = ProjectVM.NewAcronyms;
+                        comboBox.SelectedValue = data.SovAcronymName;
+                    }
+                }
             }
         }
 
@@ -562,6 +681,9 @@ namespace WpfApp
                     break;
                 case "SovMaterial":
                     selectedDataGridIndex = SovMat_DataGird.SelectedIndex;
+                    break;
+                case "SovLabor":
+                    selectedDataGridIndex = SovLab_DataGird.SelectedIndex;
                     break;
             }
 
@@ -588,18 +710,16 @@ namespace WpfApp
                     }
                     else if (tagName.Equals("SovMaterial"))
                     {
-                        SovMaterial sovMat = row.DataContext as SovMaterial;
-                        if (acronym.AcronymName.Equals("New"))
-                        {
-                            NewSovDialog newSovDlg = new NewSovDialog();
-                            newSovDlg.WindowStartupLocation = WindowStartupLocation.CenterScreen;
-                            comboBox.SelectedValue = sovMat.SovAcronymName;
-                            newSovDlg.ShowDialog();
-                        }
-                        else
-                        {
-                            ProjectVM.FetchSovMaterials[selectedDataGridIndex].SovAcronymName = acronym.AcronymName;
-                        }
+                        ProjectVM.FetchSovMaterials[selectedDataGridIndex].SovAcronymName = acronym.AcronymName;
+                        ProjectVM.FetchSovMaterials[selectedDataGridIndex].ProjSovID = acronym.ProjSovID;
+                        ProjectVM.FetchSovMaterials[selectedDataGridIndex].CoItemNo = acronym.CoItemNo;
+                    }
+                    else if (tagName.Equals("SovLabor"))
+                    {
+                        ProjectVM.FetchSovLabors[selectedDataGridIndex].SovAcronymName = acronym.AcronymName;
+                        ProjectVM.FetchSovLabors[selectedDataGridIndex].ProjSovID = acronym.ProjSovID;
+                        ProjectVM.FetchSovLabors[selectedDataGridIndex].CoItemNo = acronym.CoItemNo;
+                        ProjectVM.FetchSovLabors[selectedDataGridIndex].MatOnly = acronym.MatOnly;
                     }
                 }
             }
@@ -683,31 +803,15 @@ namespace WpfApp
                         }
                         else
                         {
-                            ProjectVM.SovMaterials[selectedDataGridIndex].MatID = material.ID;
-                            ProjectVM.SovMaterials[selectedDataGridIndex].ActionFlag = 1;
+                            ProjectVM.FetchSovMaterials[selectedDataGridIndex].MatID = material.ID;
+                            ProjectVM.FetchSovMaterials[selectedDataGridIndex].ActionFlag = 1;
                         }
                     }
                 }
             }
         }
 
-        private void QtyReqd_PreviewInput(object sender, TextCompositionEventArgs e)
-        {
-            if (!validateFieldHelper.IsNumeric(e.Text))
-            {
-                e.Handled = true;
-            }
-        }
-
-        private void TotalCost_PreviewInput(object sender, TextCompositionEventArgs e)
-        {
-            if (!validateFieldHelper.IsNumeric(e.Text))
-            {
-                e.Handled = true;
-            }
-        }
-
-        private void Billing_PreviewInput(object sender, TextCompositionEventArgs e)
+        private void ValidateNumber(object sender, TextCompositionEventArgs e)
         {
             if (!validateFieldHelper.IsNumeric(e.Text))
             {
@@ -723,6 +827,32 @@ namespace WpfApp
             if (originalText.StartsWith("$"))
             {
                 textBox.Text = originalText.Substring(1);
+            }
+        }
+
+        private void RemoveSovLabItem(object sender, RoutedEventArgs e)
+        {
+            int selectedIndex = SovLab_DataGird.SelectedIndex;
+            if (selectedIndex != -1)
+            {
+                if (ProjectVM.FetchSovLabors[selectedIndex].ActionFlag == 1)
+                {
+                    ProjectLabor sovLabor = ProjectVM.ProjectLabors.Where(labor => labor.ID == ProjectVM.FetchSovLabors[selectedIndex].ID).First();
+                    sovLabor.ActionFlag = 4;
+                }
+                else
+                {
+                    ProjectLabor sovLabor = ProjectVM.ProjectLabors.Where(labor => labor.ID == ProjectVM.FetchSovLabors[selectedIndex].ID).First();
+                    sovLabor.ActionFlag = 3;
+                }
+                ProjectVM.FetchSovLabors = new ObservableCollection<ProjectLabor>();
+                foreach (ProjectLabor item in ProjectVM.ProjectLabors)
+                {
+                    if (item.ActionFlag != 3 && item.ActionFlag != 4)
+                    {
+                        ProjectVM.FetchSovLabors.Add(item);
+                    }
+                }
             }
         }
     }

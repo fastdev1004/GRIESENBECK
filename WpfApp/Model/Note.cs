@@ -9,6 +9,7 @@ namespace WpfApp.Model
 {
     class Note:ViewModelBase
     {
+        private int _id;
         private int _notesID;
         private int _notesPK;
         private string _notesPKDesc;
@@ -16,6 +17,18 @@ namespace WpfApp.Model
         private DateTime _notesDateAdded;
         private string _notesUser;
         private string _notesUserName;
+        private int _actionFlag;
+
+        public int ID
+        {
+            get => _id;
+            set
+            {
+                if (value == _id) return;
+                _id = value;
+                OnPropertyChanged();
+            }
+        }
 
         public int NoteID
         {
@@ -94,5 +107,15 @@ namespace WpfApp.Model
             }
         }
 
+        public int ActionFlag
+        {
+            get => _actionFlag;
+            set
+            {
+                if (value == _actionFlag) return;
+                _actionFlag = value;
+                OnPropertyChanged();
+            }
+        }
     }
 }

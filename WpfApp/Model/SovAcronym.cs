@@ -11,20 +11,22 @@ namespace WpfApp.Model
 {
     class SovAcronym:ViewModelBase
     {
+        private int _id;
         private string _sovAcronym;
         private int _coItemNo;
         private string _sovDesc;
         private bool _matOnly;
         private int _projSovID;
         private int _coID;
+        private int _actionFlag;
 
-        public int CoID
+        public int ID
         {
-            get => _coID;
+            get => _id;
             set
             {
-                if (value == _coID) return;
-                _coID = value;
+                if (value == _id) return;
+                _id = value;
                 OnPropertyChanged();
             }
         }
@@ -89,6 +91,28 @@ namespace WpfApp.Model
             get
             {
                 return _sovAcronym + " | " + _sovDesc;
+            }
+        }
+
+        public int CoID
+        {
+            get => _coID;
+            set
+            {
+                if (value == _coID) return;
+                _coID = value;
+                OnPropertyChanged();
+            }
+        }
+
+        public int ActionFlag
+        {
+            get => _actionFlag;
+            set
+            {
+                if (value == _actionFlag) return;
+                _actionFlag = value;
+                OnPropertyChanged();
             }
         }
     }

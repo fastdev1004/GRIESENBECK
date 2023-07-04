@@ -15,7 +15,6 @@ namespace WpfApp.Utils
         public SqlCommand cmd;
         private readonly string connectionString;
         private int insertedID;
-        private int rowsAffected;
 
         public DatabaseConnection()
         {
@@ -1896,30 +1895,90 @@ namespace WpfApp.Utils
             return cmd;
         }
 
-        //// Delete ProjectMat
-        //public int RunQueryToDeleteProjectMat(string query, int projectMatID)
-        //{
-        //    try
-        //    {
-        //        connection.Open();
-        //        if (connection != null)
-        //        {
-        //            cmd = connection.CreateCommand();
-        //            cmd.CommandType = CommandType.Text;
-        //            cmd.CommandText = query;
+        // Create ProjectLab
+        public int RunQueryToCreateProjectLab(string query, int projSovID, int projectID, int labLineNo, int laborID, string phase, double qtyReqd, double unitPrice, bool laborComplete)
+        {
+            try
+            {
+                connection.Open();
+                if (connection != null)
+                {
+                    cmd = connection.CreateCommand();
+                    cmd.CommandType = CommandType.Text;
+                    cmd.CommandText = query;
 
-        //            cmd.Parameters.AddWithValue("@ProjMatID", projectMatID);
+                    cmd.Parameters.AddWithValue("@ProjSovID", projSovID);
+                    cmd.Parameters.AddWithValue("@ProjectID", projectID);
+                    if (labLineNo != 0)
+                        cmd.Parameters.AddWithValue("@LabLineNo", labLineNo);
+                    else cmd.Parameters.AddWithValue("@LabLineNo", DBNull.Value);
+                    if (laborID != -1 && laborID != 0)
+                        cmd.Parameters.AddWithValue("@LaborID", laborID);
+                    else cmd.Parameters.AddWithValue("@MatPhase", DBNull.Value);
+                    if (!string.IsNullOrEmpty(phase))
+                        cmd.Parameters.AddWithValue("@LabPhase", phase);
+                    else cmd.Parameters.AddWithValue("@LabPhase", DBNull.Value);
+                    if (qtyReqd != 0)
+                        cmd.Parameters.AddWithValue("@QtyReqd", qtyReqd);
+                    else cmd.Parameters.AddWithValue("@QtyReqd", DBNull.Value);
+                    if (unitPrice != 0)
+                        cmd.Parameters.AddWithValue("@UnitPrice", unitPrice);
+                    else cmd.Parameters.AddWithValue("@UnitPrice", DBNull.Value);
+                    cmd.Parameters.AddWithValue("@Complete", laborComplete);
 
-        //            rowsAffected = (int)cmd.ExecuteNonQuery();
-        //            connection.Close();
-        //        }
-        //    }
-        //    catch (Exception ex)
-        //    {
-        //        Console.WriteLine(ex);
-        //    }
-        //    return rowsAffected;
-        //}
+                   insertedID = (int)cmd.ExecuteScalar();
+                    connection.Close();
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex);
+            }
+            return insertedID;
+        }
+
+        // Update ProjectLab
+        public SqlCommand RunQueryToUpdateProjectLab(string query, int projSovID, int projectID, int labLineNo, int laborID, string phase, double qtyReqd, double unitPrice, bool laborComplete, int projLabID)
+        {
+            try
+            {
+                connection.Open();
+                if (connection != null)
+                {
+                    cmd = connection.CreateCommand();
+                    cmd.CommandType = CommandType.Text;
+                    cmd.CommandText = query;
+
+                    cmd.Parameters.AddWithValue("@ProjSovID", projSovID);
+                    cmd.Parameters.AddWithValue("@ProjectID", projectID);
+                    if (labLineNo != 0)
+                        cmd.Parameters.AddWithValue("@LabLineNo", labLineNo);
+                    else cmd.Parameters.AddWithValue("@LabLineNo", DBNull.Value);
+                    if (laborID != -1 && laborID != 0)
+                        cmd.Parameters.AddWithValue("@LaborID", laborID);
+                    else cmd.Parameters.AddWithValue("@MatPhase", DBNull.Value);
+                    if (!string.IsNullOrEmpty(phase))
+                        cmd.Parameters.AddWithValue("@LabPhase", phase);
+                    else cmd.Parameters.AddWithValue("@LabPhase", DBNull.Value);
+                    if (qtyReqd != 0)
+                        cmd.Parameters.AddWithValue("@QtyReqd", qtyReqd);
+                    else cmd.Parameters.AddWithValue("@QtyReqd", DBNull.Value);
+                    if (unitPrice != 0)
+                        cmd.Parameters.AddWithValue("@UnitPrice", unitPrice);
+                    else cmd.Parameters.AddWithValue("@UnitPrice", DBNull.Value);
+                    cmd.Parameters.AddWithValue("@Complete", laborComplete);
+                    cmd.Parameters.AddWithValue("@ProjLabID", projLabID);
+
+                    cmd.ExecuteNonQuery();
+                    connection.Close();
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex);
+            }
+            return cmd;
+        }
 
         public void Open()
         {

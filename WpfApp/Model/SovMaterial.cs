@@ -14,6 +14,7 @@ namespace WpfApp.Model
         private int _coID;
         private int _coItemNo;
         private bool _matOnly;
+        private bool _sovMatOnly;
         private int _matID;
         private string _matPhase;
         private string _matType;
@@ -135,6 +136,17 @@ namespace WpfApp.Model
             {
                 if (value == _coItemNo) return;
                 _coItemNo = value;
+                OnPropertyChanged();
+            }
+        }
+
+        public bool SovMatOnly
+        {
+            get => _sovMatOnly;
+            set
+            {
+                if (value == _sovMatOnly) return;
+                _sovMatOnly = value;
                 OnPropertyChanged();
             }
         }

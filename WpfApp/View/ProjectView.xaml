@@ -18,9 +18,9 @@
                 <MenuItem Header="New" Command="{Binding AddNewNoteCommand}"/>
             </ContextMenu>
             <ContextMenu x:Key="RowContextMenu">
-                <MenuItem Header="Delete" Click="RemoveNoteItem"/>
+                <MenuItem Header="Delete" Click="RemoveProjectNoteItem"/>
             </ContextMenu>
-            <Style x:Key="NoteRowStyle" TargetType="{x:Type DataGridRow}">
+            <Style x:Key="ProjectNoteRowStyle" TargetType="{x:Type DataGridRow}">
                 <Setter Property="ContextMenu" Value="{StaticResource RowContextMenu}" />
                 <Setter Property="Margin" Value="0, 4" />
             </Style>
@@ -75,6 +75,17 @@
             </ContextMenu>
             <Style x:Key="SovMatRowStyle" TargetType="{x:Type DataGridRow}">
                 <Setter Property="ContextMenu" Value="{StaticResource SovMatRowContextMenu}" />
+                <Setter Property="Margin" Value="0, 4" />
+            </Style>
+
+            <ContextMenu x:Key="SovLabContextMenu">
+                <MenuItem Header="New" Command="{Binding AddNewSovLabCommand }" />
+            </ContextMenu>
+            <ContextMenu x:Key="SovLabRowContextMenu">
+                <MenuItem Header="Delete" Click="RemoveSovLabItem" />
+            </ContextMenu>
+            <Style x:Key="SovLabRowStyle" TargetType="{x:Type DataGridRow}">
+                <Setter Property="ContextMenu" Value="{StaticResource SovLabRowContextMenu}" />
                 <Setter Property="Margin" Value="0, 4" />
             </Style>
             <ControlTemplate x:Key="ComboBoxValidationErrorTemplate">
@@ -338,7 +349,7 @@
                                                     <ColumnDefinition Width="1*" />
                                                 </Grid.ColumnDefinitions>
                                                 <Label>Billing Date:</Label>
-                                                <TextBox x:Name="Billing_TB" Text="{Binding TempProject.BillingDate, Mode=TwoWay}" Grid.Column="1" Width="40" HorizontalAlignment="Left" PreviewTextInput="Billing_PreviewInput"></TextBox>
+                                                <TextBox x:Name="Billing_TB" Text="{Binding TempProject.BillingDate, Mode=TwoWay}" Grid.Column="1" Width="40" HorizontalAlignment="Left" PreviewTextInput="ValidateNumber"></TextBox>
                                             </Grid>
                                         </Grid>
                                     </Grid>
@@ -514,7 +525,7 @@
                                     </Grid>
                                 </Grid>
                             </Grid>
-                            <DataGrid x:Name="ProjectNote_DataGrid" Margin="4,0" Padding="10" Grid.Column="1" ItemsSource="{Binding ProjectNotes, Mode=TwoWay}" GridLinesVisibility="None" AutoGenerateColumns="False" HeadersVisibility="None" BorderThickness="0" Background="#F5FFAF" CanUserAddRows="False" ContextMenu="{StaticResource NoteContextMenu}" RowStyle="{StaticResource NoteRowStyle}">
+                            <DataGrid x:Name="ProjectNote_DataGrid" Margin="4,0" Padding="10" Grid.Column="1" ItemsSource="{Binding FetchProjectNotes, Mode=TwoWay}" GridLinesVisibility="None" AutoGenerateColumns="False" HeadersVisibility="None" BorderThickness="0" Background="#F5FFAF" CanUserAddRows="False" ContextMenu="{StaticResource NoteContextMenu}" RowStyle="{StaticResource ProjectNoteRowStyle}">
                                 <DataGrid.Resources>
                                     <Style TargetType="DataGridColumnHeader" BasedOn="{StaticResource GridColumnHeaderBase}">
                                         <Setter Property="Background" Value="#4BACC6" />
@@ -586,7 +597,7 @@
                                             <RowDefinition Height="*" />
                                         </Grid.RowDefinitions>
                                         <Label Content="Project Manager" HorizontalAlignment="Left" />
-                                        <DataGrid x:Name="PM_DataGrid" Grid.Row="1" ItemsSource="{Binding ProjectManagerList, Mode=TwoWay}" GridLinesVisibility="None" AutoGenerateColumns="False" HeadersVisibility="None" BorderThickness="0" Background="White" CanUserAddRows="False" ContextMenu="{StaticResource PmContextMenu}" RowStyle="{StaticResource PmRowStyle}">
+                                        <DataGrid x:Name="PM_DataGrid" Grid.Row="1" ItemsSource="{Binding FetchProjectManagerList, Mode=TwoWay}" GridLinesVisibility="None" AutoGenerateColumns="False" HeadersVisibility="None" BorderThickness="0" Background="White" CanUserAddRows="False" ContextMenu="{StaticResource PmContextMenu}" RowStyle="{StaticResource PmRowStyle}">
                                             <DataGrid.Resources>
                                                 <Style TargetType="DataGridColumnHeader" BasedOn="{StaticResource GridColumnHeaderBase}">
                                                     <Setter Property="Background" Value="#4BACC6" />
@@ -633,7 +644,7 @@
                                             <RowDefinition Height="*" />
                                         </Grid.RowDefinitions>
                                         <Label Content="Superintendent" HorizontalAlignment="Left" />
-                                        <DataGrid x:Name="Supt_DataGrid" Grid.Row="1" ItemsSource="{Binding SuperintendentList, Mode=TwoWay}" GridLinesVisibility="None" AutoGenerateColumns="False" HeadersVisibility="None" BorderThickness="0" Background="White" CanUserAddRows="False" ContextMenu="{StaticResource SuptContextMenu}" RowStyle="{StaticResource SupRowStyle}">
+                                        <DataGrid x:Name="Supt_DataGrid" Grid.Row="1" ItemsSource="{Binding FetchSuperintendentList, Mode=TwoWay}" GridLinesVisibility="None" AutoGenerateColumns="False" HeadersVisibility="None" BorderThickness="0" Background="White" CanUserAddRows="False" ContextMenu="{StaticResource SuptContextMenu}" RowStyle="{StaticResource SupRowStyle}">
                                             <DataGrid.Resources>
                                                 <Style TargetType="DataGridColumnHeader" BasedOn="{StaticResource GridColumnHeaderBase}">
                                                     <Setter Property="Background" Value="#4BACC6" />
@@ -747,7 +758,7 @@
                                         <RowDefinition Height="*" />
                                     </Grid.RowDefinitions>
                                     <Label Content="" />
-                                    <DataGrid x:Name="ProjectLink_DataGrid" Grid.Row="1" ItemsSource="{Binding ProjectLinks, Mode=TwoWay}" GridLinesVisibility="None" AutoGenerateColumns="False" HeadersVisibility="None" BorderThickness="0" Background="White" CanUserAddRows="False" ContextMenu="{StaticResource ProjectLinkContextMenu}" RowStyle="{StaticResource DescRowStyle}" >
+                                    <DataGrid x:Name="ProjectLink_DataGrid" Grid.Row="1" ItemsSource="{Binding FetchProjectLinks, Mode=TwoWay}" GridLinesVisibility="None" AutoGenerateColumns="False" HeadersVisibility="None" BorderThickness="0" Background="White" CanUserAddRows="False" ContextMenu="{StaticResource ProjectLinkContextMenu}" RowStyle="{StaticResource DescRowStyle}" >
                                         <DataGrid.Resources>
                                             <Style TargetType="DataGridColumnHeader" BasedOn="{StaticResource GridColumnHeaderBase}">
                                                 <Setter Property="Background" Value="#4BACC6" />
@@ -811,7 +822,7 @@
                                 <ColumnDefinition Width="1*" />
                                 <ColumnDefinition Width="1*" />
                             </Grid.ColumnDefinitions>
-                            <DataGrid x:Name="Sov_DataGird" ItemsSource="{Binding SovAcronyms, Mode=TwoWay}" GridLinesVisibility="None" AutoGenerateColumns="False" HeadersVisibility="Column" BorderThickness="0" Background="White" CanUserAddRows="False" ContextMenu="{StaticResource SovContextMenu}" RowStyle="{StaticResource SovRowStyle}">
+                            <DataGrid x:Name="Sov_DataGird" ItemsSource="{Binding FetchSovAcronyms, Mode=TwoWay}" GridLinesVisibility="None" AutoGenerateColumns="False" HeadersVisibility="Column" BorderThickness="0" Background="White" CanUserAddRows="False" ContextMenu="{StaticResource SovContextMenu}" RowStyle="{StaticResource SovRowStyle}">
                                 <DataGrid.Resources>
                                     <Style TargetType="DataGridColumnHeader" BasedOn="{StaticResource GridColumnHeaderBase}">
                                         <Setter Property="Background" Value="#5C83B4" />
@@ -911,8 +922,23 @@
                                             <DataGridTemplateColumn Header="Acronym" Width="2*">
                                                 <DataGridTemplateColumn.CellTemplate>
                                                     <DataTemplate>
-                                                        <ComboBox ItemsSource="{Binding DataContext.Acronyms, RelativeSource={RelativeSource AncestorType=local:ProjectView}}" IsEditable="False"
-                SelectedValuePath="AcronymName" SelectedValue="{Binding SovAcronymName, Mode=TwoWay}" DisplayMemberPath="AcronymName" Loaded="SovAcronymCombo_Loaded" SelectionChanged="SovAcronymCB_Changed" Tag="SovMaterial">
+                                                        <ComboBox ItemsSource="{Binding DataContext.FilterAcronyms, RelativeSource={RelativeSource AncestorType=local:ProjectView}}" IsEditable="False" SelectedValuePath="AcronymName" SelectedValue="{Binding SovAcronymName, Mode=TwoWay}" Tag="SovMaterial" SelectionChanged="SovAcronymCB_Changed">
+                                                            <ComboBox.ItemTemplate>
+                                                                <DataTemplate>
+                                                                    <Grid>
+                                                                        <Grid.ColumnDefinitions>
+                                                                            <ColumnDefinition Width="150" />
+                                                                            <ColumnDefinition Width="50" />
+                                                                        </Grid.ColumnDefinitions>
+                                                                        <Grid>
+                                                                            <TextBlock Text="{Binding AcronymName, Mode=TwoWay}" />
+                                                                        </Grid>
+                                                                        <Grid Grid.Column="1">
+                                                                            <TextBlock Text="{Binding CoItemNo, Mode=TwoWay, Converter={StaticResource ZeroToEmptyStringConverter}}" />
+                                                                        </Grid>
+                                                                    </Grid>
+                                                                </DataTemplate>
+                                                            </ComboBox.ItemTemplate>
                                                         </ComboBox>
                                                     </DataTemplate>
                                                 </DataGridTemplateColumn.CellTemplate>
@@ -982,7 +1008,7 @@
                                                 </DataGridTemplateColumn.Header>
                                                 <DataGridTemplateColumn.CellTemplate>
                                                     <DataTemplate>
-                                                        <TextBox Text="{Binding QtyReqd, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" PreviewTextInput="QtyReqd_PreviewInput" />
+                                                        <TextBox Text="{Binding QtyReqd, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" PreviewTextInput="ValidateNumber" />
                                                     </DataTemplate>
                                                 </DataGridTemplateColumn.CellTemplate>
                                             </DataGridTemplateColumn>
@@ -992,7 +1018,7 @@
                                                 </DataGridTemplateColumn.Header>
                                                 <DataGridTemplateColumn.CellTemplate>
                                                     <DataTemplate>
-                                                        <TextBox Text="{Binding TotalCost, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged, Converter={StaticResource IntToDollarConverter}}" PreviewTextInput="TotalCost_PreviewInput" Tag="SovMaterial" />
+                                                        <TextBox Text="{Binding TotalCost, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged, Converter={StaticResource IntToDollarConverter}}" PreviewTextInput="ValidateNumber" Tag="SovMaterial" />
                                                     </DataTemplate>
                                                 </DataGridTemplateColumn.CellTemplate>
                                             </DataGridTemplateColumn>
@@ -1000,7 +1026,7 @@
                                     </DataGrid>
                                 </TabItem>
                                 <TabItem Header="Labor">
-                                    <DataGrid Margin="10" ItemsSource="{Binding ProjectLabors}" GridLinesVisibility="None" AutoGenerateColumns="False" HeadersVisibility="Column" BorderThickness="0" Background="White" CanUserAddRows="False">
+                                    <DataGrid x:Name="SovLab_DataGird" Margin="10" ItemsSource="{Binding FetchSovLabors, Mode=TwoWay}" GridLinesVisibility="None" AutoGenerateColumns="False" HeadersVisibility="Column" BorderThickness="0" Background="White" CanUserAddRows="False" ContextMenu="{StaticResource SovLabContextMenu}" RowStyle="{StaticResource SovLabRowStyle}">
                                         <DataGrid.Resources>
                                             <Style TargetType="DataGridColumnHeader" BasedOn="{StaticResource GridColumnHeaderBase}">
                                                 <Setter Property="Background" Value="#7A9F35" />
@@ -1017,8 +1043,23 @@
                                             <DataGridTemplateColumn Header="Acronym" Width="2*">
                                                 <DataGridTemplateColumn.CellTemplate>
                                                     <DataTemplate>
-                                                        <ComboBox ItemsSource="{Binding DataContext.Acronyms, RelativeSource={RelativeSource AncestorType=local:ProjectView}}"
-                SelectedValuePath="AcronymName" SelectedValue="{Binding SovAcronym, Mode=TwoWay}" DisplayMemberPath="AcronymName">
+                                                        <ComboBox ItemsSource="{Binding DataContext.FilterAcronyms, RelativeSource={RelativeSource AncestorType=local:ProjectView}}" IsEditable="False" SelectedValuePath="AcronymName" SelectedValue="{Binding SovAcronymName, Mode=TwoWay}" Tag="SovLabor" SelectionChanged="SovAcronymCB_Changed">
+                                                            <ComboBox.ItemTemplate>
+                                                                <DataTemplate>
+                                                                    <Grid>
+                                                                        <Grid.ColumnDefinitions>
+                                                                            <ColumnDefinition Width="150" />
+                                                                            <ColumnDefinition Width="50" />
+                                                                        </Grid.ColumnDefinitions>
+                                                                        <Grid>
+                                                                            <TextBlock Text="{Binding AcronymName, Mode=TwoWay}" />
+                                                                        </Grid>
+                                                                        <Grid Grid.Column="1">
+                                                                            <TextBlock Text="{Binding CoItemNo, Mode=TwoWay, Converter={StaticResource ZeroToEmptyStringConverter}}" />
+                                                                        </Grid>
+                                                                    </Grid>
+                                                                </DataTemplate>
+                                                            </ComboBox.ItemTemplate>
                                                         </ComboBox>
                                                     </DataTemplate>
                                                 </DataGridTemplateColumn.CellTemplate>
@@ -1029,15 +1070,15 @@
                                                 </DataGridTemplateColumn.Header>
                                                 <DataGridTemplateColumn.CellTemplate>
                                                     <DataTemplate>
-                                                        <TextBlock Text="{Binding ChangeOrder}" HorizontalAlignment="Center" />
+                                                        <TextBlock Text="{Binding CoItemNo, Converter={StaticResource ZeroToEmptyStringConverter}, UpdateSourceTrigger=PropertyChanged}" />
                                                     </DataTemplate>
                                                 </DataGridTemplateColumn.CellTemplate>
                                             </DataGridTemplateColumn>
                                             <DataGridTemplateColumn Header="Labor" Width="4*">
                                                 <DataGridTemplateColumn.CellTemplate>
                                                     <DataTemplate>
-                                                        <ComboBox ItemsSource="{Binding DataContext.Labors, RelativeSource={RelativeSource AncestorType=local:ProjectView}}"
-                SelectedValuePath="LaborDesc" SelectedValue="{Binding Labor, Mode=TwoWay}" DisplayMemberPath="LaborDesc">
+                                                        <ComboBox ItemsSource="{Binding DataContext.Labors, RelativeSource={RelativeSource AncestorType=local:ProjectView}}" IsEditable="False"
+                SelectedValuePath="ID" SelectedValue="{Binding LaborID, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" DisplayMemberPath="LaborDesc">
                                                         </ComboBox>
                                                     </DataTemplate>
                                                 </DataGridTemplateColumn.CellTemplate>
@@ -1048,7 +1089,7 @@
                                                 </DataGridTemplateColumn.Header>
                                                 <DataGridTemplateColumn.CellTemplate>
                                                     <DataTemplate>
-                                                        <TextBox Text="{Binding Phase, Mode=TwoWay}" />
+                                                        <TextBox Text="{Binding Phase, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
                                                     </DataTemplate>
                                                 </DataGridTemplateColumn.CellTemplate>
                                             </DataGridTemplateColumn>
@@ -1058,7 +1099,7 @@
                                                 </DataGridTemplateColumn.Header>
                                                 <DataGridTemplateColumn.CellTemplate>
                                                     <DataTemplate>
-                                                        <TextBox Text="{Binding QtyReqd, Mode=TwoWay}" />
+                                                        <TextBox Text="{Binding QtyReqd, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" PreviewTextInput="ValidateNumber" />
                                                     </DataTemplate>
                                                 </DataGridTemplateColumn.CellTemplate>
                                             </DataGridTemplateColumn>
@@ -1068,7 +1109,7 @@
                                                 </DataGridTemplateColumn.Header>
                                                 <DataGridTemplateColumn.CellTemplate>
                                                     <DataTemplate>
-                                                        <TextBox Text="{Binding UnitPrice, Mode=TwoWay}" />
+                                                        <TextBox Text="{Binding UnitPrice, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged, Converter={StaticResource IntToDollarConverter}}" PreviewTextInput="ValidateNumber" />
                                                     </DataTemplate>
                                                 </DataGridTemplateColumn.CellTemplate>
                                             </DataGridTemplateColumn>
@@ -1078,7 +1119,7 @@
                                                 </DataGridTemplateColumn.Header>
                                                 <DataGridTemplateColumn.CellTemplate>
                                                     <DataTemplate>
-                                                        <TextBlock Text="{Binding Total, Mode=TwoWay}" />
+                                                        <TextBlock Text="{Binding Total, Mode=TwoWay, Converter={StaticResource IntToDollarConverter}}" />
                                                     </DataTemplate>
                                                 </DataGridTemplateColumn.CellTemplate>
                                             </DataGridTemplateColumn>
@@ -1088,7 +1129,7 @@
                                                 </DataGridTemplateColumn.Header>
                                                 <DataGridTemplateColumn.CellTemplate>
                                                     <DataTemplate>
-                                                        <CheckBox IsChecked="{Binding Complete, Mode=TwoWay}" />
+                                                        <CheckBox IsChecked="{Binding Complete, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
                                                     </DataTemplate>
                                                 </DataGridTemplateColumn.CellTemplate>
                                             </DataGridTemplateColumn>

@@ -9,6 +9,7 @@ namespace WpfApp.Model
 {
     class Superintendent:ViewModelBase
     {
+        private int _fetchID;
         private int _supID;
         private string _supName;
         private string _supPhone;
@@ -16,6 +17,7 @@ namespace WpfApp.Model
         private string _email;
         private bool _active;
         private int _projSupID;
+        private int _actionFlag;
 
         public int ProjSupID
         {
@@ -24,6 +26,17 @@ namespace WpfApp.Model
             {
                 if (value == _projSupID) return;
                 _projSupID = value;
+                OnPropertyChanged();
+            }
+        }
+
+        public int FetchID
+        {
+            get => _fetchID;
+            set
+            {
+                if (value == _fetchID) return;
+                _fetchID = value;
                 OnPropertyChanged();
             }
         }
@@ -90,6 +103,17 @@ namespace WpfApp.Model
             {
                 if (value == _active) return;
                 _active = value;
+                OnPropertyChanged();
+            }
+        }
+
+        public int ActionFlag
+        {
+            get => _actionFlag;
+            set
+            {
+                if (value == _actionFlag) return;
+                _actionFlag = value;
                 OnPropertyChanged();
             }
         }

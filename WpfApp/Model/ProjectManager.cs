@@ -14,9 +14,6 @@ namespace WpfApp.Model
 {
     class ProjectManager:ViewModelBase
     {
-        private DatabaseConnection dbConnection;
-
-        private int _projPmID;
         private int _id;
         private int _customerID;
         private string _name;
@@ -24,22 +21,9 @@ namespace WpfApp.Model
         private string _cellPhone;
         private string _email;
         private bool _active;
-
-        public ProjectManager()
-        {
-            dbConnection = new DatabaseConnection();
-        }
-
-        public int ProjPmID
-        {
-            get => _projPmID;
-            set
-            {
-                if (value == _projPmID) return;
-                _projPmID = value;
-                OnPropertyChanged();
-            }
-        }
+        private int _projPmID;
+        private int _fetchID;
+        private int _actionFlag;
 
         public int ID
         {
@@ -114,6 +98,39 @@ namespace WpfApp.Model
             {
                 if (value == _active) return;
                 _active = value;
+                OnPropertyChanged();
+            }
+        }
+
+        public int ProjPmID
+        {
+            get => _projPmID;
+            set
+            {
+                if (value == _projPmID) return;
+                _projPmID = value;
+                OnPropertyChanged();
+            }
+        }
+
+        public int FetchID
+        {
+            get => _fetchID;
+            set
+            {
+                if (value == _fetchID) return;
+                _fetchID = value;
+                OnPropertyChanged();
+            }
+        }
+
+        public int ActionFlag
+        {
+            get => _actionFlag;
+            set
+            {
+                if (value == _actionFlag) return;
+                _actionFlag = value;
                 OnPropertyChanged();
             }
         }
