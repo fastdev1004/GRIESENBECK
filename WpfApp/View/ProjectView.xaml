@@ -46,7 +46,7 @@
                 <Setter Property="ContextMenu" Value="{StaticResource PmRowContextMenu}" />
                 <Setter Property="Margin" Value="0, 4" />
             </Style>
-            
+
             <ContextMenu x:Key="SuptContextMenu">
                 <MenuItem Header="New" Command="{Binding AddNewSuptCommand }" />
             </ContextMenu>
@@ -132,7 +132,7 @@
             </ResourceDictionary.MergedDictionaries>
         </ResourceDictionary>
     </Page.Resources>
-    
+
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto" />
@@ -201,10 +201,11 @@
                         </Grid.RowDefinitions>
                         <Grid Margin="4">
                             <Grid.ColumnDefinitions>
-                                <ColumnDefinition Width="5*" />
-                                <ColumnDefinition Width="2*" />
+                                <ColumnDefinition Width="260*" />
+                                <ColumnDefinition Width="335*"/>
+                                <ColumnDefinition Width="238*" />
                             </Grid.ColumnDefinitions>
-                            <Grid>
+                            <Grid Grid.ColumnSpan="2">
                                 <Grid.Resources>
                                     <Style TargetType="{x:Type Label}">
                                         <Setter Property="HorizontalAlignment" Value="Right" />
@@ -560,7 +561,7 @@
                                     </Grid>
                                 </Grid>
                             </Grid>
-                            <DataGrid x:Name="ProjectNote_DataGrid" Margin="4,0" Padding="10" Grid.Column="1" ItemsSource="{Binding FetchProjectNotes, Mode=TwoWay}" GridLinesVisibility="None" AutoGenerateColumns="False" HeadersVisibility="None" BorderThickness="0" Background="#F5FFAF" CanUserAddRows="False" ContextMenu="{StaticResource NoteContextMenu}" RowStyle="{StaticResource ProjectNoteRowStyle}">
+                            <DataGrid x:Name="ProjectNote_DataGrid" Margin="4,0" Padding="10" Grid.Column="2" ItemsSource="{Binding FetchProjectNotes, Mode=TwoWay}" GridLinesVisibility="None" AutoGenerateColumns="False" HeadersVisibility="None" BorderThickness="0" Background="#F5FFAF" CanUserAddRows="False" ContextMenu="{StaticResource NoteContextMenu}" RowStyle="{StaticResource ProjectNoteRowStyle}">
                                 <DataGrid.Resources>
                                     <Style TargetType="DataGridColumnHeader" BasedOn="{StaticResource GridColumnHeaderBase}">
                                         <Setter Property="Background" Value="#4BACC6" />
@@ -577,7 +578,7 @@
                                         <Setter Property="Margin" Value="0,4" />
                                     </Style>
                                 </DataGrid.Resources>
-                                    <DataGrid.Columns>
+                                <DataGrid.Columns>
                                     <DataGridTemplateColumn Header="Installation Notes" Width="*">
                                         <DataGridTemplateColumn.CellTemplate>
                                             <DataTemplate>
@@ -592,7 +593,7 @@
                                                                 <ColumnDefinition Width="1*" />
                                                                 <ColumnDefinition Width="1*" />
                                                             </Grid.ColumnDefinitions>
-                                                            <TextBlock Text="{Binding NotesDateAdded , Mode=TwoWay}" />
+                                                            <TextBlock Text="{Binding NotesDateAdded ,Mode=TwoWay}" />
                                                             <TextBlock Grid.Column="1" Text="{Binding NoteUserName, Mode=TwoWay}" HorizontalAlignment="Right" />
                                                         </Grid>
                                                         <Grid Grid.Row="1">
@@ -1482,7 +1483,7 @@
                                             <DataTemplate>
                                                 <TextBox Text="{Binding EstWeight, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
                                             </DataTemplate>
-                                        </DataGridTemplateColumn.CellTemplate> 
+                                        </DataGridTemplateColumn.CellTemplate>
                                     </DataGridTemplateColumn>
                                     <DataGridTemplateColumn IsReadOnly="False" Width="2*">
                                         <DataGridTemplateColumn.Header>
@@ -2268,15 +2269,11 @@
                 </TabItem>
                 <TabItem Header="Pre-Installation notes">
                     <Grid Margin="10">
-                        <Grid.RowDefinitions>
-                            <RowDefinition Height="1*" />
-                            <RowDefinition Height="1*" />
-                        </Grid.RowDefinitions>
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition Width="6*" />
                             <ColumnDefinition Width="4*" />
                         </Grid.ColumnDefinitions>
-                        <DataGrid ItemsSource="{Binding InstallationNotes}" GridLinesVisibility="None" AutoGenerateColumns="False" HeadersVisibility="Column" BorderThickness="0" Background="White" ContextMenu="{StaticResource InstallNoteContextMenu}" RowStyle="{StaticResource InstallNoteRowStyle}">
+                        <DataGrid x:Name="InstallNote_DataGrid" ItemsSource="{Binding FetchInstallationNotes}" GridLinesVisibility="None" AutoGenerateColumns="False" HeadersVisibility="Column" BorderThickness="0" Background="White" CanUserAddRows="False" ContextMenu="{StaticResource InstallNoteContextMenu}" RowStyle="{StaticResource InstallNoteRowStyle}">
                             <DataGrid.Resources>
                                 <Style TargetType="DataGridColumnHeader" BasedOn="{StaticResource GridColumnHeaderBase}">
                                     <Setter Property="Background" Value="#4BACC6" />
@@ -2301,8 +2298,15 @@
                                                     <RowDefinition Height="Auto" />
                                                     <RowDefinition Height="Auto" />
                                                 </Grid.RowDefinitions>
-                                                <Label Content="{Binding InstallDateAdded, Mode=TwoWay}" />
-                                                <TextBox Grid.Row="1" Height="80" Width="650" Text="{Binding InstallNote, Mode=TwoWay}" AcceptsReturn="True" ScrollViewer.VerticalScrollBarVisibility="Auto" />
+                                                <Grid>
+                                                    <Grid.ColumnDefinitions>
+                                                        <ColumnDefinition Width="1*" />
+                                                        <ColumnDefinition Width="1*" />
+                                                    </Grid.ColumnDefinitions>
+                                                    <TextBlock Text="{Binding InstallNoteUser}" HorizontalAlignment="Left" />
+                                                    <TextBlock Grid.Column="1" Text="{Binding InstallDateAdded, Mode=TwoWay}" HorizontalAlignment="Right" />
+                                                </Grid>
+                                                <TextBox Grid.Row="1" Height="80" Width="650" Text="{Binding InstallNote, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" AcceptsReturn="True" ScrollViewer.VerticalScrollBarVisibility="Auto" />
                                             </Grid>
                                         </DataTemplate>
                                     </DataGridTemplateColumn.CellTemplate>
@@ -2311,11 +2315,18 @@
                         </DataGrid>
                         <Grid Grid.Column="1" Margin="10,0,10,0">
                             <Grid.RowDefinitions>
-                                <RowDefinition Height="Auto" />
-                                <RowDefinition Height="*" />
+                                <RowDefinition Height="1*" />
+                                <RowDefinition Height="1*" />
+                                <RowDefinition Height="1*" />
                             </Grid.RowDefinitions>
-                            <Label Content="Safety/Badging" />
-                            <TextBox Grid.Row="1" Text="{Binding SafetyBadging, Mode=TwoWay}" />
+                            <Grid>
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="Auto" />
+                                    <RowDefinition Height="*" />
+                                </Grid.RowDefinitions>
+                                <TextBlock Text="Safety/Badging" />
+                                <TextBox Grid.Row="1" Text="{Binding TempProject.SafetyBadging, Mode=TwoWay}" VerticalContentAlignment="Top" AcceptsReturn="True" ScrollViewer.VerticalScrollBarVisibility="Auto" />
+                            </Grid>
                         </Grid>
                     </Grid>
                 </TabItem>

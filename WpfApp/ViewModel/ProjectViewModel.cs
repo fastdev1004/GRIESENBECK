@@ -44,6 +44,7 @@ namespace WpfApp.ViewModel
             ProjectSelectionEnable = true;
            
             InstallationNotes = new ObservableCollection<InstallationNote>();
+            FetchInstallationNotes = new ObservableCollection<InstallationNote>();
             ProjectCIPs = new ObservableCollection<CIP>();
             Contracts = new ObservableCollection<Contract>();
             TrackReports = new ObservableCollection<TrackReport>();
@@ -87,6 +88,17 @@ namespace WpfApp.ViewModel
 
         private void AddNewInstallNote()
         {
+            int itemCount = InstallationNotes.Count;
+            Console.WriteLine("DateTime.Now->"+ DateTime.Now);
+            InstallationNotes.Add(new InstallationNote { FetchID = itemCount, InstallDateAdded = DateTime.Now, ActionFlag = 1 });
+            FetchInstallationNotes = new ObservableCollection<InstallationNote>();
+            foreach (InstallationNote item in InstallationNotes)
+            {
+                if (item.ActionFlag != 3 && item.ActionFlag != 4)
+                {
+                    FetchInstallationNotes.Add(item);
+                }
+            }
         }
 
         private void AddNewProjMatShipping()
@@ -664,6 +676,37 @@ namespace WpfApp.ViewModel
                     sqlquery = "UPDATE tblProjectLabor SET Complete=" + Convert.ToInt32(laborComplete) + " WHERE ProjLab_ID=" + projLabID + " AND ProjSOV_ID=" + projSovID;
                     cmd = dbConnection.RunQuryNoParameters(sqlquery);
                 }
+
+                foreach (InstallationNote _note in InstallationNotes)
+                {
+                    int notesID = _note.ID;
+                    string notesNote = _note.InstallNote;
+                    string user = "";
+                    string userName = "";
+                    int noteProjectID = projectID;
+                    DateTime notesDateAdded = _note.InstallDateAdded;
+                    int actionFlag = _note.ActionFlag;
+
+                    if (actionFlag == 0)
+                    {
+                        sqlquery = "UPDATE tblInstallNotes SET Install_Note=@InstallNote, InstallNotes_User=@NotesUser, InstallNotes_UserName=@NotesUserName, Project_ID=@ProjectID, InstallNotes_DateAdded=@NotesDateAdded WHERE InstallNotes_ID=@NotesID";
+
+                        cmd = dbConnection.RunQueryToUpdateInstallNote(sqlquery, notesNote, user, userName, noteProjectID, notesDateAdded, notesID);
+                    }
+                    else if (actionFlag == 1)
+                    {
+                        sqlquery = "INSERT INTO tblInstallNotes(Install_Note, InstallNotes_User, InstallNotes_UserName, Project_ID, InstallNotes_DateAdded) OUTPUT INSERTED.InstallNotes_ID VALUES (@InstallNote, @NotesUser, @NotesUserName, @ProjectID, @NotesDateAdded)";
+
+                        int insertedNoteId = dbConnection.RunQueryToCreateInstallNote(sqlquery, notesNote, user, userName, noteProjectID, notesDateAdded);
+                        _note.ID = insertedNoteId;
+                    }
+                    else if (actionFlag == 3)
+                    {
+                        sqlquery = "DELETE tblInstallNotes WHERE InstallNotes_ID =" + notesID.ToString();
+                        cmd = dbConnection.RunQuryNoParameters(sqlquery);
+                    }
+                }
+
                 MessageBox.Show("Project is saved successfully", "Save", MessageBoxButton.OK, MessageBoxImage.Information);
             }
             else
@@ -1953,23 +1996,30 @@ namespace WpfApp.ViewModel
             ds = new DataSet();
             sda.Fill(ds);
             rowCount = ds.Tables[0].Rows.Count; // number of rows
+            fetchID = 0;
 
             ObservableCollection<InstallationNote> sb_installationNote = new ObservableCollection<InstallationNote>();
 
             foreach (DataRow row in ds.Tables[0].Rows)
             {
-                fetchID = row.Field<int>("InstallNotes_ID");
+                string installUser = "";
+                int installNoteId = row.Field<int>("InstallNotes_ID");
                 int projectID = row.Field<int>("Project_ID");
                 string installNote = row["Install_Note"].ToString();
+                if (!row.IsNull("InstallNotes_User"))
+                    installUser = row["InstallNotes_User"].ToString();
                 DateTime installDateAdded = row.Field<DateTime>("InstallNotes_DateAdded");
 
                 sb_installationNote.Add(new InstallationNote
                 {
-                    ID = fetchID,
+                    ID = installNoteId,
                     ProjectID = projectID,
                     InstallNote = installNote,
-                    InstallDateAdded = installDateAdded
+                    InstallNoteUser = installUser,
+                    InstallDateAdded = installDateAdded,
+                    FetchID = fetchID
                 });
+                fetchID += 1;
             }
 
             InstallationNotes = sb_installationNote;
@@ -2808,6 +2858,25 @@ namespace WpfApp.ViewModel
             set
             {
                 _installationNotes = value;
+                foreach(InstallationNote item in InstallationNotes)
+                {
+                    if(item.ActionFlag != 3 || item.ActionFlag != 4)
+                    {
+                        FetchInstallationNotes.Add(item);
+                    }
+                }
+                OnPropertyChanged();
+            }
+        }
+
+        private ObservableCollection<InstallationNote> _fetchInstallationNotes;
+
+        public ObservableCollection<InstallationNote> FetchInstallationNotes
+        {
+            get { return _fetchInstallationNotes; }
+            set
+            {
+                _fetchInstallationNotes = value;
                 OnPropertyChanged();
             }
         }

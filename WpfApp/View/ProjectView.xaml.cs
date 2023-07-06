@@ -1041,7 +1041,31 @@ namespace WpfApp
 
         private void RemoveInstallNoteItem(object sender, RoutedEventArgs e)
         {
+            int selectedIndex = InstallNote_DataGrid.SelectedIndex;
+            MenuItem menuItem = sender as MenuItem;
+            //DataGridRow row = findComponentHelper.FindDataGridRow(menuItem);
+            //InstallationNote data = row.DataContext as InstallationNote;
 
+            if (selectedIndex != -1)
+            {
+                InstallationNote note = ProjectVM.InstallationNotes.Where(item => item.FetchID == ProjectVM.FetchInstallationNotes[selectedIndex].FetchID).First();
+                if (ProjectVM.FetchInstallationNotes[selectedIndex].ActionFlag == 1)
+                {
+                    note.ActionFlag = 4;
+                }
+                else
+                {
+                    note.ActionFlag = 3;
+                }
+                ProjectVM.FetchInstallationNotes = new ObservableCollection<InstallationNote>();
+                foreach (InstallationNote item in ProjectVM.InstallationNotes)
+                {
+                    if (item.ActionFlag != 3 && item.ActionFlag != 4)
+                    {
+                        ProjectVM.FetchInstallationNotes.Add(item);
+                    }
+                }
+            }
         }
     }
 }

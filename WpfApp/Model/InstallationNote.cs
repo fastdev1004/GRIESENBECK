@@ -9,10 +9,24 @@ namespace WpfApp.Model
 {
     class InstallationNote:ViewModelBase
     {
+        private int _fetchID;
         private int _installationID;
         private string _installationNote;
         private int _projectID;
+        private string _installNoteUser;
         private DateTime _installDateAdded;
+        private int _actionFlag;
+
+        public int FetchID
+        {
+            get => _fetchID;
+            set
+            {
+                if (value == _fetchID) return;
+                _fetchID = value;
+                OnPropertyChanged();
+            }
+        }
 
         public int ID
         {
@@ -47,6 +61,17 @@ namespace WpfApp.Model
             }
         }
 
+        public string InstallNoteUser
+        {
+            get => _installNoteUser;
+            set
+            {
+                if (value == _installNoteUser) return;
+                _installNoteUser = value;
+                OnPropertyChanged();
+            }
+        }
+
         public DateTime InstallDateAdded
         {
             get => _installDateAdded;
@@ -54,6 +79,17 @@ namespace WpfApp.Model
             {
                 if (value == _installDateAdded) return;
                 _installDateAdded = value;
+                OnPropertyChanged();
+            }
+        }
+
+        public int ActionFlag
+        {
+            get => _actionFlag;
+            set
+            {
+                if (value == _actionFlag) return;
+                _actionFlag = value;
                 OnPropertyChanged();
             }
         }

@@ -39,6 +39,7 @@ namespace WpfApp.Utils
             catch (Exception e)
             {
                 Console.WriteLine(e);
+                connection.Close();
             }
             return cmd;
         }
@@ -977,6 +978,7 @@ namespace WpfApp.Utils
             }
             catch (Exception ex)
             {
+                Console.WriteLine(ex);
                 connection.Close();
             }
             return insertedID;
@@ -1053,7 +1055,7 @@ namespace WpfApp.Utils
             }
             catch (Exception ex)
             {
-                connection.Close();
+                Console.WriteLine(ex);
                 connection.Close();
             }
             return insertedID;
@@ -2178,6 +2180,7 @@ namespace WpfApp.Utils
             return cmd;
         }
 
+        // Create Project Mat Ship
         public int RunQueryToCreateProjectMatShip(string query, int projMtID, DateTime schedShipDate, DateTime estDelivDate, DateTime estInstallDate, string estWeight, int estPallet, int freightCoID, string trackingNo, double qtyShipped, DateTime dateShipped, double qtyRecvd, DateTime dateRecvd, int noOfPallet, bool freightDamage, int shipProjectID, DateTime deliverToJob, string siteStroage, string storageDetail)
         {
             try
@@ -2253,6 +2256,7 @@ namespace WpfApp.Utils
             return insertedID;
         }
 
+        // Update Project Mat Ship
         public SqlCommand RunQueryToUpdateProjectMatShip(string query, DateTime schedShipDate, DateTime estDelivDate, DateTime estInstallDate, string estWeight, int estPallet, int freightCoID, string trackingNo, double qtyShipped, DateTime dateShipped, double qtyRecvd, DateTime dateRecvd, int noOfPallet, bool freightDamage, int shipProjectID, DateTime deliverToJob, string siteStroage, string storageDetail, int projMsID)
         {
             try
@@ -2326,6 +2330,86 @@ namespace WpfApp.Utils
                 connection.Close();
             }
             return cmd;
+        }
+
+        // Update Install Note
+        public SqlCommand RunQueryToUpdateInstallNote(string query, string notesNote, string user, string userName, int noteProjectID, DateTime notesDateAdded, int notesID)
+        {
+            try
+            {
+                connection.Open();
+                if (connection != null)
+                {
+                    cmd = connection.CreateCommand();
+                    cmd.CommandType = CommandType.Text;
+                    cmd.CommandText = query;
+
+                    if (!string.IsNullOrEmpty(notesNote))
+                        cmd.Parameters.AddWithValue("@InstallNote", notesNote);
+                    else cmd.Parameters.AddWithValue("@InstallNote", DBNull.Value);
+                    if (!string.IsNullOrEmpty(user))
+                        cmd.Parameters.AddWithValue("@NotesUser", user);
+                    else cmd.Parameters.AddWithValue("@NotesUser", DBNull.Value);
+                    if (!string.IsNullOrEmpty(userName))
+                        cmd.Parameters.AddWithValue("@NotesUserName", userName);
+                    else cmd.Parameters.AddWithValue("@NotesUserName", DBNull.Value);
+                    if (noteProjectID != 0)
+                        cmd.Parameters.AddWithValue("@ProjectID", noteProjectID);
+                    else cmd.Parameters.AddWithValue("@ProjectID", DBNull.Value);
+                    if (!notesDateAdded.Equals(DateTime.MinValue))
+                        cmd.Parameters.AddWithValue("@NotesDateAdded", notesDateAdded);
+                    else cmd.Parameters.AddWithValue("@NotesDateAdded", DBNull.Value);
+                    cmd.Parameters.AddWithValue("@NotesID", notesID);
+                    cmd.ExecuteNonQuery();
+                    connection.Close();
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex);
+                connection.Close();
+            }
+            return cmd;
+        }
+
+        // Create Install Note
+        public int RunQueryToCreateInstallNote(string query, string notesNote, string user, string userName, int noteProjectID, DateTime notesDateAdded)
+        {
+            try
+            {
+                connection.Open();
+                if (connection != null)
+                {
+                    cmd = connection.CreateCommand();
+                    cmd.CommandType = CommandType.Text;
+                    cmd.CommandText = query;
+
+                    if (!string.IsNullOrEmpty(notesNote))
+                        cmd.Parameters.AddWithValue("@InstallNote", notesNote);
+                    else cmd.Parameters.AddWithValue("@InstallNote", DBNull.Value);
+                    if (!string.IsNullOrEmpty(user))
+                        cmd.Parameters.AddWithValue("@NotesUser", user);
+                    else cmd.Parameters.AddWithValue("@NotesUser", DBNull.Value);
+                    if (!string.IsNullOrEmpty(userName))
+                        cmd.Parameters.AddWithValue("@NotesUserName", userName);
+                    else cmd.Parameters.AddWithValue("@NotesUserName", DBNull.Value);
+                    if (noteProjectID != 0)
+                        cmd.Parameters.AddWithValue("@ProjectID", noteProjectID);
+                    else cmd.Parameters.AddWithValue("@ProjectID", DBNull.Value);
+                    if (!notesDateAdded.Equals(DateTime.MinValue))
+                        cmd.Parameters.AddWithValue("@NotesDateAdded", notesDateAdded);
+                    else cmd.Parameters.AddWithValue("@NotesDateAdded", DBNull.Value);
+
+                    insertedID = (int)cmd.ExecuteScalar();
+                    connection.Close();
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex);
+                connection.Close();
+            }
+            return insertedID;
         }
 
         public void Open()
