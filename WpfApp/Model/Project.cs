@@ -13,8 +13,8 @@ namespace WpfApp.Model
     {
         private int _id;
         private string _projectName;
-        private DateTime _targetDate = DateTime.Now;
-        private DateTime _dateCompleted = DateTime.Now;
+        private DateTime _targetDate;
+        private DateTime _dateCompleted;
         private bool _complete;
         private string _architect;
         private string _pmName;

@@ -63,6 +63,7 @@
     <Compile Include="Controls\CustomDatePicker.cs" />
     <Compile Include="Converter\ApprDenToValueConverter.cs" />
     <Compile Include="Converter\BoolToVisibleConverter.cs" />
+    <Compile Include="Converter\DateTimeConverter.cs" />
     <Compile Include="Converter\DateTimeToDateConverter.cs" />
     <Compile Include="Converter\DateTimeToDateTimeConverter.cs" />
     <Compile Include="Converter\IntToDollarConverter.cs" />

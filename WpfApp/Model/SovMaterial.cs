@@ -9,7 +9,7 @@ namespace WpfApp.Model
 {
     class SovMaterial : ViewModelBase
     {
-        private int _id;
+        private int _fetchID;
         private string _acronymName;
         private int _coID;
         private int _coItemNo;
@@ -27,6 +27,17 @@ namespace WpfApp.Model
         private bool _matLot;
         private double _matOrigRate;
         private int _projMatID;
+
+        public int FetchID
+        {
+            get => _fetchID;
+            set
+            {
+                if (value == _fetchID) return;
+                _fetchID = value;
+                OnPropertyChanged();
+            }
+        }
 
         public int ProjMatID
         {
@@ -79,18 +90,6 @@ namespace WpfApp.Model
             {
                 if (value == _projSovID) return;
                 _projSovID = value;
-                OnPropertyChanged();
-            }
-        }
-
-
-        public int ID
-        {
-            get => _id;
-            set
-            {
-                if (value == _id) return;
-                _id = value;
                 OnPropertyChanged();
             }
         }

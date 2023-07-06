@@ -11,14 +11,16 @@ namespace WpfApp.Model
 {
     class ProjectMatTracking:ViewModelBase
     {
+        private int _fetchId;
         private int _projectID;
+        private int _projMtID;
         private int _projMat;
         private DateTime _matReqdDate;
         private bool _matOnly;
         private string _manufName;
         private string _matPhase;
         private string _matType;
-        private string _qtyOrd;
+        private double _qtyOrd;
         private int _manufacturer;
         private string _matDesc;
         private string _acronym;
@@ -28,6 +30,7 @@ namespace WpfApp.Model
         private string _manufLeadTime;
         private string _orderNo;
         private string _poNumber;
+        private DateTime _dateOrd;
         private DateTime _shopReqDate;
         private DateTime _shopRecvdDate;
         private DateTime _submIssue;
@@ -46,6 +49,29 @@ namespace WpfApp.Model
 
         private bool _orderComplete;
         private bool _laborComplete;
+        private int _actionFlag;
+
+        public int FetchID
+        {
+            get => _fetchId;
+            set
+            {
+                if (value == _fetchId) return;
+                _fetchId = value;
+                OnPropertyChanged();
+            }
+        }
+
+        public int ProjMtID
+        {
+            get => _projMtID;
+            set
+            {
+                if (value == _projMtID) return;
+                _projMtID = value;
+                OnPropertyChanged();
+            }
+        }
 
         public int ProjectID
         {
@@ -157,7 +183,7 @@ namespace WpfApp.Model
             }
         }
 
-        public string QtyOrd
+        public double QtyOrd
         {
             get => _qtyOrd;
             set
@@ -219,6 +245,17 @@ namespace WpfApp.Model
             {
                 if (value == _poNumber) return;
                 _poNumber = value;
+                OnPropertyChanged();
+            }
+        }
+
+        public DateTime DateOrd
+        {
+            get => _dateOrd;
+            set
+            {
+                if (value == _dateOrd) return;
+                _dateOrd = value;
                 OnPropertyChanged();
             }
         }
@@ -404,6 +441,17 @@ namespace WpfApp.Model
             {
                 if (value == _laborComplete) return;
                 _laborComplete = value;
+                OnPropertyChanged();
+            }
+        }
+
+        public int ActionFlag
+        {
+            get => _actionFlag;
+            set
+            {
+                if (value == _actionFlag) return;
+                _actionFlag = value;
                 OnPropertyChanged();
             }
         }

@@ -38,6 +38,7 @@ namespace WpfApp.ViewModel
             FetchSovAcronyms = new ObservableCollection<SovAcronym>();
             SovMaterials = new ObservableCollection<SovMaterial>();
             ProjectMatTrackings = new ObservableCollection<ProjectMatTracking>();
+            FetchProjectMatTrackings = new ObservableCollection<ProjectMatTracking>();
             ProjectMtShips = new ObservableCollection<ProjectMatShip>();
             ProjectSelectionEnable = true;
            
@@ -75,15 +76,30 @@ namespace WpfApp.ViewModel
             this.AddNewSovCommand = new RelayCommand((e) => this.AddNewSov());
             this.AddNewSovMatCommand = new RelayCommand((e) => this.AddNewSovMat());
             this.AddNewSovLabCommand = new RelayCommand((e) => this.AddNewSovLab());
+            this.AddNewProjMatTrackingCommand = new RelayCommand((e) => this.AddNewProjMatTracking());
             this.SaveCommand = new RelayCommand((e) => this.SaveProject());
 
             ActionState = "New";
         }
 
+        private void AddNewProjMatTracking()
+        {
+            int itemCount = ProjectMatTrackings.Count;
+            ProjectMatTrackings.Add(new ProjectMatTracking { FetchID = itemCount, ProjMat = ProjMatID, ActionFlag = 1 });
+            FetchProjectMatTrackings = new ObservableCollection<ProjectMatTracking>();
+            foreach (ProjectMatTracking item in ProjectMatTrackings)
+            {
+                if (item.ActionFlag != 3 && item.ActionFlag != 4)
+                {
+                    FetchProjectMatTrackings.Add(item);
+                }
+            }
+        }
+
         private void AddNewNote()
         {
             int itemCount = ProjectNotes.Count;
-            ProjectNotes.Add(new Note { ID = itemCount, NotesDateAdded = DateTime.Now, NoteUser = "smile", NotesNote = "", ActionFlag = 1 });
+            ProjectNotes.Add(new Note { FetchID = itemCount, NotesDateAdded = DateTime.Now, NoteUser = "smile", NotesNote = "", ActionFlag = 1 });
             FetchProjectNotes = new ObservableCollection<Note>();
             foreach (Note item in ProjectNotes)
             {
@@ -111,7 +127,7 @@ namespace WpfApp.ViewModel
         private void AddNewSovMat()
         {
             int itemCount = SovMaterials.Count;
-            SovMaterials.Add(new SovMaterial { ID = itemCount, ActionFlag = 1 });
+            SovMaterials.Add(new SovMaterial { FetchID = itemCount, ActionFlag = 1 });
             FetchSovMaterials = new ObservableCollection<SovMaterial>();
             foreach (SovMaterial item in SovMaterials)
             {
@@ -236,34 +252,36 @@ namespace WpfApp.ViewModel
 
                 projectID = TempProject.ID;
 
-                foreach (Note _note in ProjectNotes)
-                {
-                    int notesPK = projectID;
-                    string notesPkDesc = "Project";
-                    string notesNote = _note.NotesNote;
-                    DateTime notesDateAdded = _note.NotesDateAdded;
-                    string user = "smile";
-                    int notesID = _note.NoteID;
-                    int actionFlag = _note.ActionFlag;
+                //foreach (Note _note in ProjectNotes)
+                //{
+                //    int notesPK = projectID;
+                //    string notesPkDesc = "Project";
+                //    string notesNote = _note.NotesNote;
+                //    DateTime notesDateAdded = _note.NotesDateAdded;
+                //    string user = "smile";
+                //    int notesID = _note.NoteID;
+                //    int actionFlag = _note.ActionFlag;
 
-                    if(actionFlag == 0)
-                    {
-                        sqlquery = "UPDATE tblNotes SET Notes_Note=@NotesNote, Notes_DateAdded=@NotesDateAdded WHERE Notes_ID=@NotesID";
+                //    if (actionFlag == 0)
+                //    {
+                //        sqlquery = "UPDATE tblNotes SET Notes_Note=@NotesNote, Notes_DateAdded=@NotesDateAdded WHERE Notes_ID=@NotesID";
 
-                        
-                        cmd = dbConnection.RunQueryToUpdateNote(sqlquery, notesNote, notesDateAdded, user, notesID);
-                    } else if(actionFlag == 1)
-                    {
-                        sqlquery = "INSERT INTO tblNotes(Notes_PK, Notes_PK_Desc, Notes_Note, Notes_DateAdded, Notes_User) OUTPUT INSERTED.Notes_ID VALUES (@NotesPK, @NotesDesc, @NotesNote, @NotesDateAdded, @NotesUser)";
 
-                        int insertedNoteId = dbConnection.RunQueryToCreateNote(sqlquery, notesPK, notesPkDesc, notesNote, notesDateAdded, user);
-                        _note.NoteID = insertedNoteId;
-                    } else if(actionFlag == 3)
-                    {
-                        sqlquery = "DELETE tblNotes WHERE Notes_ID =" + notesID.ToString();
-                        cmd = dbConnection.RunQuryNoParameters(sqlquery);
-                    }
-                }
+                //        cmd = dbConnection.RunQueryToUpdateNote(sqlquery, notesNote, notesDateAdded, user, notesID);
+                //    }
+                //    else if (actionFlag == 1)
+                //    {
+                //        sqlquery = "INSERT INTO tblNotes(Notes_PK, Notes_PK_Desc, Notes_Note, Notes_DateAdded, Notes_User) OUTPUT INSERTED.Notes_ID VALUES (@NotesPK, @NotesDesc, @NotesNote, @NotesDateAdded, @NotesUser)";
+
+                //        int insertedNoteId = dbConnection.RunQueryToCreateNote(sqlquery, notesPK, notesPkDesc, notesNote, notesDateAdded, user);
+                //        _note.NoteID = insertedNoteId;
+                //    }
+                //    else if (actionFlag == 3)
+                //    {
+                //        sqlquery = "DELETE tblNotes WHERE Notes_ID =" + notesID.ToString();
+                //        cmd = dbConnection.RunQuryNoParameters(sqlquery);
+                //    }
+                //}
 
                 foreach (ProjectManager _pm in ProjectManagerList)
                 {
@@ -275,12 +293,14 @@ namespace WpfApp.ViewModel
                     {
                         sqlquery = "UPDATE tblProjectPMs SET Project_ID=@ProjectID, PM_ID=@PmID WHERE ProjPM_ID=@ProjPmID";
                         cmd = dbConnection.RunQueryToUpdateProjPM(sqlquery, projectID, pmID, projPmID);
-                    } else if(actionFlag == 1)
+                    }
+                    else if (actionFlag == 1)
                     {
                         sqlquery = "INSERT INTO tblProjectPMs(Project_ID, PM_ID) OUTPUT INSERTED.ProjPM_ID VALUES (@ProjectID, @PmID)";
                         int insertedProjPmId = dbConnection.RunQueryToCreateProjPM(sqlquery, projectID, pmID);
                         _pm.ProjPmID = insertedProjPmId;
-                    } else if(actionFlag == 3)
+                    }
+                    else if (actionFlag == 3)
                     {
                         sqlquery = "DELETE tblProjectPMs WHERE ProjPM_ID =" + projPmID.ToString();
                         cmd = dbConnection.RunQuryNoParameters(sqlquery);
@@ -298,14 +318,16 @@ namespace WpfApp.ViewModel
                         sqlquery = "UPDATE tblProjectSups SET Project_ID=@ProjectID, Sup_ID=@SupID WHERE ProjSup_ID=@ProjSupID";
 
                         cmd = dbConnection.RunQueryToUpdateProjSup(sqlquery, projectID, supID, projSupID);
-                      
-                    } else if(actionFlag == 1)
+
+                    }
+                    else if (actionFlag == 1)
                     {
                         sqlquery = "INSERT INTO tblProjectSups(Project_ID, Sup_ID) OUTPUT INSERTED.ProjSup_ID VALUES (@ProjectID, @SupID)";
 
                         int insertedProjSupId = dbConnection.RunQueryToCreateProjSup(sqlquery, projectID, supID);
                         _supt.ProjSupID = insertedProjSupId;
-                    } else if(actionFlag == 3)
+                    }
+                    else if (actionFlag == 3)
                     {
                         sqlquery = "DELETE tblProjectSups WHERE ProjSup_ID =" + projSupID.ToString();
                         cmd = dbConnection.RunQuryNoParameters(sqlquery);
@@ -324,13 +346,15 @@ namespace WpfApp.ViewModel
                         sqlquery = "UPDATE tblProjectLinks SET Project_ID=@ProjectID, PathDesc=@PathDesc, PathName=@PathName WHERE Link_ID=@LinkID";
 
                         cmd = dbConnection.RunQueryToUpdateProjectLink(sqlquery, projectID, pathDesc, pathName, linkID);
-                    } else if(actionFlag == 1)
+                    }
+                    else if (actionFlag == 1)
                     {
                         sqlquery = "INSERT INTO tblProjectLinks(Project_ID, PathDesc, PathName) OUTPUT INSERTED.Link_ID VALUES (@ProjectID, @PathDesc, @PathName)";
 
                         int insertedProjLinkId = dbConnection.RunQueryToCreateProjectLink(sqlquery, projectID, pathDesc, pathName);
                         _projectLink.LinkID = insertedProjLinkId;
-                    } else if(actionFlag == 3)
+                    }
+                    else if (actionFlag == 3)
                     {
                         sqlquery = "DELETE tblProjectLinks WHERE Link_ID =" + linkID.ToString();
                         cmd = dbConnection.RunQuryNoParameters(sqlquery);
@@ -379,7 +403,7 @@ namespace WpfApp.ViewModel
                     int projectMatID = _sovMaterial.ProjMatID;
                     int projSovID = _sovMaterial.ProjSovID;
 
-                    if(matID > 0)
+                    if (matID > 0)
                     {
                         if (actionFlag == 1)
                         {
@@ -450,6 +474,63 @@ namespace WpfApp.ViewModel
                             sqlquery = "DELETE tblProjectLabor WHERE ProjLab_ID =" + projectLabID.ToString();
                             cmd = dbConnection.RunQuryNoParameters(sqlquery);
                         }
+                    }
+                }
+
+                foreach (ProjectMatTracking _projMatTracking in ProjectMatTrackings)
+                {
+                    int matTrackProjectID = _projMatTracking.ProjectID;
+                    int projMtID = _projMatTracking.ProjMtID;
+                    int projMatID = _projMatTracking.ProjMat;
+                    DateTime matReqdDate = _projMatTracking.MatReqdDate;
+                    double qtyOrd = _projMatTracking.QtyOrd;
+                    int manufID = _projMatTracking.ManufacturerID;
+                    bool takeFromStock = _projMatTracking.TakeFromStock;
+                    string manufLeadTime = _projMatTracking.LeadTime;
+                    string orderNo = _projMatTracking.ManuOrderNo;
+                    string poNumber = _projMatTracking.PoNumber;
+                    DateTime dateOrd = _projMatTracking.DateOrd;
+                    DateTime shopReqDate = _projMatTracking.ShopReqDate;
+                    DateTime shopRecvdDate = _projMatTracking.ShopRecvdDate;
+                    DateTime submIssue = _projMatTracking.SubmIssue;
+                    DateTime reSubmit = _projMatTracking.ReSubmit;
+                    DateTime submAppr = _projMatTracking.SubmAppr;
+                    bool noSubm = _projMatTracking.NoSubm;
+                    bool shipToJob = _projMatTracking.ShipToJob;
+                    bool needFM = _projMatTracking.NeedFM;
+                    bool guarDim = _projMatTracking.GuarDim;
+                    DateTime fieldDim = _projMatTracking.FieldDim;
+                    bool finalsRev = _projMatTracking.FinalsRev;
+                    DateTime rFF = _projMatTracking.RFF;
+
+                    bool orderComplete = _projMatTracking.OrderComplete;
+                    bool laborComplete = _projMatTracking.LaborComplete;
+                    int actionFlag = _projMatTracking.ActionFlag;
+
+                    if(projMatID >= 0)
+                    {
+                        if (actionFlag == 1)
+                        {
+                            sqlquery = "INSERT INTO tblProjectMaterialsTrack (ProjMat_ID, Manuf_ID, Manuf_Order_No, MatReqdDate, PO_Number, Qty_Ord, Date_Ord, TakeFromStock, Ship_to_Job, MatComplete, Guar_Dim, FM_Needed, Field_Dim, ShopReqDate, ShopRecvdDate, ReleasedForFab, SubmitIssue, SubmitAppr, Resubmit_Date, Project_ID, Finals_Rev, LaborComplete, Manuf_LeadTime, No_Sub_Needed) OUTPUT INSERTED.ProjMT_ID VALUES (@ProjMatID, @ManufID, @ManufOrderNo, @MatReqdDate, @PoNumber, @QtyOrd, @DateOrd, @TakeFromStock, @ShipToJob, @MatComplete, @GuarDim, @FmNeeded, @FieldDim, @ShopReqDate, @ShopRecvdDate, @ReleaseForFab, @SubmitIssue, @SubmitAppr, @ResubmitDate, @ProjectID, @FinalsRev, @LaborComplete, @ManufLeadTime, @NoSubNeeded)";
+
+                            int insertProjMatID = dbConnection.RunQueryToCreateProjMatTracking(sqlquery, projMatID, manufID, orderNo, matReqdDate, poNumber, qtyOrd, dateOrd, takeFromStock, shipToJob, orderComplete, guarDim, needFM, fieldDim, shopReqDate, shopRecvdDate, rFF, submIssue, submAppr, reSubmit, projectID, finalsRev, laborComplete, manufLeadTime, noSubm);
+                            _projMatTracking.ActionFlag = 0;
+                            _projMatTracking.ProjMat = insertProjMatID;
+                        }
+                        else if (actionFlag == 0)
+                        {
+                            sqlquery = "UPDATE tblProjectMaterialsTrack SET Manuf_ID=@ManufID, Manuf_Order_No=@ManufOrderNo, MatReqdDate=@MatReqdDate, PO_Number=@PoNumber, Qty_Ord=@QtyOrd, Date_Ord=@DateOrd, TakeFromStock=@TakeFromStock, Ship_to_Job=@ShipToJob, MatComplete=@MatComplete, Guar_Dim=@GuarDim, FM_Needed=@FmNeeded, Field_Dim=@FieldDim, ShopReqDate=@ShopReqDate, ShopRecvdDate=@ShopRecvdDate, ReleasedForFab=@ReleaseForFab, SubmitIssue=@SubmitIssue, SubmitAppr=@SubmitAppr, Resubmit_Date=@ResubmitDate, Project_ID=@ProjectID, Finals_Rev=@FinalsRev, LaborComplete=@LaborComplete, Manuf_LeadTime=@ManufLeadTime, No_Sub_Needed=@NoSubNeeded WHERE ProjMT_ID=@ProjMtID";
+
+                            cmd = dbConnection.RunQueryToUpdateProjMatTracking(sqlquery, projMatID, manufID, orderNo, matReqdDate, poNumber, qtyOrd, dateOrd, takeFromStock, shipToJob, orderComplete, guarDim, needFM, fieldDim, shopReqDate, shopRecvdDate, rFF, submIssue, submAppr, reSubmit, projectID, finalsRev, laborComplete, manufLeadTime, noSubm, projMtID);
+                        }
+                        else if (actionFlag == 3)
+                        {
+                            sqlquery = "DELETE tblProjectMaterialsTrack WHERE ProjMT_ID =" + projMtID.ToString();
+                            cmd = dbConnection.RunQuryNoParameters(sqlquery);
+                        }
+                    } else
+                    {
+                        Console.WriteLine("Project Mat is requried");
                     }
                 }
                 MessageBox.Show("Project is saved successfully", "Save", MessageBoxButton.OK, MessageBoxImage.Information);
@@ -823,20 +904,27 @@ namespace WpfApp.ViewModel
             sda = new SqlDataAdapter(cmd);
             ds = new DataSet();
             sda.Fill(ds);
-            ObservableCollection<Manufacturer> st_manufacturers = new ObservableCollection<Manufacturer>();
-            st_manufacturers.Add(new Manufacturer { ID = 0, ManufacturerName = "New" });
+            ObservableCollection<Manufacturer> st_manufs = new ObservableCollection<Manufacturer>();
+            ObservableCollection<Manufacturer> st_newManufs = new ObservableCollection<Manufacturer>();
+            st_newManufs.Add(new Manufacturer { ID = -1, ManufacturerName = "New" });
             foreach (DataRow row in ds.Tables[0].Rows)
             {
                 int manufID = int.Parse(row["Manuf_ID"].ToString());
                 string manufName = row["Manuf_Name"].ToString();
-                st_manufacturers.Add(new Manufacturer
+                st_manufs.Add(new Manufacturer
+                {
+                    ID = manufID,
+                    ManufacturerName = manufName,
+                });
+                st_newManufs.Add(new Manufacturer
                 {
                     ID = manufID,
                     ManufacturerName = manufName,
                 });
             }
 
-            Manufacturers = st_manufacturers;
+            Manufacturers = st_manufs;
+            NewManufacturers = st_newManufs;
 
             // FreightCo_Name
             sqlquery = "SELECT FreightCo_ID, FreightCo_Name FROM tblFreightCo ORDER BY FreightCo_Name;";
@@ -1213,7 +1301,7 @@ namespace WpfApp.ViewModel
             sda = new SqlDataAdapter(cmd);
             ds = new DataSet();
             sda.Fill(ds);
-            int id = 0;
+            int fetchID = 0;
             ObservableCollection<ProjectLabor> sb_projectLabor = new ObservableCollection<ProjectLabor>();
             foreach (DataRow row in ds.Tables[0].Rows)
             {
@@ -1252,7 +1340,7 @@ namespace WpfApp.ViewModel
                 _matOnly = row.Field<bool>("Material_Only");
                 sb_projectLabor.Add(new ProjectLabor
                 {
-                    ID = id,
+                    ID = fetchID,
                     ProjectID = ProjectID,
                     SovAcronymName = _sovAcronym,
                     LaborID = _laborID,
@@ -1267,7 +1355,7 @@ namespace WpfApp.ViewModel
                     MatOnly = _matOnly
                 });
 
-                id += 1;
+                fetchID += 1;
             }
             ProjectLabors = sb_projectLabor;
 
@@ -1463,7 +1551,7 @@ namespace WpfApp.ViewModel
             sda = new SqlDataAdapter(cmd);
             ds = new DataSet();
             sda.Fill(ds);
-            id = 0;
+            fetchID = 0;
 
             ObservableCollection<SovAcronym> sb_sovCO= new ObservableCollection<SovAcronym>();
             foreach (DataRow row in ds.Tables[0].Rows)
@@ -1486,14 +1574,14 @@ namespace WpfApp.ViewModel
                     coID = int.Parse(row["CO_ID"].ToString());
                 sb_sovCO.Add(new SovAcronym
                 {
-                    ID = id,
+                    ID = fetchID,
                     SovAcronymName = sovAcronym,
                     SovDesc = sovDesc,
                     MatOnly = matOnly,
                     ProjSovID = projSovID,
                     CoID = coID
                 });
-                id += 1;
+                fetchID += 1;
             }
 
             SovAcronyms = sb_sovCO;
@@ -1554,7 +1642,7 @@ namespace WpfApp.ViewModel
 
             ///SovMaterials
             ObservableCollection<SovMaterial> sb_sovMaterial = new ObservableCollection<SovMaterial>();
-            id = 0;
+            fetchID = 0;
             foreach (DataRow row in ds.Tables[0].Rows)
             {
                 string _acronymName = "";
@@ -1597,7 +1685,7 @@ namespace WpfApp.ViewModel
                
                 sb_sovMaterial.Add(new SovMaterial
                 {
-                    ID = id,
+                    FetchID = fetchID,
                     SovAcronymName = _acronymName,
                     CoItemNo = _coItemNo,
                     MatOnly = _matOnly,
@@ -1612,7 +1700,7 @@ namespace WpfApp.ViewModel
                     SovMatOnly = _sovMatOnly
                 });
 
-                id += 1;
+                fetchID += 1;
             }
 
             SovMaterials = sb_sovMaterial;
@@ -1675,14 +1763,14 @@ namespace WpfApp.ViewModel
 
             foreach (DataRow row in ds.Tables[0].Rows)
             {
-                id = row.Field<int>("InstallNotes_ID");
+                fetchID = row.Field<int>("InstallNotes_ID");
                 int projectID = row.Field<int>("Project_ID");
                 string installNote = row["Install_Note"].ToString();
                 DateTime installDateAdded = row.Field<DateTime>("InstallNotes_DateAdded");
 
                 sb_installationNote.Add(new InstallationNote
                 {
-                    ID = id,
+                    ID = fetchID,
                     ProjectID = projectID,
                     InstallNote = installNote,
                     InstallDateAdded = installDateAdded
@@ -1860,7 +1948,7 @@ namespace WpfApp.ViewModel
             sda = new SqlDataAdapter(cmd);
             ds = new DataSet();
             sda.Fill(ds);
-            id = 0;
+            fetchID = 0;
 
             ObservableCollection<Note> sb_projectnotes = new ObservableCollection<Note>();
             foreach (DataRow row in ds.Tables[0].Rows)
@@ -1890,7 +1978,7 @@ namespace WpfApp.ViewModel
 
                 sb_projectnotes.Add(new Note
                 {
-                    ID = id,
+                    FetchID = fetchID,
                     NoteID = _notesID,
                     NotePK = _notesPK,
                     NotesPKDesc = _notesPKDesc,
@@ -1901,7 +1989,7 @@ namespace WpfApp.ViewModel
                     ActionFlag = 0
                 });
 
-                id += 1;
+                fetchID += 1;
             }
             //Note noteItem = new Note();
             //sb_projectnotes.Add(noteItem);
@@ -2143,6 +2231,12 @@ namespace WpfApp.ViewModel
             set;
         }
 
+        public ObservableCollection<Manufacturer> NewManufacturers
+        {
+            get;
+            set;
+        }
+
         public ObservableCollection<Crew> Crews
         {
             get;
@@ -2313,6 +2407,29 @@ namespace WpfApp.ViewModel
                 if (_projectMatTracking != value)
                 {
                     _projectMatTracking = value;
+                    FetchProjectMatTrackings = new ObservableCollection<ProjectMatTracking>();
+                    foreach (ProjectMatTracking item in value)
+                    {
+                        if (item.ActionFlag != 3)
+                        {
+                            FetchProjectMatTrackings.Add(item);
+                        }
+                    }
+                    OnPropertyChanged();
+                }
+            }
+        }
+
+        private ObservableCollection<ProjectMatTracking> _fetchProjectMatTracking;
+
+        public ObservableCollection<ProjectMatTracking> FetchProjectMatTrackings
+        {
+            get { return _fetchProjectMatTracking; }
+            set
+            {
+                if (_fetchProjectMatTracking != value)
+                {
+                    _fetchProjectMatTracking = value;
                     OnPropertyChanged();
                 }
             }
@@ -2913,6 +3030,7 @@ namespace WpfApp.ViewModel
         public RelayCommand AddNewSovCommand { get; set; }
         public RelayCommand AddNewSovMatCommand { get; set; }
         public RelayCommand AddNewSovLabCommand { get; set; }
+        public RelayCommand AddNewProjMatTrackingCommand { get; set; }
 
         private void ChangeWorkOrder()
         {
@@ -2976,22 +3094,23 @@ namespace WpfApp.ViewModel
         private void ChangeMaterial()
         {
             // ProjectMatTracking 
-            sqlquery = "Select MatReqdDate, Qty_Ord, tblManufacturers.Manuf_ID, TakeFromStock, Manuf_LeadTime, Manuf_Order_No, PO_Number, ShopReqDate, ShopRecvdDate, SubmitIssue, Resubmit_Date, SubmitAppr, No_Sub_Needed, Ship_to_Job, FM_Needed, Guar_Dim, Field_Dim, Finals_Rev,  ReleasedForFab, MatComplete, LaborComplete from tblManufacturers RIGHT JOIN(Select * from tblProjectMaterialsTrack where ProjMat_ID = " + ProjMatID.ToString() + ") AS tblProjMat ON tblManufacturers.Manuf_ID = tblProjMat.Manuf_ID;";
+            sqlquery = "Select ProjMT_ID, MatReqdDate, Qty_Ord, Date_Ord, tblManufacturers.Manuf_ID, TakeFromStock, Manuf_LeadTime, Manuf_Order_No, PO_Number, ShopReqDate, ShopRecvdDate, SubmitIssue, Resubmit_Date, SubmitAppr, No_Sub_Needed, Ship_to_Job, FM_Needed, Guar_Dim, Field_Dim, Finals_Rev,  ReleasedForFab, MatComplete, LaborComplete from tblManufacturers RIGHT JOIN(Select * from tblProjectMaterialsTrack where ProjMat_ID = " + ProjMatID.ToString() + ") AS tblProjMat ON tblManufacturers.Manuf_ID = tblProjMat.Manuf_ID";
             cmd = dbConnection.RunQuryNoParameters(sqlquery);
             sda = new SqlDataAdapter(cmd);
             ds = new DataSet();
             sda.Fill(ds);
 
+            int id = 0;
             ObservableCollection<ProjectMatTracking> sb_projectMatTrackings = new ObservableCollection<ProjectMatTracking>();
             foreach (DataRow row in ds.Tables[0].Rows)
             {
                 DateTime matReqdDate = new DateTime();
-
+                int projMtID = int.Parse(row["ProjMT_ID"].ToString());
                 if (!row.IsNull("MatReqdDate"))
                     matReqdDate = row.Field<DateTime>("MatReqdDate");
-                string qtyOrd = "";
+                double qtyOrd = 0;
                 if (!row.IsNull("Qty_Ord"))
-                    qtyOrd = row.Field<int>("Qty_Ord").ToString();
+                    qtyOrd = row.Field<double>("Qty_Ord");
                 int manufID = row.Field<int>("Manuf_ID");
                 bool stock = row.Field<Boolean>("TakeFromStock");
                 string leadTime = "";
@@ -3006,6 +3125,9 @@ namespace WpfApp.ViewModel
                 DateTime shopReq = new DateTime();
                 if (!row.IsNull("ShopReqDate"))
                     shopReq = row.Field<DateTime>("ShopReqDate");
+                DateTime dateOrd = new DateTime();
+                if (!row.IsNull("Date_Ord"))
+                    dateOrd = row.Field<DateTime>("Date_Ord");
                 DateTime shopRecv = new DateTime();
                 if (!row.IsNull("ShopRecvdDate"))
                     shopRecv = row.Field<DateTime>("ShopRecvdDate");
@@ -3034,9 +3156,12 @@ namespace WpfApp.ViewModel
 
                 sb_projectMatTrackings.Add(new ProjectMatTracking
                 {
-                    ProjMat = ProjectID,
+                    FetchID = id,
+                    ProjMtID = projMtID,
+                    ProjMat = ProjMatID,
                     MatReqdDate = matReqdDate,
                     QtyOrd = qtyOrd,
+                    DateOrd = dateOrd,
                     ManufacturerID = manufID,
                     TakeFromStock = stock,
                     LeadTime = leadTime,
@@ -3055,9 +3180,18 @@ namespace WpfApp.ViewModel
                     FinalsRev = finalsRev,
                     RFF = rff,
                     OrderComplete = matComplete,
-                    LaborComplete = laborComplete
+                    LaborComplete = laborComplete,
+                    ActionFlag = 0
                 });
-                ProjectMatTrackings = sb_projectMatTrackings;
+                id += 1;
+            }
+
+            ProjectMatTrackings = sb_projectMatTrackings;
+            FetchProjectMatTrackings = new ObservableCollection<ProjectMatTracking>();
+
+            foreach (ProjectMatTracking item in ProjectMatTrackings)
+            {
+                FetchProjectMatTrackings.Add(item);
             }
 
             // Project Ship

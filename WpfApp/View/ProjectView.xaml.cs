@@ -375,30 +375,17 @@ namespace WpfApp
             ArchRep_CB.SelectedIndex = -1;
         }
 
-        private void ManufCB_Changed(object sender, SelectionChangedEventArgs e)
-        {
-            ComboBox comboBox = sender as ComboBox;
-            int selectedIndex = comboBox.SelectedIndex;
-            if (selectedIndex == 0)
-            {
-                NewManufDialog newManufDlg = new NewManufDialog();
-                newManufDlg.WindowStartupLocation = WindowStartupLocation.CenterScreen;
-                comboBox.SelectedIndex = -1;
-                newManufDlg.ShowDialog();
-            }
-        }
-
         private void FreightCB_Changed(object sender, SelectionChangedEventArgs e)
         {
-            ComboBox comboBox = sender as ComboBox;
-            int selectedIndex = comboBox.SelectedIndex;
-            if (selectedIndex == 0)
-            {
-                NewFreightDialog newFreightDlg = new NewFreightDialog();
-                newFreightDlg.WindowStartupLocation = WindowStartupLocation.CenterScreen;
-                comboBox.SelectedIndex = -1;
-                newFreightDlg.ShowDialog();
-            }
+            //ComboBox comboBox = sender as ComboBox;
+            //int selectedIndex = comboBox.SelectedIndex;
+            //if (selectedIndex == 0)
+            //{
+            //    NewFreightDialog newFreightDlg = new NewFreightDialog();
+            //    newFreightDlg.WindowStartupLocation = WindowStartupLocation.CenterScreen;
+            //    comboBox.SelectedIndex = -1;
+            //    newFreightDlg.ShowDialog();
+            //}
         }
 
         private void CrewCombo_Loaded(object sender, RoutedEventArgs e)
@@ -435,12 +422,12 @@ namespace WpfApp
             {
                 if (ProjectVM.FetchProjectNotes[selectedIndex].ActionFlag == 1)
                 {
-                    Note note = ProjectVM.ProjectNotes.Where(item => item.ID == ProjectVM.FetchProjectNotes[selectedIndex].ID).First();
+                    Note note = ProjectVM.ProjectNotes.Where(item => item.FetchID == ProjectVM.FetchProjectNotes[selectedIndex].FetchID).First();
                     note.ActionFlag = 4;
                 }
                 else
                 {
-                    Note note = ProjectVM.ProjectNotes.Where(item => item.ID == ProjectVM.FetchProjectNotes[selectedIndex].ID).First();
+                    Note note = ProjectVM.ProjectNotes.Where(item => item.FetchID == ProjectVM.FetchProjectNotes[selectedIndex].FetchID).First();
                     note.ActionFlag = 3;
                 }
                 ProjectVM.FetchProjectNotes = new ObservableCollection<Note>();
@@ -732,11 +719,11 @@ namespace WpfApp
             {
                 if (ProjectVM.FetchSovMaterials[selectedIndex].ActionFlag == 1)
                 {
-                    SovMaterial sovMaterial = ProjectVM.SovMaterials.Where(material => material.ID == ProjectVM.FetchSovMaterials[selectedIndex].ID).First();
+                    SovMaterial sovMaterial = ProjectVM.SovMaterials.Where(material => material.FetchID == ProjectVM.FetchSovMaterials[selectedIndex].FetchID).First();
                     sovMaterial.ActionFlag = 4;
                 } else
                 {
-                    SovMaterial sovMaterial = ProjectVM.SovMaterials.Where(material => material.ID == ProjectVM.FetchSovMaterials[selectedIndex].ID).First();
+                    SovMaterial sovMaterial = ProjectVM.SovMaterials.Where(material => material.FetchID == ProjectVM.FetchSovMaterials[selectedIndex].FetchID).First();
                     sovMaterial.ActionFlag = 3;
                 }
                 ProjectVM.FetchSovMaterials = new ObservableCollection<SovMaterial>();
@@ -803,8 +790,17 @@ namespace WpfApp
                         }
                         else
                         {
-                            ProjectVM.FetchSovMaterials[selectedDataGridIndex].MatID = material.ID;
-                            ProjectVM.FetchSovMaterials[selectedDataGridIndex].ActionFlag = 1;
+                            SovMaterial currentSovMat = ProjectVM.SovMaterials.Where(mat => mat.FetchID == ProjectVM.FetchProjectMatTrackings[selectedDataGridIndex].FetchID).First();
+
+                            //currentProjMatTracking.ManufacturerID = manuf.ID;
+                            //ProjectVM.FetchProjectMatTrackings = new ObservableCollection<ProjectMatTracking>();
+                            //foreach (ProjectMatTracking item in ProjectVM.ProjectMatTrackings)
+                            //{
+                            //    if (item.ActionFlag != 3 && item.ActionFlag != 4)
+                            //    {
+                            //        ProjectVM.FetchProjectMatTrackings.Add(item);
+                            //    }
+                            //}
                         }
                     }
                 }
@@ -851,6 +847,101 @@ namespace WpfApp
                     if (item.ActionFlag != 3 && item.ActionFlag != 4)
                     {
                         ProjectVM.FetchSovLabors.Add(item);
+                    }
+                }
+            }
+        }
+
+        private void RemoveProjMatTrackingItem(object sender, RoutedEventArgs e)
+        {
+            int selectedIndex = Tracking_DataGrid.SelectedIndex;
+            if (selectedIndex != -1)
+            {
+                 ProjectMatTracking projMatTracking = ProjectVM.ProjectMatTrackings.Where(tracking => tracking.FetchID == ProjectVM.FetchProjectMatTrackings[selectedIndex].FetchID).First();
+                if (ProjectVM.FetchProjectMatTrackings[selectedIndex].ActionFlag == 1)
+                {
+                    projMatTracking.ActionFlag = 4;
+                }
+                else
+                {
+                    projMatTracking.ActionFlag = 3;
+                }
+                ProjectVM.FetchProjectMatTrackings = new ObservableCollection<ProjectMatTracking>();
+                foreach (ProjectMatTracking item in ProjectVM.ProjectMatTrackings)
+                {
+                    if (item.ActionFlag != 3 && item.ActionFlag != 4)
+                    {
+                        ProjectVM.FetchProjectMatTrackings.Add(item);
+                    }
+                }
+            }
+        }
+
+        private void ManufCB_Changed(object sender, SelectionChangedEventArgs e)
+        {
+            ComboBox comboBox = sender as ComboBox;
+            int selectedIndex = comboBox.SelectedIndex;
+
+            Manufacturer manuf = comboBox.SelectedItem as Manufacturer;
+            DataGridRow row = findComponentHelper.FindDataGridRow(comboBox);
+            int selectedDataGridIndex = 0;
+            string tagName = comboBox.Tag as string;
+            switch (tagName)
+            {
+                case "ProjectMatTracking":
+                    selectedDataGridIndex = Tracking_DataGrid.SelectedIndex;
+                    break;
+            }
+
+            if (manuf != null)
+            {
+                if (selectedDataGridIndex >= 0)
+                {
+                    if (tagName.Equals("ProjectMatTracking"))
+                    {
+                        ProjectMatTracking projMatTracking = row.DataContext as ProjectMatTracking;
+                        if (manuf.ManufacturerName.Equals("New"))
+                        {
+                            NewManufDialog newMatDlg = new NewManufDialog();
+                            newMatDlg.WindowStartupLocation = WindowStartupLocation.CenterScreen;
+                            comboBox.SelectedValue = ProjectVM.FetchProjectMatTrackings[selectedDataGridIndex].ManufacturerID;
+                            newMatDlg.ShowDialog();
+                        }
+                        else
+                        {
+                            ProjectMatTracking currentProjMatTracking = ProjectVM.ProjectMatTrackings.Where(tracking => tracking.FetchID == ProjectVM.FetchProjectMatTrackings[selectedDataGridIndex].FetchID).First();
+
+                            currentProjMatTracking.ManufacturerID = manuf.ID;
+                            ProjectVM.FetchProjectMatTrackings = new ObservableCollection<ProjectMatTracking>();
+                            foreach (ProjectMatTracking item in ProjectVM.ProjectMatTrackings)
+                            {
+                                if (item.ActionFlag != 3 && item.ActionFlag != 4)
+                                {
+                                    ProjectVM.FetchProjectMatTrackings.Add(item);
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
+        private void MatTrackingCombo_Loaded(object sender, RoutedEventArgs e)
+        {
+            ComboBox comboBox = (ComboBox)sender;
+            DataGridRow row = findComponentHelper.FindDataGridRow(comboBox);
+
+            string tagName = comboBox.Tag as string;
+
+            if (row != null)
+            {
+                if (tagName.Equals("ProjectMatTracking"))
+                {
+                    ProjectMatTracking data = row.DataContext as ProjectMatTracking;
+                    if (row.GetIndex() == 0)
+                    {
+                        comboBox.ItemsSource = ProjectVM.NewManufacturers;
+                        comboBox.SelectedValue = data.ManufacturerID;
                     }
                 }
             }

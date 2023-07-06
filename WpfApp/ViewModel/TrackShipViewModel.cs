@@ -148,9 +148,9 @@ namespace WpfApp.ViewModel
 
                 if (!row.IsNull("MatReqdDate"))
                     matReqdDate = row.Field<DateTime>("MatReqdDate");
-                string qtyOrd = "";
+                double qtyOrd = 0;
                 if (!row.IsNull("Qty_Ord"))
-                    qtyOrd = row.Field<int>("Qty_Ord").ToString();
+                    qtyOrd = row.Field<double>("Qty_Ord");
                 int manufID = row.Field<int>("Manuf_ID");
                 bool stock = row.Field<Boolean>("TakeFromStock");
                 string leadTime = "";

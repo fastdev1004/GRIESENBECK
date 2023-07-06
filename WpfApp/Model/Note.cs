@@ -9,7 +9,7 @@ namespace WpfApp.Model
 {
     class Note:ViewModelBase
     {
-        private int _id;
+        private int _fetchID;
         private int _notesID;
         private int _notesPK;
         private string _notesPKDesc;
@@ -19,13 +19,13 @@ namespace WpfApp.Model
         private string _notesUserName;
         private int _actionFlag;
 
-        public int ID
+        public int FetchID
         {
-            get => _id;
+            get => _fetchID;
             set
             {
-                if (value == _id) return;
-                _id = value;
+                if (value == _fetchID) return;
+                _fetchID = value;
                 OnPropertyChanged();
             }
         }

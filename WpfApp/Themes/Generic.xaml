@@ -75,5 +75,8 @@
         <Setter Property="Height" Value="40" />
         <Setter Property="TextAlignment" Value="Center" />
     </Style>
+    <Style TargetType="DatePicker">
+        <Setter Property="BorderThickness" Value="0" />
+    </Style>
     <BitmapImage x:Key="MyImageSource" UriSource="/logo.png"/>
 </ResourceDictionary>

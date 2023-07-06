@@ -90,6 +90,7 @@ namespace WpfApp.Utils
             catch (Exception ex)
             {
                 Console.WriteLine(ex);
+                connection.Close();
             }
             return insertedID;
         }
@@ -142,6 +143,7 @@ namespace WpfApp.Utils
             catch (Exception ex)
             {
                 Console.WriteLine(ex);
+                connection.Close();
             }
             return cmd;
         }
@@ -182,6 +184,7 @@ namespace WpfApp.Utils
             catch (Exception ex)
             {
                 Console.WriteLine(ex);
+                connection.Close();
             }
             return insertedID;
         }
@@ -222,6 +225,7 @@ namespace WpfApp.Utils
             catch (Exception ex)
             {
                 Console.WriteLine(ex);
+                connection.Close();
             }
             return cmd;
         }
@@ -262,6 +266,7 @@ namespace WpfApp.Utils
             catch (Exception ex)
             {
                 Console.WriteLine(ex);
+                connection.Close();
             }
             return insertedID;
         }
@@ -303,6 +308,7 @@ namespace WpfApp.Utils
             catch (Exception ex)
             {
                 Console.WriteLine(ex);
+                connection.Close();
             }
             return cmd;
         }
@@ -359,6 +365,7 @@ namespace WpfApp.Utils
             catch (Exception ex)
             {
                 Console.WriteLine(ex);
+                connection.Close();
             }
             return cmd;
         }
@@ -414,6 +421,7 @@ namespace WpfApp.Utils
             catch (Exception ex)
             {
                 Console.WriteLine(ex);
+                connection.Close();
             }
             return insertedID;
         }
@@ -452,6 +460,7 @@ namespace WpfApp.Utils
             catch (Exception ex)
             {
                 Console.WriteLine(ex);
+                connection.Close();
             }
             return cmd;
         }
@@ -489,6 +498,7 @@ namespace WpfApp.Utils
             catch (Exception ex)
             {
                 Console.WriteLine(ex);
+                connection.Close();
             }
             return insertedID;
         }
@@ -530,6 +540,7 @@ namespace WpfApp.Utils
             catch (Exception ex)
             {
                 Console.WriteLine(ex);
+                connection.Close();
             }
             return cmd;
         }
@@ -570,6 +581,7 @@ namespace WpfApp.Utils
             catch (Exception ex)
             {
                 Console.WriteLine(ex);
+                connection.Close();
             }
             return insertedID;
         }
@@ -602,6 +614,7 @@ namespace WpfApp.Utils
             catch (Exception ex)
             {
                 Console.WriteLine(ex);
+                connection.Close();
             }
             return cmd;
         }
@@ -633,6 +646,7 @@ namespace WpfApp.Utils
             catch (Exception ex)
             {
                 Console.WriteLine(ex);
+                connection.Close();
             }
             return insertedID;
         }
@@ -662,6 +676,7 @@ namespace WpfApp.Utils
             catch (Exception ex)
             {
                 Console.WriteLine(ex);
+                connection.Close();
             }
             return cmd;
         }
@@ -693,6 +708,7 @@ namespace WpfApp.Utils
             catch (Exception ex)
             {
                 Console.WriteLine(ex);
+                connection.Close();
             }
             return insertedID;
         }
@@ -727,6 +743,7 @@ namespace WpfApp.Utils
             catch (Exception ex)
             {
                 Console.WriteLine(ex);
+                connection.Close();
             }
             return cmd;
         }
@@ -759,6 +776,7 @@ namespace WpfApp.Utils
             catch (Exception ex)
             {
                 Console.WriteLine(ex);
+                connection.Close();
             }
             return insertedSovName;
         }
@@ -800,6 +818,7 @@ namespace WpfApp.Utils
             catch (Exception ex)
             {
                 Console.WriteLine(ex);
+                connection.Close();
             }
             return cmd;
         }
@@ -839,7 +858,7 @@ namespace WpfApp.Utils
             }
             catch (Exception ex)
             {
-                Console.WriteLine(ex);
+                connection.Close();
             }
             return insertedID;
         }
@@ -900,7 +919,7 @@ namespace WpfApp.Utils
             }
             catch (Exception ex)
             {
-                Console.WriteLine(ex);
+                connection.Close();
             }
             return cmd;
         }
@@ -958,7 +977,7 @@ namespace WpfApp.Utils
             }
             catch (Exception ex)
             {
-                Console.WriteLine(ex);
+                connection.Close();
             }
             return insertedID;
         }
@@ -994,7 +1013,8 @@ namespace WpfApp.Utils
             }
             catch (Exception ex)
             {
-                Console.WriteLine(ex);
+                connection.Close();
+                connection.Close();
             }
             return cmd;
         }
@@ -1033,7 +1053,8 @@ namespace WpfApp.Utils
             }
             catch (Exception ex)
             {
-                Console.WriteLine(ex);
+                connection.Close();
+                connection.Close();
             }
             return insertedID;
         }
@@ -1088,7 +1109,8 @@ namespace WpfApp.Utils
             }
             catch (Exception ex)
             {
-                Console.WriteLine(ex);
+                connection.Close();
+                connection.Close();
             }
             return cmd;
         }
@@ -1142,7 +1164,8 @@ namespace WpfApp.Utils
             }
             catch (Exception ex)
             {
-                Console.WriteLine(ex);
+                connection.Close();
+                connection.Close();
             }
             return insertedID;
         }
@@ -1179,7 +1202,8 @@ namespace WpfApp.Utils
             }
             catch (Exception ex)
             {
-                Console.WriteLine(ex);
+                connection.Close();
+                connection.Close();
             }
             return insertedID;
         }
@@ -1210,7 +1234,8 @@ namespace WpfApp.Utils
             }
             catch (Exception ex)
             {
-                Console.WriteLine(ex);
+                connection.Close();
+                connection.Close();
             }
             return insertedID;
         }
@@ -1242,7 +1267,8 @@ namespace WpfApp.Utils
             }
             catch (Exception ex)
             {
-                Console.WriteLine(ex);
+                connection.Close();
+                connection.Close();
             }
             return insertedSovName;
         }
@@ -1273,7 +1299,8 @@ namespace WpfApp.Utils
             }
             catch (Exception ex)
             {
-                Console.WriteLine(ex);
+                connection.Close();
+                connection.Close();
             }
             return insertedID;
         }
@@ -1314,6 +1341,7 @@ namespace WpfApp.Utils
             catch (Exception ex)
             {
                 Console.WriteLine(ex);
+                connection.Close();
             }
             return insertedID;
         }
@@ -1410,6 +1438,7 @@ namespace WpfApp.Utils
             catch (Exception ex)
             {
                 Console.WriteLine(ex);
+                connection.Close();
             }
             return insertedID;
         }
@@ -1462,10 +1491,10 @@ namespace WpfApp.Utils
                     if (!string.IsNullOrEmpty(zip))
                         cmd.Parameters.AddWithValue("@Zip", zip);
                     else cmd.Parameters.AddWithValue("@Zip", DBNull.Value);
-                    if (dateCompleted.Equals(DateTime.MinValue))
+                    if (!dateCompleted.Equals(DateTime.MinValue))
                         cmd.Parameters.AddWithValue("@DateCompleted", dateCompleted);
                     else cmd.Parameters.AddWithValue("@DateCompleted", DBNull.Value);
-                    if (targetDate.Equals(DateTime.MinValue))
+                    if (!targetDate.Equals(DateTime.MinValue))
                         cmd.Parameters.AddWithValue("@TargetDate", dateCompleted);
                     else cmd.Parameters.AddWithValue("@TargetDate", DBNull.Value);
                     if(backgroundCheck)
@@ -1529,6 +1558,7 @@ namespace WpfApp.Utils
             catch (Exception ex)
             {
                 Console.WriteLine(ex);
+                connection.Close();
             }
             return cmd;
         }
@@ -1555,6 +1585,7 @@ namespace WpfApp.Utils
             catch (Exception ex)
             {
                 Console.WriteLine(ex);
+                connection.Close();
             }
             return insertedID;
         }
@@ -1582,6 +1613,7 @@ namespace WpfApp.Utils
             catch (Exception ex)
             {
                 Console.WriteLine(ex);
+                connection.Close();
             }
             return cmd;
         }
@@ -1608,6 +1640,7 @@ namespace WpfApp.Utils
             catch (Exception ex)
             {
                 Console.WriteLine(ex);
+                connection.Close();
             }
             return insertedID;
         }
@@ -1635,6 +1668,7 @@ namespace WpfApp.Utils
             catch (Exception ex)
             {
                 Console.WriteLine(ex);
+                connection.Close();
             }
             return cmd;
         }
@@ -1666,6 +1700,7 @@ namespace WpfApp.Utils
             catch (Exception ex)
             {
                 Console.WriteLine(ex);
+                connection.Close();
             }
             return insertedID;
         }
@@ -1694,6 +1729,7 @@ namespace WpfApp.Utils
             catch (Exception ex)
             {
                 Console.WriteLine(ex);
+                connection.Close();
             }
             return cmd;
         }
@@ -1727,6 +1763,7 @@ namespace WpfApp.Utils
             catch (Exception ex)
             {
                 Console.WriteLine(ex);
+                connection.Close();
             }
             return insertedID;
         }
@@ -1761,6 +1798,7 @@ namespace WpfApp.Utils
             catch (Exception ex)
             {
                 Console.WriteLine(ex);
+                connection.Close();
             }
             return cmd;
         }
@@ -1791,6 +1829,7 @@ namespace WpfApp.Utils
             catch (Exception ex)
             {
                 Console.WriteLine(ex);
+                connection.Close();
             }
             return cmd;
         }
@@ -1836,6 +1875,7 @@ namespace WpfApp.Utils
             catch (Exception ex)
             {
                 Console.WriteLine(ex);
+                connection.Close();
             }
             return insertedID;
         }
@@ -1891,6 +1931,7 @@ namespace WpfApp.Utils
             catch (Exception ex)
             {
                 Console.WriteLine(ex);
+                connection.Close();
             }
             return cmd;
         }
@@ -1933,6 +1974,7 @@ namespace WpfApp.Utils
             catch (Exception ex)
             {
                 Console.WriteLine(ex);
+                connection.Close();
             }
             return insertedID;
         }
@@ -1976,6 +2018,162 @@ namespace WpfApp.Utils
             catch (Exception ex)
             {
                 Console.WriteLine(ex);
+                connection.Close();
+            }
+            return cmd;
+        }
+        
+        // Create Project Mat Tracking
+        public int RunQueryToCreateProjMatTracking(string query, int projMatID, int manufID, string orderNo, DateTime matReqdDate, string poNumber, double qtyOrd, DateTime dateOrd, bool takeFromStock, bool shipToJob, bool orderComplete, bool guarDim, bool needFM, DateTime fieldDim, DateTime shopReqDate, DateTime shopRecvdDate, DateTime rFF, DateTime submIssue, DateTime submAppr, DateTime reSubmit, int projectID, bool finalsRev, bool laborComplete, string manufLeadTime, bool noSubm)
+        {
+            try
+            {
+                connection.Open();
+                if (connection != null)
+                {
+                    cmd = connection.CreateCommand();
+                    cmd.CommandType = CommandType.Text;
+                    cmd.CommandText = query;
+
+                    cmd.Parameters.AddWithValue("@ProjMatID", projMatID);
+                    if (manufID != 0)
+                        cmd.Parameters.AddWithValue("@ManufID", manufID);
+                    else cmd.Parameters.AddWithValue("@ManufID", DBNull.Value);
+                    if (!string.IsNullOrEmpty(orderNo))
+                        cmd.Parameters.AddWithValue("@ManufOrderNo", orderNo);
+                    else cmd.Parameters.AddWithValue("@ManufOrderNo", DBNull.Value);
+                    if (!matReqdDate.Equals(DateTime.MinValue))
+                        cmd.Parameters.AddWithValue("@MatReqdDate", matReqdDate);
+                    else cmd.Parameters.AddWithValue("@MatReqdDate", DBNull.Value);
+                    if (!string.IsNullOrEmpty(poNumber))
+                        cmd.Parameters.AddWithValue("@PoNumber", poNumber);
+                    else cmd.Parameters.AddWithValue("@PoNumber", DBNull.Value);
+                    cmd.Parameters.AddWithValue("@QtyOrd", qtyOrd);
+                    if (!dateOrd.Equals(DateTime.MinValue))
+                        cmd.Parameters.AddWithValue("@DateOrd", dateOrd);
+                    else cmd.Parameters.AddWithValue("@DateOrd", DBNull.Value);
+                    cmd.Parameters.AddWithValue("@TakeFromStock", Convert.ToInt32(takeFromStock));
+                    cmd.Parameters.AddWithValue("@ShipToJob", Convert.ToInt32(shipToJob));
+                    cmd.Parameters.AddWithValue("@MatComplete", Convert.ToInt32(orderComplete));
+                    cmd.Parameters.AddWithValue("@GuarDim", Convert.ToInt32(guarDim));
+                    cmd.Parameters.AddWithValue("@FmNeeded", Convert.ToInt32(needFM));
+                    if (!fieldDim.Equals(DateTime.MinValue))
+                        cmd.Parameters.AddWithValue("@FieldDim", fieldDim);
+                    else cmd.Parameters.AddWithValue("@FieldDim", DBNull.Value);
+                    if (!shopReqDate.Equals(DateTime.MinValue))
+                        cmd.Parameters.AddWithValue("@ShopReqDate", shopReqDate);
+                    else cmd.Parameters.AddWithValue("@ShopReqDate", DBNull.Value);
+                    if (!shopRecvdDate.Equals(DateTime.MinValue))
+                        cmd.Parameters.AddWithValue("@ShopRecvdDate", shopRecvdDate);
+                    else cmd.Parameters.AddWithValue("@ShopRecvdDate", DBNull.Value);
+                    if (!rFF.Equals(DateTime.MinValue))
+                        cmd.Parameters.AddWithValue("@ReleaseForFab", rFF);
+                    else cmd.Parameters.AddWithValue("@ReleaseForFab", DBNull.Value);
+                    if (!submIssue.Equals(DateTime.MinValue))
+                        cmd.Parameters.AddWithValue("@SubmitIssue", submIssue);
+                    else cmd.Parameters.AddWithValue("@SubmitIssue", DBNull.Value);
+                    if (!submAppr.Equals(DateTime.MinValue))
+                        cmd.Parameters.AddWithValue("@SubmitAppr", submAppr);
+                    else cmd.Parameters.AddWithValue("@SubmitAppr", DBNull.Value);
+                    if (!reSubmit.Equals(DateTime.MinValue))
+                        cmd.Parameters.AddWithValue("@ResubmitDate", reSubmit);
+                    else cmd.Parameters.AddWithValue("@ResubmitDate", DBNull.Value);
+                    if (projectID != 0)
+                        cmd.Parameters.AddWithValue("@ProjectID", projectID);
+                    else cmd.Parameters.AddWithValue("@ProjectID", DBNull.Value);
+                    cmd.Parameters.AddWithValue("@FinalsRev", Convert.ToInt32(finalsRev));
+                    cmd.Parameters.AddWithValue("@LaborComplete", Convert.ToInt32(laborComplete));
+                    if (!string.IsNullOrEmpty(manufLeadTime))
+                        cmd.Parameters.AddWithValue("@ManufLeadTime", manufLeadTime);
+                    else cmd.Parameters.AddWithValue("@ManufLeadTime", DBNull.Value);
+                    cmd.Parameters.AddWithValue("@NoSubNeeded", Convert.ToInt32(noSubm));
+
+                    insertedID = (int)cmd.ExecuteScalar();
+                    connection.Close();
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex);
+                connection.Close();
+            }
+            return insertedID;
+        }
+
+        // Update Project Mat Tracking
+        public SqlCommand RunQueryToUpdateProjMatTracking(string query, int projMatID, int manufID, string orderNo, DateTime matReqdDate, string poNumber, double qtyOrd, DateTime dateOrd, bool takeFromStock, bool shipToJob, bool orderComplete, bool guarDim, bool needFM, DateTime fieldDim, DateTime shopReqDate, DateTime shopRecvdDate, DateTime rFF, DateTime submIssue, DateTime submAppr, DateTime reSubmit, int projectID, bool finalsRev, bool laborComplete, string manufLeadTime, bool noSubm, int projMtID)
+        {
+            try
+            {
+                connection.Open();
+                if (connection != null)
+                {
+                    cmd = connection.CreateCommand();
+                    cmd.CommandType = CommandType.Text;
+                    cmd.CommandText = query;
+
+                    cmd.Parameters.AddWithValue("@ProjMatID", projMatID);
+                    if (manufID != 0)
+                        cmd.Parameters.AddWithValue("@ManufID", manufID);
+                    else cmd.Parameters.AddWithValue("@ManufID", DBNull.Value);
+                    if (!string.IsNullOrEmpty(orderNo))
+                        cmd.Parameters.AddWithValue("@ManufOrderNo", orderNo);
+                    else cmd.Parameters.AddWithValue("@ManufOrderNo", DBNull.Value);
+                    if (!matReqdDate.Equals(DateTime.MinValue))
+                        cmd.Parameters.AddWithValue("@MatReqdDate", matReqdDate);
+                    else cmd.Parameters.AddWithValue("@MatReqdDate", DBNull.Value);
+                    if (!string.IsNullOrEmpty(poNumber))
+                        cmd.Parameters.AddWithValue("@PoNumber", poNumber);
+                    else cmd.Parameters.AddWithValue("@PoNumber", DBNull.Value);
+                    cmd.Parameters.AddWithValue("@QtyOrd", qtyOrd);
+                    if (!dateOrd.Equals(DateTime.MinValue))
+                        cmd.Parameters.AddWithValue("@DateOrd", dateOrd);
+                    else cmd.Parameters.AddWithValue("@DateOrd", DBNull.Value);
+                    cmd.Parameters.AddWithValue("@TakeFromStock", Convert.ToInt32(takeFromStock));
+                    cmd.Parameters.AddWithValue("@ShipToJob", Convert.ToInt32(shipToJob));
+                    cmd.Parameters.AddWithValue("@MatComplete", Convert.ToInt32(orderComplete));
+                    cmd.Parameters.AddWithValue("@GuarDim", Convert.ToInt32(guarDim));
+                    cmd.Parameters.AddWithValue("@FmNeeded", Convert.ToInt32(needFM));
+                    if (!fieldDim.Equals(DateTime.MinValue))
+                        cmd.Parameters.AddWithValue("@FieldDim", fieldDim);
+                    else cmd.Parameters.AddWithValue("@FieldDim", DBNull.Value);
+                    if (!shopReqDate.Equals(DateTime.MinValue))
+                        cmd.Parameters.AddWithValue("@ShopReqDate", shopReqDate);
+                    else cmd.Parameters.AddWithValue("@ShopReqDate", DBNull.Value);
+                    if (!shopRecvdDate.Equals(DateTime.MinValue))
+                        cmd.Parameters.AddWithValue("@ShopRecvdDate", shopRecvdDate);
+                    else cmd.Parameters.AddWithValue("@ShopRecvdDate", DBNull.Value);
+                    if (!rFF.Equals(DateTime.MinValue))
+                        cmd.Parameters.AddWithValue("@ReleaseForFab", rFF);
+                    else cmd.Parameters.AddWithValue("@ReleaseForFab", DBNull.Value);
+                    if (!submIssue.Equals(DateTime.MinValue))
+                        cmd.Parameters.AddWithValue("@SubmitIssue", submIssue);
+                    else cmd.Parameters.AddWithValue("@SubmitIssue", DBNull.Value);
+                    if (!submAppr.Equals(DateTime.MinValue))
+                        cmd.Parameters.AddWithValue("@SubmitAppr", submAppr);
+                    else cmd.Parameters.AddWithValue("@SubmitAppr", DBNull.Value);
+                    if (!reSubmit.Equals(DateTime.MinValue))
+                        cmd.Parameters.AddWithValue("@ResubmitDate", reSubmit);
+                    else cmd.Parameters.AddWithValue("@ResubmitDate", DBNull.Value);
+                    if (projectID != 0)
+                        cmd.Parameters.AddWithValue("@ProjectID", projectID);
+                    else cmd.Parameters.AddWithValue("@ProjectID", DBNull.Value);
+                    cmd.Parameters.AddWithValue("@FinalsRev", Convert.ToInt32(finalsRev));
+                    cmd.Parameters.AddWithValue("@LaborComplete", Convert.ToInt32(laborComplete));
+                    if (!string.IsNullOrEmpty(manufLeadTime))
+                        cmd.Parameters.AddWithValue("@ManufLeadTime", manufLeadTime);
+                    else cmd.Parameters.AddWithValue("@ManufLeadTime", DBNull.Value);
+                    cmd.Parameters.AddWithValue("@NoSubNeeded", Convert.ToInt32(noSubm));
+                    cmd.Parameters.AddWithValue("@ProjMtID", projMtID);
+
+                    cmd.ExecuteNonQuery();
+                    connection.Close();
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex);
+                connection.Close();
             }
             return cmd;
         }
