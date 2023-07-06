@@ -2178,6 +2178,156 @@ namespace WpfApp.Utils
             return cmd;
         }
 
+        public int RunQueryToCreateProjectMatShip(string query, int projMtID, DateTime schedShipDate, DateTime estDelivDate, DateTime estInstallDate, string estWeight, int estPallet, int freightCoID, string trackingNo, double qtyShipped, DateTime dateShipped, double qtyRecvd, DateTime dateRecvd, int noOfPallet, bool freightDamage, int shipProjectID, DateTime deliverToJob, string siteStroage, string storageDetail)
+        {
+            try
+            {
+                connection.Open();
+                if (connection != null)
+                {
+                   
+                    cmd = connection.CreateCommand();
+                    cmd.CommandType = CommandType.Text;
+                    cmd.CommandText = query;
+
+                    cmd.Parameters.AddWithValue("@ProjMtID", projMtID);
+                    if (!schedShipDate.Equals(DateTime.MinValue))
+                        cmd.Parameters.AddWithValue("@SchedShipDate", schedShipDate);
+                    else cmd.Parameters.AddWithValue("@SchedShipDate", DBNull.Value);
+                    if (!estDelivDate.Equals(DateTime.MinValue))
+                        cmd.Parameters.AddWithValue("@EstDelivDate", estDelivDate);
+                    else cmd.Parameters.AddWithValue("@EstDelivDate", DBNull.Value);
+                    if (!estInstallDate.Equals(DateTime.MinValue))
+                        cmd.Parameters.AddWithValue("@EstInstallDate", estInstallDate);
+                    else cmd.Parameters.AddWithValue("@EstInstallDate", DBNull.Value);
+                    if (!string.IsNullOrEmpty(estWeight))
+                        cmd.Parameters.AddWithValue("@EstWeight", estWeight);
+                    else cmd.Parameters.AddWithValue("@EstWeight", DBNull.Value);
+                    if (estPallet != 0)
+                        cmd.Parameters.AddWithValue("@EstNoPallets", estPallet);
+                    else cmd.Parameters.AddWithValue("@EstNoPallets", DBNull.Value);
+                    if (freightCoID != 0)
+                        cmd.Parameters.AddWithValue("@FreightCoID", freightCoID);
+                    else cmd.Parameters.AddWithValue("@FreightCoID", DBNull.Value);
+                    if (!string.IsNullOrEmpty(trackingNo))
+                        cmd.Parameters.AddWithValue("@TrackingNo", trackingNo);
+                    else cmd.Parameters.AddWithValue("@TrackingNo", DBNull.Value);
+                    if (qtyShipped != 0)
+                        cmd.Parameters.AddWithValue("@QtyShipped", qtyShipped);
+                    else cmd.Parameters.AddWithValue("@QtyShipped", DBNull.Value);
+                    if (!dateShipped.Equals(DateTime.MinValue))
+                        cmd.Parameters.AddWithValue("@DateShipped", dateShipped);
+                    else cmd.Parameters.AddWithValue("@DateShipped", DBNull.Value);
+                    if (qtyRecvd != 0)
+                        cmd.Parameters.AddWithValue("@QtyRecvd", qtyRecvd);
+                    else cmd.Parameters.AddWithValue("@QtyRecvd", DBNull.Value);
+                    if (!dateRecvd.Equals(DateTime.MinValue))
+                        cmd.Parameters.AddWithValue("@DateRecvd", dateRecvd);
+                    else cmd.Parameters.AddWithValue("@DateRecvd", DBNull.Value);
+                    if (noOfPallet != 0)
+                        cmd.Parameters.AddWithValue("@NoOfPallets", noOfPallet);
+                    else cmd.Parameters.AddWithValue("@NoOfPallets", DBNull.Value);
+                    cmd.Parameters.AddWithValue("@FreightDamage", Convert.ToInt32(freightDamage));
+                    if (shipProjectID != 0)
+                        cmd.Parameters.AddWithValue("@ProjectID", shipProjectID);
+                    else cmd.Parameters.AddWithValue("@ProjectID", DBNull.Value);
+                    if (!deliverToJob.Equals(DateTime.MinValue))
+                        cmd.Parameters.AddWithValue("@DelivertoJob", deliverToJob);
+                    else cmd.Parameters.AddWithValue("@DelivertoJob", DBNull.Value);
+                    if (!string.IsNullOrEmpty(siteStroage))
+                        cmd.Parameters.AddWithValue("@SiteStorage", siteStroage);
+                    else cmd.Parameters.AddWithValue("@SiteStorage", DBNull.Value);
+                    if (!string.IsNullOrEmpty(storageDetail))
+                        cmd.Parameters.AddWithValue("@StorageDetail", storageDetail);
+                    else cmd.Parameters.AddWithValue("@StorageDetail", DBNull.Value);
+
+                    insertedID = (int)cmd.ExecuteScalar();
+                    connection.Close();
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex);
+                connection.Close();
+            }
+            return insertedID;
+        }
+
+        public SqlCommand RunQueryToUpdateProjectMatShip(string query, DateTime schedShipDate, DateTime estDelivDate, DateTime estInstallDate, string estWeight, int estPallet, int freightCoID, string trackingNo, double qtyShipped, DateTime dateShipped, double qtyRecvd, DateTime dateRecvd, int noOfPallet, bool freightDamage, int shipProjectID, DateTime deliverToJob, string siteStroage, string storageDetail, int projMsID)
+        {
+            try
+            {
+                connection.Open();
+                if (connection != null)
+                {
+
+                    cmd = connection.CreateCommand();
+                    cmd.CommandType = CommandType.Text;
+                    cmd.CommandText = query;
+
+                    if (!schedShipDate.Equals(DateTime.MinValue))
+                        cmd.Parameters.AddWithValue("@SchedShipDate", schedShipDate);
+                    else cmd.Parameters.AddWithValue("@SchedShipDate", DBNull.Value);
+                    if (!estDelivDate.Equals(DateTime.MinValue))
+                        cmd.Parameters.AddWithValue("@EstDelivDate", estDelivDate);
+                    else cmd.Parameters.AddWithValue("@EstDelivDate", DBNull.Value);
+                    if (!estInstallDate.Equals(DateTime.MinValue))
+                        cmd.Parameters.AddWithValue("@EstInstallDate", estInstallDate);
+                    else cmd.Parameters.AddWithValue("@EstInstallDate", DBNull.Value);
+                    if (!string.IsNullOrEmpty(estWeight))
+                        cmd.Parameters.AddWithValue("@EstWeight", estWeight);
+                    else cmd.Parameters.AddWithValue("@EstWeight", DBNull.Value);
+                    if (estPallet != 0)
+                        cmd.Parameters.AddWithValue("@EstNoPallets", estPallet);
+                    else cmd.Parameters.AddWithValue("@EstNoPallets", DBNull.Value);
+                    if (freightCoID != 0)
+                        cmd.Parameters.AddWithValue("@FreightCoID", freightCoID);
+                    else cmd.Parameters.AddWithValue("@FreightCoID", DBNull.Value);
+                    if (!string.IsNullOrEmpty(trackingNo))
+                        cmd.Parameters.AddWithValue("@TrackingNo", trackingNo);
+                    else cmd.Parameters.AddWithValue("@TrackingNo", DBNull.Value);
+                    if (qtyShipped != 0)
+                        cmd.Parameters.AddWithValue("@QtyShipped", trackingNo);
+                    else cmd.Parameters.AddWithValue("@QtyShipped", DBNull.Value);
+                    if (!dateShipped.Equals(DateTime.MinValue))
+                        cmd.Parameters.AddWithValue("@DateShipped", dateShipped);
+                    else cmd.Parameters.AddWithValue("@DateShipped", DBNull.Value);
+                    if (qtyRecvd != 0)
+                        cmd.Parameters.AddWithValue("@QtyRecvd", qtyRecvd);
+                    else cmd.Parameters.AddWithValue("@QtyRecvd", DBNull.Value);
+                    if (!dateRecvd.Equals(DateTime.MinValue))
+                        cmd.Parameters.AddWithValue("@DateRecvd", dateRecvd);
+                    else cmd.Parameters.AddWithValue("@DateRecvd", DBNull.Value);
+                    if (noOfPallet != 0)
+                        cmd.Parameters.AddWithValue("@NoOfPallets", noOfPallet);
+                    else cmd.Parameters.AddWithValue("@NoOfPallets", DBNull.Value);
+                    cmd.Parameters.AddWithValue("@FreightDamage", Convert.ToInt32(freightDamage));
+                    if (shipProjectID != 0)
+                        cmd.Parameters.AddWithValue("@ProjectID", shipProjectID);
+                    else cmd.Parameters.AddWithValue("@ProjectID", DBNull.Value);
+                    if (!deliverToJob.Equals(DateTime.MinValue))
+                        cmd.Parameters.AddWithValue("@DelivertoJob", deliverToJob);
+                    else cmd.Parameters.AddWithValue("@DelivertoJob", DBNull.Value);
+                    if (!string.IsNullOrEmpty(siteStroage))
+                        cmd.Parameters.AddWithValue("@SiteStorage", siteStroage);
+                    else cmd.Parameters.AddWithValue("@SiteStorage", DBNull.Value);
+                    if (!string.IsNullOrEmpty(storageDetail))
+                        cmd.Parameters.AddWithValue("@StorageDetail", storageDetail);
+                    else cmd.Parameters.AddWithValue("@StorageDetail", DBNull.Value);
+                    cmd.Parameters.AddWithValue("@ProjMSID", projMsID);
+
+                    cmd.ExecuteNonQuery();
+                    connection.Close();
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex);
+                connection.Close();
+            }
+            return cmd;
+        }
+
         public void Open()
         {
            connection.Open();

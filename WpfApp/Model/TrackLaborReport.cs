@@ -7,15 +7,40 @@ using WpfApp.ViewModel;
 
 namespace WpfApp.Model
 {
-    class TrackLaborReport:ViewModelBase
+    class TrackLaborReport : ViewModelBase
     {
+        private int _projLabID;
+        private int _projSovID;
         private int _projectID;
+        private int _coID;
         private string _sovAcronym;
+        private int _coItemNo;
         private string _laborDesc;
-        private string _coItemNo;
         private string _labPhase;
         private bool _complete;
         private DateTime _targetDate;
+
+        public int ProjLabID
+        {
+            get => _projLabID;
+            set
+            {
+                if (value == _projLabID) return;
+                _projLabID = value;
+                OnPropertyChanged();
+            }
+        }
+
+        public int ProjSovID
+        {
+            get => _projSovID;
+            set
+            {
+                if (value == _projSovID) return;
+                _projSovID = value;
+                OnPropertyChanged();
+            }
+        }
 
         public int ProjectID
         {
@@ -35,6 +60,17 @@ namespace WpfApp.Model
             {
                 if (value == _targetDate) return;
                 _targetDate = value;
+                OnPropertyChanged();
+            }
+        }
+
+        public int CoID
+        {
+            get => _coID;
+            set
+            {
+                if (value == _coID) return;
+                _coID = value;
                 OnPropertyChanged();
             }
         }
@@ -61,7 +97,7 @@ namespace WpfApp.Model
             }
         }
 
-        public string CoItemNo
+        public int CoItemNo
         {
             get => _coItemNo;
             set

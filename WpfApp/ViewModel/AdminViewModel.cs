@@ -167,13 +167,13 @@ namespace WpfApp.ViewModel
             SelectedFreightCoID = insertedFgtCoID;
             int totalCount = FreightCos.Count;
             CurrentIndex = totalCount - 2;
-            TempFreightCo.ID = insertedFgtCoID;
+            TempFreightCo.FreightCoID = insertedFgtCoID;
             FreightCos[totalCount - 2] = TempFreightCo;
         }
 
         public void UpdateFreightCo()
         {
-            int freightCoID = TempFreightCo.ID;
+            int freightCoID = TempFreightCo.FreightCoID;
             string freightName = TempFreightCo.FreightName;
             string freightPhone = TempFreightCo.Phone;
             string freightEmail = TempFreightCo.Email;
@@ -1441,7 +1441,7 @@ namespace WpfApp.ViewModel
                 string cell = row["FreightCo_Cell"].ToString();
                 bool active = row.Field<Boolean>("Active");
 
-                st_freightCO.Add(new FreightCo { ID = id, FreightName = name, Phone = phone, Email = email, Contact = contact, Cell = cell, Active = active });
+                st_freightCO.Add(new FreightCo { FreightCoID = id, FreightName = name, Phone = phone, Email = email, Contact = contact, Cell = cell, Active = active });
             }
 
             st_freightCO.Add(new FreightCo());

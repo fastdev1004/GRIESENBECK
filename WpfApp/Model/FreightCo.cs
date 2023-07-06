@@ -17,7 +17,7 @@ namespace WpfApp.Model
         private string _cell;
         private bool _active;
 
-        public int ID
+        public int FreightCoID
         {
             get => _freightCoID;
             set

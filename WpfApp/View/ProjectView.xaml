@@ -101,6 +101,28 @@
                 <Setter Property="ContextMenu" Value="{StaticResource ProjMatTrackingRowContextMenu}" />
                 <Setter Property="Margin" Value="0, 4" />
             </Style>
+
+            <ContextMenu x:Key="ProjMatShippingContextMenu">
+                <MenuItem Header="New" Command="{Binding AddNewProjMatShippingCommand }" />
+            </ContextMenu>
+            <ContextMenu x:Key="ProjMatShippingRowContextMenu">
+                <MenuItem Header="Delete" Click="RemoveProjMatShippingItem" />
+            </ContextMenu>
+            <Style x:Key="ProjMatShippingRowStyle" TargetType="{x:Type DataGridRow}">
+                <Setter Property="ContextMenu" Value="{StaticResource ProjMatShippingRowContextMenu}" />
+                <Setter Property="Margin" Value="0, 4" />
+            </Style>
+
+            <ContextMenu x:Key="InstallNoteContextMenu">
+                <MenuItem Header="New" Command="{Binding AddNewInstallNoteCommand }" />
+            </ContextMenu>
+            <ContextMenu x:Key="InstallNoteRowContextMenu">
+                <MenuItem Header="Delete" Click="RemoveInstallNoteItem" />
+            </ContextMenu>
+            <Style x:Key="InstallNoteRowStyle" TargetType="{x:Type DataGridRow}">
+                <Setter Property="ContextMenu" Value="{StaticResource InstallNoteRowContextMenu}" />
+                <Setter Property="Margin" Value="0, 4" />
+            </Style>
             <ControlTemplate x:Key="ComboBoxValidationErrorTemplate">
                 <DockPanel>
                 </DockPanel>
@@ -1237,8 +1259,7 @@
                                     <DataGridTemplateColumn Header="Manafacturer" Width="3*">
                                         <DataGridTemplateColumn.CellTemplate>
                                             <DataTemplate>
-                                                <ComboBox ItemsSource="{Binding DataContext.Manufacturers, RelativeSource={RelativeSource AncestorType=local:ProjectView}}" IsEditable="False" SelectionChanged="ManufCB_Changed" Loaded="MatTrackingCombo_Loaded"
-                SelectedValuePath="ID" SelectedValue="{Binding ManufacturerID, Mode=TwoWay}" DisplayMemberPath="ManufacturerName" Tag="ProjectMatTracking">
+                                                <ComboBox ItemsSource="{Binding DataContext.Manufacturers, RelativeSource={RelativeSource AncestorType=local:ProjectView}}" IsEditable="False" SelectionChanged="ManufCB_Changed" Loaded="MatTrackingCombo_Loaded" SelectedValuePath="ID" SelectedValue="{Binding ManufacturerID, Mode=TwoWay}" DisplayMemberPath="ManufacturerName" Tag="ProjectMatTracking">
                                                 </ComboBox>
                                             </DataTemplate>
                                         </DataGridTemplateColumn.CellTemplate>
@@ -1329,7 +1350,7 @@
                                         </DataGridTemplateColumn.Header>
                                         <DataGridTemplateColumn.CellTemplate>
                                             <DataTemplate>
-                                                <DatePicker SelectedDate="{Binding SubmAppr, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged, Converter={StaticResource DateTimeConverter}}" />
+                                                <DatePicker SelectedDate="{Binding SubmAppr, UpdateSourceTrigger=PropertyChanged, Converter={StaticResource DateTimeConverter}}" />
                                             </DataTemplate>
                                         </DataGridTemplateColumn.CellTemplate>
                                     </DataGridTemplateColumn>
@@ -1409,7 +1430,7 @@
                                 <RowDefinition Height="*" />
                             </Grid.RowDefinitions>
                             <Label Content="Shipping:" HorizontalAlignment="Left" />
-                            <DataGrid Grid.Row="1" ItemsSource="{Binding ProjectMtShips, Mode=TwoWay}" GridLinesVisibility="None" AutoGenerateColumns="False" CanUserResizeColumns="False" CanUserAddRows="False" HeadersVisibility="Column" BorderThickness="0" Background="White">
+                            <DataGrid x:Name="Shipping_DataGrid" Grid.Row="1" ItemsSource="{Binding FetchProjectMatShips, Mode=TwoWay}" GridLinesVisibility="None" AutoGenerateColumns="False" CanUserResizeColumns="False" CanUserAddRows="False" HeadersVisibility="Column" BorderThickness="0" Background="White" ContextMenu="{StaticResource ProjMatShippingContextMenu}" RowStyle="{StaticResource ProjMatShippingRowStyle}">
                                 <DataGrid.Resources>
                                     <Style TargetType="DataGridColumnHeader" BasedOn="{StaticResource GridColumnHeaderBase}">
                                         <Setter Property="Background" Value="#5C83B4" />
@@ -1429,7 +1450,7 @@
                                     <DataGridTemplateColumn IsReadOnly="False" Width="2.5*" Header="Sched Ship">
                                         <DataGridTemplateColumn.CellTemplate>
                                             <DataTemplate>
-                                                <DatePicker SelectedDate="{Binding SchedShipDate, Converter={StaticResource DateTimeConverter}}"/>
+                                                <DatePicker SelectedDate="{Binding SchedShipDate, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged, Converter={StaticResource DateTimeConverter}}"/>
                                             </DataTemplate>
                                         </DataGridTemplateColumn.CellTemplate>
                                     </DataGridTemplateColumn>
@@ -1439,7 +1460,7 @@
                                         </DataGridTemplateColumn.Header>
                                         <DataGridTemplateColumn.CellTemplate>
                                             <DataTemplate>
-                                                <DatePicker SelectedDate="{Binding EstDelivDate, Converter={StaticResource DateTimeConverter}}" />
+                                                <DatePicker SelectedDate="{Binding EstDelivDate, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged, Converter={StaticResource DateTimeConverter}}" />
                                             </DataTemplate>
                                         </DataGridTemplateColumn.CellTemplate>
                                     </DataGridTemplateColumn>
@@ -1449,7 +1470,7 @@
                                         </DataGridTemplateColumn.Header>
                                         <DataGridTemplateColumn.CellTemplate>
                                             <DataTemplate>
-                                                <DatePicker SelectedDate="{Binding EstInstallDate, Converter={StaticResource DateTimeConverter}}" />
+                                                <DatePicker SelectedDate="{Binding EstInstallDate, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged, Converter={StaticResource DateTimeConverter}}" />
                                             </DataTemplate>
                                         </DataGridTemplateColumn.CellTemplate>
                                     </DataGridTemplateColumn>
@@ -1459,9 +1480,9 @@
                                         </DataGridTemplateColumn.Header>
                                         <DataGridTemplateColumn.CellTemplate>
                                             <DataTemplate>
-                                                <TextBox Text="{Binding EstWeight}" />
+                                                <TextBox Text="{Binding EstWeight, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
                                             </DataTemplate>
-                                        </DataGridTemplateColumn.CellTemplate>
+                                        </DataGridTemplateColumn.CellTemplate> 
                                     </DataGridTemplateColumn>
                                     <DataGridTemplateColumn IsReadOnly="False" Width="2*">
                                         <DataGridTemplateColumn.Header>
@@ -1469,15 +1490,14 @@
                                         </DataGridTemplateColumn.Header>
                                         <DataGridTemplateColumn.CellTemplate>
                                             <DataTemplate>
-                                                <TextBox Text="{Binding EstPallet}" />
+                                                <TextBox Text="{Binding EstPallet, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" PreviewTextInput="ValidateNumber" />
                                             </DataTemplate>
                                         </DataGridTemplateColumn.CellTemplate>
                                     </DataGridTemplateColumn>
                                     <DataGridTemplateColumn Header="Freight CO" Width="2.5*">
                                         <DataGridTemplateColumn.CellTemplate>
                                             <DataTemplate>
-                                                <ComboBox ItemsSource="{Binding DataContext.FreightCos, RelativeSource={RelativeSource AncestorType=local:ProjectView}}" IsEditable="False" SelectionChanged="FreightCB_Changed"
-                SelectedValuePath="ID" SelectedValue="{Binding FreightCoID, Mode=TwoWay}" DisplayMemberPath="FreightName">
+                                                <ComboBox ItemsSource="{Binding DataContext.FreightCos, RelativeSource={RelativeSource AncestorType=local:ProjectView}}" IsEditable="False" SelectionChanged="FreightCB_Changed" Loaded="FreightCoCombo_Loaded" SelectedValuePath="FreightCoID" SelectedValue="{Binding FreightCoID, Mode=TwoWay}" DisplayMemberPath="FreightName" Tag="ProjectMatShipping">
                                                 </ComboBox>
                                             </DataTemplate>
                                         </DataGridTemplateColumn.CellTemplate>
@@ -1488,7 +1508,7 @@
                                         </DataGridTemplateColumn.Header>
                                         <DataGridTemplateColumn.CellTemplate>
                                             <DataTemplate>
-                                                <TextBox Text="{Binding TrackingNo}"/>
+                                                <TextBox Text="{Binding TrackingNo, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
                                             </DataTemplate>
                                         </DataGridTemplateColumn.CellTemplate>
                                     </DataGridTemplateColumn>
@@ -1498,7 +1518,7 @@
                                         </DataGridTemplateColumn.Header>
                                         <DataGridTemplateColumn.CellTemplate>
                                             <DataTemplate>
-                                                <DatePicker SelectedDate="{Binding DateShipped, Converter={StaticResource DateTimeConverter}}" />
+                                                <DatePicker SelectedDate="{Binding DateShipped, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged,  Converter={StaticResource DateTimeConverter}}" />
                                             </DataTemplate>
                                         </DataGridTemplateColumn.CellTemplate>
                                     </DataGridTemplateColumn>
@@ -1508,7 +1528,7 @@
                                         </DataGridTemplateColumn.Header>
                                         <DataGridTemplateColumn.CellTemplate>
                                             <DataTemplate>
-                                                <TextBox Text="{Binding QtyShipped}" />
+                                                <TextBox Text="{Binding QtyShipped, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" PreviewTextInput="ValidateNumber" />
                                             </DataTemplate>
                                         </DataGridTemplateColumn.CellTemplate>
                                     </DataGridTemplateColumn>
@@ -1518,7 +1538,7 @@
                                         </DataGridTemplateColumn.Header>
                                         <DataGridTemplateColumn.CellTemplate>
                                             <DataTemplate>
-                                                <TextBox Text="{Binding NoOfPallet}" />
+                                                <TextBox Text="{Binding NoOfPallet, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
                                             </DataTemplate >
                                         </DataGridTemplateColumn.CellTemplate>
                                     </DataGridTemplateColumn>
@@ -1528,7 +1548,7 @@
                                         </DataGridTemplateColumn.Header>
                                         <DataGridTemplateColumn.CellTemplate>
                                             <DataTemplate>
-                                                <DatePicker SelectedDate="{Binding DateRecvd, Converter={StaticResource DateTimeConverter}}" />
+                                                <DatePicker SelectedDate="{Binding DateRecvd, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged, Converter={StaticResource DateTimeConverter}}" />
                                             </DataTemplate>
                                         </DataGridTemplateColumn.CellTemplate>
                                     </DataGridTemplateColumn>
@@ -1538,7 +1558,7 @@
                                         </DataGridTemplateColumn.Header>
                                         <DataGridTemplateColumn.CellTemplate>
                                             <DataTemplate>
-                                                <TextBox Text="{Binding QtyRecvd}" />
+                                                <TextBox Text="{Binding QtyRecvd, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" PreviewTextInput="ValidateNumber" />
                                             </DataTemplate>
                                         </DataGridTemplateColumn.CellTemplate>
                                     </DataGridTemplateColumn>
@@ -1548,7 +1568,7 @@
                                         </DataGridTemplateColumn.Header>
                                         <DataGridTemplateColumn.CellTemplate>
                                             <DataTemplate>
-                                                <CheckBox IsChecked="{Binding FreightDamage}" />
+                                                <CheckBox IsChecked="{Binding FreightDamage, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
                                             </DataTemplate>
                                         </DataGridTemplateColumn.CellTemplate>
                                     </DataGridTemplateColumn>
@@ -1558,24 +1578,25 @@
                                         </DataGridTemplateColumn.Header>
                                         <DataGridTemplateColumn.CellTemplate>
                                             <DataTemplate>
-                                                <DatePicker SelectedDate="{Binding DeliverToJob, Converter={StaticResource DateTimeConverter}}" />
+                                                <DatePicker SelectedDate="{Binding DeliverToJob, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged, Converter={StaticResource DateTimeConverter}}" />
                                             </DataTemplate>
                                         </DataGridTemplateColumn.CellTemplate>
                                     </DataGridTemplateColumn>
-                                    <DataGridTemplateColumn IsReadOnly="False" Width="2*">
+                                    <DataGridTemplateColumn IsReadOnly="False" Width="1*">
                                         <DataGridTemplateColumn.Header>
                                             <TextBlock Text="Stored on Site" TextWrapping="Wrap" />
                                         </DataGridTemplateColumn.Header>
                                         <DataGridTemplateColumn.CellTemplate>
                                             <DataTemplate>
-                                                <!--<ComboBox ItemsSource="{Binding SiteStorages}" SelectedValue="{Binding SiteStroage}" />-->
+                                                <!--<ComboBox ItemsSource="{Binding SiteStorages, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" SelectedValue="{Binding SiteStorage}" />-->
+                                                <TextBlock Text="{Binding SiteStorage}" />
                                             </DataTemplate>
                                         </DataGridTemplateColumn.CellTemplate>
                                     </DataGridTemplateColumn>
-                                    <DataGridTemplateColumn IsReadOnly="False" Header="Storage  Detail" Width="1*">
+                                    <DataGridTemplateColumn IsReadOnly="False" Header="Storage  Detail" Width="2*">
                                         <DataGridTemplateColumn.CellTemplate>
                                             <DataTemplate>
-                                                <TextBox Text="{Binding StroageDetail}" />
+                                                <TextBox Text="{Binding StorageDetail, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
                                             </DataTemplate>
                                         </DataGridTemplateColumn.CellTemplate>
                                     </DataGridTemplateColumn>
@@ -1591,10 +1612,6 @@
                             <RowDefinition Height="1*" />
                         </Grid.RowDefinitions>
                         <Grid>
-                            <Grid.ColumnDefinitions>
-                                <ColumnDefinition Width="483*"/>
-                                <ColumnDefinition Width="1171*"/>
-                            </Grid.ColumnDefinitions>
                             <DataGrid ItemsSource="{Binding TrackReports}" GridLinesVisibility="None" AutoGenerateColumns="False" CanUserAddRows="False" HeadersVisibility="Column" BorderThickness="0" Background="White" Grid.ColumnSpan="2">
                                 <DataGrid.Resources>
                                     <Style TargetType="DataGridColumnHeader" BasedOn="{StaticResource GridColumnHeaderBase}">
@@ -1614,7 +1631,7 @@
                                         </DataGridTemplateColumn.Header>
                                         <DataGridTemplateColumn.CellTemplate>
                                             <DataTemplate>
-                                                <DatePicker SelectedDate="{Binding MatReqdDate}"/>
+                                                <DatePicker SelectedDate="{Binding MatReqdDate, UpdateSourceTrigger=PropertyChanged, Converter={StaticResource DateTimeConverter}}"/>
                                             </DataTemplate>
                                         </DataGridTemplateColumn.CellTemplate>
                                     </DataGridTemplateColumn>
@@ -1624,7 +1641,7 @@
                                         </DataGridTemplateColumn.Header>
                                         <DataGridTemplateColumn.CellTemplate>
                                             <DataTemplate>
-                                                <TextBox Text="{Binding ManufacturerName}" />
+                                                <TextBox Text="{Binding ManufacturerName, UpdateSourceTrigger=PropertyChanged}" IsReadOnly="True" />
                                             </DataTemplate>
                                         </DataGridTemplateColumn.CellTemplate>
                                     </DataGridTemplateColumn>
@@ -1634,7 +1651,7 @@
                                         </DataGridTemplateColumn.Header>
                                         <DataGridTemplateColumn.CellTemplate>
                                             <DataTemplate>
-                                                <TextBlock Text="{Binding QtyOrd}" />
+                                                <TextBox Text="{Binding QtyOrd, UpdateSourceTrigger=PropertyChanged}" PreviewTextInput="ValidateNumber" />
                                             </DataTemplate>
                                         </DataGridTemplateColumn.CellTemplate>
                                     </DataGridTemplateColumn>
@@ -1644,7 +1661,7 @@
                                         </DataGridTemplateColumn.Header>
                                         <DataGridTemplateColumn.CellTemplate>
                                             <DataTemplate>
-                                                <TextBox Text="{Binding Phase}" />
+                                                <TextBox Text="{Binding Phase}" IsReadOnly="True" />
                                             </DataTemplate>
                                         </DataGridTemplateColumn.CellTemplate>
                                     </DataGridTemplateColumn>
@@ -1654,7 +1671,7 @@
                                         </DataGridTemplateColumn.Header>
                                         <DataGridTemplateColumn.CellTemplate>
                                             <DataTemplate>
-                                                <TextBox Text="{Binding Type}" />
+                                                <TextBox Text="{Binding Type}" IsReadOnly="True" />
                                             </DataTemplate>
                                         </DataGridTemplateColumn.CellTemplate>
                                     </DataGridTemplateColumn>
@@ -1664,7 +1681,7 @@
                                         </DataGridTemplateColumn.Header>
                                         <DataGridTemplateColumn.CellTemplate>
                                             <DataTemplate>
-                                                <TextBox Text="{Binding ManufLeadTime}" />
+                                                <TextBox Text="{Binding LeadTime, UpdateSourceTrigger=PropertyChanged}" IsReadOnly="True" />
                                             </DataTemplate>
                                         </DataGridTemplateColumn.CellTemplate>
                                     </DataGridTemplateColumn>
@@ -1674,7 +1691,7 @@
                                         </DataGridTemplateColumn.Header>
                                         <DataGridTemplateColumn.CellTemplate>
                                             <DataTemplate>
-                                                <TextBox Text="{Binding PoNumber}" />
+                                                <TextBox Text="{Binding PoNumber, UpdateSourceTrigger=PropertyChanged}" />
                                             </DataTemplate>
                                         </DataGridTemplateColumn.CellTemplate>
                                     </DataGridTemplateColumn>
@@ -1684,7 +1701,7 @@
                                         </DataGridTemplateColumn.Header>
                                         <DataGridTemplateColumn.CellTemplate>
                                             <DataTemplate>
-                                                <DatePicker SelectedDate="{Binding ShopReqDate}" />
+                                                <DatePicker SelectedDate="{Binding ShopReqDate, UpdateSourceTrigger=PropertyChanged, Converter={StaticResource DateTimeConverter}}" />
                                             </DataTemplate>
                                         </DataGridTemplateColumn.CellTemplate>
                                     </DataGridTemplateColumn>
@@ -1694,7 +1711,7 @@
                                         </DataGridTemplateColumn.Header>
                                         <DataGridTemplateColumn.CellTemplate>
                                             <DataTemplate>
-                                                <!--<DatePicker SelectedDate="{Binding ShopRecvdDate}" />-->
+                                                <DatePicker SelectedDate="{Binding ShopRecvdDate, UpdateSourceTrigger=PropertyChanged, Converter={StaticResource DateTimeConverter}}" />
                                             </DataTemplate >
                                         </DataGridTemplateColumn.CellTemplate>
                                     </DataGridTemplateColumn>
@@ -1704,7 +1721,7 @@
                                         </DataGridTemplateColumn.Header>
                                         <DataGridTemplateColumn.CellTemplate>
                                             <DataTemplate>
-                                                <DatePicker SelectedDate="{Binding SubmIssue}" />
+                                                <DatePicker SelectedDate="{Binding SubmIssue, UpdateSourceTrigger=PropertyChanged, Converter={StaticResource DateTimeConverter}}" />
                                             </DataTemplate>
                                         </DataGridTemplateColumn.CellTemplate>
                                     </DataGridTemplateColumn>
@@ -1714,17 +1731,17 @@
                                         </DataGridTemplateColumn.Header>
                                         <DataGridTemplateColumn.CellTemplate>
                                             <DataTemplate>
-                                                <DatePicker SelectedDate="{Binding ReSubmit}" />
+                                                <DatePicker SelectedDate="{Binding ReSubmit, UpdateSourceTrigger=PropertyChanged, Converter={StaticResource DateTimeConverter}}" />
                                             </DataTemplate>
                                         </DataGridTemplateColumn.CellTemplate>
                                     </DataGridTemplateColumn>
-                                    <DataGridTemplateColumn IsReadOnly="False" Width="1*">
+                                    <DataGridTemplateColumn IsReadOnly="False" Width="2*">
                                         <DataGridTemplateColumn.Header>
                                             <TextBlock Text="Submit Appr" TextWrapping="Wrap" />
                                         </DataGridTemplateColumn.Header>
                                         <DataGridTemplateColumn.CellTemplate>
                                             <DataTemplate>
-                                                <CheckBox IsChecked="{Binding SubmAppr, Mode=TwoWay}" />
+                                                <DatePicker SelectedDate="{Binding SubmAppr, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged, Converter={StaticResource DateTimeConverter}}" />
                                             </DataTemplate>
                                         </DataGridTemplateColumn.CellTemplate>
                                     </DataGridTemplateColumn>
@@ -1734,7 +1751,7 @@
                                         </DataGridTemplateColumn.Header>
                                         <DataGridTemplateColumn.CellTemplate>
                                             <DataTemplate>
-                                                <TextBox Text="{Binding Color}" />
+                                                <TextBox Text="{Binding Color}" IsReadOnly="True" />
                                             </DataTemplate>
                                         </DataGridTemplateColumn.CellTemplate>
                                     </DataGridTemplateColumn>
@@ -1744,7 +1761,7 @@
                                         </DataGridTemplateColumn.Header>
                                         <DataGridTemplateColumn.CellTemplate>
                                             <DataTemplate>
-                                                <CheckBox IsChecked="{Binding GuarDim}" />
+                                                <CheckBox IsChecked="{Binding GuarDim, UpdateSourceTrigger=PropertyChanged}" />
                                             </DataTemplate>
                                         </DataGridTemplateColumn.CellTemplate>
                                     </DataGridTemplateColumn>
@@ -1754,21 +1771,21 @@
                                         </DataGridTemplateColumn.Header>
                                         <DataGridTemplateColumn.CellTemplate>
                                             <DataTemplate>
-                                                <DatePicker Text="{Binding FieldDim}" />
+                                                <DatePicker Text="{Binding FieldDim, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged, Converter={StaticResource DateTimeConverter}}" />
                                             </DataTemplate>
                                         </DataGridTemplateColumn.CellTemplate>
                                     </DataGridTemplateColumn>
                                     <DataGridTemplateColumn IsReadOnly="False" Header="R.F.F" Width="2*">
                                         <DataGridTemplateColumn.CellTemplate>
                                             <DataTemplate>
-                                                <DatePicker SelectedDate="{Binding RFF}" />
+                                                <DatePicker SelectedDate="{Binding RFF, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged, Converter={StaticResource DateTimeConverter}}" />
                                             </DataTemplate>
                                         </DataGridTemplateColumn.CellTemplate>
                                     </DataGridTemplateColumn>
                                     <DataGridTemplateColumn IsReadOnly="False" Header="Complete" Width="2*">
                                         <DataGridTemplateColumn.CellTemplate>
                                             <DataTemplate>
-                                                <CheckBox IsChecked="{Binding LaborComplete}" />
+                                                <CheckBox IsChecked="{Binding LaborComplete, UpdateSourceTrigger=PropertyChanged}" />
                                             </DataTemplate>
                                         </DataGridTemplateColumn.CellTemplate>
                                     </DataGridTemplateColumn>
@@ -1799,7 +1816,7 @@
                                         </DataGridTemplateColumn.Header>
                                         <DataGridTemplateColumn.CellTemplate>
                                             <DataTemplate>
-                                                <TextBox Text="{Binding SovAcronym}"/>
+                                                <TextBox Text="{Binding SovAcronym}" IsReadOnly="False" />
                                             </DataTemplate>
                                         </DataGridTemplateColumn.CellTemplate>
                                     </DataGridTemplateColumn>
@@ -1809,7 +1826,7 @@
                                         </DataGridTemplateColumn.Header>
                                         <DataGridTemplateColumn.CellTemplate>
                                             <DataTemplate>
-                                                <TextBox Text="{Binding LaborDesc}" />
+                                                <TextBox Text="{Binding LaborDesc}" IsReadOnly="False" />
                                             </DataTemplate>
                                         </DataGridTemplateColumn.CellTemplate>
                                     </DataGridTemplateColumn>
@@ -1819,7 +1836,7 @@
                                         </DataGridTemplateColumn.Header>
                                         <DataGridTemplateColumn.CellTemplate>
                                             <DataTemplate>
-                                                <TextBox Text="{Binding CoItemNo}" />
+                                                <TextBox Text="{Binding CoItemNo, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged, Converter={StaticResource ZeroToEmptyStringConverter}}" PreviewTextInput="ValidateNumberEmpty" />
                                             </DataTemplate>
                                         </DataGridTemplateColumn.CellTemplate>
                                     </DataGridTemplateColumn>
@@ -1829,7 +1846,7 @@
                                         </DataGridTemplateColumn.Header>
                                         <DataGridTemplateColumn.CellTemplate>
                                             <DataTemplate>
-                                                <TextBox Text="{Binding LabPhase}" />
+                                                <TextBox Text="{Binding LabPhase}" IsReadOnly="False" />
                                             </DataTemplate>
                                         </DataGridTemplateColumn.CellTemplate>
                                     </DataGridTemplateColumn>
@@ -1839,7 +1856,7 @@
                                         </DataGridTemplateColumn.Header>
                                         <DataGridTemplateColumn.CellTemplate>
                                             <DataTemplate>
-                                                <CheckBox IsChecked="{Binding Complete}" />
+                                                <CheckBox IsChecked="{Binding Complete, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
                                             </DataTemplate>
                                         </DataGridTemplateColumn.CellTemplate>
                                     </DataGridTemplateColumn>
@@ -2259,7 +2276,7 @@
                             <ColumnDefinition Width="6*" />
                             <ColumnDefinition Width="4*" />
                         </Grid.ColumnDefinitions>
-                        <DataGrid ItemsSource="{Binding InstallationNotes}" GridLinesVisibility="None" AutoGenerateColumns="False" HeadersVisibility="Column" BorderThickness="0" Background="White">
+                        <DataGrid ItemsSource="{Binding InstallationNotes}" GridLinesVisibility="None" AutoGenerateColumns="False" HeadersVisibility="Column" BorderThickness="0" Background="White" ContextMenu="{StaticResource InstallNoteContextMenu}" RowStyle="{StaticResource InstallNoteRowStyle}">
                             <DataGrid.Resources>
                                 <Style TargetType="DataGridColumnHeader" BasedOn="{StaticResource GridColumnHeaderBase}">
                                     <Setter Property="Background" Value="#4BACC6" />

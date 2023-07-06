@@ -9,6 +9,8 @@ namespace WpfApp.Model
 {
     class ProjectMatShip:ViewModelBase
     {
+        private int _fetchID;
+        private int _projMsID;
         private int _projMtID;
         private DateTime _schedShipDate;
         private DateTime _estDelivDate;
@@ -18,14 +20,38 @@ namespace WpfApp.Model
         private int _freightCoID;
         private string _trackingNo;
         private DateTime _dateShipped;
-        private int _qtyShipped;
+        private double _qtyShipped;
         private int _noOfPallet;
         private DateTime _dateRecvd;
-        private int _qtyRecvd;
+        private double _qtyRecvd;
         private bool _freightDamage;
+        private int _projectID;
         private DateTime _deliverToJob;
-        private string _siteStroage;
-        private string _stroageDetail;
+        private string _siteStorage;
+        private string _storageDetail;
+        private int _actionFlag;
+
+        public int FetchID
+        {
+            get => _fetchID;
+            set
+            {
+                if (value == _fetchID) return;
+                _fetchID = value;
+                OnPropertyChanged();
+            }
+        }
+
+        public int ProjMsID
+        {
+            get => _projMsID;
+            set
+            {
+                if (value == _projMsID) return;
+                _projMsID = value;
+                OnPropertyChanged();
+            }
+        }
 
         public int ProjMtID
         {
@@ -126,7 +152,7 @@ namespace WpfApp.Model
             }
         }
 
-        public int QtyShipped
+        public double QtyShipped
         {
             get => _qtyShipped;
             set
@@ -159,7 +185,7 @@ namespace WpfApp.Model
             }
         }
 
-        public int QtyRecvd
+        public double QtyRecvd
         {
             get => _qtyRecvd;
             set
@@ -181,6 +207,17 @@ namespace WpfApp.Model
             }
         }
 
+        public int ProjectID
+        {
+            get => _projectID;
+            set
+            {
+                if (value == _projectID) return;
+                _projectID = value;
+                OnPropertyChanged();
+            }
+        }
+
         public DateTime DeliverToJob
         {
             get => _deliverToJob;
@@ -192,24 +229,35 @@ namespace WpfApp.Model
             }
         }
 
-        public string SiteStroage
+        public string SiteStorage
         {
-            get => _siteStroage;
+            get => _siteStorage;
             set
             {
-                if (value == _siteStroage) return;
-                _siteStroage = value;
+                if (value == _siteStorage) return;
+                _siteStorage = value;
                 OnPropertyChanged();
             }
         }
 
-        public string StroageDetail
+        public string StorageDetail
         {
-            get => _stroageDetail;
+            get => _storageDetail;
             set
             {
-                if (value == _stroageDetail) return;
-                _stroageDetail = value;
+                if (value == _storageDetail) return;
+                _storageDetail = value;
+                OnPropertyChanged();
+            }
+        }
+
+        public int ActionFlag
+        {
+            get => _actionFlag;
+            set
+            {
+                if (value == _actionFlag) return;
+                _actionFlag = value;
                 OnPropertyChanged();
             }
         }

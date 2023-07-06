@@ -1643,7 +1643,7 @@ namespace WpfApp.View
                                 AdminVM.TempFreightCo.Email = textBox.Text;
                                 break;
                         }
-                        AdminVM.TempFreightCo.ID = _freightCo.ID;
+                        AdminVM.TempFreightCo.FreightCoID = _freightCo.FreightCoID;
                         AdminVM.TempFreightCo.Active = _freightCo.Active;
                         AdminVM.ActionState = "UpdateRow";
                         AdminVM.UpdateFreightCo();
@@ -1692,7 +1692,7 @@ namespace WpfApp.View
                     else
                     {
                         FreightCo _freightCo = dataGrid.Items[rowIndex] as FreightCo;
-                        AdminVM.SelectedFreightCoID = _freightCo.ID;
+                        AdminVM.SelectedFreightCoID = _freightCo.FreightCoID;
                         AdminVM.TempFreightCo = _freightCo;
 
                         if (chkBox.IsChecked == true)

@@ -80,7 +80,7 @@ namespace WpfApp.ViewModel
                 string freightName = row["FreightCo_Name"].ToString();
                 sb_freightCo.Add(new FreightCo
                 {
-                    ID = freightID,
+                    FreightCoID = freightID,
                     FreightName = freightName,
                 });
             }
@@ -226,7 +226,6 @@ namespace WpfApp.ViewModel
             ds = new DataSet();
             sda.Fill(ds);
 
-
             ObservableCollection<ProjectMatShip> sb_projectMtShip = new ObservableCollection<ProjectMatShip>();
 
             foreach (DataRow row in ds.Tables[0].Rows)
@@ -297,17 +296,11 @@ namespace WpfApp.ViewModel
                     QtyRecvd = qtyRecvd,
                     FreightDamage = freightDamage,
                     DeliverToJob = deliverToJob,
-                    SiteStroage = siteStroage,
-                    StroageDetail = stroageDetail
+                    SiteStorage = siteStroage,
+                    StorageDetail = stroageDetail
                 });
             }
-            if(sb_projectMtShip.Count != 0)
-                ProjectMtShips = sb_projectMtShip;
-            else
-            {
-                //sb_projectMtShip.Add(new ProjectMatShip());
-                //ProjectMtShips = sb_projectMtShip;
-            }
+           ProjectMtShips = sb_projectMtShip;
         }
 
         private int _projectId;

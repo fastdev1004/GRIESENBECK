@@ -375,19 +375,6 @@ namespace WpfApp
             ArchRep_CB.SelectedIndex = -1;
         }
 
-        private void FreightCB_Changed(object sender, SelectionChangedEventArgs e)
-        {
-            //ComboBox comboBox = sender as ComboBox;
-            //int selectedIndex = comboBox.SelectedIndex;
-            //if (selectedIndex == 0)
-            //{
-            //    NewFreightDialog newFreightDlg = new NewFreightDialog();
-            //    newFreightDlg.WindowStartupLocation = WindowStartupLocation.CenterScreen;
-            //    comboBox.SelectedIndex = -1;
-            //    newFreightDlg.ShowDialog();
-            //}
-        }
-
         private void CrewCombo_Loaded(object sender, RoutedEventArgs e)
         {
             WorkCrew_CB.SelectionChanged += CrewCB_Changed;
@@ -807,14 +794,6 @@ namespace WpfApp
             }
         }
 
-        private void ValidateNumber(object sender, TextCompositionEventArgs e)
-        {
-            if (!validateFieldHelper.IsNumeric(e.Text))
-            {
-                e.Handled = true;
-            }
-        }
-
         private void TotalCost_GotFocus(object sender, RoutedEventArgs e)
         {
             TextBox textBox = (TextBox)sender;
@@ -945,6 +924,124 @@ namespace WpfApp
                     }
                 }
             }
+        }
+
+        private void RemoveProjMatShippingItem(object sender, RoutedEventArgs e)
+        {
+            int selectedIndex = Shipping_DataGrid.SelectedIndex;
+            if (selectedIndex != -1)
+            {
+                ProjectMatShip projMtShipping = ProjectVM.ProjectMatShips.Where(shipping => shipping.FetchID == ProjectVM.FetchProjectMatShips[selectedIndex].FetchID).First();
+                if (ProjectVM.FetchProjectMatShips[selectedIndex].ActionFlag == 1)
+                {
+                    projMtShipping.ActionFlag = 4;
+                }
+                else
+                {
+                    projMtShipping.ActionFlag = 3;
+                }
+                ProjectVM.FetchProjectMatShips = new ObservableCollection<ProjectMatShip>();
+                foreach (ProjectMatShip item in ProjectVM.ProjectMatShips)
+                {
+                    if (item.ActionFlag != 3 && item.ActionFlag != 4)
+                    {
+                        ProjectVM.FetchProjectMatShips.Add(item);
+                    }
+                }
+            }
+        }
+
+        private void FreightCoCombo_Loaded(object sender, RoutedEventArgs e)
+        {
+            ComboBox comboBox = (ComboBox)sender;
+            DataGridRow row = findComponentHelper.FindDataGridRow(comboBox);
+
+            string tagName = comboBox.Tag as string;
+
+            if (row != null)
+            {
+                if (tagName.Equals("ProjectMatShipping"))
+                {
+                    ProjectMatShip data = row.DataContext as ProjectMatShip;
+                    if (row.GetIndex() == 0)
+                    {
+                        comboBox.ItemsSource = ProjectVM.NewFreightCos;
+                        comboBox.SelectedValue = data.FreightCoID;
+                    }
+                }
+            }
+        }
+
+        private void FreightCB_Changed(object sender, SelectionChangedEventArgs e)
+        {
+            ComboBox comboBox = sender as ComboBox;
+            int selectedIndex = comboBox.SelectedIndex;
+
+            FreightCo freight = comboBox.SelectedItem as FreightCo;
+            DataGridRow row = findComponentHelper.FindDataGridRow(comboBox);
+            int selectedDataGridIndex = 0;
+            string tagName = comboBox.Tag as string;
+            switch (tagName)
+            {
+                case "ProjectMatShipping":
+                    selectedDataGridIndex = Shipping_DataGrid.SelectedIndex;
+                    break;
+            }
+
+            if (freight != null)
+            {
+                if (selectedDataGridIndex >= 0)
+                {
+                    if (tagName.Equals("ProjectMatShipping"))
+                    {
+                        ProjectMatShip projMatShipping = row.DataContext as ProjectMatShip;
+                        if (freight.FreightName.Equals("New"))
+                        {
+                            NewFreightDialog newFreightDlg = new NewFreightDialog();
+                            newFreightDlg.WindowStartupLocation = WindowStartupLocation.CenterScreen;
+                            comboBox.SelectedValue = ProjectVM.FetchProjectMatShips[selectedDataGridIndex].FreightCoID;
+                            newFreightDlg.ShowDialog();
+                        }
+                        else
+                        {
+                            ProjectMatShip currentProjMatShipping = ProjectVM.ProjectMatShips.Where(tracking => tracking.FetchID == ProjectVM.FetchProjectMatShips[selectedDataGridIndex].FetchID).First();
+
+                            currentProjMatShipping.FreightCoID = freight.FreightCoID;
+                            ProjectVM.FetchProjectMatShips = new ObservableCollection<ProjectMatShip>();
+                            foreach (ProjectMatShip item in ProjectVM.ProjectMatShips)
+                            {
+                                if (item.ActionFlag != 3 && item.ActionFlag != 4)
+                                {
+                                    ProjectVM.FetchProjectMatShips.Add(item);
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
+        private void ValidateNumberEmpty(object sender, TextCompositionEventArgs e)
+        {
+            TextBox textBox = sender as TextBox;
+
+            if (!validateFieldHelper.IsNumeric(e.Text) || string.IsNullOrEmpty(textBox.Text))
+            {
+                e.Handled = true;
+            }
+        }
+
+        private void ValidateNumber(object sender, TextCompositionEventArgs e)
+        {
+            if (!validateFieldHelper.IsNumeric(e.Text))
+            {
+                e.Handled = true;
+            }
+        }
+
+        private void RemoveInstallNoteItem(object sender, RoutedEventArgs e)
+        {
+
         }
     }
 }

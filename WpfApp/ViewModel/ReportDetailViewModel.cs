@@ -100,7 +100,7 @@ namespace WpfApp.ViewModel
             {
                 string sovAcronym = "";
                 string laborDesc = "";
-                string coItemNo = "";
+                int coItemNo = 0;
                 string labPhase = "";
                 DateTime targetDate = new DateTime();
                 bool laborComplete = false;
@@ -113,7 +113,7 @@ namespace WpfApp.ViewModel
                 if (!row1.IsNull("Labor_Desc"))
                     laborDesc = row1["Labor_Desc"].ToString();
                 if (!row1.IsNull("CO_ItemNo"))
-                    coItemNo = row1["CO_ItemNo"].ToString();
+                    coItemNo = int.Parse(row1["CO_ItemNo"].ToString());
                 if (!row1.IsNull("Lab_Phase"))
                     labPhase = row1["Lab_Phase"].ToString();
                 if (!row1.IsNull("Complete"))
