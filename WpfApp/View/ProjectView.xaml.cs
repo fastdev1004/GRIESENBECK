@@ -39,38 +39,38 @@ namespace WpfApp
             Loaded += LoadPage;
         }
 
-        private void WorkOrderNote_PreviewKeyUp(object sender, KeyEventArgs e)
-        {
-            TextBox NotesNote = sender as TextBox;
-            if (NotesNote != null)
-            {
-                DataGrid dataGrid = findComponentHelper.FindDataGrid(NotesNote);
+        //private void WorkOrderNote_PreviewKeyUp(object sender, KeyEventArgs e)
+        //{
+        //    TextBox NotesNote = sender as TextBox;
+        //    if (NotesNote != null)
+        //    {
+        //        DataGrid dataGrid = findComponentHelper.FindDataGrid(NotesNote);
 
-                if (dataGrid != null)
-                {
-                    TextBox lastRowTextBox = findComponentHelper.GetLastRowTextBox(dataGrid);
-                    if (lastRowTextBox != null)
-                    {
-                        string lastRowText = lastRowTextBox.Text;
-                        if (!string.IsNullOrEmpty(lastRowText))
-                        {
-                            ObservableCollection<Note> notes = ProjectVM.WorkOrderNotes;
-                            Grid parentGrid = NotesNote.Parent as Grid;
-                            Grid grandParentGrid = parentGrid.Parent as Grid;
-                            Grid firstChildGrid = grandParentGrid.Children[0] as Grid;
-                            TextBlock NotesDateAdded = firstChildGrid.Children[0] as TextBlock;
-                            TextBlock NoteUserName = firstChildGrid.Children[1] as TextBlock;
-                            NotesDateAdded.Text = DateTime.Now.ToString();
-                            NoteUserName.Text = "smile";
+        //        if (dataGrid != null)
+        //        {
+        //            TextBox lastRowTextBox = findComponentHelper.GetLastRowTextBox(dataGrid);
+        //            if (lastRowTextBox != null)
+        //            {
+        //                string lastRowText = lastRowTextBox.Text;
+        //                if (!string.IsNullOrEmpty(lastRowText))
+        //                {
+        //                    ObservableCollection<Note> notes = ProjectVM.WorkOrderNotes;
+        //                    Grid parentGrid = NotesNote.Parent as Grid;
+        //                    Grid grandParentGrid = parentGrid.Parent as Grid;
+        //                    Grid firstChildGrid = grandParentGrid.Children[0] as Grid;
+        //                    TextBlock NotesDateAdded = firstChildGrid.Children[0] as TextBlock;
+        //                    TextBlock NoteUserName = firstChildGrid.Children[1] as TextBlock;
+        //                    NotesDateAdded.Text = DateTime.Now.ToString();
+        //                    NoteUserName.Text = "smile";
 
-                            Note item = new Note();
-                            notes.Add(item);
-                            e.Handled = true;
-                        }
-                    }
-                }
-            }
-        }
+        //                    Note item = new Note();
+        //                    notes.Add(item);
+        //                    e.Handled = true;
+        //                }
+        //            }
+        //        }
+        //    }
+        //}
 
         private void LoadPage(object sender, RoutedEventArgs e)
         {
@@ -222,7 +222,9 @@ namespace WpfApp
                         {
                             selectedPM.FetchID = originPM.FetchID;
                             selectedPM.ActionFlag = originPM.ActionFlag;
+                            selectedPM.ProjPmID = originPM.ProjPmID;
                             ProjectVM.ProjectManagerList[fetchID] = selectedPM;
+
                             ProjectVM.FetchProjectManagerList = new ObservableCollection<ProjectManager>();
 
                             foreach (ProjectManager item in ProjectVM.ProjectManagerList)
@@ -267,6 +269,7 @@ namespace WpfApp
                         {
                             selectedSup.FetchID = originSup.FetchID;
                             selectedSup.ActionFlag = originSup.ActionFlag;
+                            selectedSup.ProjSupID = originSup.ProjSupID;
                             ProjectVM.SuperintendentList[fetchID] = selectedSup;
                             ProjectVM.FetchSuperintendentList = new ObservableCollection<Superintendent>();
 
@@ -377,8 +380,6 @@ namespace WpfApp
 
         private void CrewCombo_Loaded(object sender, RoutedEventArgs e)
         {
-            WorkCrew_CB.SelectionChanged += CrewCB_Changed;
-            WorkCrew_CB.SelectedIndex = -1;
             Crew_CB.SelectionChanged += CrewCB_Changed;
             Crew_CB.SelectedIndex = -1;
         }
@@ -387,19 +388,22 @@ namespace WpfApp
         {
             ComboBox comboBox = sender as ComboBox;
             int selectedIndex = comboBox.SelectedIndex;
-            if (selectedIndex == 0)
-            {
-                NewCrewDialog newCrewDlg = new NewCrewDialog();
-                newCrewDlg.WindowStartupLocation = WindowStartupLocation.CenterScreen;
-                comboBox.SelectedIndex = -1;
-                newCrewDlg.ShowDialog();
-            }
-        }
 
-        private void WorkSuptCombo_Loaded(object sender, RoutedEventArgs e)
-        {
-            WorkSupt_CB.SelectionChanged += WorkSuptCB_Changed;
-            WorkSupt_CB.SelectedIndex = -1;
+            Crew crew = comboBox.SelectedItem as Crew;
+            string tagName = comboBox.Tag as string;
+
+            if (crew != null)
+            {
+                if (crew.CrewName.Equals("New"))
+                {
+                    NewCrewDialog newCrewDlg = new NewCrewDialog();
+                    newCrewDlg.WindowStartupLocation = WindowStartupLocation.CenterScreen;
+                    //if(tagName.Equals("ProjectCrew"))
+                    //    comboBox.SelectedValue = ProjectVM.TempProject.CrewID;
+                    comboBox.SelectedIndex = -1;
+                    newCrewDlg.ShowDialog();
+                }
+            }
         }
 
         private void RemoveProjectNoteItem(object sender, RoutedEventArgs e)
@@ -663,7 +667,6 @@ namespace WpfApp
 
             if (acronym != null)
             {
-
                 if (selectedDataGridIndex >= 0)
                 {
                     if (tagName.Equals("SovAcronym"))
@@ -777,17 +780,16 @@ namespace WpfApp
                         }
                         else
                         {
-                            SovMaterial currentSovMat = ProjectVM.SovMaterials.Where(mat => mat.FetchID == ProjectVM.FetchProjectMatTrackings[selectedDataGridIndex].FetchID).First();
-
-                            //currentProjMatTracking.ManufacturerID = manuf.ID;
-                            //ProjectVM.FetchProjectMatTrackings = new ObservableCollection<ProjectMatTracking>();
-                            //foreach (ProjectMatTracking item in ProjectVM.ProjectMatTrackings)
-                            //{
-                            //    if (item.ActionFlag != 3 && item.ActionFlag != 4)
-                            //    {
-                            //        ProjectVM.FetchProjectMatTrackings.Add(item);
-                            //    }
-                            //}
+                            SovMaterial currentSovMat = ProjectVM.SovMaterials.Where(mat => mat.FetchID == ProjectVM.FetchSovMaterials[selectedDataGridIndex].FetchID).First();
+                            currentSovMat.MatID = material.ID;
+                            ProjectVM.FetchSovMaterials = new ObservableCollection<SovMaterial>();
+                            foreach (SovMaterial item in ProjectVM.SovMaterials)
+                            {
+                                if (item.ActionFlag != 3 && item.ActionFlag != 4)
+                                {
+                                    ProjectVM.FetchSovMaterials.Add(item);
+                                }
+                            }
                         }
                     }
                 }
@@ -1066,6 +1068,86 @@ namespace WpfApp
                     }
                 }
             }
+        }
+
+        private void RemoveContractItem(object sender, RoutedEventArgs e)
+        {
+            int selectedIndex = Contract_DataGrid.SelectedIndex;
+            if (selectedIndex != -1)
+            {
+                Contract contract = ProjectVM.Contracts.Where(item => item.FetchID == ProjectVM.FetchContracts[selectedIndex].FetchID).First();
+                if (ProjectVM.FetchContracts[selectedIndex].ActionFlag == 1)
+                {
+                    contract.ActionFlag = 4;
+                }
+                else
+                {
+                    contract.ActionFlag = 3;
+                }
+                ProjectVM.FetchContracts = new ObservableCollection<Contract>();
+                foreach (Contract item in ProjectVM.Contracts)
+                {
+                    if (item.ActionFlag != 3 && item.ActionFlag != 4)
+                    {
+                        ProjectVM.FetchContracts.Add(item);
+                    }
+                }
+            }
+        }
+
+        private void RemoveChangeOrderItem(object sender, RoutedEventArgs e)
+        {
+            int selectedIndex = ChangeOrder_DataGrid.SelectedIndex;
+            if (selectedIndex != -1)
+            {
+                ChangeOrder changeOrder = ProjectVM.ChangeOrders.Where(item => item.FetchID == ProjectVM.FetchChangeOrders[selectedIndex].FetchID).First();
+                if (ProjectVM.FetchChangeOrders[selectedIndex].ActionFlag == 1)
+                {
+                    changeOrder.ActionFlag = 4;
+                }
+                else
+                {
+                    changeOrder.ActionFlag = 3;
+                }
+                ProjectVM.FetchChangeOrders = new ObservableCollection<ChangeOrder>();
+                foreach (ChangeOrder item in ProjectVM.ChangeOrders)
+                {
+                    if (item.ActionFlag != 3 && item.ActionFlag != 4)
+                    {
+                        ProjectVM.FetchChangeOrders.Add(item);
+                    }
+                }
+            }
+        }
+
+        private void RemoveCipItem(object sender, RoutedEventArgs e)
+        {
+            int selectedIndex = CIP_DataGrid.SelectedIndex;
+            if (selectedIndex != -1)
+            {
+                CIP cip = ProjectVM.ProjectCIPs.Where(item => item.FetchID == ProjectVM.FetchProjectCIPs[selectedIndex].FetchID).First();
+                if (ProjectVM.FetchProjectCIPs[selectedIndex].ActionFlag == 1)
+                {
+                    cip.ActionFlag = 4;
+                }
+                else
+                {
+                    cip.ActionFlag = 3;
+                }
+                ProjectVM.FetchProjectCIPs = new ObservableCollection<CIP>();
+                foreach (CIP item in ProjectVM.ProjectCIPs)
+                {
+                    if (item.ActionFlag != 3 && item.ActionFlag != 4)
+                    {
+                        ProjectVM.FetchProjectCIPs.Add(item);
+                    }
+                }
+            }
+        }
+
+        private void RemoveWorkNoteItem(object sender, RoutedEventArgs e)
+        {
+
         }
     }
 }

@@ -46,9 +46,12 @@ namespace WpfApp.ViewModel
             InstallationNotes = new ObservableCollection<InstallationNote>();
             FetchInstallationNotes = new ObservableCollection<InstallationNote>();
             ProjectCIPs = new ObservableCollection<CIP>();
+            FetchProjectCIPs = new ObservableCollection<CIP>();
             Contracts = new ObservableCollection<Contract>();
+            FetchContracts = new ObservableCollection<Contract>();
             TrackReports = new ObservableCollection<TrackReport>();
             ChangeOrders = new ObservableCollection<ChangeOrder>();
+            FetchChangeOrders = new ObservableCollection<ChangeOrder>();
             TrackShipRecvs = new ObservableCollection<TrackShipRecv>();
             TrackLaborReports = new ObservableCollection<TrackLaborReport>();
             ProjectWorkOrders = new ObservableCollection<ProjectWorkOrder>();
@@ -81,15 +84,74 @@ namespace WpfApp.ViewModel
             this.AddNewProjMatTrackingCommand = new RelayCommand((e) => this.AddNewProjMatTracking());
             this.AddNewProjMatShippingCommand = new RelayCommand((e) => this.AddNewProjMatShipping());
             this.AddNewInstallNoteCommand = new RelayCommand((e) => this.AddNewInstallNote());
+            this.AddNewContractCommand = new RelayCommand((e) => this.AddNewContract());
+            this.AddNewChangeOrderCommand = new RelayCommand((e) => this.AddNewChangeOrder());
+            this.AddNewCipCommand = new RelayCommand((e) => this.AddNewCIP());
+            this.AddNewWorkNoteCommand = new RelayCommand((e) => this.AddNewWorkNote());
             this.SaveCommand = new RelayCommand((e) => this.SaveProject());
 
             ActionState = "New";
         }
 
+        private void AddNewWorkNote()
+        {
+            int itemCount = ProjectCIPs.Count;
+            ProjectCIPs.Add(new CIP { FetchID = itemCount, ActionFlag = 1 });
+            FetchProjectCIPs = new ObservableCollection<CIP>();
+            foreach (CIP item in ProjectCIPs)
+            {
+                if (item.ActionFlag != 3 && item.ActionFlag != 4)
+                {
+                    FetchProjectCIPs.Add(item);
+                }
+            }
+        }
+
+        private void AddNewCIP()
+        {
+            int itemCount = ProjectCIPs.Count;
+            ProjectCIPs.Add(new CIP { FetchID = itemCount, ActionFlag = 1 });
+            FetchProjectCIPs = new ObservableCollection<CIP>();
+            foreach (CIP item in ProjectCIPs)
+            {
+                if (item.ActionFlag != 3 && item.ActionFlag != 4)
+                {
+                    FetchProjectCIPs.Add(item);
+                }
+            }
+        }
+
+        private void AddNewChangeOrder()
+        {
+            int itemCount = ChangeOrders.Count;
+            ChangeOrders.Add(new ChangeOrder { FetchID = itemCount, ActionFlag = 1 });
+            FetchChangeOrders = new ObservableCollection<ChangeOrder>();
+            foreach (ChangeOrder item in ChangeOrders)
+            {
+                if (item.ActionFlag != 3 && item.ActionFlag != 4)
+                {
+                    FetchChangeOrders.Add(item);
+                }
+            }
+        }
+
+        private void AddNewContract()
+        {
+            int itemCount = Contracts.Count;
+            Contracts.Add(new Contract { FetchID = itemCount, ActionFlag = 1 });
+            FetchContracts = new ObservableCollection<Contract>();
+            foreach (Contract item in Contracts)
+            {
+                if (item.ActionFlag != 3 && item.ActionFlag != 4)
+                {
+                    FetchContracts.Add(item);
+                }
+            }
+        }
+
         private void AddNewInstallNote()
         {
             int itemCount = InstallationNotes.Count;
-            Console.WriteLine("DateTime.Now->"+ DateTime.Now);
             InstallationNotes.Add(new InstallationNote { FetchID = itemCount, InstallDateAdded = DateTime.Now, ActionFlag = 1 });
             FetchInstallationNotes = new ObservableCollection<InstallationNote>();
             foreach (InstallationNote item in InstallationNotes)
@@ -450,16 +512,25 @@ namespace WpfApp.ViewModel
                     bool matLot = _sovMaterial.MatLot;
                     double matOrigRate = _sovMaterial.MatOrigRate;
                     int projectMatID = _sovMaterial.ProjMatID;
-                    int projSovID = _sovMaterial.ProjSovID;
+                    int projSovID = 0;
+                    if (_sovMaterial.ProjSovID != 0)
+                        projSovID = _sovMaterial.ProjSovID;
+                    else projSovID = ProjSovID;
 
                     if (matID > 0)
                     {
                         if (actionFlag == 1)
                         {
-                            sqlquery = "INSERT INTO tblProjectMaterials (ProjSOV_ID, Material_ID, Mat_Phase, Mat_Type, Color_Selected, Qty_Reqd, TotalCost, Mat_Only, Project_ID) OUTPUT INSERTED.ProjMat_ID VALUES (@ProjSovID, @MatID, @MatPhase, @MatType, @Color, @QtyReqd, @TotalCost, @MatOnly, @ProjectID)";
+                            if (ProjSovID != 0)
+                            {
+                                sqlquery = "INSERT INTO tblProjectMaterials (ProjSOV_ID, Material_ID, Mat_Phase, Mat_Type, Color_Selected, Qty_Reqd, TotalCost, Mat_Only, Project_ID) OUTPUT INSERTED.ProjMat_ID VALUES (@ProjSovID, @MatID, @MatPhase, @MatType, @Color, @QtyReqd, @TotalCost, @MatOnly, @ProjectID)";
 
-                            int insertProjMatID = dbConnection.RunQueryToCreateProjectMat(sqlquery, projSovID, matID, matPhase, matType, color, qtyReqd, totalCost, matOnly, projectID);
-                            _sovMaterial.ActionFlag = 0;
+                                int insertProjMatID = dbConnection.RunQueryToCreateProjectMat(sqlquery, projSovID, matID, matPhase, matType, color, qtyReqd, totalCost, matOnly, projectID);
+                                _sovMaterial.ActionFlag = 0;
+                            } else
+                            {
+                                MessageBox.Show("ProjSov is required", "SOV Material Warning", MessageBoxButton.OK, MessageBoxImage.Information);
+                            }
                         }
                         else if (actionFlag == 0)
                         {
@@ -491,7 +562,10 @@ namespace WpfApp.ViewModel
                     double qtyReqd = _sovLabor.QtyReqd;
                     int projectLabID = _sovLabor.ProjLabID;
                     bool laborComplete = _sovLabor.Complete;
-                    int projSovID = _sovLabor.ProjSovID;
+                    int projSovID = 0;
+                    if (_sovLabor.ProjSovID != 0)
+                        projSovID = _sovLabor.ProjSovID;
+                    else projSovID = ProjSovID;
                     int laborProjectID = _sovLabor.ProjectID;
                     double unitPrice = _sovLabor.UnitPrice;
                     double total = _sovLabor.Total;
@@ -556,7 +630,7 @@ namespace WpfApp.ViewModel
                     bool laborComplete = _projMatTracking.LaborComplete;
                     int actionFlag = _projMatTracking.ActionFlag;
 
-                    if(projMatID >= 0)
+                    if (projMatID >= 0)
                     {
                         if (actionFlag == 1)
                         {
@@ -577,7 +651,8 @@ namespace WpfApp.ViewModel
                             sqlquery = "DELETE tblProjectMaterialsTrack WHERE ProjMT_ID =" + projMtID.ToString();
                             cmd = dbConnection.RunQuryNoParameters(sqlquery);
                         }
-                    } else
+                    }
+                    else
                     {
                         Console.WriteLine("Project Mat is requried");
                     }
@@ -614,7 +689,7 @@ namespace WpfApp.ViewModel
                         _ship.ActionFlag = 0;
                         _ship.ProjMsID = insertedID;
                     }
-                    else if(actionFlag == 0)
+                    else if (actionFlag == 0)
                     {
                         sqlquery = "UPDATE tblProjectMaterialsShip SET SchedShipDate=@SchedShipDate, EstDelivDate=@EstDelivDate, EstInstallDate=@EstInstallDate, EstWeight=@EstWeight, EstNoPallets=@EstNoPallets, FreightCo_ID=@FreightCoID, TrackingNo=@TrackingNo, Qty_Shipped=@QtyShipped, Date_Shipped=@DateShipped, Qty_Recvd=@QtyRecvd, Date_Recvd=@DateRecvd, NoOfPallets=@NoOfPallets, FreightDamage=@FreightDamage, Project_ID=@ProjectID, DelivertoJob=@DelivertoJob, SiteStorage=@SiteStorage, StorageDetail=@StorageDetail WHERE ProjMS_ID=@ProjMsID";
                         cmd = dbConnection.RunQueryToUpdateProjectMatShip(sqlquery, schedShipDate, estDelivDate, estInstallDate, estWeight, estPallet, freightCoID, trackingNo, qtyShipped, dateShipped, qtyRecvd, dateRecvd, noOfPallet, freightDamage, shipProjectID, deliverToJob, siteStroage, storageDetail, projMsID);
@@ -628,32 +703,24 @@ namespace WpfApp.ViewModel
                     int projMatID = _trackReport.ProjMat;
                     DateTime matReqdDate = _trackReport.MatReqdDate;
                     double qtyOrd = _trackReport.QtyOrd;
-                    int manufID = _trackReport.ManufacturerID;
-                    bool takeFromStock = _trackReport.TakeFromStock;
-                    string manufLeadTime = _trackReport.LeadTime;
-                    string orderNo = _trackReport.ManuOrderNo;
                     string poNumber = _trackReport.PoNumber;
-                    DateTime dateOrd = _trackReport.DateOrd;
                     DateTime shopReqDate = _trackReport.ShopReqDate;
                     DateTime shopRecvdDate = _trackReport.ShopRecvdDate;
                     DateTime submIssue = _trackReport.SubmIssue;
                     DateTime reSubmit = _trackReport.ReSubmit;
                     DateTime submAppr = _trackReport.SubmAppr;
-                    bool noSubm = _trackReport.NoSubm;
-                    bool shipToJob = _trackReport.ShipToJob;
-                    bool needFM = _trackReport.NeedFM;
                     bool guarDim = _trackReport.GuarDim;
                     DateTime fieldDim = _trackReport.FieldDim;
-                    bool finalsRev = _trackReport.FinalsRev;
                     DateTime rFF = _trackReport.RFF;
 
                     bool orderComplete = _trackReport.OrderComplete;
                     bool laborComplete = _trackReport.LaborComplete;
                     //int actionFlag = _trackReport.ActionFlag;
 
-                    sqlquery = "UPDATE tblProjectMaterialsTrack SET Manuf_ID=@ManufID, Manuf_Order_No=@ManufOrderNo, MatReqdDate=@MatReqdDate, PO_Number=@PoNumber, Qty_Ord=@QtyOrd, Date_Ord=@DateOrd, TakeFromStock=@TakeFromStock, Ship_to_Job=@ShipToJob, MatComplete=@MatComplete, Guar_Dim=@GuarDim, FM_Needed=@FmNeeded, Field_Dim=@FieldDim, ShopReqDate=@ShopReqDate, ShopRecvdDate=@ShopRecvdDate, ReleasedForFab=@ReleaseForFab, SubmitIssue=@SubmitIssue, SubmitAppr=@SubmitAppr, Resubmit_Date=@ResubmitDate, Project_ID=@ProjectID, Finals_Rev=@FinalsRev, LaborComplete=@LaborComplete, Manuf_LeadTime=@ManufLeadTime, No_Sub_Needed=@NoSubNeeded WHERE ProjMT_ID=@ProjMtID";
-
-                    cmd = dbConnection.RunQueryToUpdateProjMatTracking(sqlquery, projMatID, manufID, orderNo, matReqdDate, poNumber, qtyOrd, dateOrd, takeFromStock, shipToJob, orderComplete, guarDim, needFM, fieldDim, shopReqDate, shopRecvdDate, rFF, submIssue, submAppr, reSubmit, projectID, finalsRev, laborComplete, manufLeadTime, noSubm, projMtID);
+                    sqlquery = "UPDATE tblProjectMaterialsTrack SET MatReqdDate= '" + matReqdDate.ToString() + "' , PO_Number='" + poNumber + "' , Qty_Ord='" + qtyOrd + "' , MatComplete=" + Convert.ToInt32(orderComplete) + " , Guar_Dim=" + Convert.ToInt32(guarDim) + " , Field_Dim='" + fieldDim + "' , ShopReqDate='" + shopReqDate + "' , ShopRecvdDate='" + shopRecvdDate + "' , ReleasedForFab='" + rFF + "' , SubmitIssue='" + submIssue + "' , SubmitAppr='" + submAppr + "' , Resubmit_Date='" + reSubmit + "' , Project_ID=" + projectID + " , LaborComplete=" + Convert.ToInt32(laborComplete) + " WHERE ProjMT_ID=" + projMtID;
+                    
+                    //cmd = dbConnection.RunQueryToUpdateProjMatTracking(sqlquery, projMatID, matReqdDate, poNumber, qtyOrd, orderComplete, guarDim, fieldDim, shopReqDate, shopRecvdDate, rFF, submIssue, submAppr, reSubmit, projectID, laborComplete, projMtID);
+                    cmd = dbConnection.RunQuryNoParameters(sqlquery);
                 }
 
                 foreach (TrackLaborReport _trackLaborReport in TrackLaborReports)
@@ -667,8 +734,8 @@ namespace WpfApp.ViewModel
                     string labPhase = _trackLaborReport.LabPhase;
                     bool laborComplete = _trackLaborReport.Complete;
 
-                    sqlquery = "UPDATE tblProjectChangeOrders SET CO_ItemNo="+ coItemNo.ToString() +" WHERE CO_ID="+ coID.ToString();
-                    if(coItemNo != 0)
+                    sqlquery = "UPDATE tblProjectChangeOrders SET CO_ItemNo=" + coItemNo.ToString() + " WHERE CO_ID=" + coID.ToString();
+                    if (coItemNo != 0)
                     {
                         cmd = dbConnection.RunQuryNoParameters(sqlquery);
                     }
@@ -703,6 +770,116 @@ namespace WpfApp.ViewModel
                     else if (actionFlag == 3)
                     {
                         sqlquery = "DELETE tblInstallNotes WHERE InstallNotes_ID =" + notesID.ToString();
+                        cmd = dbConnection.RunQuryNoParameters(sqlquery);
+                    }
+                }
+
+                foreach (Contract _contract in Contracts)
+                {
+                    int scID = _contract.ScID;
+                    string contractJobNo = _contract.JobNo;
+                    string contractNumber = _contract.ContractNumber;
+                    bool changeOrder = _contract.ChangeOrder;
+                    string changeOrderNo = _contract.ChangeOrderNo;
+                    DateTime dateRecd = _contract.DateRecd;
+                    DateTime dateProcessed = _contract.DateProcessed;
+                    int amtOfContract = _contract.AmtOfContract;
+                    DateTime signedoffbySales = _contract.SignedoffbySales;
+                    DateTime signedoffbyoperations = _contract.Signedoffbyoperations;
+                    DateTime givenAcctingforreview = _contract.GivenAcctingforreview;
+                    DateTime givenforfinalsignature = _contract.Givenforfinalsignature;
+                    DateTime dateReturnedback = _contract.DateReturnedback;
+                    DateTime returnedtoDawn = _contract.ReturnedtoDawn;
+                    string scope = _contract.Scope;
+                    string returnedVia = _contract.ReturnedVia;
+                    string comment = _contract.Comment;
+                    int contractProjectID = _contract.ProjectID;
+                    int actionFlag = _contract.ActionFlag;
+
+                    if (actionFlag == 0)
+                    {
+                        sqlquery = "UPDATE tblSC SET ProjectID=@ProjectID, Contractnumber=@ContractNumber, DateRecD=@DateRecd, AmtOfcontract=@AmtOfcontract, ChangeOrder=@ChangeOrder, ChangeOrderNo=@ChangeOrderNo, SignedoffbySales=@SignedoffbySales, Signedoffbyoperations=@Signedoffbyoperations, GivenAcctingforreview=@GivenAcctingforreview, Givenforfinalsignature=@Givenforfinalsignature, Datereturnedback=@Datereturnedback, ReturnedtoDawn=@ReturnedtoDawn, ReturnedVia=@ReturnedVia, Comments=@Comments, DateProcessed=@DateProcessed, Scope=@Scope WHERE SCID=@SCID";
+
+                        cmd = dbConnection.RunQueryToUpdateSC(sqlquery, ProjectID, contractNumber, dateRecd, amtOfContract, changeOrder, changeOrderNo, signedoffbySales, signedoffbyoperations, givenAcctingforreview, givenforfinalsignature, dateReturnedback, returnedtoDawn, returnedVia, comment, dateProcessed, scope, scID);
+                    }
+                    else if (actionFlag == 1)
+                    {
+                        sqlquery = "INSERT INTO tblSC(ProjectID, Contractnumber, DateRecD, AmtOfcontract, ChangeOrder, ChangeOrderNo, SignedoffbySales, Signedoffbyoperations, GivenAcctingforreview, Givenforfinalsignature, Datereturnedback, ReturnedtoDawn, ReturnedVia, Comments, DateProcessed, Scope) VALUES (@ProjectID, @Contractnumber, @DateRecd, @AmtOfcontract, @ChangeOrder, @ChangeOrderNo, @SignedoffbySales, @Signedoffbyoperations, @GivenAcctingforreview, @Givenforfinalsignature, @Datereturnedback, @ReturnedtoDawn, @Comments, @ReturnedVia, @DateProcessed, @Scope)";
+
+                        int insertedScId = dbConnection.RunQueryToCreateSC(sqlquery, ProjectID, contractNumber, dateRecd, amtOfContract, changeOrder, changeOrderNo, signedoffbySales, signedoffbyoperations, givenAcctingforreview, givenforfinalsignature, dateReturnedback, returnedtoDawn, returnedVia, comment, dateProcessed, scope);
+                        _contract.ScID = insertedScId;
+                    }
+                    //else if (actionFlag == 3)
+                    //{
+                    //    sqlquery = "DELETE tblInstallNotes WHERE InstallNotes_ID =" + notesID.ToString();
+                    //    cmd = dbConnection.RunQuryNoParameters(sqlquery);
+                    //}
+                }
+
+                foreach (ChangeOrder _changeOrder in ChangeOrders)
+                {
+                    int coID = _changeOrder.CoID;
+                    int coProjectID = ProjectID;
+                    int coItemNo = _changeOrder.CoItemNo;
+                    DateTime coDate = _changeOrder.CoDate;
+                    string coAppDen = _changeOrder.CoAppDen;
+                    DateTime coDateAppDen = _changeOrder.CoDateAppDen;
+                    string coComment = _changeOrder.CoComment;
+                    int actionFlag = _changeOrder.ActionFlag;
+
+                    if (actionFlag == 0)
+                    {
+                        sqlquery = "UPDATE tblProjectChangeOrders SET Project_ID=@ProjectID, CO_ItemNo=@CoItemNo, CO_Date=@CoDate, CO_AppDen=@CoAppDen, CO_DateAppDen=@CoDateAppDen, CO_Comments=@CoComments WHERE CO_ID=@CoID";
+
+                        cmd = dbConnection.RunQueryToUpdateCO(sqlquery, coProjectID, coItemNo, coDate, coAppDen, coDateAppDen, coComment, coID);
+                    }
+                    else if (actionFlag == 1)
+                    {
+                        sqlquery = "INSERT INTO tblProjectChangeOrders(Project_ID, CO_ItemNo, CO_Date, CO_AppDen, CO_DateAppDen, CO_Comments) output inserted.CO_ID values (@ProjectID, @CoItemNo, @CoDate, @CoAppDen, @CoDateAppDen, @CoComments)";
+
+                        int insertedId = dbConnection.RunQueryToCreateCO(sqlquery, coProjectID, coItemNo, coDate, coAppDen, coDateAppDen, coComment);
+                        _changeOrder.CoID = insertedId;
+                    }
+                    else if (actionFlag == 3)
+                    {
+                        //sqlquery = "DELETE tblInstallNotes WHERE InstallNotes_ID =" + notesID.ToString();
+                        //cmd = dbConnection.RunQuryNoParameters(sqlquery);
+                    }
+                }
+
+                foreach (CIP _cip in ProjectCIPs)
+                {
+                    int cipProjectID = _cip.ProjectID;
+                    string cipType = _cip.CipType;
+                    DateTime cipTargetDate = _cip.TargetDate;
+                    double cipOriginalContractAmt = _cip.OriginalContractAmt;
+                    double cipFinalContractAmt = _cip.FinalContractAmt;
+                    DateTime cipFormsRecD = _cip.FormsRecD;
+                    DateTime cipFormsSent = _cip.FormsSent;
+                    DateTime cipCertRecD = _cip.CertRecD;
+                    bool cipExemptionApproved = _cip.ExemptionApproved;
+                    DateTime cipExemptionAppDate = _cip.ExemptionAppDate;
+                    string cipCrewEnrolled = _cip.CrewEnrolled;
+                    string cipNotes = _cip.Notes;
+                    int actionFlag = _cip.ActionFlag;
+                    int cipID = _cip.CipID;
+
+                    if (actionFlag == 0)
+                    {
+                        sqlquery = "UPDATE tblCIPs SET TargetDate=@TargetDate, FormsRecD=@FormsRecd, FormsSent=@FormsSent, CertRecD=@CertRecd, OriginalContractAmt=@OriginalContractAmt, FinalContractAmt=@FinalContractAmt, CrewEnrolled=@CrewEnrolled, Notes=@Notes, ExemptionApproved=@ExemptionApproved, Project_ID=@ProjectID, CIPType=@CIPType, ExemptionAppDate=@ExemptionAppDate WHERE CIPid=@CipID";
+
+                        cmd = dbConnection.RunQueryToUpdateCIP(sqlquery, cipTargetDate, cipFormsRecD, cipFormsSent, cipCertRecD, cipOriginalContractAmt, cipFinalContractAmt, cipCrewEnrolled, cipNotes, cipExemptionApproved, ProjectID, cipType, cipExemptionAppDate, cipID);
+                    }
+                    else if (actionFlag == 1)
+                    {
+                        sqlquery = "INSERT INTO tblCIPs(TargetDate, FormsRecD, FormsSent, CertRecD, OriginalContractAmt, FinalContractAmt, CrewEnrolled, Notes, ExemptionApproved, Project_ID, CIPType, ExemptionAppDate) output inserted.CIPid values (@TargetDate, @FormsRecD, @FormsSent, @CertRecD, @OriginalContractAmt, @FinalContractAmt, @CrewEnrolled, @Notes, @ExemptionApproved, @ProjectID, @CIPType, @ExemptionAppDate)";
+
+                        int insertedId = dbConnection.RunQueryToCreateCIP(sqlquery, cipTargetDate, cipFormsRecD, cipFormsSent, cipCertRecD, cipOriginalContractAmt, cipFinalContractAmt, cipCrewEnrolled, cipNotes, cipExemptionApproved, ProjectID, cipType, cipExemptionAppDate);
+                        _cip.CipID = insertedId;
+                    }
+                    else if (actionFlag == 3)
+                    {
+                        sqlquery = "DELETE tblCIPs WHERE CIPid =" + cipID.ToString();
                         cmd = dbConnection.RunQuryNoParameters(sqlquery);
                     }
                 }
@@ -872,7 +1049,8 @@ namespace WpfApp.ViewModel
             sda.Fill(ds);
 
             ObservableCollection<Crew> st_crew = new ObservableCollection<Crew>();
-            st_crew.Add(new Crew { ID = 0, CrewName = "New" });
+            ObservableCollection<Crew> st_newCrew = new ObservableCollection<Crew>();
+            st_newCrew.Add(new Crew { ID = 0, CrewName = "New" });
             foreach (DataRow row in ds.Tables[0].Rows)
             {
                 int Num;
@@ -883,9 +1061,11 @@ namespace WpfApp.ViewModel
                     int crewID = int.Parse(row["Crew_ID"].ToString());
                     string crewName = row["Crew_Name"].ToString();
                     st_crew.Add(new Crew { ID = crewID, CrewName = crewName });
+                    st_newCrew.Add(new Crew { ID = crewID, CrewName = crewName });
                 }
             }
             Crews = st_crew;
+            NewCrews = st_newCrew;
 
             // Salesman
             sqlquery = "SELECT Salesman_ID, Salesman_Name FROM tblSalesmen;";
@@ -1194,9 +1374,9 @@ namespace WpfApp.ViewModel
             NewAcronyms = st_newAcronym;
 
             // CIP Type
-            ObservableCollection<string> st_cip = new ObservableCollection<string>();
+            ObservableCollection<ApplOption> st_cip = new ObservableCollection<ApplOption>();
 
-            sqlquery = "SELECT DISTINCT CIPType FROM tblCIPs";
+            sqlquery = "SELECT * FROM tblApplOptions WHERE OptCat = 'CIPType'";
             cmd = dbConnection.RunQuryNoParameters(sqlquery);
             sda = new SqlDataAdapter(cmd);
             ds = new DataSet();
@@ -1204,18 +1384,32 @@ namespace WpfApp.ViewModel
 
             foreach (DataRow row in ds.Tables[0].Rows)
             {
-                string cipType = "";
-                if(!row.IsNull("CIPType"))
-                {
-                    cipType = row["CIPType"].ToString();
-                    st_cip.Add(cipType);
-                }
+                int optionID = 0;
+                string optCat = "";
+                string optTxtVal = "";
+                string optNumVal = "";
+                string optDesc = "";
+                string optLong = "";
+
+                optionID = int.Parse(row["Option_ID"].ToString());
+                if (!row.IsNull("OptCat"))
+                    optCat = row["OptCat"].ToString();
+                if (!row.IsNull("OptTxtVal"))
+                    optTxtVal = row["OptTxtVal"].ToString();
+                if (!row.IsNull("OptNumVal"))
+                    optNumVal = row["OptNumVal"].ToString();
+                if (!row.IsNull("OptDesc"))
+                    optDesc = row["OptDesc"].ToString();
+                if (!row.IsNull("OptLong"))
+                    optLong = row["OptLong"].ToString();
+
+                st_cip.Add(new ApplOption { OptID = optionID, OptCat = optCat, OptTxtVal = optTxtVal, OptNumVal = optNumVal, OptDesc = optDesc, OptLong = optLong });
             }
 
             CIPTypes = st_cip;
 
             // CIP Enroll
-            ObservableCollection<string> st_crewEnroll = new ObservableCollection<string>();
+            ObservableCollection<CrewEnroll> st_crewEnroll = new ObservableCollection<CrewEnroll>();
 
             sqlquery = "SELECT DISTINCT CrewEnrolled FROM tblCIPs ";
             cmd = dbConnection.RunQuryNoParameters(sqlquery);
@@ -1229,14 +1423,14 @@ namespace WpfApp.ViewModel
                 if (!row.IsNull("CrewEnrolled"))
                 {
                     cipType = row["CrewEnrolled"].ToString();
-                    st_crewEnroll.Add(cipType);
+                    st_crewEnroll.Add(new CrewEnroll { CrewEnrollValue = cipType });
                 }
             }
 
             CrewEnrolls = st_crewEnroll;
 
             // ApprDen Type
-            ObservableCollection<string> st_apprDen = new ObservableCollection<string>();
+            ObservableCollection<ApprDen> st_apprDen = new ObservableCollection<ApprDen>();
 
             sqlquery = "SELECT DISTINCT CO_AppDEn FROM tblProjectChangeOrders";
             cmd = dbConnection.RunQuryNoParameters(sqlquery);
@@ -1250,7 +1444,7 @@ namespace WpfApp.ViewModel
                 if (!row.IsNull("CO_AppDEn"))
                 {
                     apprDen = row["CO_AppDEn"].ToString();
-                    st_apprDen.Add(apprDen);
+                    st_apprDen.Add(new ApprDen { ApprDenValue = apprDen });
                 }
             }
 
@@ -1784,13 +1978,19 @@ namespace WpfApp.ViewModel
             TrackLaborReports = sb_trackLaborReports;
 
             // SOV Grid 1
-            sqlquery = "Select tblSOV.*, tblProjectChangeOrders.CO_ItemNo from (Select tblSOV.*, tblScheduleOfValues.SOV_Desc from tblScheduleOfValues Right JOIN (SELECT tblProjectSOV.* From tblProjects LEFT Join tblProjectSOV ON tblProjects.Project_ID = tblProjectSOV.Project_ID where tblProjects.Project_ID = " + ProjectID.ToString() + ") AS tblSOV ON tblSOV.SOV_Acronym = tblScheduleOfValues.SOV_Acronym Where tblScheduleOfValues.Active = 'true') AS tblSOV LEFT JOIN tblProjectChangeOrders ON tblProjectChangeOrders.CO_ID = tblSOV.CO_ID ORDER BY tblSOV.SOV_Acronym;";
+            sqlquery = "Select tblSOV.*, tblProjectChangeOrders.CO_ItemNo from (Select tblSOV.*, tblScheduleOfValues.SOV_Desc from tblScheduleOfValues Right JOIN (SELECT tblProjectSOV.* From tblProjects LEFT Join tblProjectSOV ON tblProjects.Project_ID = tblProjectSOV.Project_ID where tblProjects.Project_ID = " + ProjectID.ToString() + ") AS tblSOV ON tblSOV.SOV_Acronym = tblScheduleOfValues.SOV_Acronym Where tblScheduleOfValues.Active = 'true') AS tblSOV LEFT JOIN tblProjectChangeOrders ON tblProjectChangeOrders.CO_ID = tblSOV.CO_ID ORDER BY tblSOV.SOV_Acronym";
             cmd = dbConnection.RunQuryNoParameters(sqlquery);
             sda = new SqlDataAdapter(cmd);
             ds = new DataSet();
             sda.Fill(ds);
             fetchID = 0;
 
+            if (ds.Tables[0].Rows.Count > 0)
+            {
+                firstRow = ds.Tables[0].Rows[0];
+                if (!firstRow.IsNull("ProjSOV_ID"))
+                    ProjSovID = int.Parse(firstRow["ProjSOV_ID"].ToString());
+            }
             ObservableCollection<SovAcronym> sb_sovCO= new ObservableCollection<SovAcronym>();
             foreach (DataRow row in ds.Tables[0].Rows)
             {
@@ -1831,6 +2031,7 @@ namespace WpfApp.ViewModel
             ds = new DataSet();
             sda.Fill(ds);
 
+            fetchID = 0;
             ObservableCollection<ChangeOrder> sb_changeOrder = new ObservableCollection<ChangeOrder>();
             foreach (DataRow row in ds.Tables[0].Rows)
             {
@@ -1859,14 +2060,17 @@ namespace WpfApp.ViewModel
 
                 sb_changeOrder.Add(new ChangeOrder
                 {
+                    FetchID = fetchID,
                     CoID = _coID,
                     CoItemNo = _coItemNo,
                     ProjectID = _projectID,
                     CoDate = _coDate,
                     CoDateAppDen = _coDateAppDen,
                     CoAppDen = _coAppDen,
-                    CoComment = _coComment
+                    CoComment = _coComment,
+                    ActionFlag = 0
                 });
+                fetchID += 1;
             }
 
             ChangeOrders = sb_changeOrder;
@@ -2025,16 +2229,18 @@ namespace WpfApp.ViewModel
             InstallationNotes = sb_installationNote;
 
             // Contracts
-            sqlquery = "SELECT tblProj.Job_No, Contractnumber, ChangeOrder, ChangeOrderNo, DateRecD, DateProcessed, AmtOfcontract, SignedoffbySales, Signedoffbyoperations, GivenAcctingforreview, Givenforfinalsignature, Scope, ReturnedVia, ReturnedtoDawn, Comments FROM tblSC RIGHT JOIN (SELECT Project_ID, Job_No FROM tblProjects WHERE Project_ID = " + ProjectID.ToString() + ") AS tblProj ON tblSC.ProjectID = tblProj.Project_ID";
+            sqlquery = "SELECT SCID, tblProj.Job_No, Contractnumber, ChangeOrder, ChangeOrderNo, DateRecD, DateProcessed, AmtOfcontract, SignedoffbySales, Signedoffbyoperations, GivenAcctingforreview, Givenforfinalsignature, Datereturnedback, ReturnedtoDawn, Scope, ReturnedVia, ReturnedtoDawn, Comments FROM tblSC INNER JOIN (SELECT Project_ID, Job_No FROM tblProjects WHERE Project_ID = " + ProjectID.ToString() + ") AS tblProj ON tblSC.ProjectID = tblProj.Project_ID";
 
             cmd = dbConnection.RunQuryNoParameters(sqlquery);
             sda = new SqlDataAdapter(cmd);
             ds = new DataSet();
             sda.Fill(ds);
 
+            fetchID = 0;
             ObservableCollection<Contract> sb_contract = new ObservableCollection<Contract>();
             foreach (DataRow row in ds.Tables[0].Rows)
             {
+                int _scID = 0;
                 string _jobNo = "";
                 string _contractNumber = "";
                 bool _changeOrder = false;
@@ -2046,11 +2252,15 @@ namespace WpfApp.ViewModel
                 DateTime _signedoffbyoperations = new DateTime();
                 DateTime _givenAcctingforreview = new DateTime();
                 DateTime _givenforfinalsignature = new DateTime();
+                DateTime _dateReturnedback = new DateTime();
+                DateTime _returnedtoDawn = new DateTime();
                 string _scope = "";
                 string _returnedVia = "";
                 DateTime _returnedDate = new DateTime();
                 string _comment = "";
 
+                if (!row.IsNull("SCID"))
+                    _scID = int.Parse(row["SCID"].ToString());
                 if (!row.IsNull("Job_No"))
                     _jobNo = row["Job_No"].ToString();
                 if (!row.IsNull("Contractnumber"))
@@ -2073,6 +2283,10 @@ namespace WpfApp.ViewModel
                     _givenAcctingforreview = row.Field<DateTime>("GivenAcctingforreview");
                 if (!row.IsNull("Givenforfinalsignature"))
                     _givenforfinalsignature = row.Field<DateTime>("Givenforfinalsignature");
+                if (!row.IsNull("Datereturnedback"))
+                    _dateReturnedback = row.Field<DateTime>("Datereturnedback");
+                if (!row.IsNull("ReturnedtoDawn"))
+                    _returnedtoDawn = row.Field<DateTime>("ReturnedtoDawn");
                 if (!row.IsNull("Scope"))
                     _scope = row["Scope"].ToString();
                 if (!row.IsNull("ReturnedVia"))
@@ -2082,8 +2296,11 @@ namespace WpfApp.ViewModel
                 if (!row.IsNull("Comments"))
                     _comment = row["Comments"].ToString();
 
+
                 sb_contract.Add(new Contract
                 {
+                    FetchID = fetchID,
+                    ScID = _scID,
                     JobNo = _jobNo,
                     ContractNumber = _contractNumber,
                     ChangeOrder = _changeOrder,
@@ -2095,11 +2312,15 @@ namespace WpfApp.ViewModel
                     SignedoffbySales = _signedoffbySales,
                     GivenAcctingforreview = _givenAcctingforreview,
                     Givenforfinalsignature = _givenforfinalsignature,
+                    DateReturnedback = _dateReturnedback,
+                    ReturnedtoDawn = _returnedtoDawn,
                     Scope = _scope,
-                    ReturnedDate = _returnedDate,
                     ReturnedVia = _returnedVia,
-                    Comment = _comment
+                    Comment = _comment,
+                    ActionFlag = 0
                 });
+
+                fetchID += 1;
             }
             Contracts = sb_contract;
 
@@ -2241,17 +2462,18 @@ namespace WpfApp.ViewModel
             ProjectNotes = sb_projectnotes;
 
             // CIPGrid
-            sqlquery = "SELECT Job_No, CIPType, TargetDate, OriginalContractAmt, FinalContractAmt, FormsRecD, FormsSent, CertRecD, ExemptionApproved, ExemptionAppDate, CrewEnrolled, Notes FROM tblCIPs RIGHT JOIN (SELECT Project_ID, Job_No FROM tblProjects WHERE Project_ID = " + ProjectID .ToString() + ") AS tblProjs ON tblCIPs.Project_ID = tblProjs.Project_ID";
+            sqlquery = "SELECT CIPid, CIPType, TargetDate, OriginalContractAmt, FinalContractAmt, FormsRecD, FormsSent, CertRecD, ExemptionApproved, ExemptionAppDate, CrewEnrolled, Notes FROM tblCIPs WHERE Project_ID = " + ProjectID.ToString();
 
             cmd = dbConnection.RunQuryNoParameters(sqlquery);
             sda = new SqlDataAdapter(cmd);
             ds = new DataSet();
             sda.Fill(ds);
 
+            fetchID = 0;
             ObservableCollection<CIP> sb_cips = new ObservableCollection<CIP>();
             foreach (DataRow row in ds.Tables[0].Rows)
             {
-                string _jobNo = "";
+                int _cipID = 0;
                 string _cipType = "";
                 DateTime _targetDate = new DateTime();
                 double _originalContractAmt = 0;
@@ -2264,8 +2486,8 @@ namespace WpfApp.ViewModel
                 string _crewEnrolled = "";
                 string _notes = "";
 
-                if (!row.IsNull("Job_No"))
-                    _jobNo = row["Job_No"].ToString();
+                if (!row.IsNull("CIPid"))
+                    _cipID = int.Parse(row["CIPid"].ToString());
                 if (!row.IsNull("CIPType"))
                     _cipType = row["CIPType"].ToString();
                 if (!row.IsNull("TargetDate"))
@@ -2291,7 +2513,9 @@ namespace WpfApp.ViewModel
 
                 sb_cips.Add(new CIP
                 {
-                    JobNo = _jobNo,
+                    FetchID = fetchID,
+                    CipID = _cipID,
+                    ProjectID = ProjectID,
                     CipType = _cipType,
                     TargetDate = _targetDate,
                     OriginalContractAmt = _originalContractAmt,
@@ -2302,8 +2526,10 @@ namespace WpfApp.ViewModel
                     ExemptionApproved = _exemptionApproved,
                     ExemptionAppDate = _exemptionAppDate,
                     CrewEnrolled = _crewEnrolled,
-                    Notes = _notes
+                    Notes = _notes,
+                    ActionFlag = 0
                 });
+                fetchID += 1;
             }
 
             ProjectCIPs = sb_cips;
@@ -2438,13 +2664,7 @@ namespace WpfApp.ViewModel
             set;
         }
 
-        public ObservableCollection<string> CIPTypes
-        {
-            get;
-            set;
-        }
-
-        public ObservableCollection<string> CrewEnrolls
+        public ObservableCollection<ApplOption> CIPTypes
         {
             get;
             set;
@@ -2483,6 +2703,12 @@ namespace WpfApp.ViewModel
         }
 
         public ObservableCollection<Crew> Crews
+        {
+            get;
+            set;
+        }
+
+        public ObservableCollection<Crew> NewCrews
         {
             get;
             set;
@@ -2801,6 +3027,26 @@ namespace WpfApp.ViewModel
             {
                 if (value == _changeOrders) return;
                 _changeOrders = value;
+                foreach(ChangeOrder item in value)
+                {
+                    if (item.ActionFlag != 3)
+                    {
+                        FetchChangeOrders.Add(item);
+                    }
+                }
+                OnPropertyChanged();
+            }
+        }
+
+        private ObservableCollection<ChangeOrder> _fetchChangeOrders;
+
+        public ObservableCollection<ChangeOrder> FetchChangeOrders
+        {
+            get => _fetchChangeOrders;
+            set
+            {
+                if (value == _fetchChangeOrders) return;
+                _fetchChangeOrders = value;
                 OnPropertyChanged();
             }
         }
@@ -2889,21 +3135,27 @@ namespace WpfApp.ViewModel
             set
             {
                 _contracts = value;
+                FetchContracts = new ObservableCollection<Contract>();
+                foreach(Contract item in value)
+                {
+                    if (item.ActionFlag != 3)
+                    {
+                        FetchContracts.Add(item);
+                    }
+                }
                 OnPropertyChanged();
             }
         }
 
-        private ObservableCollection<string> _apprDen;
-        public ObservableCollection<string> ApprDens
+        private ObservableCollection<Contract> _fetchContracts;
+
+        public ObservableCollection<Contract> FetchContracts
         {
-            get { return _apprDen; }
+            get { return _fetchContracts; }
             set
             {
-                if (_apprDen != value)
-                {
-                    _apprDen = value;
-                    OnPropertyChanged();
-                }
+                _fetchContracts = value;
+                OnPropertyChanged();
             }
         }
 
@@ -3011,6 +3263,20 @@ namespace WpfApp.ViewModel
             }
         }
 
+        private ObservableCollection<ApprDen> _apprDens;
+        public ObservableCollection<ApprDen> ApprDens
+        {
+            get { return _apprDens; }
+            set
+            {
+                if (_apprDens != value)
+                {
+                    _apprDens = value;
+                    OnPropertyChanged();
+                }
+            }
+        }
+
         private ObservableCollection<CIP> _projectCIP;
         public ObservableCollection<CIP> ProjectCIPs
         {
@@ -3020,6 +3286,28 @@ namespace WpfApp.ViewModel
                 if (_projectCIP != value)
                 {
                     _projectCIP = value;
+                    FetchProjectCIPs = new ObservableCollection<CIP>();
+                    foreach(CIP item in ProjectCIPs)
+                    {
+                        if(item.ActionFlag != 3)
+                        {
+                            FetchProjectCIPs.Add(item);
+                        }
+                    }
+                    OnPropertyChanged();
+                }
+            }
+        }
+
+        private ObservableCollection<CIP> _fetchProjectCIP;
+        public ObservableCollection<CIP> FetchProjectCIPs
+        {
+            get { return _fetchProjectCIP; }
+            set
+            {
+                if (_fetchProjectCIP != value)
+                {
+                    _fetchProjectCIP = value;
                     OnPropertyChanged();
                 }
             }
@@ -3035,6 +3323,29 @@ namespace WpfApp.ViewModel
                 if (_workOrderNotes != value)
                 {
                     _workOrderNotes = value;
+                    FetchWorkOrderNotes = new ObservableCollection<Note>();
+                    foreach(Note item in value)
+                    {
+                        if (item.ActionFlag != 3)
+                        {
+                            FetchWorkOrderNotes.Add(item);
+                        }
+                    }
+                    OnPropertyChanged();
+                }
+            }
+        }
+
+        private ObservableCollection<Note> _fetchWorkOrderNotes;
+
+        public ObservableCollection<Note> FetchWorkOrderNotes
+        {
+            get { return _fetchWorkOrderNotes; }
+            set
+            {
+                if (_fetchWorkOrderNotes != value)
+                {
+                    _fetchWorkOrderNotes = value;
                     OnPropertyChanged();
                 }
             }
@@ -3240,6 +3551,21 @@ namespace WpfApp.ViewModel
             }
         }
 
+        private int _projSovID;
+
+        public int ProjSovID
+        {
+            get { return _projSovID; }
+            set
+            {
+                if (_projSovID != value)
+                {
+                    _projSovID = value;
+                    OnPropertyChanged();
+                }
+            }
+        }
+
         private DateTime _woComplDate;
 
         public DateTime WO_ComplDate
@@ -3311,6 +3637,19 @@ namespace WpfApp.ViewModel
             }
         }
 
+        private ObservableCollection<CrewEnroll> _crewEnrolls;
+
+        public ObservableCollection<CrewEnroll> CrewEnrolls
+        {
+            get { return _crewEnrolls; }
+            set
+            {
+                if (value == _crewEnrolls) return;
+                _crewEnrolls = value;
+                OnPropertyChanged();
+            }
+        }
+
         public ObservableCollection<string> MasterContracts { get; set; }
 
         // Command
@@ -3326,6 +3665,10 @@ namespace WpfApp.ViewModel
         public RelayCommand AddNewProjMatTrackingCommand { get; set; }
         public RelayCommand AddNewProjMatShippingCommand { get; set; }
         public RelayCommand AddNewInstallNoteCommand { get; set; }
+        public RelayCommand AddNewContractCommand { get; set; }
+        public RelayCommand AddNewChangeOrderCommand { get; set; }
+        public RelayCommand AddNewCipCommand { get; set; }
+        public RelayCommand AddNewWorkNoteCommand { get; set; }
 
         private void ChangeWorkOrder()
         {

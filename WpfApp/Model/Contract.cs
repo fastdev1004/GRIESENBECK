@@ -7,8 +7,10 @@ using WpfApp.ViewModel;
 
 namespace WpfApp.Model
 {
-    class Contract:ViewModelBase
+    class Contract : ViewModelBase
     {
+        private int _fetchID;
+        private int _scID;
         private string _jobNo;
         private string _contractNumber;
         private bool _changeOrder;
@@ -20,11 +22,35 @@ namespace WpfApp.Model
         private DateTime _signedoffbyoperations;
         private DateTime _givenAcctingforreview;
         private DateTime _givenforfinalsignature;
+        private DateTime _dateReturnedback;
+        private DateTime _returnedtoDawn;
         private string _scope;
         private string _returnedVia;
-        private DateTime _returnedDate;
         private string _comment;
         private int _projectID;
+        private int _actionFlag;
+
+        public int FetchID
+        {
+            get => _fetchID;
+            set
+            {
+                if (value == _fetchID) return;
+                _fetchID = value;
+                OnPropertyChanged();
+            }
+        }
+
+        public int ScID
+        {
+            get => _scID;
+            set
+            {
+                if (value == _scID) return;
+                _scID = value;
+                OnPropertyChanged();
+            }
+        }
 
         public string JobNo
         {
@@ -150,6 +176,30 @@ namespace WpfApp.Model
             }
         }
 
+        public DateTime DateReturnedback
+        {
+            get => _dateReturnedback;
+            set
+            {
+
+                if (value == _dateReturnedback) return;
+                _dateReturnedback = value;
+                OnPropertyChanged();
+            }
+        }
+
+        public DateTime ReturnedtoDawn
+        {
+            get => _returnedtoDawn;
+            set
+            {
+
+                if (value == _returnedtoDawn) return;
+                _returnedtoDawn = value;
+                OnPropertyChanged();
+            }
+        }
+
         public string Scope
         {
             get => _scope;
@@ -172,17 +222,6 @@ namespace WpfApp.Model
             }
         }
 
-        public DateTime ReturnedDate
-        {
-            get => _returnedDate;
-            set
-            {
-                if (value == _returnedDate) return;
-                _returnedDate = value;
-                OnPropertyChanged();
-            }
-        }
-
         public string Comment
         {
             get => _comment;
@@ -201,6 +240,17 @@ namespace WpfApp.Model
             {
                 if (value == _projectID) return;
                 _projectID = value;
+                OnPropertyChanged();
+            }
+        }
+
+        public int ActionFlag
+        {
+            get => _actionFlag;
+            set
+            {
+                if (value == _actionFlag) return;
+                _actionFlag = value;
                 OnPropertyChanged();
             }
         }

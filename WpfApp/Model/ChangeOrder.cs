@@ -9,14 +9,26 @@ namespace WpfApp.Model
 {
     class ChangeOrder:ViewModelBase
     {
-        private int _projectID;
+        private int _fetchID;
         private int _coID;
+        private int _projectID;
         private int _coItemNo;
         private DateTime _coDate;
         private string _coAppDen;
         private DateTime _coDateAppDen;
         private string _coComment;
+        private int _actionFlag;
 
+        public int FetchID
+        {
+            get => _fetchID;
+            set
+            {
+                if (value == _fetchID) return;
+                _fetchID = value;
+                OnPropertyChanged();
+            }
+        }
 
         public int ProjectID
         {
@@ -91,6 +103,17 @@ namespace WpfApp.Model
             {
                 if (value == _coComment) return;
                 _coComment = value;
+                OnPropertyChanged();
+            }
+        }
+
+        public int ActionFlag
+        {
+            get => _actionFlag;
+            set
+            {
+                if (value == _actionFlag) return;
+                _actionFlag = value;
                 OnPropertyChanged();
             }
         }

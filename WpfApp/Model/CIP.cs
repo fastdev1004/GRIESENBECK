@@ -9,7 +9,8 @@ namespace WpfApp.Model
 {
     class CIP:ViewModelBase
     {
-        private string _jobNo;
+        private int _fetchID;
+        private int _cipID;
         private int _projectID;
         private string _cipType;
         private DateTime _targetDate;
@@ -22,14 +23,26 @@ namespace WpfApp.Model
         private DateTime _exemptionAppDate;
         private string _crewEnrolled;
         private string _notes;
+        private int _actionFlag;
 
-        public string JobNo
+        public int FetchID
         {
-            get => _jobNo;
+            get => _fetchID;
             set
             {
-                if (value == _jobNo) return;
-                _jobNo = value;
+                if (value == _fetchID) return;
+                _fetchID = value;
+                OnPropertyChanged();
+            }
+        }
+
+        public int CipID
+        {
+            get => _cipID;
+            set
+            {
+                if (value == _cipID) return;
+                _cipID = value;
                 OnPropertyChanged();
             }
         }
@@ -160,6 +173,17 @@ namespace WpfApp.Model
             {
                 if (value == _notes) return;
                 _notes = value;
+                OnPropertyChanged();
+            }
+        }
+
+        public int ActionFlag
+        {
+            get => _actionFlag;
+            set
+            {
+                if (value == _actionFlag) return;
+                _actionFlag = value;
                 OnPropertyChanged();
             }
         }

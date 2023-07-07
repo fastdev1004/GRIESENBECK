@@ -2412,6 +2412,351 @@ namespace WpfApp.Utils
             return insertedID;
         }
 
+        // Create SC
+        public int RunQueryToCreateSC(string query, int contractProjectID, string contractNumber, DateTime dateRecd, int amtOfContract, bool changeOrder, string changeOrderNo, DateTime signedoffbySales, DateTime signedoffbyoperations, DateTime givenAcctingforreview, DateTime givenforfinalsignature, DateTime dateReturnedback, DateTime returnedtoDawn, string returnedVia, string comment, DateTime dateProcessed, string scope)
+        {
+            try
+            {
+                connection.Open();
+                if (connection != null)
+                {
+                    cmd = connection.CreateCommand();
+                    cmd.CommandType = CommandType.Text;
+                    cmd.CommandText = query;
+
+                    if (contractProjectID != 0)
+                        cmd.Parameters.AddWithValue("@ProjectID", contractProjectID);
+                    else cmd.Parameters.AddWithValue("@ProjectID", DBNull.Value);
+                    if (!string.IsNullOrEmpty(contractNumber))
+                        cmd.Parameters.AddWithValue("@ContractNumber", contractNumber);
+                    else cmd.Parameters.AddWithValue("@ContractNumber", DBNull.Value);
+                    if (!dateRecd.Equals(DateTime.MinValue))
+                        cmd.Parameters.AddWithValue("@DateRecd", dateRecd);
+                    else cmd.Parameters.AddWithValue("@DateRecd", DBNull.Value);
+                    if (amtOfContract != 0)
+                        cmd.Parameters.AddWithValue("@AmtOfcontract", amtOfContract);
+                    else cmd.Parameters.AddWithValue("@AmtOfcontract", DBNull.Value);
+                    cmd.Parameters.AddWithValue("@ChangeOrder", Convert.ToInt32(changeOrder));
+                    if (!string.IsNullOrEmpty(changeOrderNo))
+                        cmd.Parameters.AddWithValue("@ChangeOrderNo", changeOrderNo);
+                    else cmd.Parameters.AddWithValue("@ChangeOrderNo", DBNull.Value);
+                    if (!signedoffbySales.Equals(DateTime.MinValue))
+                        cmd.Parameters.AddWithValue("@SignedoffbySales", signedoffbySales);
+                    else cmd.Parameters.AddWithValue("@SignedoffbySales", DBNull.Value);
+                    if (!signedoffbyoperations.Equals(DateTime.MinValue))
+                        cmd.Parameters.AddWithValue("@Signedoffbyoperations", signedoffbyoperations);
+                    else cmd.Parameters.AddWithValue("@Signedoffbyoperations", DBNull.Value);
+                    if (!givenAcctingforreview.Equals(DateTime.MinValue))
+                        cmd.Parameters.AddWithValue("@GivenAcctingforreview", givenAcctingforreview);
+                    else cmd.Parameters.AddWithValue("@GivenAcctingforreview", DBNull.Value);
+                    if (!givenforfinalsignature.Equals(DateTime.MinValue))
+                        cmd.Parameters.AddWithValue("@Givenforfinalsignature", givenforfinalsignature);
+                    else cmd.Parameters.AddWithValue("@Givenforfinalsignature", DBNull.Value);
+                    if (!dateReturnedback.Equals(DateTime.MinValue))
+                        cmd.Parameters.AddWithValue("@Datereturnedback", dateReturnedback);
+                    else cmd.Parameters.AddWithValue("@Datereturnedback", DBNull.Value);
+                    if (!returnedtoDawn.Equals(DateTime.MinValue))
+                        cmd.Parameters.AddWithValue("@ReturnedtoDawn", returnedtoDawn);
+                    else cmd.Parameters.AddWithValue("@ReturnedtoDawn", DBNull.Value);
+                    if (!string.IsNullOrEmpty(comment))
+                        cmd.Parameters.AddWithValue("@Comments", comment);
+                    else cmd.Parameters.AddWithValue("@Comments", DBNull.Value);
+                    if (!string.IsNullOrEmpty(returnedVia))
+                        cmd.Parameters.AddWithValue("@ReturnedVia", returnedVia);
+                    else cmd.Parameters.AddWithValue("@ReturnedVia", DBNull.Value);
+                    if (!dateProcessed.Equals(DateTime.MinValue))
+                        cmd.Parameters.AddWithValue("@DateProcessed", dateProcessed);
+                    else cmd.Parameters.AddWithValue("@DateProcessed", DBNull.Value);
+                    if (!string.IsNullOrEmpty(scope))
+                        cmd.Parameters.AddWithValue("@Scope", scope);
+                    else cmd.Parameters.AddWithValue("@Scope", DBNull.Value);
+                   
+                    insertedID = (int)cmd.ExecuteScalar();
+                    connection.Close();
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex);
+                connection.Close();
+            }
+            return insertedID;
+        }
+
+        // Update SC
+        public SqlCommand RunQueryToUpdateSC(string query, int contractProjectID, string contractNumber, DateTime dateRecd, int amtOfContract, bool changeOrder, string changeOrderNo, DateTime signedoffbySales, DateTime signedoffbyoperations, DateTime givenAcctingforreview, DateTime givenforfinalsignature, DateTime dateReturnedback, DateTime returnedtoDawn, string returnedVia, string comment, DateTime dateProcessed, string scope, int scID)
+        {
+            try
+            {
+                connection.Open();
+                if (connection != null)
+                {
+                    cmd = connection.CreateCommand();
+                    cmd.CommandType = CommandType.Text;
+                    cmd.CommandText = query;
+
+                    if (contractProjectID != 0)
+                        cmd.Parameters.AddWithValue("@ProjectID", contractProjectID);
+                    else cmd.Parameters.AddWithValue("@ProjectID", DBNull.Value);
+                    if (!string.IsNullOrEmpty(contractNumber))
+                        cmd.Parameters.AddWithValue("@ContractNumber", contractNumber);
+                    else cmd.Parameters.AddWithValue("@ContractNumber", DBNull.Value);
+                    if (!dateRecd.Equals(DateTime.MinValue))
+                        cmd.Parameters.AddWithValue("@DateRecd", dateRecd);
+                    else cmd.Parameters.AddWithValue("@DateRecd", DBNull.Value);
+                    if (amtOfContract != 0)
+                        cmd.Parameters.AddWithValue("@AmtOfcontract", amtOfContract);
+                    else cmd.Parameters.AddWithValue("@AmtOfcontract", DBNull.Value);
+                    cmd.Parameters.AddWithValue("@ChangeOrder", Convert.ToInt32(changeOrder));
+                    if (!string.IsNullOrEmpty(changeOrderNo))
+                        cmd.Parameters.AddWithValue("@ChangeOrderNo", changeOrderNo);
+                    else cmd.Parameters.AddWithValue("@ChangeOrderNo", DBNull.Value);
+                    if (!signedoffbySales.Equals(DateTime.MinValue))
+                        cmd.Parameters.AddWithValue("@SignedoffbySales", signedoffbySales);
+                    else cmd.Parameters.AddWithValue("@SignedoffbySales", DBNull.Value);
+                    if (!signedoffbyoperations.Equals(DateTime.MinValue))
+                        cmd.Parameters.AddWithValue("@Signedoffbyoperations", signedoffbyoperations);
+                    else cmd.Parameters.AddWithValue("@Signedoffbyoperations", DBNull.Value);
+                    if (!givenAcctingforreview.Equals(DateTime.MinValue))
+                        cmd.Parameters.AddWithValue("@GivenAcctingforreview", givenAcctingforreview);
+                    else cmd.Parameters.AddWithValue("@GivenAcctingforreview", DBNull.Value);
+                    if (!givenforfinalsignature.Equals(DateTime.MinValue))
+                        cmd.Parameters.AddWithValue("@Givenforfinalsignature", givenforfinalsignature);
+                    else cmd.Parameters.AddWithValue("@Givenforfinalsignature", DBNull.Value);
+                    if (!dateReturnedback.Equals(DateTime.MinValue))
+                        cmd.Parameters.AddWithValue("@Datereturnedback", dateReturnedback);
+                    else cmd.Parameters.AddWithValue("@Datereturnedback", DBNull.Value);
+                    if (!returnedtoDawn.Equals(DateTime.MinValue))
+                        cmd.Parameters.AddWithValue("@ReturnedtoDawn", returnedtoDawn);
+                    else cmd.Parameters.AddWithValue("@ReturnedtoDawn", DBNull.Value);
+                    if (!string.IsNullOrEmpty(comment))
+                        cmd.Parameters.AddWithValue("@Comments", comment);
+                    else cmd.Parameters.AddWithValue("@Comments", DBNull.Value);
+                    if (!string.IsNullOrEmpty(returnedVia))
+                        cmd.Parameters.AddWithValue("@ReturnedVia", returnedVia);
+                    else cmd.Parameters.AddWithValue("@ReturnedVia", DBNull.Value);
+                    if (!dateProcessed.Equals(DateTime.MinValue))
+                        cmd.Parameters.AddWithValue("@DateProcessed", dateProcessed);
+                    else cmd.Parameters.AddWithValue("@DateProcessed", DBNull.Value);
+                    if (!string.IsNullOrEmpty(scope))
+                        cmd.Parameters.AddWithValue("@Scope", scope);
+                    else cmd.Parameters.AddWithValue("@Scope", DBNull.Value);
+                    cmd.Parameters.AddWithValue("@SCID", scID);
+
+                    cmd.ExecuteNonQuery();
+                    connection.Close();
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex);
+                connection.Close();
+            }
+            return cmd;
+        }
+
+        // Update Change Order
+        public SqlCommand RunQueryToUpdateCO(string query, int coProjectID, int coItemNo, DateTime coDate, string coAppDen, DateTime coDateAppDen, string coComment, int coID)
+        {
+            try
+            {
+                connection.Open();
+                if (connection != null)
+                {
+                    cmd = connection.CreateCommand();
+                    cmd.CommandType = CommandType.Text;
+                    cmd.CommandText = query;
+
+                    if (coProjectID != 0)
+                        cmd.Parameters.AddWithValue("@ProjectID", coProjectID);
+                    else cmd.Parameters.AddWithValue("@ProjectID", DBNull.Value);
+                    if (coItemNo != 0)
+                        cmd.Parameters.AddWithValue("@CoItemNo", coItemNo);
+                    else cmd.Parameters.AddWithValue("@CoItemNo", DBNull.Value);
+                    if (!coDate.Equals(DateTime.MinValue))
+                        cmd.Parameters.AddWithValue("@CoDate", coDate);
+                    else cmd.Parameters.AddWithValue("@CoDate", DBNull.Value);
+                    if (!string.IsNullOrEmpty(coAppDen))
+                        cmd.Parameters.AddWithValue("@CoAppDen", coAppDen);
+                    else cmd.Parameters.AddWithValue("@CoAppDen", DBNull.Value);
+                    if (!coDateAppDen.Equals(DateTime.MinValue))
+                        cmd.Parameters.AddWithValue("@CoDateAppDen", coDateAppDen);
+                    else cmd.Parameters.AddWithValue("@CoDateAppDen", DBNull.Value);
+                    if (!string.IsNullOrEmpty(coComment))
+                        cmd.Parameters.AddWithValue("@CoComments", coComment);
+                    else cmd.Parameters.AddWithValue("@CoComments", DBNull.Value);
+                    cmd.Parameters.AddWithValue("@CoID", coID);
+
+                    cmd.ExecuteNonQuery();
+                    connection.Close();
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex);
+                connection.Close();
+            }
+            return cmd;
+        }
+
+
+        // Create Change Order
+        public int RunQueryToCreateCO(string query, int coProjectID, int coItemNo, DateTime coDate, string coAppDen, DateTime coDateAppDen, string coComment)
+        {
+            try
+            {
+                connection.Open();
+                if (connection != null)
+                {
+                    cmd = connection.CreateCommand();
+                    cmd.CommandType = CommandType.Text;
+                    cmd.CommandText = query;
+
+                    if (coProjectID != 0)
+                        cmd.Parameters.AddWithValue("@ProjectID", coProjectID);
+                    else cmd.Parameters.AddWithValue("@ProjectID", DBNull.Value);
+                    if (coItemNo != 0)
+                        cmd.Parameters.AddWithValue("@CoItemNo", coItemNo);
+                    else cmd.Parameters.AddWithValue("@CoItemNo", DBNull.Value);
+                    if (!coDate.Equals(DateTime.MinValue))
+                        cmd.Parameters.AddWithValue("@CoDate", coDate);
+                    else cmd.Parameters.AddWithValue("@CoDate", DBNull.Value);
+                    if (!string.IsNullOrEmpty(coAppDen))
+                        cmd.Parameters.AddWithValue("@CoAppDen", coAppDen);
+                    else cmd.Parameters.AddWithValue("@CoAppDen", DBNull.Value);
+                    if (!coDateAppDen.Equals(DateTime.MinValue))
+                        cmd.Parameters.AddWithValue("@CoDateAppDen", coDateAppDen);
+                    else cmd.Parameters.AddWithValue("@CoDateAppDen", DBNull.Value);
+                    if (!string.IsNullOrEmpty(coComment))
+                        cmd.Parameters.AddWithValue("@CoComments", coComment);
+                    else cmd.Parameters.AddWithValue("@CoComments", DBNull.Value);
+
+                    insertedID = (int)cmd.ExecuteScalar();
+                    connection.Close();
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex);
+                connection.Close();
+            }
+            return insertedID;
+        }
+
+        // Create CIP Type
+        public int RunQueryToCreateCIP(string query, DateTime cipTargetDate, DateTime cipFormsRecD, DateTime cipFormsSent, DateTime cipCertRecD, double cipOriginalContractAmt, double cipFinalContractAmt, string cipCrewEnrolled, string cipNotes, bool cipExemptionApproved, int cipProjectID, string cipType, DateTime cipExemptionAppDate)
+        {
+            try
+            {
+                connection.Open();
+                if (connection != null)
+                {
+                    cmd = connection.CreateCommand();
+                    cmd.CommandType = CommandType.Text;
+                    cmd.CommandText = query;
+
+                    if (!cipTargetDate.Equals(DateTime.MinValue))
+                        cmd.Parameters.AddWithValue("@TargetDate", cipTargetDate);
+                    else cmd.Parameters.AddWithValue("@TargetDate", DBNull.Value);
+                    if (!cipFormsRecD.Equals(DateTime.MinValue))
+                        cmd.Parameters.AddWithValue("@FormsRecD", cipFormsRecD);
+                    else cmd.Parameters.AddWithValue("@FormsRecD", DBNull.Value);
+                    if (!cipFormsSent.Equals(DateTime.MinValue))
+                        cmd.Parameters.AddWithValue("@FormsSent", cipFormsSent);
+                    else cmd.Parameters.AddWithValue("@FormsSent", DBNull.Value);
+                    if (!cipCertRecD.Equals(DateTime.MinValue))
+                        cmd.Parameters.AddWithValue("@CertRecD", cipCertRecD);
+                    else cmd.Parameters.AddWithValue("@CertRecD", DBNull.Value);
+                    if (cipOriginalContractAmt != 0)
+                        cmd.Parameters.AddWithValue("@OriginalContractAmt", cipOriginalContractAmt);
+                    else cmd.Parameters.AddWithValue("@OriginalContractAmt", DBNull.Value);
+                    if (cipFinalContractAmt != 0)
+                        cmd.Parameters.AddWithValue("@FinalContractAmt", cipFinalContractAmt);
+                    else cmd.Parameters.AddWithValue("@FinalContractAmt", DBNull.Value);
+                    if (!string.IsNullOrEmpty(cipCrewEnrolled))
+                        cmd.Parameters.AddWithValue("@CrewEnrolled", cipCrewEnrolled);
+                    else cmd.Parameters.AddWithValue("@CrewEnrolled", DBNull.Value);
+                    if (!string.IsNullOrEmpty(cipNotes))
+                        cmd.Parameters.AddWithValue("@Notes", cipNotes);
+                    else cmd.Parameters.AddWithValue("@Notes", DBNull.Value);
+                    cmd.Parameters.AddWithValue("@ExemptionApproved", Convert.ToInt32(cipExemptionApproved));
+                    cmd.Parameters.AddWithValue("@ProjectID", cipProjectID);
+                    if (!string.IsNullOrEmpty(cipType))
+                        cmd.Parameters.AddWithValue("@CIPType", cipType);
+                    else cmd.Parameters.AddWithValue("@CIPType", DBNull.Value);
+                    if (!cipExemptionAppDate.Equals(DateTime.MinValue))
+                        cmd.Parameters.AddWithValue("@ExemptionAppDate", cipExemptionAppDate);
+                    else cmd.Parameters.AddWithValue("@ExemptionAppDate", DBNull.Value);
+
+                    insertedID = (int)cmd.ExecuteScalar();
+                    connection.Close();
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex);
+                connection.Close();
+            }
+            return insertedID;
+        }
+
+        // Update CIP Type
+        public SqlCommand RunQueryToUpdateCIP(string query, DateTime cipTargetDate, DateTime cipFormsRecD, DateTime cipFormsSent, DateTime cipCertRecD, double cipOriginalContractAmt, double cipFinalContractAmt, string cipCrewEnrolled, string cipNotes, bool cipExemptionApproved, int cipProjectID, string cipType, DateTime cipExemptionAppDate, int cipID)
+        {
+            try
+            {
+                connection.Open();
+                if (connection != null)
+                {
+                    cmd = connection.CreateCommand();
+                    cmd.CommandType = CommandType.Text;
+                    cmd.CommandText = query;
+
+                    if (!cipTargetDate.Equals(DateTime.MinValue))
+                        cmd.Parameters.AddWithValue("@TargetDate", cipTargetDate);
+                    else cmd.Parameters.AddWithValue("@TargetDate", DBNull.Value);
+                    if (!cipFormsRecD.Equals(DateTime.MinValue))
+                        cmd.Parameters.AddWithValue("@FormsRecD", cipFormsRecD);
+                    else cmd.Parameters.AddWithValue("@FormsRecD", DBNull.Value);
+                    if (!cipFormsSent.Equals(DateTime.MinValue))
+                        cmd.Parameters.AddWithValue("@FormsSent", cipFormsSent);
+                    else cmd.Parameters.AddWithValue("@FormsSent", DBNull.Value);
+                    if (!cipCertRecD.Equals(DateTime.MinValue))
+                        cmd.Parameters.AddWithValue("@CertRecD", cipCertRecD);
+                    else cmd.Parameters.AddWithValue("@CertRecD", DBNull.Value);
+                    if (cipOriginalContractAmt != 0)
+                        cmd.Parameters.AddWithValue("@OriginalContractAmt", cipOriginalContractAmt);
+                    else cmd.Parameters.AddWithValue("@OriginalContractAmt", DBNull.Value);
+                    if (cipFinalContractAmt != 0)
+                        cmd.Parameters.AddWithValue("@FinalContractAmt", cipFinalContractAmt);
+                    else cmd.Parameters.AddWithValue("@FinalContractAmt", DBNull.Value);
+                    if (!string.IsNullOrEmpty(cipCrewEnrolled))
+                        cmd.Parameters.AddWithValue("@CrewEnrolled", cipCrewEnrolled);
+                    else cmd.Parameters.AddWithValue("@CrewEnrolled", DBNull.Value);
+                    if (!string.IsNullOrEmpty(cipNotes))
+                        cmd.Parameters.AddWithValue("@Notes", cipNotes);
+                    else cmd.Parameters.AddWithValue("@Notes", DBNull.Value);
+                    cmd.Parameters.AddWithValue("@ExemptionApproved", Convert.ToInt32(cipExemptionApproved));
+                    cmd.Parameters.AddWithValue("@ProjectID", cipProjectID);
+                    if (!string.IsNullOrEmpty(cipType))
+                        cmd.Parameters.AddWithValue("@CIPType", cipType);
+                    else cmd.Parameters.AddWithValue("@CIPType", DBNull.Value);
+                    if (!cipExemptionAppDate.Equals(DateTime.MinValue))
+                        cmd.Parameters.AddWithValue("@ExemptionAppDate", cipExemptionAppDate);
+                    else cmd.Parameters.AddWithValue("@ExemptionAppDate", DBNull.Value);
+                    cmd.Parameters.AddWithValue("@CipID", cipID);
+
+                    cmd.ExecuteNonQuery();
+                    connection.Close();
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex);
+                connection.Close();
+            }
+            return cmd;
+        }
         public void Open()
         {
            connection.Open();

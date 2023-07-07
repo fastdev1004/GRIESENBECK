@@ -14,9 +14,8 @@
             </Style>
         </Style.Resources>
     </Style>
-    <Style TargetType="TextBox">
+    <Style x:Name="TextBoxStyleBase" TargetType="TextBox">
         <Setter Property="VerticalContentAlignment" Value="Center" />
-   
     </Style>
     <Style TargetType="TextBlock">
         <Setter Property="VerticalAlignment" Value="Center" />

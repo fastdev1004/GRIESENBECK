@@ -72,12 +72,14 @@
     <Compile Include="Converter\ZeroToEmptyStringConverter.cs" />
     <Compile Include="Model\Acronym.cs" />
     <Compile Include="Model\ApplOption.cs" />
+    <Compile Include="Model\ApprDen.cs" />
     <Compile Include="Model\Architect.cs" />
     <Compile Include="Model\ArchRep.cs" />
     <Compile Include="Model\ChangeOrder.cs" />
     <Compile Include="Model\CIP.cs" />
     <Compile Include="Model\Contract.cs" />
     <Compile Include="Model\Crew.cs" />
+    <Compile Include="Model\CrewEnroll.cs" />
     <Compile Include="Model\Customer.cs" />
     <Compile Include="Model\CustomerContact.cs" />
     <Compile Include="Model\Estimator.cs" />

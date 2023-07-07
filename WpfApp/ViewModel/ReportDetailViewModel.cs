@@ -417,7 +417,6 @@ namespace WpfApp.ViewModel
                     _notes = row["Notes"].ToString();
                 sb_cip.Add(new CIP
                 {
-                    ProjectID = _projectID,
                     CipType = _cipType,
                     FormsRecD = _formsRecD,
                     FormsSent = _formsSent,
@@ -535,7 +534,6 @@ namespace WpfApp.ViewModel
                     SignedoffbySales = _signedoffbySales,
                     GivenAcctingforreview = _givenAcctingforreview,
                     Givenforfinalsignature = _givenforfinalsignature,
-                    ReturnedDate = _returnedDate,
                     ReturnedVia = _returnedVia,
                     Comment = _comment,
                     ProjectID = _projectID

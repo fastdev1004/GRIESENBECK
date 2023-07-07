@@ -159,7 +159,6 @@ namespace WpfApp.ViewModel
                     GivenAcctingforreview = _givenAcctingforreview,
                     Givenforfinalsignature = _givenforfinalsignature,
                     Scope = _scope,
-                    ReturnedDate = _returnedDate,
                     ReturnedVia = _returnedVia,
                     Comment = _comment
                 });

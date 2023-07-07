@@ -9,7 +9,7 @@ using WpfApp.ViewModel;
 
 namespace WpfApp.Model
 {
-    class Acronym:ViewModelBase
+    class Acronym : ViewModelBase
     {
         private string _acronymName;
         private string _acronymDesc;
