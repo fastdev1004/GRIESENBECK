@@ -85,7 +85,7 @@ namespace WpfApp.ViewModel.Dialog
             foreach (Note _note in ScNotes)
             {
                 sqlquery = "INSERT INTO tblNotes(Notes_PK, Notes_PK_Desc, Notes_Note, Notes_DateAdded, Notes_User) OUTPUT INSERTED.Notes_ID VALUES (@NotesPK, @NotesDesc, @NotesNote, @NotesDateAdded, @NotesUser)";
-                // Here
+
                 int notesPK = insertedSubmID;
                 string notesPkDesc = "CustomerContact";
                 string notesNote = _note.NotesNote;

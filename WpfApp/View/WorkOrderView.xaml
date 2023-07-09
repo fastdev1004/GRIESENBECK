@@ -296,7 +296,7 @@
                                     <RowDefinition Height="1*" />
                                 </Grid.RowDefinitions>
                                 <Grid>
-                                    <DataGrid x:Name="ProjectWorkOrderList" GridLinesVisibility="None" ItemsSource="{Binding ProjectWorkOrders, Mode=TwoWay}" SelectedValuePath="ProjMatID" AutoGenerateColumns="False" CanUserAddRows="False" Background="LightGray" HeadersVisibility="Column">
+                                    <DataGrid x:Name="ProjectWorkOrderList" GridLinesVisibility="None" ItemsSource="{Binding ProjectMaterials, Mode=TwoWay}" SelectedValuePath="ProjMatID" AutoGenerateColumns="False" CanUserAddRows="False" Background="LightGray" HeadersVisibility="Column">
                                         <DataGrid.Resources>
                                             <Style TargetType="DataGridRow">
                                                 <Setter Property="Height" Value="15" />

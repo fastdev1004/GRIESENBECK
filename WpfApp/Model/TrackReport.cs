@@ -7,7 +7,7 @@ using WpfApp.ViewModel;
 
 namespace WpfApp.Model
 {
-    class TrackReport:ViewModelBase
+    class TrackReport : ViewModelBase
     {
         private int _projMat;
         private DateTime _matReqdDate;

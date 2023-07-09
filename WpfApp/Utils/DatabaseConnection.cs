@@ -2757,6 +2757,128 @@ namespace WpfApp.Utils
             }
             return cmd;
         }
+
+        // Update WorkOrder
+        public SqlCommand RunQueryToUpdateWorkOrder(string query, int woNumber, int woProjectID, int woSupID, int woCrewID, DateTime woDateStarted, DateTime woDateCompleted, DateTime woSchedStartDate, DateTime woSchedComplDate, bool woComplete, int woID)
+        {
+            try
+            {
+                connection.Open();
+                if (connection != null)
+                {
+                    cmd = connection.CreateCommand();
+                    cmd.CommandType = CommandType.Text;
+                    cmd.CommandText = query;
+
+                    if (woNumber != 0)
+                        cmd.Parameters.AddWithValue("@WoNumber", woNumber);
+                    else cmd.Parameters.AddWithValue("@WoNumber", DBNull.Value);
+                    if (woProjectID != 0)
+                        cmd.Parameters.AddWithValue("@ProjectID", woProjectID);
+                    else cmd.Parameters.AddWithValue("@ProjectID", DBNull.Value);
+                    if (woSupID != 0)
+                        cmd.Parameters.AddWithValue("@SupID", woSupID);
+                    else cmd.Parameters.AddWithValue("@SupID", DBNull.Value);
+                    if (woCrewID != 0)
+                        cmd.Parameters.AddWithValue("@CrewID", woCrewID);
+                    else cmd.Parameters.AddWithValue("@CrewID", DBNull.Value);
+                    if (!woDateStarted.Equals(DateTime.MinValue))
+                        cmd.Parameters.AddWithValue("@DateStarted", woDateStarted);
+                    else cmd.Parameters.AddWithValue("@DateStarted", DBNull.Value);
+                    if (!woDateCompleted.Equals(DateTime.MinValue))
+                        cmd.Parameters.AddWithValue("@DateCompleted", woDateCompleted);
+                    else cmd.Parameters.AddWithValue("@DateCompleted", DBNull.Value);
+                    if (!woSchedStartDate.Equals(DateTime.MinValue))
+                        cmd.Parameters.AddWithValue("@SchedStartDate", woSchedStartDate);
+                    else cmd.Parameters.AddWithValue("@SchedStartDate", DBNull.Value);
+                    if (!woSchedComplDate.Equals(DateTime.MinValue))
+                        cmd.Parameters.AddWithValue("@SchedComplDate", woSchedComplDate);
+                    else cmd.Parameters.AddWithValue("@SchedComplDate", DBNull.Value);
+                    cmd.Parameters.AddWithValue("@Complete", woComplete);
+                    if (woID != 0)
+                        cmd.Parameters.AddWithValue("@WoID", woNumber);
+                    else cmd.Parameters.AddWithValue("@WoID", DBNull.Value);
+
+                    cmd.ExecuteNonQuery();
+                    connection.Close();
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex);
+                connection.Close();
+            }
+            return cmd;
+        }
+
+        // Create Work Orders Mat
+        public int RunQueryToCreateWorkOrdersMat(string query, int woID, int projMsID, double matQty)
+        {
+            try
+            {
+                connection.Open();
+                if (connection != null)
+                {
+                    cmd = connection.CreateCommand();
+                    cmd.CommandType = CommandType.Text;
+                    cmd.CommandText = query;
+
+                    if (woID != 0)
+                        cmd.Parameters.AddWithValue("@WoID", woID);
+                    else cmd.Parameters.AddWithValue("@WoID", DBNull.Value);
+                    if (projMsID != 0)
+                        cmd.Parameters.AddWithValue("@ProjMsID", projMsID);
+                    else cmd.Parameters.AddWithValue("@ProjMsID", DBNull.Value);
+                    if (matQty != 0)
+                        cmd.Parameters.AddWithValue("@MatQty", matQty);
+                    else cmd.Parameters.AddWithValue("@MatQty", DBNull.Value);
+
+                    insertedID = (int)cmd.ExecuteScalar();
+                    connection.Close();
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex);
+                connection.Close();
+            }
+            return insertedID;
+        }
+
+        // Create Work Orders Lab
+        public int RunQueryToCreateWorkOrdersLab(string query, int woID, int projLabID, float labQty)
+        {
+            try
+            {
+                connection.Open();
+                if (connection != null)
+                {
+                    cmd = connection.CreateCommand();
+                    cmd.CommandType = CommandType.Text;
+                    cmd.CommandText = query;
+
+                    if (woID != 0)
+                        cmd.Parameters.AddWithValue("@WoID", woID);
+                    else cmd.Parameters.AddWithValue("@WoID", DBNull.Value);
+                    if (projLabID != 0)
+                        cmd.Parameters.AddWithValue("@ProjLabID", projLabID);
+                    else cmd.Parameters.AddWithValue("@ProjLabID", DBNull.Value);
+                    if (labQty != 0)
+                        cmd.Parameters.AddWithValue("@LabQty", labQty);
+                    else cmd.Parameters.AddWithValue("@LabQty", DBNull.Value);
+
+                    insertedID = (int)cmd.ExecuteScalar();
+                    connection.Close();
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex);
+                connection.Close();
+            }
+            return insertedID;
+        }
+
         public void Open()
         {
            connection.Open();

@@ -100,7 +100,7 @@
     <Compile Include="Model\ProjectManager.cs" />
     <Compile Include="Model\ProjectMatShip.cs" />
     <Compile Include="Model\ProjectMatTracking.cs" />
-    <Compile Include="Model\ProjectWorkOrder.cs" />
+    <Compile Include="Model\ProjectMaterial.cs" />
     <Compile Include="Model\Report.cs" />
     <Compile Include="Model\ReportActiveLabor.cs" />
     <Compile Include="Model\ReportActiveProject.cs" />
@@ -133,6 +133,8 @@
     <Compile Include="Model\User.cs" />
     <Compile Include="Model\Warranty.cs" />
     <Compile Include="Model\WorkOrder.cs" />
+    <Compile Include="Model\WorkOrderLabor.cs" />
+    <Compile Include="Model\WorkOrderMaterial.cs" />
     <Compile Include="Utils\DatabaseConnection.cs" />
     <Compile Include="Utils\FindComponentHelper.cs" />
     <Compile Include="Utils\ValidateFieldHelper.cs" />

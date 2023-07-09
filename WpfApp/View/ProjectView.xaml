@@ -1956,8 +1956,8 @@
                                             <DataGridTextColumn Width="2*" Binding="{Binding Path=WoID}" IsReadOnly="True" Header="WO" />
                                             <DataGridTextColumn Width="1*" Binding="{Binding Path=WoNumber}" IsReadOnly="True" Header="WO #" />
                                             <DataGridTextColumn Width="4*" Binding="{Binding Path=CrewName}" IsReadOnly="True" Header="Crew" />
-                                            <DataGridTextColumn Width="2*" Binding="{Binding Path=DateStarted}" IsReadOnly="True" Header="Started" />
-                                            <DataGridTextColumn Width="2*" Binding="{Binding Path=DateCompleted}" IsReadOnly="True" Header="Completed" />
+                                            <DataGridTextColumn Width="2*" Binding="{Binding Path=DateStarted, Converter={StaticResource DateTimeConverter}}" IsReadOnly="True" Header="Started" />
+                                            <DataGridTextColumn Width="2*" Binding="{Binding Path=DateCompleted, Converter={StaticResource DateTimeConverter}}" IsReadOnly="True" Header="Completed" />
                                         </DataGrid.Columns>
                                     </DataGrid>
                                 </Grid>
@@ -1979,23 +1979,23 @@
                                             <RowDefinition Height="Auto" />
                                         </Grid.RowDefinitions>
                                         <Label Content="WO Number:" Margin="0,4,0,4" />
-                                        <TextBox x:Name="WoNbr_TextBox" Text="{Binding WO_Number, Mode=TwoWay}" Grid.Column="1" Width="100" Margin="0,4,0,4" HorizontalAlignment="Left" />
+                                        <TextBox x:Name="WoNbr_TextBox" Text="{Binding TempWorkOrder.WoNumber, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Grid.Column="1" Width="100" Margin="0,4,0,4" HorizontalAlignment="Left" />
                                         <Label Grid.Row="1" Content="Crew:" Margin="0,4,0,4" />
-                                        <ComboBox x:Name="WorkCrew_CB" ItemsSource="{Binding Crews}" SelectedValuePath="ID" SelectedValue="{Binding WO_CrewID}" DisplayMemberPath="CrewName" Grid.Row="1" Grid.Column="1" Width="200" HorizontalAlignment="Left" Margin="0,4,0,4" IsEditable="False" Validation.ErrorTemplate="{x:Null}" Tag="WorkOrderCrew" />
+                                        <ComboBox x:Name="WorkCrew_CB" ItemsSource="{Binding Crews}" SelectedValuePath="ID" SelectedValue="{Binding TempWorkOrder.CrewID, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" DisplayMemberPath="CrewName" Grid.Row="1" Grid.Column="1" Width="200" HorizontalAlignment="Left" Margin="0,4,0,4" IsEditable="False" Validation.ErrorTemplate="{x:Null}" Tag="WorkOrderCrew" />
                                         <Label Grid.Row="2" Content="Sched Start Date:" Margin="0,4,0,4" />
-                                        <DatePicker SelectedDate="{Binding WO_SchedStartDate, Mode=TwoWay}" x:Name="SchedStartDate_Datepicker" Grid.Row="2" Grid.Column="1" Width="100" Margin="0,4,0,4" HorizontalAlignment="Left" />
+                                        <DatePicker SelectedDate="{Binding TempWorkOrder.SchedStartDate, Mode=TwoWay, Converter={StaticResource DateTimeConverter}, UpdateSourceTrigger=PropertyChanged}" x:Name="SchedStartDate_Datepicker" Grid.Row="2" Grid.Column="1" Width="100" Margin="0,4,0,4" HorizontalAlignment="Left" />
                                         <Label Grid.Row="3" Content="Sched Compl Date:" Margin="0,4,0,4" />
-                                        <DatePicker SelectedDate="{Binding WO_SchedComplDate, Mode=TwoWay}" x:Name="SchedComplDate_Datepicker" Grid.Row="3" Grid.Column="1" Width="100" Margin="0,4,0,4" HorizontalAlignment="Left" />
+                                        <DatePicker SelectedDate="{Binding TempWorkOrder.SchedComplDate, Mode=TwoWay, Converter={StaticResource DateTimeConverter}, UpdateSourceTrigger=PropertyChanged}" x:Name="SchedComplDate_Datepicker" Grid.Row="3" Grid.Column="1" Width="100" Margin="0,4,0,4" HorizontalAlignment="Left" />
                                         <Label Grid.Row="4" Content="Supt:" Margin="0,4,0,4" />
-                                        <ComboBox x:Name="WorkSupt_CB" SelectedValue="{Binding WO_SuptID, Mode=TwoWay}" ItemsSource="{Binding Superintendents}" SelectedValuePath="SupID" DisplayMemberPath="SupName" Grid.Row="4" Grid.Column="1" Width="200" HorizontalAlignment="Left" Margin="0,4,0,4" IsEditable="False" Validation.ErrorTemplate="{x:Null}" />
+                                        <ComboBox x:Name="WorkSupt_CB" SelectedValue="{Binding TempWorkOrder.SuptID, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" ItemsSource="{Binding Superintendents}" SelectedValuePath="SupID" DisplayMemberPath="SupName" Grid.Row="4" Grid.Column="1" Width="200" HorizontalAlignment="Left" Margin="0,4,0,4" IsEditable="False" Validation.ErrorTemplate="{x:Null}" />
                                         <Label Grid.Row="5" Content="Start Date:" Margin="0,4,0,4" />
-                                        <DatePicker SelectedDate="{Binding WO_StartDate, Mode=TwoWay}" x:Name="WoStartDate_Datepicker" Grid.Row="5" Grid.Column="1" Width="100" Margin="0,4,0,4" HorizontalAlignment="Left" />
+                                        <DatePicker SelectedDate="{Binding TempWorkOrder.DateStarted, Mode=TwoWay, Converter={StaticResource DateTimeConverter}, UpdateSourceTrigger=PropertyChanged}" x:Name="WoStartDate_Datepicker" Grid.Row="5" Grid.Column="1" Width="100" Margin="0,4,0,4" HorizontalAlignment="Left" />
                                         <Label Grid.Row="6" Content="Compl Date:" Margin="0,4,0,4" />
-                                        <DatePicker SelectedDate="{Binding WO_ComplDate, Mode=TwoWay}" x:Name="WoComplDate_Datepicker" Grid.Row="6" Grid.Column="1" Width="100" Margin="0,4,0,4" HorizontalAlignment="Left" />
+                                        <DatePicker SelectedDate="{Binding TempWorkOrder.DateCompleted, Mode=TwoWay, Converter={StaticResource DateTimeConverter}, UpdateSourceTrigger=PropertyChanged}" x:Name="WoComplDate_Datepicker" Grid.Row="6" Grid.Column="1" Width="100" Margin="0,4,0,4" HorizontalAlignment="Left" />
                                     </Grid>
                                 </Border>
                             </Grid>
-                            <DataGrid Margin="4,0" Padding="10" Grid.Row="2" ItemsSource="{Binding WorkOrderNotes, Mode=TwoWay}" GridLinesVisibility="None" AutoGenerateColumns="False" HeadersVisibility="None" BorderThickness="0" Background="#F5FFAF" CanUserAddRows="False" ContextMenu="{StaticResource WorkNoteContextMenu}" RowStyle="{StaticResource WorkNoteRowStyle}">
+                            <DataGrid x:Name="WorkOrderNote_DataGrid" Margin="4,0" Padding="10" Grid.Row="2" ItemsSource="{Binding FetchWorkOrderNotes, Mode=TwoWay}" GridLinesVisibility="None" AutoGenerateColumns="False" HeadersVisibility="None" BorderThickness="0" Background="#F5FFAF" CanUserAddRows="False" ContextMenu="{StaticResource WorkNoteContextMenu}" RowStyle="{StaticResource WorkNoteRowStyle}">
                                 <DataGrid.Resources>
                                     <Style TargetType="DataGridColumnHeader" BasedOn="{StaticResource GridColumnHeaderBase}">
                                         <Setter Property="Background" Value="#4BACC6" />
@@ -2031,7 +2031,7 @@
                                                             <TextBlock Grid.Column="1" Text="{Binding NoteUserName, Mode=TwoWay}" HorizontalAlignment="Right" />
                                                         </Grid>
                                                         <Grid Grid.Row="1">
-                                                            <TextBox Text="{Binding NotesNote, Mode=TwoWay}" AcceptsReturn="True" ScrollViewer.VerticalScrollBarVisibility="Auto" Height="40" />
+                                                            <TextBox Text="{Binding NotesNote, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" AcceptsReturn="True" ScrollViewer.VerticalScrollBarVisibility="Auto" Height="40" />
                                                         </Grid>
                                                     </Grid>
                                                 </Grid>
@@ -2124,11 +2124,12 @@
                                                 <RowDefinition Height="1*" />
                                             </Grid.RowDefinitions>
                                             <Grid>
-                                                <DataGrid x:Name="ProjectWorkOrderList" GridLinesVisibility="None" ItemsSource="{Binding ProjectWorkOrders, Mode=TwoWay}" SelectedValuePath="ProjMatID" AutoGenerateColumns="False" CanUserAddRows="False" Background="LightGray" HeadersVisibility="Column">
+                                                <DataGrid x:Name="WorkOrderProjectMaterial" GridLinesVisibility="None" ItemsSource="{Binding ProjectMaterials, Mode=TwoWay}" SelectedValuePath="ProjMsID" AutoGenerateColumns="False" CanUserAddRows="False" Background="LightGray" HeadersVisibility="Column">
                                                     <DataGrid.Resources>
                                                         <Style TargetType="DataGridRow">
                                                             <Setter Property="Height" Value="15" />
                                                             <Setter Property="BorderThickness" Value="0" />
+                                                            <EventSetter Event="MouseDoubleClick" Handler="WorkOrderMat_DoubleClick"/>
                                                         </Style>
                                                         <Style TargetType="{x:Type DataGridCell}">
                                                             <Setter Property="VerticalAlignment" Value="Center" />
@@ -2155,87 +2156,83 @@
                                                         <DataGridTextColumn Width="2*" Binding="{Binding Path=MatQty}" IsReadOnly="True" Header="Mat_Qty" />
                                                     </DataGrid.Columns>
                                                 </DataGrid>
-                                                <!--<ListView x:Name="ProjectWorkOrderList" Background="#E8E8E8">
-                                                    <ListView.View>
-                                                        <GridView>
-                                                            <GridView.ColumnHeaderContainerStyle>
-                                                                <Style TargetType="{x:Type GridViewColumnHeader}">
-                                                                    <Setter Property="Background" Value="#E8E8E8"/>
-                                                                    <Setter Property="HorizontalAlignment" Value="Left" />
-                                                                </Style>
-                                                            </GridView.ColumnHeaderContainerStyle>
-                                                            <GridViewColumn Width="120" DisplayMemberBinding="{Binding SovAcronym}">
-                                                                <GridViewColumn.Header>
-                                                                    <GridViewColumnHeader Tag="Name">SOV</GridViewColumnHeader>
-                                                                </GridViewColumn.Header>
-                                                            </GridViewColumn>
-                                                            <GridViewColumn Width="120" DisplayMemberBinding="{Binding MatName}">
-                                                                <GridViewColumn.Header>
-                                                                    <GridViewColumnHeader Tag="Age">Material</GridViewColumnHeader>
-                                                                </GridViewColumn.Header>
-                                                            </GridViewColumn>
-                                                            <GridViewColumn Width="120" DisplayMemberBinding="{Binding ManufName}">
-                                                                <GridViewColumn.Header>
-                                                                    <GridViewColumnHeader Tag="Gender">Manufacturer</GridViewColumnHeader>
-                                                                </GridViewColumn.Header>
-                                                            </GridViewColumn>
-                                                            <GridViewColumn Width="80" DisplayMemberBinding="{Binding Stock}">
-                                                                <GridViewColumn.Header>
-                                                                    <GridViewColumnHeader Tag="Gender">Stock?</GridViewColumnHeader>
-                                                                </GridViewColumn.Header>
-                                                            </GridViewColumn>
-                                                            <GridViewColumn Width="100" DisplayMemberBinding="{Binding MatlReqd}">
-                                                                <GridViewColumn.Header>
-                                                                    <GridViewColumnHeader Tag="Gender">Matl Reqd</GridViewColumnHeader>
-                                                                </GridViewColumn.Header>
-                                                            </GridViewColumn>
-                                                            <GridViewColumn Width="100" DisplayMemberBinding="{Binding QtyReqd}">
-                                                                <GridViewColumn.Header>
-                                                                    <GridViewColumnHeader Tag="Gender">Qty Reqd</GridViewColumnHeader>
-                                                                </GridViewColumn.Header>
-                                                            </GridViewColumn>
-                                                            <GridViewColumn Width="100" DisplayMemberBinding="{Binding QtyOrd}">
-                                                                <GridViewColumn.Header>
-                                                                    <GridViewColumnHeader Tag="Gender">Qty Ord</GridViewColumnHeader>
-                                                                </GridViewColumn.Header>
-                                                            </GridViewColumn>
-                                                            <GridViewColumn Width="80" DisplayMemberBinding="{Binding QtyRecvd}">
-                                                                <GridViewColumn.Header>
-                                                                    <GridViewColumnHeader Tag="Gender">Qty Recvd</GridViewColumnHeader>
-                                                                </GridViewColumn.Header>
-                                                            </GridViewColumn>
-                                                            <GridViewColumn Width="100" DisplayMemberBinding="{Binding MatQty}">
-                                                                <GridViewColumn.Header>
-                                                                    <GridViewColumnHeader Tag="Gender">Mat_Qty</GridViewColumnHeader>
-                                                                </GridViewColumn.Header>
-                                                            </GridViewColumn>
-                                                        </GridView>
-                                                    </ListView.View>
-                                                </ListView>-->
                                             </Grid>
                                             <Grid Grid.Row="1" Margin="0,10,0,0">
                                                 <Grid.RowDefinitions>
                                                     <RowDefinition Height="Auto" />
-                                                    <RowDefinition Height="Auto" />
                                                     <RowDefinition Height="*" />
                                                 </Grid.RowDefinitions>
-                                                <Label Content="WO Materials:" HorizontalAlignment="Left" />
-                                                <Grid Grid.Row="1" Background="#BD623D" Height="30">
-                                                    <Grid.ColumnDefinitions>
-                                                        <ColumnDefinition Width="2*"/>
-                                                        <ColumnDefinition Width="3*"/>
-                                                        <ColumnDefinition Width="4*"/>
-                                                        <ColumnDefinition Width="2*"/>
-                                                        <ColumnDefinition Width="3*"/>
-                                                        <ColumnDefinition Width="2*"/>
-                                                    </Grid.ColumnDefinitions>
-                                                    <Label Content="SOV" Foreground="white" HorizontalAlignment="Center" />
-                                                    <Label Grid.Column="1" Content="Material" Foreground="white" HorizontalAlignment="Center" />
-                                                    <Label Grid.Column="2" Content="Manufacturer" Foreground="white" HorizontalAlignment="Center" />
-                                                    <Label Grid.Column="3" Content="Qty" Foreground="white" HorizontalAlignment="Center" />
-                                                    <Label Grid.Column="4" Content="Charge Order #" Foreground="white" HorizontalAlignment="Center" />
-                                                    <Label Grid.Column="5" Content="Ship Date" Foreground="white" HorizontalAlignment="Center" />
-                                                </Grid>
+                                                <TextBlock Text="WO Materials:" HorizontalAlignment="Left" />
+                                                <DataGrid x:Name="WOMat_DataGird" Grid.Row="1" ItemsSource="{Binding FetchWorkOrderMaterials, Mode=TwoWay}" GridLinesVisibility="None" AutoGenerateColumns="False" HeadersVisibility="Column" BorderThickness="0" Background="White" CanUserAddRows="False" ContextMenu="{StaticResource SovMatContextMenu}" RowStyle="{StaticResource SovMatRowStyle}" AlternatingRowBackground="LightGray">
+                                                    <DataGrid.Resources>
+                                                        <Style TargetType="DataGridColumnHeader" BasedOn="{StaticResource GridColumnHeaderBase}">
+                                                            <Setter Property="Background" Value="#BD623D" />
+                                                        </Style>
+                                                        <Style TargetType="TextBox">
+                                                            <Setter Property="BorderThickness" Value="0,0,0,1" />
+                                                        </Style>
+                                                        <Style TargetType="ComboBox">
+                                                            <Setter Property="BorderThickness" Value="0,0,0,1" />
+                                                            <Setter Property="IsEditable" Value="True" />
+                                                        </Style>
+                                                    </DataGrid.Resources>
+                                                    <DataGrid.Columns>
+                                                        <DataGridTemplateColumn Header="SOV" Width="2*">
+                                                            <DataGridTemplateColumn.CellTemplate>
+                                                                <DataTemplate>
+                                                                    <TextBlock Text="{Binding SovAcronymName, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+                                                                </DataTemplate>
+                                                            </DataGridTemplateColumn.CellTemplate>
+                                                        </DataGridTemplateColumn>
+                                                        <DataGridTemplateColumn Header="Material" Width="4*">
+                                                            <DataGridTemplateColumn.CellTemplate>
+                                                                <DataTemplate>
+                                                                    <TextBlock Text="{Binding MatName, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+                                                                </DataTemplate>
+                                                            </DataGridTemplateColumn.CellTemplate>
+                                                        </DataGridTemplateColumn>
+                                                        <DataGridTemplateColumn IsReadOnly="False" Width="4*">
+                                                            <DataGridTemplateColumn.Header>
+                                                                <TextBlock Text="Manufacturer" TextWrapping="Wrap" />
+                                                            </DataGridTemplateColumn.Header>
+                                                            <DataGridTemplateColumn.CellTemplate>
+                                                                <DataTemplate>
+                                                                    <TextBlock Text="{Binding ManufName, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+                                                                </DataTemplate>
+                                                            </DataGridTemplateColumn.CellTemplate>
+                                                        </DataGridTemplateColumn>
+                                                        <DataGridTemplateColumn IsReadOnly="False" Width="1*">
+                                                            <DataGridTemplateColumn.Header>
+                                                                <TextBlock Text="Qty" TextWrapping="Wrap" />
+                                                            </DataGridTemplateColumn.Header>
+                                                            <DataGridTemplateColumn.CellTemplate>
+                                                                <DataTemplate>
+                                                                    <TextBlock Text="{Binding MatQty, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+                                                                </DataTemplate>
+                                                            </DataGridTemplateColumn.CellTemplate>
+                                                        </DataGridTemplateColumn>
+                                                        <DataGridTemplateColumn IsReadOnly="False" Width="2*">
+                                                            <DataGridTemplateColumn.Header>
+                                                                <TextBlock Text="Change Order #" TextWrapping="Wrap" />
+                                                            </DataGridTemplateColumn.Header>
+                                                            <DataGridTemplateColumn.CellTemplate>
+                                                                <DataTemplate>
+                                                                    <TextBlock Text="{Binding CoItemNo, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" PreviewTextInput="ValidateNumber" />
+                                                                </DataTemplate>
+                                                            </DataGridTemplateColumn.CellTemplate>
+                                                        </DataGridTemplateColumn>
+                                                        <DataGridTemplateColumn IsReadOnly="False" Width="4*">
+                                                            <DataGridTemplateColumn.Header>
+                                                                <TextBlock Text="Ship Date" TextWrapping="Wrap" />
+                                                            </DataGridTemplateColumn.Header>
+                                                            <DataGridTemplateColumn.CellTemplate>
+                                                                <DataTemplate>
+                                                                    <TextBlock Text="{Binding ShipDate, Mode=TwoWay, Converter={StaticResource DateTimeConverter}}" />
+                                                                </DataTemplate>
+                                                            </DataGridTemplateColumn.CellTemplate>
+                                                        </DataGridTemplateColumn>
+                                                    </DataGrid.Columns>
+                                                </DataGrid>
                                             </Grid>
                                         </Grid>
                                     </TabItem>
@@ -2246,11 +2243,12 @@
                                                 <RowDefinition Height="1*" />
                                             </Grid.RowDefinitions>
                                             <Grid>
-                                                <DataGrid x:Name="ProjectLaborList" GridLinesVisibility="None" ItemsSource="{Binding ProjectLabors, Mode=TwoWay}" SelectedValuePath="ProjMatID" AutoGenerateColumns="False" CanUserAddRows="False" Background="LightGray" HeadersVisibility="Column">
+                                                <DataGrid x:Name="ProjectLaborList" GridLinesVisibility="None" ItemsSource="{Binding ProjectLabors, Mode=TwoWay}" SelectedValuePath="ProjLabID" AutoGenerateColumns="False" CanUserAddRows="False" Background="LightGray" HeadersVisibility="Column">
                                                     <DataGrid.Resources>
                                                         <Style TargetType="DataGridRow">
                                                             <Setter Property="Height" Value="15" />
                                                             <Setter Property="BorderThickness" Value="0" />
+                                                            <EventSetter Event="MouseDoubleClick" Handler="WorkOrderLab_DoubleClick"/>
                                                         </Style>
                                                         <Style TargetType="{x:Type DataGridCell}">
                                                             <Setter Property="VerticalAlignment" Value="Center" />
@@ -2266,41 +2264,90 @@
                                                         </Style>
                                                     </DataGrid.Resources>
                                                     <DataGrid.Columns>
-                                                        <DataGridTextColumn Width="2*" Binding="{Binding Path=SovAcronym}" IsReadOnly="True" Header="SOV" />
-                                                        <DataGridTextColumn Width="4*" Binding="{Binding Path=Labor}" IsReadOnly="True" Header="Labor" />
+                                                        <DataGridTextColumn Width="2*" Binding="{Binding Path=SovAcronymName}" IsReadOnly="True" Header="SOV" />
+                                                        <DataGridTextColumn Width="4*" Binding="{Binding Path=LaborDesc}" IsReadOnly="True" Header="Labor" />
                                                         <DataGridTextColumn Width="2*" Binding="{Binding Path=QtyReqd}" IsReadOnly="True" Header="Qty Reqd" />
                                                         <DataGridTextColumn Width="2*" Binding="{Binding Path=UnitPrice}" IsReadOnly="True" Header="Unit Price" />
                                                         <DataGridTextColumn Width="2*" Binding="{Binding Path=Total}" IsReadOnly="True" Header="Total" />
-                                                        <DataGridTextColumn Width="1*" Binding="{Binding Path=ChangeOrder}" IsReadOnly="True" Header="CO" />
-                                                        <DataGridTextColumn Width="2*" Binding="{Binding Path=Phase}" IsReadOnly="True" Header="Phase" />
+                                                        <DataGridTextColumn Width="1*" Binding="{Binding Path=CoItemNo, Converter={StaticResource ZeroToEmptyStringConverter}}" IsReadOnly="True" Header="CO" />
+                                                        <DataGridTextColumn Width="2*" Binding="{Binding Path=LaborPhase}" IsReadOnly="True" Header="Phase" />
                                                     </DataGrid.Columns>
                                                 </DataGrid>
                                             </Grid>
                                             <Grid Grid.Row="1" Margin="0,10,0,0">
                                                 <Grid.RowDefinitions>
                                                     <RowDefinition Height="Auto" />
-                                                    <RowDefinition Height="Auto" />
                                                     <RowDefinition Height="*" />
                                                 </Grid.RowDefinitions>
                                                 <Label Content="WO Labor:" HorizontalAlignment="Left" />
-                                                <Grid Grid.Row="1" Background="#7A9F35" Height="30">
-                                                    <Grid.ColumnDefinitions>
-                                                        <ColumnDefinition Width="2*"/>
-                                                        <ColumnDefinition Width="3*"/>
-                                                        <ColumnDefinition Width="4*"/>
-                                                        <ColumnDefinition Width="2*"/>
-                                                        <ColumnDefinition Width="3*"/>
-                                                        <ColumnDefinition Width="2*"/>
-                                                        <ColumnDefinition Width="2*"/>
-                                                    </Grid.ColumnDefinitions>
-                                                    <Label Content="SOV" Foreground="white" HorizontalAlignment="Center" />
-                                                    <Label Grid.Column="1" Content="Labor" Foreground="white" HorizontalAlignment="Center" />
-                                                    <Label Grid.Column="2" Content="Phase" Foreground="white" HorizontalAlignment="Center" />
-                                                    <Label Grid.Column="3" Content="Qty" Foreground="white" HorizontalAlignment="Center" />
-                                                    <Label Grid.Column="4" Content="Unit Price" Foreground="white" HorizontalAlignment="Center" />
-                                                    <Label Grid.Column="5" Content="Total" Foreground="white" HorizontalAlignment="Center" />
-                                                    <Label Grid.Column="6" Content="CO #" Foreground="white" HorizontalAlignment="Center" />
-                                                </Grid>
+                                                <DataGrid x:Name="WoLab_DataGird" Grid.Row="1" ItemsSource="{Binding FetchWorkOrderLabors}" GridLinesVisibility="None" AutoGenerateColumns="False" HeadersVisibility="Column" BorderThickness="0" Background="White" CanUserAddRows="False" AlternatingRowBackground="LightGray">
+                                                    <DataGrid.Resources>
+                                                        <Style TargetType="DataGridColumnHeader" BasedOn="{StaticResource GridColumnHeaderBase}">
+                                                            <Setter Property="Background" Value="#7A9F35" />
+                                                        </Style>
+                                                        <Style TargetType="TextBox">
+                                                            <Setter Property="BorderThickness" Value="0,0,0,1" />
+                                                        </Style>
+                                                        <Style TargetType="ComboBox">
+                                                            <Setter Property="BorderThickness" Value="0,0,0,1" />
+                                                            <Setter Property="IsEditable" Value="True" />
+                                                        </Style>
+                                                    </DataGrid.Resources>
+                                                    <DataGrid.Columns>
+                                                        <DataGridTemplateColumn Header="SOV" Width="3*">
+                                                            <DataGridTemplateColumn.CellTemplate>
+                                                                <DataTemplate>
+                                                                    <TextBlock Text="{Binding SovAcronymName, Mode=TwoWay}" />
+                                                                </DataTemplate>
+                                                            </DataGridTemplateColumn.CellTemplate>
+                                                        </DataGridTemplateColumn>
+                                                        <DataGridTemplateColumn Header="Labor" Width="5*">
+                                                            <DataGridTemplateColumn.CellTemplate>
+                                                                <DataTemplate>
+                                                                    <TextBlock Text="{Binding LabDesc, Mode=TwoWay}" />
+                                                                </DataTemplate>
+                                                            </DataGridTemplateColumn.CellTemplate>
+                                                        </DataGridTemplateColumn>
+                                                        <DataGridTemplateColumn Header="Phase" Width="4*">
+                                                            <DataGridTemplateColumn.CellTemplate>
+                                                                <DataTemplate>
+                                                                    <TextBlock Text="{Binding LabPhase, Mode=TwoWay}" />
+                                                                </DataTemplate>
+                                                            </DataGridTemplateColumn.CellTemplate>
+                                                        </DataGridTemplateColumn>
+                                                        <DataGridTemplateColumn IsReadOnly="False" Width="1*">
+                                                            <DataGridTemplateColumn.Header>
+                                                                <TextBlock Text="Qty" TextWrapping="Wrap" />
+                                                            </DataGridTemplateColumn.Header>
+                                                            <DataGridTemplateColumn.CellTemplate>
+                                                                <DataTemplate>
+                                                                    <TextBox Text="{Binding LabQty, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+                                                                </DataTemplate>
+                                                            </DataGridTemplateColumn.CellTemplate>
+                                                        </DataGridTemplateColumn>
+                                                        <DataGridTemplateColumn Header="Unit Price" Width="2*">
+                                                            <DataGridTemplateColumn.CellTemplate>
+                                                                <DataTemplate>
+                                                                    <TextBlock Text="{Binding UnitPrice, Mode=TwoWay}" />
+                                                                </DataTemplate>
+                                                            </DataGridTemplateColumn.CellTemplate>
+                                                        </DataGridTemplateColumn>
+                                                        <DataGridTemplateColumn Header="Total" Width="2*">
+                                                            <DataGridTemplateColumn.CellTemplate>
+                                                                <DataTemplate>
+                                                                    <TextBlock Text="{Binding Total, Mode=TwoWay}" />
+                                                                </DataTemplate>
+                                                            </DataGridTemplateColumn.CellTemplate>
+                                                        </DataGridTemplateColumn>
+                                                        <DataGridTemplateColumn Header="CO #" Width="2*">
+                                                            <DataGridTemplateColumn.CellTemplate>
+                                                                <DataTemplate>
+                                                                    <TextBlock Text="{Binding CoItemNo, Mode=TwoWay}" />
+                                                                </DataTemplate>
+                                                            </DataGridTemplateColumn.CellTemplate>
+                                                        </DataGridTemplateColumn>
+                                                    </DataGrid.Columns>
+                                                </DataGrid>
                                             </Grid>
                                         </Grid>
                                     </TabItem>

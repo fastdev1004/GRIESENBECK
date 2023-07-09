@@ -10,19 +10,20 @@ namespace WpfApp.Model
     class ProjectLabor:ViewModelBase
     {
         private int _id;
+        private int _laborID;
         private int _projectID;
         private string _sovAcronym;
-        private int _laborID;
-        private double _qtyReqd;
-        private double _unitPrice;
-        private double _total;
-        private int _coItemNo;
+        private int _projLabID;
+        private string _laborDesc;
+        private string _laborPhase;
+        private float _qtyReqd;
+        private float _unitPrice;
+        private float _total;
         private int _coID;
-        private string _phase;
+        private int _coItemNo;
         private bool _complete;
         private int _actionFlag;
         private int _projSovID;
-        private int _projLabID;
         private int _labLineNo;
         private bool _matOnly;
 
@@ -33,6 +34,17 @@ namespace WpfApp.Model
             {
                 if (value == _id) return;
                 _id = value;
+                OnPropertyChanged();
+            }
+        }
+
+        public int LaborID
+        {
+            get => _laborID;
+            set
+            {
+                if (value == _laborID) return;
+                _laborID = value;
                 OnPropertyChanged();
             }
         }
@@ -59,18 +71,40 @@ namespace WpfApp.Model
             }
         }
 
-        public int LaborID
+        public string LaborDesc
         {
-            get => _laborID;
+            get => _laborDesc;
             set
             {
-                if (value == _laborID) return;
-                _laborID = value;
+                if (value == _laborDesc) return;
+                _laborDesc = value;
                 OnPropertyChanged();
             }
         }
 
-        public double QtyReqd
+        public string LaborPhase
+        {
+            get => _laborPhase;
+            set
+            {
+                if (value == _laborPhase) return;
+                _laborPhase = value;
+                OnPropertyChanged();
+            }
+        }
+
+        public int ProjLabID
+        {
+            get => _projLabID;
+            set
+            {
+                if (value == _projLabID) return;
+                _projLabID = value;
+                OnPropertyChanged();
+            }
+        }
+
+        public float QtyReqd
         {
             get => _qtyReqd;
             set
@@ -82,7 +116,7 @@ namespace WpfApp.Model
             }
         }
 
-        public double UnitPrice
+        public float UnitPrice
         {
             get => _unitPrice;
             set
@@ -94,13 +128,24 @@ namespace WpfApp.Model
             }
         }
 
-        public double Total
+        public float Total
         {
             get => _qtyReqd * _unitPrice;
             set
             {
                 if (value == _qtyReqd * _unitPrice) return;
                 _total = value;
+                OnPropertyChanged();
+            }
+        }
+
+        public int CoID
+        {
+            get => _coID;
+            set
+            {
+                if (value == _coID) return;
+                _coID = value;
                 OnPropertyChanged();
             }
         }
@@ -112,17 +157,6 @@ namespace WpfApp.Model
             {
                 if (value == _coItemNo) return;
                 _coItemNo = value;
-                OnPropertyChanged();
-            }
-        }
-
-        public string Phase
-        {
-            get => _phase;
-            set
-            {
-                if (value == _phase) return;
-                _phase = value;
                 OnPropertyChanged();
             }
         }
@@ -160,17 +194,6 @@ namespace WpfApp.Model
             }
         }
 
-        public int ProjLabID
-        {
-            get => _projLabID;
-            set
-            {
-                if (value == _projLabID) return;
-                _projLabID = value;
-                OnPropertyChanged();
-            }
-        }
-
         public int ProjSovID
         {
             get => _projSovID;
@@ -178,17 +201,6 @@ namespace WpfApp.Model
             {
                 if (value == _projSovID) return;
                 _projSovID = value;
-                OnPropertyChanged();
-            }
-        }
-
-        public int CoID
-        {
-            get => _coID;
-            set
-            {
-                if (value == _coID) return;
-                _coID = value;
                 OnPropertyChanged();
             }
         }

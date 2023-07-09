@@ -411,14 +411,13 @@ namespace WpfApp
             int selectedIndex = ProjectNote_DataGrid.SelectedIndex;
             if (selectedIndex != -1)
             {
+                Note note = ProjectVM.ProjectNotes.Where(item => item.FetchID == ProjectVM.FetchProjectNotes[selectedIndex].FetchID).First();
                 if (ProjectVM.FetchProjectNotes[selectedIndex].ActionFlag == 1)
                 {
-                    Note note = ProjectVM.ProjectNotes.Where(item => item.FetchID == ProjectVM.FetchProjectNotes[selectedIndex].FetchID).First();
                     note.ActionFlag = 4;
                 }
                 else
                 {
-                    Note note = ProjectVM.ProjectNotes.Where(item => item.FetchID == ProjectVM.FetchProjectNotes[selectedIndex].FetchID).First();
                     note.ActionFlag = 3;
                 }
                 ProjectVM.FetchProjectNotes = new ObservableCollection<Note>();
@@ -583,14 +582,13 @@ namespace WpfApp
             int selectedIndex = Sov_DataGird.SelectedIndex;
             if (selectedIndex != -1)
             {
+                SovAcronym sovAcronym = ProjectVM.SovAcronyms.Where(acronym => acronym.ID == ProjectVM.FetchSovAcronyms[selectedIndex].ID).First();
                 if (ProjectVM.FetchSovAcronyms[selectedIndex].ActionFlag == 1)
                 {
-                    SovAcronym sovAcronym = ProjectVM.SovAcronyms.Where(acronym => acronym.ID == ProjectVM.FetchSovAcronyms[selectedIndex].ID).First();
                     sovAcronym.ActionFlag = 4;
                 }
                 else
                 {
-                    SovAcronym sovAcronym = ProjectVM.SovAcronyms.Where(acronym => acronym.ID == ProjectVM.FetchSovAcronyms[selectedIndex].ID).First();
                     sovAcronym.ActionFlag = 3;
                 }
                 ProjectVM.FetchSovAcronyms = new ObservableCollection<SovAcronym>();
@@ -707,13 +705,12 @@ namespace WpfApp
             int selectedIndex = SovMat_DataGird.SelectedIndex;
             if (selectedIndex != -1)
             {
+                SovMaterial sovMaterial = ProjectVM.SovMaterials.Where(material => material.FetchID == ProjectVM.FetchSovMaterials[selectedIndex].FetchID).First();
                 if (ProjectVM.FetchSovMaterials[selectedIndex].ActionFlag == 1)
                 {
-                    SovMaterial sovMaterial = ProjectVM.SovMaterials.Where(material => material.FetchID == ProjectVM.FetchSovMaterials[selectedIndex].FetchID).First();
                     sovMaterial.ActionFlag = 4;
                 } else
                 {
-                    SovMaterial sovMaterial = ProjectVM.SovMaterials.Where(material => material.FetchID == ProjectVM.FetchSovMaterials[selectedIndex].FetchID).First();
                     sovMaterial.ActionFlag = 3;
                 }
                 ProjectVM.FetchSovMaterials = new ObservableCollection<SovMaterial>();
@@ -812,14 +809,13 @@ namespace WpfApp
             int selectedIndex = SovLab_DataGird.SelectedIndex;
             if (selectedIndex != -1)
             {
+                ProjectLabor sovLabor = ProjectVM.ProjectLabors.Where(labor => labor.ID == ProjectVM.FetchSovLabors[selectedIndex].ID).First();
                 if (ProjectVM.FetchSovLabors[selectedIndex].ActionFlag == 1)
                 {
-                    ProjectLabor sovLabor = ProjectVM.ProjectLabors.Where(labor => labor.ID == ProjectVM.FetchSovLabors[selectedIndex].ID).First();
                     sovLabor.ActionFlag = 4;
                 }
                 else
                 {
-                    ProjectLabor sovLabor = ProjectVM.ProjectLabors.Where(labor => labor.ID == ProjectVM.FetchSovLabors[selectedIndex].ID).First();
                     sovLabor.ActionFlag = 3;
                 }
                 ProjectVM.FetchSovLabors = new ObservableCollection<ProjectLabor>();
@@ -1147,7 +1143,63 @@ namespace WpfApp
 
         private void RemoveWorkNoteItem(object sender, RoutedEventArgs e)
         {
+            int selectedIndex = WorkOrderNote_DataGrid.SelectedIndex;
+            if (selectedIndex != -1)
+            {
+                Note note = ProjectVM.FetchWorkOrderNotes.Where(item => item.FetchID == ProjectVM.FetchWorkOrderNotes[selectedIndex].FetchID).First();
+                if (ProjectVM.FetchWorkOrderNotes[selectedIndex].ActionFlag == 1)
+                {
+                    note.ActionFlag = 4;
+                }
+                else
+                {
+                    note.ActionFlag = 3;
+                }
+                ProjectVM.FetchWorkOrderNotes = new ObservableCollection<Note>();
+                foreach (Note item in ProjectVM.WorkOrderNotes)
+                {
+                    if (item.ActionFlag != 3 && item.ActionFlag != 4)
+                    {
+                        ProjectVM.FetchWorkOrderNotes.Add(item);
+                    }
+                }
+            }
+        }
 
+        private void WorkOrderMat_DoubleClick(object sender, MouseButtonEventArgs e)
+        {
+            var row = (DataGridRow)sender;
+            ProjectMaterial projMat = row.DataContext as ProjectMaterial;
+
+            WorkOrderMaterial workOrderMat = new WorkOrderMaterial { WodID = 0, WoID = ProjectVM.WorkOrderID, ProjMsID = projMat.ProjMsID, SovAcronymName = projMat.SovAcronym, MatName = projMat.MatName, ManufName = projMat.ManufName, MatQty = 0, CoItemNo = projMat.CoItemNo, ShipDate = projMat.DateShipped, ActionFlag = 1 };
+
+            ProjectVM.WorkOrderMaterials.Add(workOrderMat);
+            ProjectVM.FetchWorkOrderMaterials = new ObservableCollection<WorkOrderMaterial>();
+            foreach (WorkOrderMaterial item in ProjectVM.WorkOrderMaterials)
+            {
+                if (item.ActionFlag != 3 && item.ActionFlag != 4)
+                {
+                    ProjectVM.FetchWorkOrderMaterials.Add(item);
+                }
+            }
+        }
+
+        private void WorkOrderLab_DoubleClick(object sender, MouseButtonEventArgs e)
+        {
+            var row = (DataGridRow)sender;
+            ProjectLabor projLab = row.DataContext as ProjectLabor;
+
+            WorkOrderLabor workOrderLab = new WorkOrderLabor { WodID = 0, WoID = ProjectVM.WorkOrderID, ProjLabID = projLab.ProjLabID, CoItemNo = projLab.CoItemNo, SovAcronymName = projLab.SovAcronymName, LabDesc = projLab.LaborDesc, LabPhase = projLab.LaborPhase, LabQty = projLab.QtyReqd, UnitPrice = projLab.UnitPrice, ActionFlag = 1 };
+
+            ProjectVM.WorkOrderLabors.Add(workOrderLab);
+            ProjectVM.FetchWorkOrderLabors = new ObservableCollection<WorkOrderLabor>();
+            foreach (WorkOrderLabor item in ProjectVM.WorkOrderLabors)
+            {
+                if (item.ActionFlag != 3 && item.ActionFlag != 4)
+                {
+                    ProjectVM.FetchWorkOrderLabors.Add(item);
+                }
+            }
         }
     }
 }

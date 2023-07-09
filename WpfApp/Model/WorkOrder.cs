@@ -7,8 +7,9 @@ using WpfApp.ViewModel;
 
 namespace WpfApp.Model
 {
-    class WorkOrder:ViewModelBase
+    class WorkOrder : ViewModelBase
     {
+        private int _wodID;
         private int _woID;
         private int _projectID;
         private int _woNumber;
@@ -19,6 +20,18 @@ namespace WpfApp.Model
         private DateTime _dateCompleted;
         private DateTime _schedStartDate;
         private DateTime _schedComplDate;
+        private bool _complete;
+
+        public int WodID
+        {
+            get => _wodID;
+            set
+            {
+                if (value == _wodID) return;
+                _wodID = value;
+                OnPropertyChanged();
+            }
+        }
 
         public int WoID
         {
@@ -126,6 +139,17 @@ namespace WpfApp.Model
             {
                 if (value == _dateCompleted) return;
                 _dateCompleted = value;
+                OnPropertyChanged();
+            }
+        }
+
+        public bool Complete
+        {
+            get => _complete;
+            set
+            {
+                if (value == _complete) return;
+                _complete = value;
                 OnPropertyChanged();
             }
         }

@@ -151,16 +151,16 @@ namespace WpfApp.ViewModel
             }
         }
 
-        private ObservableCollection<ProjectWorkOrder> _projectWorkOrder;
+        private ObservableCollection<ProjectMaterial> _projectMaterial;
 
-        public ObservableCollection<ProjectWorkOrder> ProjectWorkOrders
+        public ObservableCollection<ProjectMaterial> ProjectMaterials
         {
-            get { return _projectWorkOrder; }
+            get { return _projectMaterial; }
             set
             {
-                if (_projectWorkOrder != value)
+                if (_projectMaterial != value)
                 {
-                    _projectWorkOrder = value;
+                    _projectMaterial = value;
                     OnPropertyChanged();
                 }
             }
@@ -377,7 +377,7 @@ namespace WpfApp.ViewModel
             ds = new DataSet();
             sda.Fill(ds);
 
-            ObservableCollection<ProjectWorkOrder> sb_projectWorkOrder = new ObservableCollection<ProjectWorkOrder>();
+            ObservableCollection<ProjectMaterial> sb_projectWorkOrder = new ObservableCollection<ProjectMaterial>();
             foreach (DataRow row in ds.Tables[0].Rows)
             {
                 int _projectID = 0;
@@ -412,7 +412,7 @@ namespace WpfApp.ViewModel
                 if (!row.IsNull("Mat_Qty"))
                     _matQty = int.Parse(row["Mat_Qty"].ToString());
 
-                sb_projectWorkOrder.Add(new ProjectWorkOrder
+                sb_projectWorkOrder.Add(new ProjectMaterial
                 {
                     ProjectID = _projectID,
                     SovAcronym = _sovAcronym,
@@ -426,7 +426,7 @@ namespace WpfApp.ViewModel
                     MatQty = _matQty
                 });
             }
-            ProjectWorkOrders = sb_projectWorkOrder;
+            ProjectMaterials = sb_projectWorkOrder;
 
             // Project Labor List
             sqlquery = "SELECT CO_ItemNo, tblLab.* FROM tblProjectChangeOrders RIGHT JOIN (SELECT tblProjectSOV.SOV_Acronym, tblProjectSOV.CO_ID, tblLab.Labor_Desc, tblLab.Qty_Reqd, tblLab.UnitPrice, tblLab.Lab_Phase FROM tblProjectSOV RIGHT JOIN ( SELECT tblLabor.Labor_Desc, tblLab.*  FROM tblLabor RIGHT JOIN ( SELECT * FROM tblProjectLabor WHERE Project_ID = " + ProjectID.ToString() + ") AS tblLab ON tblLabor.Labor_ID = tblLab.Labor_ID) AS tblLab ON tblProjectSOV.ProjSOV_ID = tblLab.ProjSOV_ID) AS tblLab ON tblProjectChangeOrders.CO_ID = tblLab.CO_ID ORDER BY tblLab.SOV_Acronym";
@@ -442,7 +442,7 @@ namespace WpfApp.ViewModel
                 string _sovAcronym = "";
                 int _laborID = 0;
                 int _qtyReqd = 0;
-                double _unitPrice = 0;
+                float _unitPrice = 0;
                 //int    = 0;
                 int _changeOrder = 0;
                 string _phase = "";
@@ -453,7 +453,7 @@ namespace WpfApp.ViewModel
                 if (!row.IsNull("Qty_Reqd"))
                     _qtyReqd = int.Parse(row["Qty_Reqd"].ToString());
                 if (!row.IsNull("UnitPrice"))
-                    _unitPrice = row.Field<double>("UnitPrice");
+                    _unitPrice = row.Field<float>("UnitPrice");
                 if (!row.IsNull("CO_ItemNo"))
                     _changeOrder = int.Parse(row["CO_ItemNo"].ToString());
                 if (!row.IsNull("Lab_Phase"))
@@ -466,7 +466,7 @@ namespace WpfApp.ViewModel
                     QtyReqd = _qtyReqd,
                     UnitPrice = _unitPrice,
                     CoItemNo = _changeOrder,
-                    Phase = _phase
+                    LaborPhase = _phase
                 });
             }
             ProjectLabors = sb_projectLabor;

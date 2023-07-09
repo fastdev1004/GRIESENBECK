@@ -7,8 +7,10 @@ using WpfApp.ViewModel;
 
 namespace WpfApp.Model
 {
-    class ProjectWorkOrder:ViewModelBase
+    class ProjectMaterial : ViewModelBase
     {
+        private int _projMsID;
+        private int _woID;
         private int _projectID;
         private string _sovAcronym;
         private string _manufName;
@@ -19,6 +21,30 @@ namespace WpfApp.Model
         private int _qtyOrd;
         private int _qtyRecvd;
         private int _matQty;
+        private int _coItemNo;
+        private DateTime _dateShipped;
+
+        public int ProjMsID
+        {
+            get => _projMsID;
+            set
+            {
+                if (value == _projMsID) return;
+                _projMsID = value;
+                OnPropertyChanged();
+            }
+        }
+
+        public int WoID
+        {
+            get => _woID;
+            set
+            {
+                if (value == _woID) return;
+                _woID = value;
+                OnPropertyChanged();
+            }
+        }
 
         public int ProjectID
         {
@@ -126,6 +152,28 @@ namespace WpfApp.Model
             {
                 if (value == _matQty) return;
                 _matQty = value;
+                OnPropertyChanged();
+            }
+        }
+
+        public int CoItemNo
+        {
+            get => _coItemNo;
+            set
+            {
+                if (value == _coItemNo) return;
+                _coItemNo = value;
+                OnPropertyChanged();
+            }
+        }
+
+        public DateTime DateShipped
+        {
+            get => _dateShipped;
+            set
+            {
+                if (value == _dateShipped) return;
+                _dateShipped = value;
                 OnPropertyChanged();
             }
         }
