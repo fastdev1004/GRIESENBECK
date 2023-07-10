@@ -1717,7 +1717,7 @@ namespace WpfApp.ViewModel
             }
             TrackShipRecvs = st_TrackShipRecv;
 
-            // WorkOrder Project Material List
+            // Project Material List
             sqlquery = "SELECT tblProjectChangeOrders.CO_ItemNo, tblProjCO.* FROM tblProjectChangeOrders RIGHT JOIN (SELECT tblManufacturers.Manuf_Name, tblProjManuf.* FROM tblManufacturers RIGHT JOIN(SELECT tblProjectSOV.CO_ID, tblProjectSOV.SOV_Acronym, tblProjSOV.* FROM tblProjectSOV INNER JOIN(SELECT tblProjMat.Material_Desc, tblProjMat.Qty_Reqd, tblProjMat.ProjSOV_ID, tblProjMatTrackShip.* FROM(SELECT Material_Desc, Qty_Reqd, ProjSOV_ID, ProjMat_ID FROM tblMaterials INNER JOIN tblProjectMaterials ON tblMaterials.Material_ID = tblProjectMaterials.Material_ID AND tblProjectMaterials.Project_ID = "+ ProjectID.ToString() +") AS tblProjMat INNER JOIN(SELECT tblProjectMaterialsTrack.ProjMat_ID, tblProjectMaterialsTrack.MatReqdDate, tblProjectMaterialsTrack.Manuf_ID, tblProjectMaterialsTrack.TakeFromStock, tblProjectMaterialsTrack.Qty_Ord, tblProjectMaterialsShip.ProjMS_ID, tblProjectMaterialsShip.Date_Shipped, tblProjectMaterialsShip.Qty_Recvd FROM tblProjectMaterialsShip INNER JOIN tblProjectMaterialsTrack ON tblProjectMaterialsShip.ProjMT_ID = tblProjectMaterialsTrack.ProjMT_ID) AS tblProjMatTrackShip ON tblProjMatTrackShip.ProjMat_ID = tblProjMat.ProjMat_ID) AS tblProjSOV ON tblProjectSOV.ProjSOV_ID = tblProjSOV.ProjSOV_ID) AS tblProjManuf ON tblManufacturers.Manuf_ID = tblProjManuf.Manuf_ID) AS tblProjCO ON tblProjCO.CO_ID = tblProjectChangeOrders.CO_ID";
 
             cmd = dbConnection.RunQuryNoParameters(sqlquery);
@@ -3861,7 +3861,7 @@ namespace WpfApp.ViewModel
             WorkOrderNotes = st_workOrderNotes;
 
             // Work Order Material
-            sqlquery = "SELECT tblProjectChangeOrders.CO_ItemNo, tblProjCO.* FROM tblProjectChangeOrders RIGHT JOIN (SELECT tblManufacturers.Manuf_Name, tblProjManuf.* FROM tblManufacturers INNER JOIN(SELECT Material_Desc, tblProjMat.* FROM tblMaterials INNER JOIN(SELECT CO_ID, SOV_Acronym, tblProjMat.* FROM tblProjectSOV INNER JOIN(SELECT tblProjectMaterials.ProjSOV_ID, tblProjectMaterials.Material_ID, tblProjMat.* FROM tblProjectMaterials INNER JOIN(SELECT tblMatShip.*, tblProjectMaterialsTrack.Manuf_ID, tblProjectMaterialsTrack.ProjMat_ID FROM tblProjectMaterialsTrack INNER JOIN(SELECT tblProjectMaterialsShip.ProjMS_ID, tblProjectMaterialsShip.ProjMT_ID, tblProjectMaterialsShip.SchedShipDate, WOD_ID, WO_ID, Mat_Qty FROM tblProjectMaterialsShip INNER JOIN tblWorkOrdersMat ON tblProjectMaterialsShip.ProjMS_ID = tblWorkOrdersMat.ProjMS_ID AND tblWorkOrdersMat.WO_ID = "+ WorkOrderID +") AS tblMatShip ON tblMatShip.ProjMT_ID = tblProjectMaterialsTrack.ProjMT_ID) AS tblProjMat ON tblProjMat.ProjMat_ID = tblProjectMaterials.ProjMat_ID) AS tblProjMat ON tblProjMat.ProjSOV_ID = tblProjectSOV.ProjSOV_ID) AS tblProjMat ON tblProjMat.Manuf_ID = tblMaterials.Material_ID) AS tblProjManuf ON tblProjManuf.Manuf_ID = tblManufacturers.Manuf_ID) AS tblProjCO ON tblProjCO.CO_ID = tblProjectChangeOrders.CO_ID";
+            sqlquery = "SELECT tblProjectChangeOrders.CO_ItemNo, tblProjCO.* FROM tblProjectChangeOrders RIGHT JOIN (SELECT tblManufacturers.Manuf_Name, tblProjManuf.* FROM tblManufacturers INNER JOIN(SELECT Material_Desc, tblProjMat.* FROM tblMaterials INNER JOIN(SELECT CO_ID, SOV_Acronym, tblProjMat.* FROM tblProjectSOV INNER JOIN(SELECT tblProjectMaterials.ProjSOV_ID, tblProjectMaterials.Material_ID, tblProjectMaterials.Qty_Reqd, tblProjMat.* FROM tblProjectMaterials INNER JOIN(SELECT tblMatShip.*, tblProjectMaterialsTrack.Manuf_ID, tblProjectMaterialsTrack.ProjMat_ID, tblProjectMaterialsTrack.Qty_Ord FROM tblProjectMaterialsTrack INNER JOIN(SELECT tblProjectMaterialsShip.ProjMS_ID, tblProjectMaterialsShip.ProjMT_ID, tblProjectMaterialsShip.SchedShipDate, tblProjectMaterialsShip.Qty_Recvd, WOD_ID, WO_ID, Mat_Qty FROM tblProjectMaterialsShip INNER JOIN tblWorkOrdersMat ON tblProjectMaterialsShip.ProjMS_ID = tblWorkOrdersMat.ProjMS_ID AND tblWorkOrdersMat.WO_ID = "+ WorkOrderID +") AS tblMatShip ON tblMatShip.ProjMT_ID = tblProjectMaterialsTrack.ProjMT_ID) AS tblProjMat ON tblProjMat.ProjMat_ID = tblProjectMaterials.ProjMat_ID) AS tblProjMat ON tblProjMat.ProjSOV_ID = tblProjectSOV.ProjSOV_ID) AS tblProjMat ON tblProjMat.Manuf_ID = tblMaterials.Material_ID) AS tblProjManuf ON tblProjManuf.Manuf_ID = tblManufacturers.Manuf_ID) AS tblProjCO ON tblProjCO.CO_ID = tblProjectChangeOrders.CO_ID";
             cmd = dbConnection.RunQuryNoParameters(sqlquery);
             sda = new SqlDataAdapter(cmd);
             ds = new DataSet();
@@ -3877,6 +3877,7 @@ namespace WpfApp.ViewModel
                 string matName = "";
                 string manufName = "";
                 float matQty = 0;
+                float totalQty = 0;
                 int coItemNo = 0;
                 DateTime _shipDate = new DateTime();
 
@@ -3896,8 +3897,14 @@ namespace WpfApp.ViewModel
                     coItemNo = int.Parse(row["CO_ItemNo"].ToString());
                 if (!row.IsNull("SchedShipDate"))
                     _shipDate = row.Field<DateTime>("SchedShipDate");
+                if (!row.IsNull("Qty_Recvd"))
+                    totalQty = float.Parse(row["Qty_Recvd"].ToString());
+                if (!row.IsNull("Qty_Ord"))
+                    totalQty = float.Parse(row["Qty_Ord"].ToString());
+                if (!row.IsNull("Qty_Reqd"))
+                    totalQty = float.Parse(row["Qty_Reqd"].ToString());
 
-                st_workOrderMats.Add(new WorkOrderMaterial { WodID = wodID, WoID = woID, SovAcronymName = sovAcronymName, MatName = matName, ManufName = manufName, MatQty = matQty, CoItemNo = coItemNo, ShipDate = _shipDate, FetchID = fetchID });
+                st_workOrderMats.Add(new WorkOrderMaterial { WodID = wodID, WoID = woID, SovAcronymName = sovAcronymName, MatName = matName, ManufName = manufName, MatQty = matQty, TotalQty = totalQty, CoItemNo = coItemNo, ShipDate = _shipDate, FetchID = fetchID });
 
                 fetchID += 1;
             }
@@ -3924,6 +3931,7 @@ namespace WpfApp.ViewModel
                 string labDesc = "";
                 string labPhase = "";
                 float labQty = 0;
+                float totalQty = 0;
                 float unitPrice = 0;
 
                 if (!row.IsNull("WOD_ID"))
@@ -3940,12 +3948,14 @@ namespace WpfApp.ViewModel
                     labDesc = row["Labor_Desc"].ToString();
                 if (!row.IsNull("Lab_Phase"))
                     labPhase = row["Lab_Phase"].ToString();
+                if (!row.IsNull("Qty_Reqd"))
+                    totalQty = int.Parse(row["Qty_Reqd"].ToString());
                 if (!row.IsNull("Lab_Qty"))
                     labQty = float.Parse(row["Lab_Qty"].ToString());
                 if (!row.IsNull("UnitPrice"))
                     unitPrice = float.Parse(row["UnitPrice"].ToString());
 
-                st_workOrderLabs.Add(new WorkOrderLabor { FetchID = fetchID, WodID = wodID, WoID = woID, SovAcronymName = sovAcronymName, ProjLabID = projLabID, CoItemNo = coItemNo, LabDesc = labDesc, LabPhase = labPhase, LabQty = labQty, UnitPrice = unitPrice, ActionFlag = 0 });
+                st_workOrderLabs.Add(new WorkOrderLabor { FetchID = fetchID, WodID = wodID, WoID = woID, SovAcronymName = sovAcronymName, ProjLabID = projLabID, CoItemNo = coItemNo, LabDesc = labDesc, LabPhase = labPhase, TotalQty = totalQty, LabQty = labQty, UnitPrice = unitPrice, ActionFlag = 0 });
 
                 fetchID += 1;
             }

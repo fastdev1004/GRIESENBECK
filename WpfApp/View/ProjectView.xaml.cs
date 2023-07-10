@@ -1172,7 +1172,7 @@ namespace WpfApp
             int count = ProjectVM.WorkOrderMaterials.Count;
             ProjectMaterial projMat = row.DataContext as ProjectMaterial;
 
-            WorkOrderMaterial workOrderMat = new WorkOrderMaterial { WodID = 0, WoID = ProjectVM.WorkOrderID, ProjMsID = projMat.ProjMsID, SovAcronymName = projMat.SovAcronym, MatName = projMat.MatName, ManufName = projMat.ManufName, MatQty = 0, CoItemNo = projMat.CoItemNo, ShipDate = projMat.DateShipped, ActionFlag = 1, FetchID = count };
+            WorkOrderMaterial workOrderMat = new WorkOrderMaterial { WodID = 0, WoID = ProjectVM.WorkOrderID, ProjMsID = projMat.ProjMsID, SovAcronymName = projMat.SovAcronym, MatName = projMat.MatName, ManufName = projMat.ManufName, MatQty = projMat.MatQty, TotalQty = projMat.MatQty, CoItemNo = projMat.CoItemNo, ShipDate = projMat.DateShipped, ActionFlag = 1, FetchID = count };
 
             ProjectVM.WorkOrderMaterials.Add(workOrderMat);
             ProjectVM.FetchWorkOrderMaterials = new ObservableCollection<WorkOrderMaterial>();
@@ -1191,7 +1191,7 @@ namespace WpfApp
             int count = ProjectVM.WorkOrderLabors.Count;
             ProjectLabor projLab = row.DataContext as ProjectLabor;
 
-            WorkOrderLabor workOrderLab = new WorkOrderLabor { WodID = 0, WoID = ProjectVM.WorkOrderID, ProjLabID = projLab.ProjLabID, CoItemNo = projLab.CoItemNo, SovAcronymName = projLab.SovAcronymName, LabDesc = projLab.LaborDesc, LabPhase = projLab.LaborPhase, LabQty = projLab.QtyReqd, UnitPrice = projLab.UnitPrice, ActionFlag = 1, FetchID = count };
+            WorkOrderLabor workOrderLab = new WorkOrderLabor { WodID = 0, WoID = ProjectVM.WorkOrderID, ProjLabID = projLab.ProjLabID, CoItemNo = projLab.CoItemNo, SovAcronymName = projLab.SovAcronymName, LabDesc = projLab.LaborDesc, LabPhase = projLab.LaborPhase, LabQty = projLab.QtyReqd, TotalQty = projLab.QtyReqd , UnitPrice = projLab.UnitPrice, ActionFlag = 1, FetchID = count };
 
             ProjectVM.WorkOrderLabors.Add(workOrderLab);
             ProjectVM.FetchWorkOrderLabors = new ObservableCollection<WorkOrderLabor>();
@@ -1210,7 +1210,16 @@ namespace WpfApp
             int selectedWoDatagrid = WoLab_DataGird.SelectedIndex;
 
             WorkOrderLabor workOrderLabor = ProjectVM.WorkOrderLabors.Where(item => item.FetchID == ProjectVM.FetchWorkOrderLabors[selectedWoDatagrid].FetchID).First();
-            workOrderLabor.LabQty = float.Parse(textBox.Text);
+
+            float totalQty = workOrderLabor.TotalQty;
+            float qty = float.Parse(textBox.Text);
+            if(qty <= totalQty)
+                workOrderLabor.LabQty = float.Parse(textBox.Text);
+            else
+            {
+                MessageBox.Show("Lab Qty is more than Total Qty");
+                textBox.Text = "1";
+            }
         }
 
         private void MatTextInput(object sender, KeyEventArgs e)
@@ -1220,6 +1229,16 @@ namespace WpfApp
 
             WorkOrderMaterial workOrderMat = ProjectVM.WorkOrderMaterials.Where(item => item.FetchID == ProjectVM.FetchWorkOrderMaterials[selectedWoDatagrid].FetchID).First();
             workOrderMat.MatQty = float.Parse(textBox.Text);
+
+            float totalQty = workOrderMat.TotalQty;
+            float qty = float.Parse(textBox.Text);
+            if (qty <= totalQty)
+                workOrderMat.MatQty = float.Parse(textBox.Text);
+            else
+            {
+                MessageBox.Show("Mat Qty is more than Total Qty");
+                textBox.Text = "1";
+            }
         }
     }
 }

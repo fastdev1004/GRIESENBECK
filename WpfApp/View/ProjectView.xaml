@@ -1934,7 +1934,7 @@
                                     <Label Grid.Column="1" FontStyle="Italic" HorizontalAlignment="Right">(click to select WO)</Label>
                                 </Grid>
                                 <Grid Grid.Row="1">
-                                    <DataGrid x:Name="WOListView" GridLinesVisibility="None" ItemsSource="{Binding WorkOrders, Mode=TwoWay}" SelectedValue="{Binding WorkOrderID, Mode=TwoWay}" SelectedValuePath="WoID" AutoGenerateColumns="False" CanUserAddRows="False" Background="White" HeadersVisibility="Column">
+                                    <DataGrid x:Name="WOListView" GridLinesVisibility="None" ItemsSource="{Binding WorkOrders, Mode=TwoWay}" SelectedValue="{Binding WorkOrderID, Mode=TwoWay}" SelectedValuePath="WoID" AutoGenerateColumns="False" CanUserAddRows="False" Background="White" HeadersVisibility="Column" Validation.ErrorTemplate="{x:Null}">
                                         <DataGrid.Resources>
                                             <Style TargetType="DataGridRow">
                                                 <Setter Property="Height" Value="15" />
@@ -2362,7 +2362,7 @@
                             <ColumnDefinition Width="6*" />
                             <ColumnDefinition Width="4*" />
                         </Grid.ColumnDefinitions>
-                        <DataGrid x:Name="InstallNote_DataGrid" ItemsSource="{Binding FetchInstallationNotes}" GridLinesVisibility="None" AutoGenerateColumns="False" HeadersVisibility="Column" BorderThickness="0" Background="White" CanUserAddRows="False" ContextMenu="{StaticResource InstallNoteContextMenu}" AlternatingRowBackground="LightGray" RowStyle="{StaticResource InstallNoteRowStyle}">
+                        <DataGrid x:Name="InstallNote_DataGrid" ItemsSource="{Binding FetchInstallationNotes}" GridLinesVisibility="None" AutoGenerateColumns="False" HeadersVisibility="Column" BorderThickness="0" Background="White" CanUserAddRows="False" ContextMenu="{StaticResource InstallNoteContextMenu}" RowStyle="{StaticResource InstallNoteRowStyle}">
                             <DataGrid.Resources>
                                 <Style TargetType="DataGridColumnHeader" BasedOn="{StaticResource GridColumnHeaderBase}">
                                     <Setter Property="Background" Value="#4BACC6" />

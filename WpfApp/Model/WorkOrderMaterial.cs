@@ -17,6 +17,7 @@ namespace WpfApp.Model
         private string _matName;
         private string _manufName;
         private float _matQty;
+        private float _totalQty;
         private int _coItemNo;
         private DateTime _shipDate;
         private int _actionFlag;
@@ -105,6 +106,17 @@ namespace WpfApp.Model
             {
                 if (value == _matQty) return;
                 _matQty = value;
+                OnPropertyChanged();
+            }
+        }
+
+        public float TotalQty
+        {
+            get => _totalQty;
+            set
+            {
+                if (value == _totalQty) return;
+                _totalQty = value;
                 OnPropertyChanged();
             }
         }

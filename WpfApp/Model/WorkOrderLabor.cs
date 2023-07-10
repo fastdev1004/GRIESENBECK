@@ -18,6 +18,7 @@ namespace WpfApp.Model
         private string _labDesc;
         private string _labPhase;
         private float _labQty;
+        private float _totalQty;
         private float _unitPrice;
         private float _total;
         private int _actionFlag;
@@ -119,6 +120,17 @@ namespace WpfApp.Model
                 _labQty = value;
                 OnPropertyChanged();
                 OnPropertyChanged(nameof(Total));
+            }
+        }
+
+        public float TotalQty
+        {
+            get => _totalQty;
+            set
+            {
+                if (value == _totalQty) return;
+                _totalQty = value;
+                OnPropertyChanged();
             }
         }
 
