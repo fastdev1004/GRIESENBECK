@@ -2812,7 +2812,7 @@ namespace WpfApp.Utils
         }
 
         // Create Work Orders Mat
-        public int RunQueryToCreateWorkOrdersMat(string query, int woID, int projMsID, double matQty)
+        public int RunQueryToCreateWorkOrdersMat(string query, int woID, int projMsID, float matQty)
         {
             try
             {
@@ -2843,6 +2843,37 @@ namespace WpfApp.Utils
                 connection.Close();
             }
             return insertedID;
+        }
+
+        // Update Work Orders Mat
+        public SqlCommand RunQueryToUpdateWorkOrdersMat(string query, float matQty, int wodID)
+        {
+            try
+            {
+                connection.Open();
+                if (connection != null)
+                {
+                    cmd = connection.CreateCommand();
+                    cmd.CommandType = CommandType.Text;
+                    cmd.CommandText = query;
+
+                    if (wodID != 0)
+                        cmd.Parameters.AddWithValue("@WodID", wodID);
+                    else cmd.Parameters.AddWithValue("@WodID", DBNull.Value);
+                    if (matQty != 0)
+                        cmd.Parameters.AddWithValue("@MatQty", matQty);
+                    else cmd.Parameters.AddWithValue("@MatQty", DBNull.Value);
+
+                    cmd.ExecuteNonQuery();
+                    connection.Close();
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex);
+                connection.Close();
+            }
+            return cmd;
         }
 
         // Create Work Orders Lab
@@ -2877,6 +2908,35 @@ namespace WpfApp.Utils
                 connection.Close();
             }
             return insertedID;
+        }
+
+        // Update Work Orders Lab
+        public SqlCommand RunQueryToUpdateWorkOrdersLab(string query, float labQty, int wodID)
+        {
+            try
+            {
+                connection.Open();
+                if (connection != null)
+                {
+                    cmd = connection.CreateCommand();
+                    cmd.CommandType = CommandType.Text;
+                    cmd.CommandText = query;
+
+                    if (labQty != 0)
+                        cmd.Parameters.AddWithValue("@LabQty", labQty);
+                    else cmd.Parameters.AddWithValue("@LabQty", DBNull.Value);
+                    cmd.Parameters.AddWithValue("@WodID", wodID);
+
+                    cmd.ExecuteNonQuery();
+                    connection.Close();
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex);
+                connection.Close();
+            }
+            return cmd;
         }
 
         public void Open()

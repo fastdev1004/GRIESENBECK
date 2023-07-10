@@ -10,8 +10,6 @@ namespace WpfApp.Model
     class ProjectMaterial : ViewModelBase
     {
         private int _projMsID;
-        private int _woID;
-        private int _projectID;
         private string _sovAcronym;
         private string _manufName;
         private string _matName;
@@ -31,28 +29,6 @@ namespace WpfApp.Model
             {
                 if (value == _projMsID) return;
                 _projMsID = value;
-                OnPropertyChanged();
-            }
-        }
-
-        public int WoID
-        {
-            get => _woID;
-            set
-            {
-                if (value == _woID) return;
-                _woID = value;
-                OnPropertyChanged();
-            }
-        }
-
-        public int ProjectID
-        {
-            get => _projectID;
-            set
-            {
-                if (value == _projectID) return;
-                _projectID = value;
                 OnPropertyChanged();
             }
         }

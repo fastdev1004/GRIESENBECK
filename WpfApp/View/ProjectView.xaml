@@ -2150,9 +2150,9 @@
                                                         <DataGridTextColumn Width="2*" Binding="{Binding Path=ManufName}" IsReadOnly="True" Header="Manufacturer" />
                                                         <DataGridTextColumn Width="2*" Binding="{Binding Path=Stock}" IsReadOnly="True" Header="Stock?" />
                                                         <DataGridTextColumn Width="3*" Binding="{Binding Path=MatlReqd}" IsReadOnly="True" Header="Matl Reqd" />
-                                                        <DataGridTextColumn Width="2*" Binding="{Binding Path=QtyReqd}" IsReadOnly="True" Header="Qty Reqd" />
-                                                        <DataGridTextColumn Width="2*" Binding="{Binding Path=QtyOrd}" IsReadOnly="True" Header="Qty Ord" />
-                                                        <DataGridTextColumn Width="2*" Binding="{Binding Path=QtyRecvd}" IsReadOnly="True" Header="Qty Recvd" />
+                                                        <DataGridTextColumn Width="2*" Binding="{Binding Path=QtyReqd, Converter={StaticResource ZeroToEmptyStringConverter}}" IsReadOnly="True" Header="Qty Reqd" />
+                                                        <DataGridTextColumn Width="2*" Binding="{Binding Path=QtyOrd, Converter={StaticResource ZeroToEmptyStringConverter}}" IsReadOnly="True" Header="Qty Ord" />
+                                                        <DataGridTextColumn Width="2*" Binding="{Binding Path=QtyRecvd, Converter={StaticResource ZeroToEmptyStringConverter}}" IsReadOnly="True" Header="Qty Recvd" />
                                                         <DataGridTextColumn Width="2*" Binding="{Binding Path=MatQty}" IsReadOnly="True" Header="Mat_Qty" />
                                                     </DataGrid.Columns>
                                                 </DataGrid>
@@ -2163,7 +2163,7 @@
                                                     <RowDefinition Height="*" />
                                                 </Grid.RowDefinitions>
                                                 <TextBlock Text="WO Materials:" HorizontalAlignment="Left" />
-                                                <DataGrid x:Name="WOMat_DataGird" Grid.Row="1" ItemsSource="{Binding FetchWorkOrderMaterials, Mode=TwoWay}" GridLinesVisibility="None" AutoGenerateColumns="False" HeadersVisibility="Column" BorderThickness="0" Background="White" CanUserAddRows="False" ContextMenu="{StaticResource SovMatContextMenu}" RowStyle="{StaticResource SovMatRowStyle}" AlternatingRowBackground="LightGray">
+                                                <DataGrid x:Name="WoMat_DataGird" Grid.Row="1" ItemsSource="{Binding FetchWorkOrderMaterials, Mode=TwoWay}" GridLinesVisibility="None" AutoGenerateColumns="False" HeadersVisibility="Column" BorderThickness="0" Background="White" CanUserAddRows="False" AlternatingRowBackground="LightGray">
                                                     <DataGrid.Resources>
                                                         <Style TargetType="DataGridColumnHeader" BasedOn="{StaticResource GridColumnHeaderBase}">
                                                             <Setter Property="Background" Value="#BD623D" />
@@ -2207,7 +2207,7 @@
                                                             </DataGridTemplateColumn.Header>
                                                             <DataGridTemplateColumn.CellTemplate>
                                                                 <DataTemplate>
-                                                                    <TextBlock Text="{Binding MatQty, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+                                                                    <TextBox Text="{Binding MatQty, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" KeyUp="MatTextInput" />
                                                                 </DataTemplate>
                                                             </DataGridTemplateColumn.CellTemplate>
                                                         </DataGridTemplateColumn>
@@ -2217,7 +2217,7 @@
                                                             </DataGridTemplateColumn.Header>
                                                             <DataGridTemplateColumn.CellTemplate>
                                                                 <DataTemplate>
-                                                                    <TextBlock Text="{Binding CoItemNo, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" PreviewTextInput="ValidateNumber" />
+                                                                    <TextBlock Text="{Binding CoItemNo, Mode=TwoWay, Converter={StaticResource ZeroToEmptyStringConverter}}" PreviewTextInput="ValidateNumber"  />
                                                                 </DataTemplate>
                                                             </DataGridTemplateColumn.CellTemplate>
                                                         </DataGridTemplateColumn>
@@ -2321,7 +2321,7 @@
                                                             </DataGridTemplateColumn.Header>
                                                             <DataGridTemplateColumn.CellTemplate>
                                                                 <DataTemplate>
-                                                                    <TextBox Text="{Binding LabQty, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+                                                                    <TextBox Text="{Binding LabQty, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" KeyUp="LabQtyTextInput" />
                                                                 </DataTemplate>
                                                             </DataGridTemplateColumn.CellTemplate>
                                                         </DataGridTemplateColumn>

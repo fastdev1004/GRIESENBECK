@@ -380,7 +380,6 @@ namespace WpfApp.ViewModel
             ObservableCollection<ProjectMaterial> sb_projectWorkOrder = new ObservableCollection<ProjectMaterial>();
             foreach (DataRow row in ds.Tables[0].Rows)
             {
-                int _projectID = 0;
                 string _sovAcronym = "";
                 string _matName = "";
                 string _manufName = "";
@@ -391,8 +390,6 @@ namespace WpfApp.ViewModel
                 int _qtyRecvd = 0;
                 int _matQty = 0;
 
-                if (!row.IsNull("Project_ID"))
-                    _projectID = row.Field<int>("Project_ID");
                 if (!row.IsNull("SOV_Acronym"))
                     _sovAcronym = row["SOV_Acronym"].ToString();
                 if (!row.IsNull("Material_Desc"))
@@ -414,7 +411,6 @@ namespace WpfApp.ViewModel
 
                 sb_projectWorkOrder.Add(new ProjectMaterial
                 {
-                    ProjectID = _projectID,
                     SovAcronym = _sovAcronym,
                     MatName = _matName,
                     ManufName = _manufName,
