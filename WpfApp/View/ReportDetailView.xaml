@@ -13,6 +13,7 @@
         <ResourceDictionary>
             <converter:BoolToVisibleConverter x:Key="BoolToVisibleConverter" />
             <converter:DateTimeToDateConverter x:Key="DateTimeToDateConverter" />
+            <converter:DateTimeConverter x:Key="DateTimeConverter" />
             <ResourceDictionary.MergedDictionaries>
                 <ResourceDictionary Source="../Themes/Generic.xaml" />
             </ResourceDictionary.MergedDictionaries>
@@ -1297,14 +1298,14 @@
                 <RowDefinition Height="Auto" />
             </Grid.RowDefinitions>
             <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="6*" />
-                <ColumnDefinition Width="4*" />
+                <ColumnDefinition Width="8*" />
+                <ColumnDefinition Width="2*" />
             </Grid.ColumnDefinitions>
             <Grid>
                 <TextBlock Style="{StaticResource ReportViewHeader}" Text="Field Measure" />
             </Grid>
             <Grid Grid.Row="1" >
-                <DataGrid ItemsSource="{Binding ReportFieldMeasures, Mode=TwoWay}" GridLinesVisibility="None" AutoGenerateColumns="False" HeadersVisibility="Column" CanUserAddRows="False" BorderThickness="0">
+                <DataGrid x:Name="FieldMeasure_DataGrid" ItemsSource="{Binding ReportFieldMeasures, Mode=TwoWay}" GridLinesVisibility="None" AutoGenerateColumns="False" HeadersVisibility="Column" CanUserAddRows="False" BorderThickness="0">
                     <DataGrid.Resources>
                         <Style TargetType="DataGridColumnHeader" BasedOn="{StaticResource GridColumnHeaderBase}">
                             <Setter Property="Background" Value="#C6D9F1" />
@@ -1353,14 +1354,14 @@
                                                         </WrapPanel>
                                                         <WrapPanel Grid.Column="1">
                                                             <Label Content="Target Date:" />
-                                                            <TextBlock Text="{Binding TargetDate, Mode=TwoWay, Converter={StaticResource DateTimeToDateConverter}}" VerticalAlignment="Center" />
+                                                            <DatePicker x:Name="TargetDate_DP" SelectedDate="{Binding TargetDate, Mode=TwoWay, Converter={StaticResource DateTimeConverter}}" Loaded="FieldMeasureTargetDate_Loaded" />
                                                         </WrapPanel>
                                                         <Grid Grid.Column="2">
                                                             <Button Content="View" VerticalAlignment="Center" Width="40" Click="GoProject" CommandParameter="{Binding ProjectID}" />
                                                         </Grid>
                                                         <WrapPanel Grid.Column="3">
                                                             <Label Content="Completed:" />
-                                                            <TextBlock Text="{Binding DateComplete, Mode=TwoWay, Converter={StaticResource DateTimeToDateConverter}}" VerticalAlignment="Center"/>
+                                                            <TextBlock Text="{Binding DateComplete, Mode=TwoWay, Converter={StaticResource DateTimeToDateConverter}}" VerticalAlignment="Center" />
                                                         </WrapPanel>
                                                     </Grid>
                                                 </Border>
@@ -1401,7 +1402,7 @@
                                                         <ColumnDefinition Width="3*" />
                                                         <ColumnDefinition Width="1*" />
                                                     </Grid.ColumnDefinitions>
-                                                    <TextBox Background="LightBlue" VerticalScrollBarVisibility="Auto" Height="60" Text="{Binding Notes, Mode=TwoWay}" />
+                                                    <TextBox Background="LightBlue" VerticalScrollBarVisibility="Auto" Text="{Binding Notes, Mode=TwoWay}" IsReadOnly="True" TextWrapping="WrapWithOverflow" />
                                                     <Grid Grid.Column="1">
                                                         <Grid.RowDefinitions>
                                                             <RowDefinition Height="Auto" />
@@ -1537,7 +1538,7 @@
                                                             </DataGridTemplateColumn.Header>
                                                             <DataGridTemplateColumn.CellTemplate>
                                                                 <DataTemplate>
-                                                                    <TextBlock Text="{Binding FieldDim, Mode=TwoWay}" />
+                                                                    <TextBlock Text="{Binding FieldDim, Mode=TwoWay, Converter={StaticResource DateTimeConverter}}" />
                                                                 </DataTemplate>
                                                             </DataGridTemplateColumn.CellTemplate>
                                                         </DataGridTemplateColumn>
@@ -1609,7 +1610,7 @@
                 <TextBlock Style="{StaticResource ReportViewHeader}" Text="Jobs by Arch Rep" />
             </Grid>
             <Grid Grid.Row="1" >
-                <DataGrid ItemsSource="{Binding ReportJobArchReps, Mode=TwoWay}" GridLinesVisibility="None" AutoGenerateColumns="False" HeadersVisibility="Column" CanUserAddRows="False" BorderThickness="0">
+                <DataGrid ItemsSource="{Binding ReportJobArchReps}" GridLinesVisibility="None" AutoGenerateColumns="False" HeadersVisibility="Column" CanUserAddRows="False" BorderThickness="0"  VirtualizingPanel.VirtualizationMode="Standard" >
                     <DataGrid.Resources>
                         <Style TargetType="DataGridColumnHeader" BasedOn="{StaticResource GridColumnHeaderBase}">
                             <Setter Property="Background" Value="#C6D9F1" />
@@ -1621,6 +1622,7 @@
                         <Style TargetType="Label">
                             <Setter Property="FontWeight" Value="Bold" />
                             <Setter Property="FontStyle" Value="Italic" />
+                            <Setter Property="VerticalAlignment" Value="Center" />
                         </Style>
                         <Style TargetType="DataGridRow">
                             <Setter Property="Height" Value="Auto" />
@@ -1656,21 +1658,59 @@
                                                                 <ColumnDefinition Width="3*" />
                                                                 <ColumnDefinition Width="2*" />
                                                             </Grid.ColumnDefinitions>
-                                                            <WrapPanel>
-                                                                <TextBlock Text="{Binding ProjectName, Mode=TwoWay}" VerticalAlignment="Center" FontSize="16" FontWeight="Bold" />
-                                                            </WrapPanel>
-                                                            <WrapPanel Grid.Column="1">
+                                                            <Grid>
+                                                                <Grid.Resources>
+                                                                    <Style TargetType="TextBlock">
+                                                                        <Setter Property="FontSize" Value="16" />
+                                                                        <Setter Property="FontWeight" Value="Bold" />
+                                                                        <Setter Property="VerticalAlignment" Value="Center" />
+                                                                    </Style>
+                                                                    <Style TargetType="TextBox">
+                                                                        <Setter Property="FontSize" Value="16" />
+                                                                        <Setter Property="FontWeight" Value="Bold" />
+                                                                    </Style>
+                                                                </Grid.Resources>
+                                                                <Grid.ColumnDefinitions>
+                                                                    <ColumnDefinition Width="Auto" />
+                                                                    <ColumnDefinition Width="*" />
+                                                                </Grid.ColumnDefinitions>
+                                                                <Label Content="" />
+                                                                <TextBlock Grid.Column="1" Text="{Binding ProjectName, Mode=TwoWay}" MouseLeftButtonDown="TextBlock_MouseLeftButtonDown" Tag="ProjectName" />
+                                                            </Grid>
+                                                            <Grid Grid.Column="1">
+                                                                <Grid.ColumnDefinitions>
+                                                                    <ColumnDefinition Width="Auto" />
+                                                                    <ColumnDefinition Width="*" />
+                                                                </Grid.ColumnDefinitions>
                                                                 <Label Content="Target Date:" />
-                                                                <TextBlock Text="{Binding TargetDate, Mode=TwoWay, Converter={StaticResource DateTimeToDateConverter}}" VerticalAlignment="Center" />
-                                                            </WrapPanel>
-                                                            <WrapPanel Grid.Column="2">
+                                                                <DatePicker Grid.Column="1" SelectedDate="{Binding TargetDate, Mode=TwoWay, Converter={StaticResource DateTimeConverter}}" VerticalAlignment="Center" Loaded="JobsTDate_Loaded" Tag="JobArchRep" />
+                                                            </Grid>
+                                                            <Grid Grid.Column="2">
+                                                                <Grid.Resources>
+                                                                    <Style TargetType="TextBlock">
+                                                                        <Setter Property="VerticalAlignment" Value="Center" />
+                                                                    </Style>
+                                                                </Grid.Resources>
+                                                                <Grid.ColumnDefinitions>
+                                                                    <ColumnDefinition Width="Auto" />
+                                                                    <ColumnDefinition Width="*" />
+                                                                </Grid.ColumnDefinitions>
                                                                 <Label Content="Architect:" />
-                                                                <TextBlock Text="{Binding Architect, Mode=TwoWay}" VerticalAlignment="Center" />
-                                                            </WrapPanel>
-                                                            <WrapPanel Grid.Column="3">
+                                                                <TextBlock Grid.Column="1" Text="{Binding Architect, Mode=TwoWay}" MouseLeftButtonDown="TextBlock_MouseLeftButtonDown" Tag="Architect" />
+                                                            </Grid>
+                                                            <Grid Grid.Column="3">
+                                                                <Grid.Resources>
+                                                                    <Style TargetType="TextBlock">
+                                                                        <Setter Property="VerticalAlignment" Value="Center" />
+                                                                    </Style>
+                                                                </Grid.Resources>
+                                                                <Grid.ColumnDefinitions>
+                                                                    <ColumnDefinition Width="Auto" />
+                                                                    <ColumnDefinition Width="*" />
+                                                                </Grid.ColumnDefinitions>
                                                                 <Label Content="Arch Rep:" />
-                                                                <TextBlock Text="{Binding ArchRep, Mode=TwoWay}" VerticalAlignment="Center"/>
-                                                            </WrapPanel>
+                                                                <TextBlock Grid.Column="1" Text="{Binding ArchRep, Mode=TwoWay}" MouseLeftButtonDown="TextBlock_MouseLeftButtonDown" Tag="ArchRep" />
+                                                            </Grid>
                                                         </Grid>
                                                         <Grid Grid.Row="1">
                                                             <Grid.ColumnDefinitions>
@@ -1679,22 +1719,58 @@
                                                                 <ColumnDefinition Width="2*" />
                                                                 <ColumnDefinition Width="2*" />
                                                             </Grid.ColumnDefinitions>
-                                                            <WrapPanel>
+                                                            <Grid>
+                                                                <Grid.ColumnDefinitions>
+                                                                    <ColumnDefinition Width="Auto" />
+                                                                    <ColumnDefinition Width="*" />
+                                                                </Grid.ColumnDefinitions>
+                                                                <Grid.Resources>
+                                                                    <Style TargetType="TextBlock">
+                                                                        <Setter Property="VerticalAlignment" Value="Center" />
+                                                                    </Style>
+                                                                </Grid.Resources>
                                                                 <Label Content="Customer:" />
-                                                                <TextBlock Text="{Binding CustomerName, Mode=TwoWay}" VerticalAlignment="Center" />
-                                                            </WrapPanel>
-                                                            <WrapPanel Grid.Column="1">
+                                                                <TextBlock Grid.Column="1" Text="{Binding CustomerName, Mode=TwoWay}" MouseLeftButtonDown="TextBlock_MouseLeftButtonDown" Tag="Customer" />
+                                                            </Grid>
+                                                            <Grid Grid.Column="1">
+                                                                <Grid.Resources>
+                                                                    <Style TargetType="TextBlock">
+                                                                        <Setter Property="VerticalAlignment" Value="Center" />
+                                                                    </Style>
+                                                                </Grid.Resources>
+                                                                <Grid.ColumnDefinitions>
+                                                                    <ColumnDefinition Width="0.5*" />
+                                                                    <ColumnDefinition Width="*" />
+                                                                </Grid.ColumnDefinitions>
                                                                 <Label Content="" />
-                                                                <TextBlock Text="{Binding FullAddress, Mode=OneWay}" VerticalAlignment="Center" />
-                                                            </WrapPanel>
-                                                            <WrapPanel Grid.Column="2">
+                                                                <TextBlock Grid.Column="1" Text="{Binding FullAddress, Mode=OneWay}" MouseLeftButtonDown="TextBlock_MouseLeftButtonDown" Tag="FullAddress" />
+                                                            </Grid>
+                                                            <Grid Grid.Column="2">
+                                                                <Grid.Resources>
+                                                                    <Style TargetType="TextBlock">
+                                                                        <Setter Property="VerticalAlignment" Value="Center" />
+                                                                    </Style>
+                                                                </Grid.Resources>
+                                                                <Grid.ColumnDefinitions>
+                                                                    <ColumnDefinition Width="Auto" />
+                                                                    <ColumnDefinition Width="*" />
+                                                                </Grid.ColumnDefinitions>
                                                                 <Label Content="Job No:" />
-                                                                <TextBlock Text="{Binding JobNo, Mode=TwoWay}" VerticalAlignment="Center" />
-                                                            </WrapPanel>
-                                                            <WrapPanel Grid.Column="3">
+                                                                <TextBlock Grid.Column="1" Text="{Binding JobNo, Mode=TwoWay}" MouseLeftButtonDown="TextBlock_MouseLeftButtonDown" Tag="JobNo" />
+                                                            </Grid>
+                                                            <Grid Grid.Column="3">
+                                                                <Grid.Resources>
+                                                                    <Style TargetType="TextBlock">
+                                                                        <Setter Property="VerticalAlignment" Value="Center" />
+                                                                    </Style>
+                                                                </Grid.Resources>
+                                                                <Grid.ColumnDefinitions>
+                                                                    <ColumnDefinition Width="Auto" />
+                                                                    <ColumnDefinition Width="*" />
+                                                                </Grid.ColumnDefinitions>
                                                                 <Label Content="Salesman:" />
-                                                                <TextBlock Text="{Binding SalesmanName, Mode=TwoWay}" VerticalAlignment="Center" />
-                                                            </WrapPanel>
+                                                                <TextBlock Grid.Column="1" Text="{Binding SalesmanName, Mode=TwoWay}" MouseLeftButtonDown="TextBlock_MouseLeftButtonDown" Tag="Salesman" />
+                                                            </Grid>
                                                         </Grid>
                                                     </Grid>
                                                 </Border>
@@ -1784,7 +1860,7 @@
                                                                 </DataGridTemplateColumn.Header>
                                                                 <DataGridTemplateColumn.CellTemplate>
                                                                     <DataTemplate>
-                                                                        <CheckBox IsChecked="{Binding OrderComplete, Mode=TwoWay}" />
+                                                                        <CheckBox IsChecked="{Binding OrderComplete, Mode=TwoWay}" PreviewMouseDown="CheckBox_PreviewMouseDown" />
                                                                     </DataTemplate>
                                                                 </DataGridTemplateColumn.CellTemplate>
                                                             </DataGridTemplateColumn>
@@ -1792,8 +1868,6 @@
                                                     </DataGrid>
                                                 </Grid>
                                             </Grid>
-
-                                         
                                         </Grid>
                                     </Border>
                                 </DataTemplate>
@@ -1834,7 +1908,7 @@
                 <TextBlock Style="{StaticResource ReportViewHeader}" Text="Jobs by Architect" />
             </Grid>
             <Grid Grid.Row="1" >
-                <DataGrid ItemsSource="{Binding ReportJobArchitects, Mode=TwoWay}" GridLinesVisibility="None" AutoGenerateColumns="False" HeadersVisibility="Column" CanUserAddRows="False" BorderThickness="0">
+                <DataGrid ItemsSource="{Binding ReportJobArchitects, Mode=TwoWay}" GridLinesVisibility="None" AutoGenerateColumns="False" HeadersVisibility="Column" CanUserAddRows="False" BorderThickness="0" VirtualizingPanel.IsVirtualizing="False">
                     <DataGrid.Resources>
                         <Style TargetType="DataGridColumnHeader" BasedOn="{StaticResource GridColumnHeaderBase}">
                             <Setter Property="Background" Value="#C6D9F1" />
@@ -1876,20 +1950,49 @@
                                                         </Grid.RowDefinitions>
                                                         <Grid>
                                                             <Grid.ColumnDefinitions>
-                                                                <ColumnDefinition Width="4*" />
-                                                                <ColumnDefinition Width="2*" />
                                                                 <ColumnDefinition Width="3*" />
+                                                                <ColumnDefinition Width="2*" />
+                                                                <ColumnDefinition Width="2*" />
+                                                                <ColumnDefinition Width="4*" />
                                                             </Grid.ColumnDefinitions>
-                                                            <WrapPanel>
-                                                                <TextBlock Text="{Binding ProjectName, Mode=TwoWay}" VerticalAlignment="Center" FontSize="16" FontWeight="Bold" />
-                                                            </WrapPanel>
-                                                            <WrapPanel Grid.Column="1" VerticalAlignment="Center">
+                                                            <Grid>
+                                                                <Grid.Resources>
+                                                                    <Style TargetType="TextBlock">
+                                                                        <Setter Property="FontSize" Value="16" />
+                                                                        <Setter Property="FontWeight" Value="Bold" />
+                                                                        <Setter Property="VerticalAlignment" Value="Center" />
+                                                                    </Style>
+                                                                    <Style TargetType="TextBox">
+                                                                        <Setter Property="FontSize" Value="16" />
+                                                                        <Setter Property="FontWeight" Value="Bold" />
+                                                                    </Style>
+                                                                </Grid.Resources>
+                                                                <Grid.ColumnDefinitions>
+                                                                    <ColumnDefinition Width="Auto" />
+                                                                    <ColumnDefinition Width="*" />
+                                                                </Grid.ColumnDefinitions>
+                                                                <Label Content="" />
+                                                                <TextBlock Grid.Column="1" Text="{Binding ProjectName, Mode=TwoWay}" MouseLeftButtonDown="TextBlock_MouseLeftButtonDown" Tag="ProjectName" />
+                                                            </Grid>
+                                                            <Grid Grid.Column="1">
+                                                                <Grid.ColumnDefinitions>
+                                                                    <ColumnDefinition Width="Auto" />
+                                                                    <ColumnDefinition Width="*" />
+                                                                </Grid.ColumnDefinitions>
+                                                                <Label Content="Target Date:" />
+                                                                <DatePicker Grid.Column="1" SelectedDate="{Binding TargetDate, Mode=TwoWay, Converter={StaticResource DateTimeConverter}}" VerticalAlignment="Center" Loaded="JobsTDate_Loaded" Tag="JobArchitect" />
+                                                            </Grid>
+                                                            <WrapPanel Grid.Column="2" VerticalAlignment="Center">
                                                                 <Button>View</Button>
                                                             </WrapPanel>
-                                                            <WrapPanel Grid.Column="2">
+                                                            <Grid Grid.Column="3">
+                                                                <Grid.ColumnDefinitions>
+                                                                    <ColumnDefinition Width="Auto" />
+                                                                    <ColumnDefinition Width="*" />
+                                                                </Grid.ColumnDefinitions>
                                                                 <Label Content="Architect:" />
-                                                                <TextBlock Text="{Binding Architect, Mode=TwoWay}" VerticalAlignment="Center" />
-                                                            </WrapPanel>
+                                                                <TextBlock Grid.Column="1" Text="{Binding Architect, Mode=TwoWay}" MouseLeftButtonDown="TextBlock_MouseLeftButtonDown" VerticalAlignment="Center" Tag="Architect" />
+                                                            </Grid>
                                                         </Grid>
                                                         <Grid Grid.Row="1">
                                                             <Grid.ColumnDefinitions>
@@ -1897,18 +2000,35 @@
                                                                 <ColumnDefinition Width="2*" />
                                                                 <ColumnDefinition Width="3*" />
                                                             </Grid.ColumnDefinitions>
-                                                            <WrapPanel>
+                                                            <Grid>
+                                                                <Grid.ColumnDefinitions>
+                                                                    <ColumnDefinition Width="Auto" />
+                                                                    <ColumnDefinition Width="*" />
+                                                                </Grid.ColumnDefinitions>
                                                                 <Label Content="Customer:" />
-                                                                <TextBlock Text="{Binding CustomerName, Mode=TwoWay}" VerticalAlignment="Center" />
-                                                            </WrapPanel>
-                                                            <WrapPanel Grid.Column="1">
+                                                                <TextBlock Grid.Column="1" Text="{Binding CustomerName, Mode=TwoWay}" MouseLeftButtonDown="TextBlock_MouseLeftButtonDown" VerticalAlignment="Center" Tag="Customer" />
+                                                            </Grid>
+                                                            <Grid Grid.Column="1">
+                                                                <Grid.Resources>
+                                                                    <Style TargetType="TextBlock">
+                                                                        <Setter Property="VerticalAlignment" Value="Center" />
+                                                                    </Style>
+                                                                </Grid.Resources>
+                                                                <Grid.ColumnDefinitions>
+                                                                    <ColumnDefinition Width="Auto" />
+                                                                    <ColumnDefinition Width="*" />
+                                                                </Grid.ColumnDefinitions>
                                                                 <Label Content="Job No:" />
-                                                                <TextBlock Text="{Binding JobNo, Mode=TwoWay}" VerticalAlignment="Center" />
-                                                            </WrapPanel>
-                                                            <WrapPanel Grid.Column="2">
+                                                                <TextBlock Grid.Column="2" Text="{Binding JobNo, Mode=TwoWay}" MouseLeftButtonDown="TextBlock_MouseLeftButtonDown" Tag="JobNo" />
+                                                            </Grid>
+                                                            <Grid Grid.Column="3">
+                                                                <Grid.ColumnDefinitions>
+                                                                    <ColumnDefinition Width="Auto" />
+                                                                    <ColumnDefinition Width="*" />
+                                                                </Grid.ColumnDefinitions>
                                                                 <Label Content="Salesman:" />
-                                                                <TextBlock Text="{Binding SalesmanName, Mode=TwoWay}" VerticalAlignment="Center" />
-                                                            </WrapPanel>
+                                                                <TextBlock Grid.Column="1" VerticalAlignment="Center" Text="{Binding SalesmanName, Mode=TwoWay}" MouseLeftButtonDown="TextBlock_MouseLeftButtonDown" Tag="Salesman" />
+                                                            </Grid>
                                                         </Grid>
                                                     </Grid>
                                                 </Border>
@@ -2025,7 +2145,7 @@
                 <TextBlock Style="{StaticResource ReportViewHeader}" Text="Jobs by Manufacturer" />
             </Grid>
             <Grid Grid.Row="1" >
-                <DataGrid ItemsSource="{Binding ReportJobManufs, Mode=TwoWay}" GridLinesVisibility="None" AutoGenerateColumns="False" HeadersVisibility="Column" CanUserAddRows="False" BorderThickness="0">
+                <DataGrid ItemsSource="{Binding ReportJobManufs, Mode=TwoWay}" GridLinesVisibility="None" AutoGenerateColumns="False" HeadersVisibility="Column" CanUserAddRows="False" BorderThickness="0" VirtualizingPanel.IsVirtualizing="False">
                     <DataGrid.Resources>
                         <Style TargetType="DataGridColumnHeader" BasedOn="{StaticResource GridColumnHeaderBase}">
                             <Setter Property="Background" Value="#C6D9F1" />
@@ -2067,20 +2187,49 @@
                                                         </Grid.RowDefinitions>
                                                         <Grid>
                                                             <Grid.ColumnDefinitions>
-                                                                <ColumnDefinition Width="4*" />
-                                                                <ColumnDefinition Width="2*" />
                                                                 <ColumnDefinition Width="3*" />
+                                                                <ColumnDefinition Width="2*" />
+                                                                <ColumnDefinition Width="2*" />
+                                                                <ColumnDefinition Width="4*" />
                                                             </Grid.ColumnDefinitions>
-                                                            <WrapPanel>
-                                                                <TextBlock Text="{Binding ProjectName, Mode=TwoWay}" VerticalAlignment="Center" FontSize="16" FontWeight="Bold" />
-                                                            </WrapPanel>
-                                                            <WrapPanel Grid.Column="1" VerticalAlignment="Center">
+                                                            <Grid>
+                                                                <Grid.Resources>
+                                                                    <Style TargetType="TextBlock">
+                                                                        <Setter Property="FontSize" Value="16" />
+                                                                        <Setter Property="FontWeight" Value="Bold" />
+                                                                        <Setter Property="VerticalAlignment" Value="Center" />
+                                                                    </Style>
+                                                                    <Style TargetType="TextBox">
+                                                                        <Setter Property="FontSize" Value="16" />
+                                                                        <Setter Property="FontWeight" Value="Bold" />
+                                                                    </Style>
+                                                                </Grid.Resources>
+                                                                <Grid.ColumnDefinitions>
+                                                                    <ColumnDefinition Width="Auto" />
+                                                                    <ColumnDefinition Width="*" />
+                                                                </Grid.ColumnDefinitions>
+                                                                <Label Content="" />
+                                                                <TextBlock Grid.Column="1" Text="{Binding ProjectName, Mode=TwoWay}" MouseLeftButtonDown="TextBlock_MouseLeftButtonDown" VerticalAlignment="Center" Tag="ProjectName" />
+                                                            </Grid>
+                                                            <Grid Grid.Column="1">
+                                                                <Grid.ColumnDefinitions>
+                                                                    <ColumnDefinition Width="Auto" />
+                                                                    <ColumnDefinition Width="*" />
+                                                                </Grid.ColumnDefinitions>
+                                                                <Label Content="Target Date:" />
+                                                                <DatePicker Grid.Column="1" SelectedDate="{Binding TargetDate, Mode=TwoWay, Converter={StaticResource DateTimeConverter}}" VerticalAlignment="Center"  Loaded="JobsTDate_Loaded" Tag="JobManuf" />
+                                                            </Grid>
+                                                            <WrapPanel Grid.Column="2" VerticalAlignment="Center">
                                                                 <Button>View</Button>
                                                             </WrapPanel>
-                                                            <WrapPanel Grid.Column="2">
+                                                            <Grid Grid.Column="3">
+                                                                <Grid.ColumnDefinitions>
+                                                                    <ColumnDefinition Width="Auto" />
+                                                                    <ColumnDefinition Width="*" />
+                                                                </Grid.ColumnDefinitions>
                                                                 <Label Content="Architect:" />
-                                                                <TextBlock Text="{Binding Architect, Mode=TwoWay}" VerticalAlignment="Center" />
-                                                            </WrapPanel>
+                                                                <TextBlock Grid.Column="1" Text="{Binding Architect, Mode=TwoWay}" MouseLeftButtonDown="TextBlock_MouseLeftButtonDown" VerticalAlignment="Center" Tag="Architect" />
+                                                            </Grid>
                                                         </Grid>
                                                         <Grid Grid.Row="1">
                                                             <Grid.ColumnDefinitions>
@@ -2088,18 +2237,30 @@
                                                                 <ColumnDefinition Width="2*" />
                                                                 <ColumnDefinition Width="3*" />
                                                             </Grid.ColumnDefinitions>
-                                                            <WrapPanel>
+                                                            <Grid>
+                                                                <Grid.ColumnDefinitions>
+                                                                    <ColumnDefinition Width="Auto" />
+                                                                    <ColumnDefinition Width="*" />
+                                                                </Grid.ColumnDefinitions>
                                                                 <Label Content="Customer:" />
-                                                                <TextBlock Text="{Binding CustomerName, Mode=TwoWay}" VerticalAlignment="Center" />
-                                                            </WrapPanel>
-                                                            <WrapPanel Grid.Column="1">
+                                                                <TextBlock Grid.Column="1" Text="{Binding CustomerName, Mode=TwoWay}" MouseLeftButtonDown="TextBlock_MouseLeftButtonDown" VerticalAlignment="Center" Tag="Customer" />
+                                                            </Grid>
+                                                            <Grid Grid.Column="1">
+                                                                <Grid.ColumnDefinitions>
+                                                                    <ColumnDefinition Width="Auto" />
+                                                                    <ColumnDefinition Width="*" />
+                                                                </Grid.ColumnDefinitions>
                                                                 <Label Content="Job No:" />
-                                                                <TextBlock Text="{Binding JobNo, Mode=TwoWay}" VerticalAlignment="Center" />
-                                                            </WrapPanel>
-                                                            <WrapPanel Grid.Column="2">
+                                                                <TextBlock Grid.Column="1" Text="{Binding JobNo, Mode=OneWay}" MouseLeftButtonDown="TextBlock_MouseLeftButtonDown" VerticalAlignment="Center" Tag="FullAddress" />
+                                                            </Grid>
+                                                            <Grid Grid.Column="3">
+                                                                <Grid.ColumnDefinitions>
+                                                                    <ColumnDefinition Width="Auto" />
+                                                                    <ColumnDefinition Width="*" />
+                                                                </Grid.ColumnDefinitions>
                                                                 <Label Content="Salesman:" />
-                                                                <TextBlock Text="{Binding SalesmanName, Mode=TwoWay}" VerticalAlignment="Center" />
-                                                            </WrapPanel>
+                                                                <TextBlock Grid.Column="1" Text="{Binding SalesmanName, Mode=TwoWay}" MouseLeftButtonDown="TextBlock_MouseLeftButtonDown" VerticalAlignment="Center" Tag="Salesman" />
+                                                            </Grid>
                                                         </Grid>
                                                     </Grid>
                                                 </Border>
@@ -3679,7 +3840,7 @@
                     <TextBlock Text=" to "/>
                     <TextBlock Text="{Binding End}"/>
                     <TextBlock Text=" of "/>
-                    <TextBlock Text="{Binding TotalItems}"/>
+                    <TextBlock Text="{Binding TotalItems, Mode=TwoWay}"/>
                 </StackPanel>
                 <Button Margin="4,0" Content="&gt;" Command="{Binding NextPageCommand}"/>
                 <Button Margin="4,0" Content="&gt;&gt;" Command="{Binding LastPageCommand}" CommandParameter="{Binding ReportID, Mode=TwoWay}" />

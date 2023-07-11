@@ -39,39 +39,6 @@ namespace WpfApp
             Loaded += LoadPage;
         }
 
-        //private void WorkOrderNote_PreviewKeyUp(object sender, KeyEventArgs e)
-        //{
-        //    TextBox NotesNote = sender as TextBox;
-        //    if (NotesNote != null)
-        //    {
-        //        DataGrid dataGrid = findComponentHelper.FindDataGrid(NotesNote);
-
-        //        if (dataGrid != null)
-        //        {
-        //            TextBox lastRowTextBox = findComponentHelper.GetLastRowTextBox(dataGrid);
-        //            if (lastRowTextBox != null)
-        //            {
-        //                string lastRowText = lastRowTextBox.Text;
-        //                if (!string.IsNullOrEmpty(lastRowText))
-        //                {
-        //                    ObservableCollection<Note> notes = ProjectVM.WorkOrderNotes;
-        //                    Grid parentGrid = NotesNote.Parent as Grid;
-        //                    Grid grandParentGrid = parentGrid.Parent as Grid;
-        //                    Grid firstChildGrid = grandParentGrid.Children[0] as Grid;
-        //                    TextBlock NotesDateAdded = firstChildGrid.Children[0] as TextBlock;
-        //                    TextBlock NoteUserName = firstChildGrid.Children[1] as TextBlock;
-        //                    NotesDateAdded.Text = DateTime.Now.ToString();
-        //                    NoteUserName.Text = "smile";
-
-        //                    Note item = new Note();
-        //                    notes.Add(item);
-        //                    e.Handled = true;
-        //                }
-        //            }
-        //        }
-        //    }
-        //}
-
         private void LoadPage(object sender, RoutedEventArgs e)
         {
             ProjectViewModel loadContext = DataContext as ProjectViewModel;

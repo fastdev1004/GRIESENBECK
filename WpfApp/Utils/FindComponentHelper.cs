@@ -48,7 +48,7 @@ namespace WpfApp.Utils
             yield break;
         }
 
-        public static T FindVisualParent<T>(DependencyObject child) where T : DependencyObject
+        public T FindVisualParent<T>(DependencyObject child) where T : DependencyObject
         {
             DependencyObject parent = VisualTreeHelper.GetParent(child);
             if (parent == null)

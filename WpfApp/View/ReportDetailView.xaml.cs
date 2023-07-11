@@ -5,6 +5,8 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Media;
+using WpfApp.Utils;
 using WpfApp.ViewModel;
 
 namespace WpfApp.View
@@ -16,9 +18,15 @@ namespace WpfApp.View
     {
 
         private ReportDetailViewModel ReportDetailVM;
+        private FindComponentHelper findComponentHelper;
+        private bool datePickerLoaded = false;
+
         public ReportDetailView()
         {
             InitializeComponent();
+            ReportDetailVM = new ReportDetailViewModel();
+            findComponentHelper = new FindComponentHelper();
+            this.DataContext = ReportDetailVM;
             Loaded += LoadPage;
         }
 
@@ -30,7 +38,7 @@ namespace WpfApp.View
         private void LoadPage(object sender, RoutedEventArgs e)
         {
             ReportDetailViewModel loadContext = DataContext as ReportDetailViewModel;
-          
+
             if (loadContext != null)
             {
                 ReportDetailVM = new ReportDetailViewModel();
@@ -78,6 +86,104 @@ namespace WpfApp.View
             projectVM.ProjectID = parameterValue;
             projectPage.DataContext = projectVM;
             this.NavigationService.Navigate(projectPage);
+        }
+
+        private void FieldMeasureTargetDate_Changed(object sender, SelectionChangedEventArgs e)
+        {
+            DatePicker datePicker = sender as DatePicker;
+            var selectedDate = datePicker.SelectedDate;
+
+            if (selectedDate is DateTime)
+            {
+                ReportDetailVM.SelectedDateFrom = (DateTime)selectedDate;
+                ReportDetailVM.LoadFieldMeasureData();
+            }
+        }
+
+        private void FieldMeasureTargetDate_Loaded(object sender, RoutedEventArgs e)
+        {
+            DatePicker datePicker = sender as DatePicker;
+            datePicker.SelectedDateChanged += FieldMeasureTargetDate_Changed;
+        }
+
+        private void TextBlock_MouseLeftButtonDown(object sender, System.Windows.Input.MouseButtonEventArgs e)
+        {
+            TextBlock textBlock = sender as TextBlock;
+            TextBox textBox = new TextBox();
+            textBox.Text = textBlock.Text;
+            textBox.LostFocus += TextBox_LostFocus;
+
+            Grid parentGrid = findComponentHelper.FindVisualParent<Grid>(textBlock);
+
+            if (parentGrid != null)
+            {
+                if (parentGrid.Children.Count == 2)
+                {
+                    Grid.SetColumn(textBox, 1);
+
+                    int textBlockIndex = parentGrid.Children.IndexOf(textBlock);
+                    parentGrid.Children.RemoveAt(textBlockIndex);
+                    parentGrid.Children.Insert(textBlockIndex, textBox);
+
+                    textBox.Focus();
+                }
+            }
+
+        }
+
+        private void TextBox_LostFocus(object sender, RoutedEventArgs e)
+        {
+            TextBox textBox = (TextBox)sender;
+
+            TextBlock newtextBlock = new TextBlock();
+            newtextBlock.Text = textBox.Text;
+            newtextBlock.MouseLeftButtonDown += TextBlock_MouseLeftButtonDown;
+
+            Grid parentGrid = (Grid)textBox.Parent;
+
+            if (parentGrid.Children.Count == 2)
+            {
+                Grid.SetColumn(newtextBlock, 1);
+
+                int textBoxIndex = parentGrid.Children.IndexOf(textBox);
+                parentGrid.Children.RemoveAt(textBoxIndex);
+                parentGrid.Children.Insert(textBoxIndex, newtextBlock);
+            }
+        }
+
+        private void CheckBox_PreviewMouseDown(object sender, System.Windows.Input.MouseButtonEventArgs e)
+        {
+            e.Handled = true;
+        }
+
+        private void JobsTDate_Loaded(object sender, RoutedEventArgs e)
+        {
+            DatePicker datePicker = sender as DatePicker;
+            datePicker.SelectedDateChanged += JobsTDate_Changed;
+        }
+
+        private void JobsTDate_Changed(object sender, SelectionChangedEventArgs e)
+        {
+            DatePicker datePicker = sender as DatePicker;
+            string tagName = datePicker.Tag as string;
+            var selectedDate = datePicker.SelectedDate;
+
+            if (selectedDate is DateTime)
+            {
+                ReportDetailVM.SelectedDateFrom = (DateTime)selectedDate;
+                switch(tagName)
+                {
+                    case "JobArchRep":
+                        ReportDetailVM.LoadJobByArchRepData();
+                        break;
+                    case "JobArchitect":
+                        ReportDetailVM.LoadJobByArchitectData();
+                        break;
+                    case "JobManuf":
+                        ReportDetailVM.LoadJobByManufacturerData();
+                        break;
+                }
+            }
         }
     }
 }

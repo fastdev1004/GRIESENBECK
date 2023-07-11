@@ -155,7 +155,7 @@ namespace WpfApp.Model
             get => _color;
             set
             {
-                if (value == _acronym) return;
+                if (value == _color) return;
                 _color = value;
                 OnPropertyChanged();
             }
@@ -402,7 +402,7 @@ namespace WpfApp.Model
 
         public DateTime EstDeliv
         {
-            get => _schedShip;
+            get => _estDeliv;
             set
             {
                 if (value == _estDeliv) return;
