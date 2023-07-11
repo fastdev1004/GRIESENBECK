@@ -167,7 +167,6 @@ namespace WpfApp.View
             DatePicker datePicker = sender as DatePicker;
             string tagName = datePicker.Tag as string;
             var selectedDate = datePicker.SelectedDate;
-
             if (selectedDate is DateTime)
             {
                 ReportDetailVM.SelectedDateFrom = (DateTime)selectedDate;
@@ -181,6 +180,30 @@ namespace WpfApp.View
                         break;
                     case "JobManuf":
                         ReportDetailVM.LoadJobByManufacturerData();
+                        break;
+                    case "ActionLabor":
+                        ReportDetailVM.LoadActiveLaborData();
+                        break;
+                    case "ChangeOrder":
+                        ReportDetailVM.LoadChangeOrders();
+                        break;
+                    case "CIP":
+                        ReportDetailVM.LoadCIPData();
+                        break;
+                    case "Contracts":
+                        ReportDetailVM.LoadContractData();
+                        break;
+                    case "FieldMeasure":
+                        ReportDetailVM.LoadFieldMeasureData();
+                        break;
+                    case "OpenJobsList":
+                        ReportDetailVM.LoadOpenJobsData();
+                        break;
+                    case "PmMeeting":
+                        ReportDetailVM.LoadPmMeetingData();
+                        break;
+                    case "ActiveProject":
+                        ReportDetailVM.LoadActiveProjectData();
                         break;
                 }
             }

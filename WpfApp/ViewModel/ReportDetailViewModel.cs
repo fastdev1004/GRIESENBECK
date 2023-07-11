@@ -147,10 +147,10 @@ namespace WpfApp.ViewModel
             sda.Fill(ds);
 
             int totalItems = ds.Tables[0].Rows.Count;
-            _totalItems = totalItems;
+            TotalItems = totalItems;
             _itemCount = 10;
 
-            sqlquery = "SELECT * FROM (SELECT ROW_NUMBER() over(ORDER BY Project_Name) AS RowIndex, tblProjects.*, tblSalesmen.Salesman_Name FROM tblSalesmen RIGHT JOIN(SELECT tblprojects.*, tblCustomers.Full_Name FROM tblCustomers RIGHT JOIN(SELECT tblprojects.Project_ID, tblProjects.Project_Name, tblprojects.Job_No, tblprojects.Customer_ID, tblprojects.Salesman_ID FROM tblProjects RIGHT JOIN(SELECT DISTINCT Project_ID FROM tblProjectLabor) AS tblProjectID ON tblProjects.Project_ID = tblProjectID.Project_ID "+ whereClause +") AS tblProjects ON tblprojects.Customer_ID = tblCustomers.Customer_ID) AS tblProjects ON tblProjects.Salesman_ID = tblSalesmen.Salesman_ID ) AS tbl WHERE tbl.RowIndex >= "+ Start +" and tbl.RowIndex <= " + End;
+            sqlquery = "SELECT * FROM (SELECT ROW_NUMBER() over(ORDER BY Project_Name) AS RowIndex, tblProjects.*, tblSalesmen.Salesman_Name FROM tblSalesmen RIGHT JOIN(SELECT tblprojects.*, tblCustomers.Full_Name FROM tblCustomers RIGHT JOIN(SELECT tblprojects.Project_ID, tblprojects.Target_Date, tblProjects.Project_Name, tblprojects.Job_No, tblprojects.Customer_ID, tblprojects.Salesman_ID FROM tblProjects RIGHT JOIN(SELECT DISTINCT Project_ID FROM tblProjectLabor) AS tblProjectID ON tblProjects.Project_ID = tblProjectID.Project_ID " + whereClause +") AS tblProjects ON tblprojects.Customer_ID = tblCustomers.Customer_ID) AS tblProjects ON tblProjects.Salesman_ID = tblSalesmen.Salesman_ID ) AS tbl WHERE tbl.RowIndex >= "+ Start +" and tbl.RowIndex <= " + End + " ORDER BY Job_No";
 
             cmd = dbConnection.RunQuryNoParameters(sqlquery);
             sda = new SqlDataAdapter(cmd);
@@ -165,6 +165,7 @@ namespace WpfApp.ViewModel
                 string _jobNo = "";
                 string _customerName = "";
                 string _salesmanName = "";
+                DateTime _targetDate = new DateTime();
 
                 if (!row.IsNull("Project_ID"))
                     _projectID = int.Parse(row["Project_ID"].ToString());
@@ -176,10 +177,12 @@ namespace WpfApp.ViewModel
                     _customerName = row["Full_Name"].ToString();
                 if (!row.IsNull("Salesman_Name"))
                     _salesmanName = row["Salesman_Name"].ToString();
+                if (!row.IsNull("Target_Date"))
+                    _targetDate = row.Field<DateTime>("Target_Date");
 
                 List<TrackLaborReport> _trackLaborReports = TrackLaborReports.Where(item => item.ProjectID == _projectID).ToList();
 
-                st_activeLabors.Add(new ReportActiveLabor { ProjectID = _projectID, ProjectName = _projectName, JobNo = _jobNo, CustomerName = _customerName, SalesmanName = _salesmanName, LaborReports= _trackLaborReports });
+                st_activeLabors.Add(new ReportActiveLabor { ProjectID = _projectID, ProjectName = _projectName, JobNo = _jobNo, CustomerName = _customerName, SalesmanName = _salesmanName, LaborReports= _trackLaborReports, TargetDate = _targetDate });
             }
             ReportActiveLabors = st_activeLabors;
         }
@@ -337,10 +340,10 @@ namespace WpfApp.ViewModel
             sda.Fill(ds);
 
             int totalItems = ds.Tables[0].Rows.Count;
-            _totalItems = totalItems;
+            TotalItems = totalItems;
             _itemCount = 10;
 
-            sqlquery = "SELECT * FROM (SELECT ROW_NUMBER() over(ORDER BY Project_Name) AS RowIndex, tblCustomers.Full_Name, tblProjects.* FROM tblCustomers INNER JOIN(SELECT tblSalesmen.Salesman_Name, tblProjects.* FROM tblSalesmen RIGHT JOIN(SELECT Project_ID, Project_Name, Job_No, Salesman_ID, Customer_ID FROM tblProjects RIGHT JOIN(SELECT DISTINCT tblCOTracking.ProjectID FROM tblCOTracking) AS tblCOTracking ON tblCOTracking.ProjectID = tblProjects.Project_ID "+ whereClause +") AS tblProjects ON tblProjects.Salesman_ID = tblSalesmen.Salesman_ID) AS tblProjects ON tblProjects.Customer_ID = tblCustomers.Customer_ID) AS tbl WHERE tbl.RowIndex >= "+ Start +" and tbl.RowIndex <= " + End;
+            sqlquery = "SELECT * FROM (SELECT ROW_NUMBER() over(ORDER BY Project_Name) AS RowIndex, tblCustomers.Full_Name, tblProjects.* FROM tblCustomers INNER JOIN(SELECT tblSalesmen.Salesman_Name, tblProjects.* FROM tblSalesmen RIGHT JOIN(SELECT Project_ID, Project_Name, Job_No, Salesman_ID, Customer_ID, Target_Date FROM tblProjects RIGHT JOIN(SELECT DISTINCT tblCOTracking.ProjectID FROM tblCOTracking) AS tblCOTracking ON tblCOTracking.ProjectID = tblProjects.Project_ID " + whereClause +") AS tblProjects ON tblProjects.Salesman_ID = tblSalesmen.Salesman_ID) AS tblProjects ON tblProjects.Customer_ID = tblCustomers.Customer_ID) AS tbl WHERE tbl.RowIndex >= "+ Start +" and tbl.RowIndex <= " + End;
 
             cmd = dbConnection.RunQuryNoParameters(sqlquery);
             sda = new SqlDataAdapter(cmd);
@@ -356,6 +359,7 @@ namespace WpfApp.ViewModel
                 string _salesmanName = "";
                 string _customerName = "";
                 List<ReportCOItem> _reportCOItems;
+                DateTime _targetDate = DateTime.Now;
 
                 if (!row.IsNull("Project_ID"))
                     _projectID = int.Parse(row["Project_ID"].ToString());
@@ -367,6 +371,9 @@ namespace WpfApp.ViewModel
                     _salesmanName = row["Salesman_Name"].ToString();
                 if (!row.IsNull("Full_Name"))
                     _customerName = row["Full_Name"].ToString();
+                if (!row.IsNull("Target_Date"))
+                    _targetDate = row.Field<DateTime>("Target_Date");
+
                 _reportCOItems = ReportCOItems.Where(item => item.ProjectID == _projectID).ToList();
                 st_reportCOs.Add(new ReportCO
                 {
@@ -375,7 +382,8 @@ namespace WpfApp.ViewModel
                     ProjectName = _projectName,
                     SalesmanName = _salesmanName,
                     CustomerName = _customerName,
-                    ReportCOItems = _reportCOItems
+                    ReportCOItems = _reportCOItems,
+                    TargetDate = _targetDate
                 });
             }
             ReportCOs = st_reportCOs;
@@ -439,10 +447,10 @@ namespace WpfApp.ViewModel
             sda.Fill(ds);
 
             int totalItems = ds.Tables[0].Rows.Count;
-            _totalItems = totalItems;
+            TotalItems = totalItems;
             _itemCount = 10;
 
-            sqlquery = "SELECT * FROM (SELECT ROW_NUMBER() over(ORDER BY Job_No) AS RowIndex, tblProjects.*, tblSalesmen.Salesman_Name FROM tblSalesmen RIGHT JOIN (SELECT tblProjects.*, tblCustomers.Full_Name FROM tblCustomers RIGHT JOIN(SELECT tblprojs.Project_ID, Job_No, CIPType, OriginalContractAmt, FinalContractAmt, FormsRecD, FormsSent, CertRecD, ExemptionApproved, ExemptionAppDate, CrewEnrolled, Notes, Customer_ID, Salesman_ID, tblProjs.Target_Date FROM tblCIPs INNER JOIN(SELECT Project_ID, Job_No, Salesman_ID, Customer_ID, Target_Date FROM tblProjects "+ whereProjectClause + ") AS tblProjs ON tblCIPs.Project_ID = tblProjs.Project_ID) AS tblProjects ON tblProjects.Customer_ID = tblCustomers.Customer_ID) AS tblProjects ON tblProjects.Salesman_ID = tblSalesmen.Salesman_ID) AS tbl WHERE tbl.RowIndex >= " + Start + " and tbl.RowIndex <= " + End;
+            sqlquery = "SELECT * FROM (SELECT ROW_NUMBER() over(ORDER BY Job_No) AS RowIndex, tblProjects.*, tblSalesmen.Salesman_Name FROM tblSalesmen RIGHT JOIN (SELECT tblProjects.*, tblCustomers.Full_Name FROM tblCustomers RIGHT JOIN(SELECT tblprojs.Project_ID, Job_No, CIPType, OriginalContractAmt, FinalContractAmt, FormsRecD, FormsSent, CertRecD, ExemptionApproved, ExemptionAppDate, CrewEnrolled, Notes, Customer_ID, Salesman_ID, tblProjs.Target_Date FROM tblCIPs INNER JOIN(SELECT Project_ID, Job_No, Salesman_ID, Customer_ID, Target_Date FROM tblProjects "+ whereProjectClause + ") AS tblProjs ON tblCIPs.Project_ID = tblProjs.Project_ID) AS tblProjects ON tblProjects.Customer_ID = tblCustomers.Customer_ID) AS tblProjects ON tblProjects.Salesman_ID = tblSalesmen.Salesman_ID) AS tbl WHERE tbl.RowIndex >= " + Start + " and tbl.RowIndex <= " + End + " ORDER BY Job_No";
             cmd = dbConnection.RunQuryNoParameters(sqlquery);
             sda = new SqlDataAdapter(cmd);
             ds = new DataSet();
@@ -480,7 +488,6 @@ namespace WpfApp.ViewModel
                     CIPs = sb_cipList
                 });
             }
-
             ReportCIPs = sb_reportCIP;
         }
 
@@ -538,6 +545,7 @@ namespace WpfApp.ViewModel
                     GivenAcctingforreview = _givenAcctingforreview,
                     Givenforfinalsignature = _givenforfinalsignature,
                     ReturnedVia = _returnedVia,
+                    ReturnedtoDawn = _returnedDate,
                     Comment = _comment,
                     ProjectID = _projectID
                 });
@@ -550,10 +558,10 @@ namespace WpfApp.ViewModel
             sda.Fill(ds);
 
             int totalItems = ds.Tables[0].Rows.Count;
-            _totalItems = totalItems;
+            TotalItems = totalItems;
             _itemCount = 10;
 
-            sqlquery = "SELECT * FROM (SELECT ROW_NUMBER() over(ORDER BY Project_Name) AS RowIndex, tblCustomers.Full_Name, tblProject.* FROM tblCustomers RIGHT JOIN (SELECT Salesman_Name, tblProject.*FROM tblSalesmen RIGHT JOIN(SELECT Project_ID, Project_Name, Job_No, Salesman_ID, Customer_ID FROM tblProjects RIGHT JOIN(SELECT DISTINCT(ProjectID) FROM tblSC) AS tblSC ON tblProjects.Project_ID = tblSC.ProjectID " + whereProjectClause + ") AS tblProject ON tblProject.Salesman_ID = tblSalesmen.Salesman_ID) AS tblProject ON tblproject.Customer_ID = tblCustomers.Customer_ID ) AS tbl WHERE tbl.RowIndex >= " + Start + " and tbl.RowIndex <= " + End;;
+            sqlquery = "SELECT * FROM (SELECT ROW_NUMBER() over(ORDER BY Project_Name) AS RowIndex, tblCustomers.Full_Name, tblProject.* FROM tblCustomers RIGHT JOIN (SELECT Salesman_Name, tblProject.*FROM tblSalesmen RIGHT JOIN(SELECT Project_ID, Project_Name, Job_No, Salesman_ID, Customer_ID, Target_Date FROM tblProjects RIGHT JOIN(SELECT DISTINCT(ProjectID) FROM tblSC) AS tblSC ON tblProjects.Project_ID = tblSC.ProjectID " + whereProjectClause + ") AS tblProject ON tblProject.Salesman_ID = tblSalesmen.Salesman_ID) AS tblProject ON tblproject.Customer_ID = tblCustomers.Customer_ID ) AS tbl WHERE tbl.RowIndex >= " + Start + " and tbl.RowIndex <= " + End;;
             
             cmd = dbConnection.RunQuryNoParameters(sqlquery);
             sda = new SqlDataAdapter(cmd);
@@ -569,6 +577,7 @@ namespace WpfApp.ViewModel
                 string _salesmanName = "";
                 string _customerName = "";
                 List<Contract> _contracts;
+                DateTime _targetDate = DateTime.Now;
 
                 if (!row.IsNull("Project_ID"))
                     _projectID = int.Parse(row["Project_ID"].ToString());
@@ -581,6 +590,8 @@ namespace WpfApp.ViewModel
                 if (!row.IsNull("Full_Name"))
                     _customerName = row["Full_Name"].ToString();
                 _contracts = sb_contract.Where(item => item.ProjectID == _projectID).ToList();
+                if (!row.IsNull("Target_Date"))
+                    _targetDate = row.Field<DateTime>("Target_Date");
 
                 sb_reportContracts.Add(new ReportContract
                 {
@@ -589,7 +600,8 @@ namespace WpfApp.ViewModel
                     ProjectName = _projectName,
                     SalesmanName = _salesmanName,
                     CustomerName = _customerName,
-                    Contracts = _contracts
+                    Contracts = _contracts,
+                    TargetDate = _targetDate
                 });
             }
             ReportContracts = sb_reportContracts;
@@ -796,18 +808,18 @@ namespace WpfApp.ViewModel
                 });
             }
 
-            sqlquery = "SELECT DISTINCT tblProjectMat.Project_ID FROM tblProjectMaterialsTrack INNER JOIN(SELECT tblProjectMaterials.ProjMat_ID, tblProjectMat.* FROM tblProjectMaterials INNER JOIN(SELECT Project_ID, Project_Name, Customer_ID, Job_No, Salesman_ID FROM tblProjects) AS tblProjectMat ON tblProjectMat.Project_ID = tblProjectMaterials.Project_ID) AS tblProjectMat ON tblProjectMat.ProjMat_ID = tblProjectMaterialsTrack.ProjMat_ID";
+            sqlquery = "SELECT DISTINCT tblProjectMat.Project_ID FROM tblProjectMaterialsTrack INNER JOIN(SELECT tblProjectMaterials.ProjMat_ID, tblProjectMat.* FROM tblProjectMaterials INNER JOIN(SELECT Project_ID, Project_Name, Customer_ID, Job_No, Salesman_ID FROM tblProjects " + whereProjectClause + ") AS tblProjectMat ON tblProjectMat.Project_ID = tblProjectMaterials.Project_ID) AS tblProjectMat ON tblProjectMat.ProjMat_ID = tblProjectMaterialsTrack.ProjMat_ID";
             cmd = dbConnection.RunQuryNoParameters(sqlquery);
             sda = new SqlDataAdapter(cmd);
             ds = new DataSet();
             sda.Fill(ds);
 
             int totalItems = ds.Tables[0].Rows.Count;
-            _totalItems = totalItems;
+            TotalItems = totalItems;
             _itemCount = 10;
 
             // Field Measure
-            sqlquery = "SElECT * FROM (SELECT ROW_NUMBER() over(ORDER BY tblProjects.Target_Date) AS RowIndex,  tblSalesmen.Salesman_Name, tblProjects.* FROM tblSalesmen RIGHT JOIN(SELECT tblCustomers.Full_Name, tblProjects.* FROM tblCustomers RIGHT JOIN(SELECT tblProjects.Project_ID, tblProjects.Project_Name, tblProjects.Target_Date, tblProjects.Date_Completed, tblProjects.Address, tblProjects.State, tblProjects.ZIP, tblProjects.Job_No, tblProjects.Salesman_ID, tblProjects.Customer_ID, tblProjects.Stored_Materials, tblProjects.Billing_Date FROM tblProjects INNER JOIN (SELECT DISTINCT tblProjectMat.Project_ID FROM tblProjectMaterialsTrack INNER JOIN(SELECT tblProjectMaterials.ProjMat_ID, tblProjectMat.* FROM tblProjectMaterials INNER JOIN(SELECT Project_ID, Project_Name, Customer_ID, Job_No, Salesman_ID FROM tblProjects "+ whereProjectClause +") AS tblProjectMat ON tblProjectMat.Project_ID = tblProjectMaterials.Project_ID) AS tblProjectMat ON tblProjectMat.ProjMat_ID = tblProjectMaterialsTrack.ProjMat_ID) AS tblProjMatTrack ON tblProjMatTrack.Project_ID = tblProjects.Project_ID) AS tblProjects ON tblProjects.Customer_ID = tblCustomers.Customer_ID) AS tblProjects ON tblProjects.Salesman_ID = tblSalesmen.Salesman_ID) AS tbl WHERE tbl.RowIndex >= " + Start +" and tbl.RowIndex <= " + End;
+            sqlquery = "SElECT * FROM (SELECT ROW_NUMBER() over(ORDER BY tblProjects.Target_Date) AS RowIndex,  tblSalesmen.Salesman_Name, tblProjects.* FROM tblSalesmen RIGHT JOIN(SELECT tblCustomers.Full_Name, tblProjects.* FROM tblCustomers RIGHT JOIN(SELECT tblProjects.Project_ID, tblProjects.Project_Name, tblProjects.Target_Date, tblProjects.Date_Completed, tblProjects.Address, tblProjects.State, tblProjects.ZIP, tblProjects.Job_No, tblProjects.Salesman_ID, tblProjects.Customer_ID, tblProjects.Stored_Materials, tblProjects.Billing_Date FROM tblProjects INNER JOIN (SELECT DISTINCT tblProjectMat.Project_ID FROM tblProjectMaterialsTrack INNER JOIN(SELECT tblProjectMaterials.ProjMat_ID, tblProjectMat.* FROM tblProjectMaterials INNER JOIN(SELECT Project_ID, Project_Name, Customer_ID, Job_No, Salesman_ID FROM tblProjects "+ whereProjectClause +") AS tblProjectMat ON tblProjectMat.Project_ID = tblProjectMaterials.Project_ID) AS tblProjectMat ON tblProjectMat.ProjMat_ID = tblProjectMaterialsTrack.ProjMat_ID) AS tblProjMatTrack ON tblProjMatTrack.Project_ID = tblProjects.Project_ID) AS tblProjects ON tblProjects.Customer_ID = tblCustomers.Customer_ID) AS tblProjects ON tblProjects.Salesman_ID = tblSalesmen.Salesman_ID) AS tbl WHERE tbl.RowIndex >= " + Start +" and tbl.RowIndex <= " + End + " ORDER BY Job_No";
             cmd = dbConnection.RunQuryNoParameters(sqlquery);
             sda = new SqlDataAdapter(cmd);
             ds = new DataSet();
@@ -1128,7 +1140,7 @@ namespace WpfApp.ViewModel
             TotalItems = totalItems;
             _itemCount = 10;
 
-            sqlquery = "SELECT * FROM (SELECT ROW_NUMBER() over(ORDER BY Project_Name) AS RowIndex, tblArchitects.Arch_Company, tblProjArch.* FROM tblArchitects RIGHT JOIN(SELECT tblSalesmen.Salesman_Name, tblProjSalesman.* FROM tblSalesmen RIGHT JOIN(SELECT tblCustomers.Full_Name, tblProjCustomer.* FROM tblCustomers RIGHT JOIN(SELECT tblProjects.Project_ID, Project_Name, Target_Date, Arch_Rep_ID, Architect_ID, Customer_ID, Job_No, Salesman_ID, tblProjects.Address, tblProjects.State, tblProjects.ZIP FROM tblProjects INNER JOIN(SELECT DISTINCT tblProjectMat.Project_ID FROM tblProjectMaterialsTrack INNER JOIN(SELECT tblProjectMaterials.ProjMat_ID, tblProjectMat.* FROM tblProjectMaterials INNER JOIN(SELECT Project_ID, Project_Name, Customer_ID, Job_No, Salesman_ID FROM tblProjects " + whereProjectClause + ") AS tblProjectMat ON tblProjectMat.Project_ID = tblProjectMaterials.Project_ID) AS tblProjectMat ON tblProjectMat.ProjMat_ID = tblProjectMaterialsTrack.ProjMat_ID) AS tblProj ON tblProj.Project_ID = tblProjects.Project_ID) AS tblProjCustomer ON tblProjCustomer.Customer_ID = tblCustomers.Customer_ID) AS tblProjSalesman ON tblProjSalesman.Salesman_ID = tblSalesmen.Salesman_ID) AS tblProjArch ON tblProjArch.Architect_ID = tblArchitects.Architect_ID "+ whereArchitectClause + " ) AS tbl WHERE tbl.RowIndex >= " + Start + " and tbl.RowIndex <= " + End;
+            sqlquery = "SELECT * FROM (SELECT ROW_NUMBER() over(ORDER BY Project_Name) AS RowIndex, tblArchitects.Arch_Company, tblProjArch.* FROM tblArchitects RIGHT JOIN(SELECT tblSalesmen.Salesman_Name, tblProjSalesman.* FROM tblSalesmen RIGHT JOIN(SELECT tblCustomers.Full_Name, tblProjCustomer.* FROM tblCustomers RIGHT JOIN(SELECT tblProjects.Project_ID, Project_Name, Target_Date, Arch_Rep_ID, Architect_ID, Customer_ID, Job_No, Salesman_ID, tblProjects.Address, tblProjects.State, tblProjects.ZIP FROM tblProjects INNER JOIN(SELECT DISTINCT tblProjectMat.Project_ID FROM tblProjectMaterialsTrack INNER JOIN(SELECT tblProjectMaterials.ProjMat_ID, tblProjectMat.* FROM tblProjectMaterials INNER JOIN(SELECT Project_ID, Project_Name, Customer_ID, Job_No, Salesman_ID FROM tblProjects " + whereProjectClause + ") AS tblProjectMat ON tblProjectMat.Project_ID = tblProjectMaterials.Project_ID) AS tblProjectMat ON tblProjectMat.ProjMat_ID = tblProjectMaterialsTrack.ProjMat_ID) AS tblProj ON tblProj.Project_ID = tblProjects.Project_ID) AS tblProjCustomer ON tblProjCustomer.Customer_ID = tblCustomers.Customer_ID) AS tblProjSalesman ON tblProjSalesman.Salesman_ID = tblSalesmen.Salesman_ID) AS tblProjArch ON tblProjArch.Architect_ID = tblArchitects.Architect_ID "+ whereArchitectClause + " ) AS tbl WHERE tbl.RowIndex >= " + Start + " and tbl.RowIndex <= " + End + "ORDER BY Job_No";
             cmd = dbConnection.RunQuryNoParameters(sqlquery);
             sda = new SqlDataAdapter(cmd);
             ds = new DataSet();
@@ -1212,7 +1224,7 @@ namespace WpfApp.ViewModel
                 whereArchitectClause += $" AND tblArchitects.Architect_ID = '{SelectedArchitectID}'";
             }
 
-            sqlquery = "SELECT tblManufacturers.Manuf_Name, tblManuf.* FROM tblManufacturers RIGHT JOIN (SELECT tblProjectChangeOrders.CO_ItemNo, tblCOItem.* FROM tblProjectChangeOrders RIGHT JOIN(SELECT tblMaterials.Material_Desc, tblProjects.* FROM tblMaterials RIGHT JOIN(SELECT tblManufacturers.Manuf_Name, tblprojects.* FROM tblManufacturers RIGHT JOIN(SELECT tblProjectMaterialsTrack.MatReqdDate, tblProjectMaterialsTrack.ProjMat_ID, CO_ID, Manuf_ID, Mat_Phase, Mat_Type, SOV_Acronym, Material_ID, ReleasedForFab, Complete, tblProjects.Project_ID FROM tblProjectMaterialsTrack INNER JOIN(SELECT tblProjectSOV.CO_ID, tblProjectSOV.SOV_Acronym, tblprojects.* FROM tblProjectSOV RIGHT JOIN(SELECT tblProjectMaterials.ProjMat_ID, tblProjectMaterials.Material_ID, tblProjectMaterials.ProjSOV_ID, tblProjectMaterials.Mat_Only, tblProjectMaterials.Mat_Phase, tblProjectMaterials.Mat_Type, tblProjects.* FROM tblProjectMaterials RIGHT JOIN(SELECT * FROM tblProjects) AS tblProjects ON tblProjectMaterials.Project_ID = tblProjects.Project_ID) AS tblProjects ON tblProjects.ProjSOV_ID = tblProjectSOV.ProjSOV_ID) AS tblProjects ON tblProjectMaterialsTrack.ProjMat_ID = tblProjects.ProjMat_ID "+ whereManufClause + ") AS tblProjects ON tblProjects.Manuf_ID = tblManufacturers.Manuf_ID) AS tblProjects on tblProjects.Material_ID = tblMaterials.Material_ID " + whereMatClause + ") AS tblCOItem ON tblCOItem.CO_ID = tblProjectChangeOrders.CO_ID) AS tblManuf ON tblManuf.Manuf_ID = tblManufacturers.Manuf_ID";
+            sqlquery = "SELECT tblManufacturers.Manuf_Name, tblManuf.* FROM tblManufacturers RIGHT JOIN (SELECT tblProjectChangeOrders.CO_ItemNo, tblCOItem.* FROM tblProjectChangeOrders RIGHT JOIN(SELECT tblMaterials.Material_Desc, tblProjects.* FROM tblMaterials RIGHT JOIN(SELECT tblManufacturers.Manuf_Name, tblprojects.* FROM tblManufacturers RIGHT JOIN(SELECT tblProjectMaterialsTrack.MatReqdDate, tblProjectMaterialsTrack.ProjMat_ID, CO_ID, Manuf_ID, Mat_Phase, Mat_Type, SOV_Acronym, Material_ID, ReleasedForFab, Complete, tblProjects.Project_ID FROM tblProjectMaterialsTrack INNER JOIN(SELECT tblProjectSOV.CO_ID, tblProjectSOV.SOV_Acronym, tblprojects.* FROM tblProjectSOV RIGHT JOIN(SELECT tblProjectMaterials.ProjMat_ID, tblProjectMaterials.Material_ID, tblProjectMaterials.ProjSOV_ID, tblProjectMaterials.Mat_Only, tblProjectMaterials.Mat_Phase, tblProjectMaterials.Mat_Type, tblProjects.* FROM tblProjectMaterials RIGHT JOIN(SELECT * FROM tblProjects) AS tblProjects ON tblProjectMaterials.Project_ID = tblProjects.Project_ID) AS tblProjects ON tblProjects.ProjSOV_ID = tblProjectSOV.ProjSOV_ID) AS tblProjects ON tblProjectMaterialsTrack.ProjMat_ID = tblProjects.ProjMat_ID "+ whereManufClause + ") AS tblProjects ON tblProjects.Manuf_ID = tblManufacturers.Manuf_ID) AS tblProjects on tblProjects.Material_ID = tblMaterials.Material_ID " + whereMatClause + ") AS tblCOItem ON tblCOItem.CO_ID = tblProjectChangeOrders.CO_ID) AS tblManuf ON tblManuf.Manuf_ID = tblManufacturers.Manuf_ID ORDER BY Job_No;";
             cmd = dbConnection.RunQuryNoParameters(sqlquery);
             sda = new SqlDataAdapter(cmd);
             ds = new DataSet();
@@ -1357,7 +1369,7 @@ namespace WpfApp.ViewModel
                 whereMatClause += $" AND tblMaterials.Material_ID = '{SelectedMatID}'";
             }
 
-            sqlquery = "SELECT SchedShipDate, tblProjMat.* FROM tblProjectMaterialsShip RIGHT JOIN (SELECT tblProjectChangeOrders.CO_ItemNo, tblCOItem.* FROM tblProjectChangeOrders RIGHT JOIN(SELECT tblMaterials.Material_Desc, tblProjects.* FROM tblMaterials RIGHT JOIN(SELECT tblManufacturers.Manuf_Name, tblprojects.* FROM tblManufacturers RIGHT JOIN(SELECT tblProjectMaterialsTrack.MatReqdDate, tblProjectMaterialsTrack.ProjMat_ID, tblProjectMaterialsTrack.ProjMT_ID, CO_ID, Manuf_ID, Mat_Phase, Mat_Type, SOV_Acronym, Material_ID, ReleasedForFab, Complete, tblProjects.Project_ID FROM tblProjectMaterialsTrack INNER JOIN(SELECT tblProjectSOV.CO_ID, tblProjectSOV.SOV_Acronym, tblprojects.* FROM tblProjectSOV RIGHT JOIN(SELECT tblProjectMaterials.ProjMat_ID, tblProjectMaterials.Material_ID, tblProjectMaterials.ProjSOV_ID, tblProjectMaterials.Mat_Only, tblProjectMaterials.Mat_Phase, tblProjectMaterials.Mat_Type, tblProjects.* FROM tblProjectMaterials RIGHT JOIN(SELECT * FROM tblProjects) AS tblProjects ON tblProjectMaterials.Project_ID = tblProjects.Project_ID) AS tblProjects ON tblProjects.ProjSOV_ID = tblProjectSOV.ProjSOV_ID) AS tblProjects ON tblProjectMaterialsTrack.ProjMat_ID = tblProjects.ProjMat_ID) AS tblProjects ON tblProjects.Manuf_ID = tblManufacturers.Manuf_ID) AS tblProjects on tblProjects.Material_ID = tblMaterials.Material_ID "+ whereMatClause +") AS tblCOItem ON tblCOItem.CO_ID = tblProjectChangeOrders.CO_ID) AS tblProjMat ON tblProjMat.ProjMT_ID = tblProjectMaterialsShip.ProjMT_ID";
+            sqlquery = "SELECT SchedShipDate, tblProjMat.* FROM tblProjectMaterialsShip RIGHT JOIN (SELECT tblProjectChangeOrders.CO_ItemNo, tblCOItem.* FROM tblProjectChangeOrders RIGHT JOIN(SELECT tblMaterials.Material_Desc, tblProjects.* FROM tblMaterials RIGHT JOIN(SELECT tblManufacturers.Manuf_Name, tblprojects.* FROM tblManufacturers RIGHT JOIN(SELECT tblProjectMaterialsTrack.MatReqdDate, tblProjectMaterialsTrack.ProjMat_ID, tblProjectMaterialsTrack.ProjMT_ID, CO_ID, Manuf_ID, Mat_Phase, Mat_Type, SOV_Acronym, Material_ID, ReleasedForFab, Complete, tblProjects.Project_ID FROM tblProjectMaterialsTrack INNER JOIN(SELECT tblProjectSOV.CO_ID, tblProjectSOV.SOV_Acronym, tblprojects.* FROM tblProjectSOV RIGHT JOIN(SELECT tblProjectMaterials.ProjMat_ID, tblProjectMaterials.Material_ID, tblProjectMaterials.ProjSOV_ID, tblProjectMaterials.Mat_Only, tblProjectMaterials.Mat_Phase, tblProjectMaterials.Mat_Type, tblProjects.* FROM tblProjectMaterials RIGHT JOIN(SELECT * FROM tblProjects) AS tblProjects ON tblProjectMaterials.Project_ID = tblProjects.Project_ID) AS tblProjects ON tblProjects.ProjSOV_ID = tblProjectSOV.ProjSOV_ID) AS tblProjects ON tblProjectMaterialsTrack.ProjMat_ID = tblProjects.ProjMat_ID) AS tblProjects ON tblProjects.Manuf_ID = tblManufacturers.Manuf_ID) AS tblProjects on tblProjects.Material_ID = tblMaterials.Material_ID " + whereMatClause + ") AS tblCOItem ON tblCOItem.CO_ID = tblProjectChangeOrders.CO_ID) AS tblProjMat ON tblProjMat.ProjMT_ID = tblProjectMaterialsShip.ProjMT_ID";
             cmd = dbConnection.RunQuryNoParameters(sqlquery);
             sda = new SqlDataAdapter(cmd);
             ds = new DataSet();
@@ -1419,16 +1431,16 @@ namespace WpfApp.ViewModel
             ProjectMatTrackings = sb_matTrackings;
 
             // total items
-            sqlquery = "SELECT DISTINCT tblProjectMat.Project_ID FROM tblProjectMaterialsTrack INNER JOIN(SELECT tblProjectMaterials.ProjMat_ID, tblProjectMat.* FROM tblProjectMaterials INNER JOIN(SELECT Project_ID, Project_Name, Customer_ID, Job_No, Salesman_ID FROM tblProjects "+ whereProjectClause +") AS tblProjectMat ON tblProjectMat.Project_ID = tblProjectMaterials.Project_ID) AS tblProjectMat ON tblProjectMat.ProjMat_ID = tblProjectMaterialsTrack.ProjMat_ID" + whereManufClause;
+            sqlquery = "SELECT DISTINCT tblProjectMat.Project_ID FROM tblProjectMaterialsTrack INNER JOIN(SELECT tblProjectMaterials.ProjMat_ID, tblProjectMat.* FROM tblProjectMaterials INNER JOIN(SELECT Project_ID, Project_Name, Customer_ID, Job_No, Salesman_ID FROM tblProjects " + whereProjectClause + ") AS tblProjectMat ON tblProjectMat.Project_ID = tblProjectMaterials.Project_ID) AS tblProjectMat ON tblProjectMat.ProjMat_ID = tblProjectMaterialsTrack.ProjMat_ID" + whereManufClause;
             cmd = dbConnection.RunQuryNoParameters(sqlquery);
             sda = new SqlDataAdapter(cmd);
             ds = new DataSet();
             sda.Fill(ds);
             int totalItems = ds.Tables[0].Rows.Count;
-            _totalItems = totalItems;
+            TotalItems = totalItems;
             _itemCount = 10;
 
-            sqlquery = "SELECT * FROM (SELECT ROW_NUMBER() over(ORDER BY Project_Name) AS RowIndex, tblSalesmen.Salesman_Name, tblProjSalesman.* FROM tblSalesmen RIGHT JOIN (SELECT tblCustomers.Full_Name, tblProjCustomer.* FROM tblCustomers RIGHT JOIN(SELECT tblProjects.Project_ID, Project_Name, Customer_ID, Job_No, Salesman_ID FROM tblProjects INNER JOIN(SELECT DISTINCT tblProjectMat.Project_ID FROM tblProjectMaterialsTrack INNER JOIN(SELECT tblProjectMaterials.ProjMat_ID, tblProjectMat.* FROM tblProjectMaterials INNER JOIN(SELECT Project_ID, Project_Name, Customer_ID, Job_No, Salesman_ID FROM tblProjects " + whereProjectClause + ") AS tblProjectMat ON tblProjectMat.Project_ID = tblProjectMaterials.Project_ID) AS tblProjectMat ON tblProjectMat.ProjMat_ID = tblProjectMaterialsTrack.ProjMat_ID" + whereManufClause + ") AS tblProj ON tblProj.Project_ID = tblProjects.Project_ID) AS tblProjCustomer ON tblProjCustomer.Customer_ID = tblCustomers.Customer_ID) AS tblProjSalesman ON tblProjSalesman.Salesman_ID = tblSalesmen.Salesman_ID) AS tbl WHERE tbl.RowIndex >= " + Start + " and tbl.RowIndex <= " + End;
+            sqlquery = "SELECT * FROM (SELECT ROW_NUMBER() over(ORDER BY Project_Name) AS RowIndex, tblSalesmen.Salesman_Name, tblProjSalesman.* FROM tblSalesmen RIGHT JOIN (SELECT tblCustomers.Full_Name, tblProjCustomer.* FROM tblCustomers RIGHT JOIN(SELECT tblProjects.Project_ID, Project_Name, Customer_ID, Job_No, Salesman_ID, Target_Date FROM tblProjects INNER JOIN(SELECT DISTINCT tblProjectMat.Project_ID FROM tblProjectMaterialsTrack INNER JOIN(SELECT tblProjectMaterials.ProjMat_ID, tblProjectMat.* FROM tblProjectMaterials INNER JOIN(SELECT Project_ID, Project_Name, Customer_ID, Job_No, Salesman_ID FROM tblProjects " + whereProjectClause + ") AS tblProjectMat ON tblProjectMat.Project_ID = tblProjectMaterials.Project_ID) AS tblProjectMat ON tblProjectMat.ProjMat_ID = tblProjectMaterialsTrack.ProjMat_ID " + whereManufClause + ") AS tblProj ON tblProj.Project_ID = tblProjects.Project_ID) AS tblProjCustomer ON tblProjCustomer.Customer_ID = tblCustomers.Customer_ID) AS tblProjSalesman ON tblProjSalesman.Salesman_ID = tblSalesmen.Salesman_ID) AS tbl WHERE tbl.RowIndex >= " + Start + " and tbl.RowIndex <= " + End + " ORDER BY Job_No";
             cmd = dbConnection.RunQuryNoParameters(sqlquery);
             sda = new SqlDataAdapter(cmd);
             ds = new DataSet();
@@ -1443,6 +1455,7 @@ namespace WpfApp.ViewModel
                 string _salesmanName = "";
                 string _jobNo = "";
                 List<ProjectMatTracking> _projectMatTrackings = new List<ProjectMatTracking>();
+                DateTime _targetDate = DateTime.Now;
 
                 if (!row.IsNull("Project_ID"))
                     _projectID = int.Parse(row["Project_ID"].ToString());
@@ -1454,6 +1467,8 @@ namespace WpfApp.ViewModel
                     _salesmanName = row["Salesman_Name"].ToString();
                 if (!row.IsNull("Job_No"))
                     _jobNo = row["Job_No"].ToString();
+                if (!row.IsNull("Target_Date"))
+                    _targetDate = row.Field<DateTime>("Target_Date");
 
                 _projectMatTrackings = ProjectMatTrackings.Where(item => item.ProjectID == _projectID).ToList();
 
@@ -1464,7 +1479,8 @@ namespace WpfApp.ViewModel
                     CustomerName = _customerName,
                     SalesmanName = _salesmanName,
                     JobNo = _jobNo,
-                    ProjectMatTrackings = _projectMatTrackings
+                    ProjectMatTrackings = _projectMatTrackings,
+                    TargetDate = _targetDate
                 });
             }
             ReportActiveProjects = sb_reportActiveProject;
@@ -1547,23 +1563,23 @@ namespace WpfApp.ViewModel
             ProjectMatTrackings = sb_matTrackings;
 
             // total row
-            sqlquery = "SELECT * FROM tblProjects INNER JOIN(SELECT DISTINCT tblProjectMat.Project_ID FROM tblProjectMaterialsTrack INNER JOIN(SELECT tblProjectMaterials.ProjMat_ID, tblProjectMat.* FROM tblProjectMaterials INNER JOIN(SELECT Project_ID, Project_Name, Customer_ID, Job_No, Salesman_ID FROM tblProjects) AS tblProjectMat ON tblProjectMat.Project_ID = tblProjectMaterials.Project_ID) AS tblProjectMat ON tblProjectMat.ProjMat_ID = tblProjectMaterialsTrack.ProjMat_ID) AS tblProj ON tblProj.Project_ID = tblProjects.Project_ID WHERE tblProjects.Complete = 0";
+            sqlquery = "SELECT * FROM tblProjects INNER JOIN(SELECT DISTINCT tblProjectMat.Project_ID FROM tblProjectMaterialsTrack INNER JOIN(SELECT tblProjectMaterials.ProjMat_ID, tblProjectMat.* FROM tblProjectMaterials INNER JOIN(SELECT Project_ID, Project_Name, Customer_ID, Job_No, Salesman_ID FROM tblProjects "+ whereProjectClause +") AS tblProjectMat ON tblProjectMat.Project_ID = tblProjectMaterials.Project_ID) AS tblProjectMat ON tblProjectMat.ProjMat_ID = tblProjectMaterialsTrack.ProjMat_ID) AS tblProj ON tblProj.Project_ID = tblProjects.Project_ID WHERE tblProjects.Complete = 0";
             cmd = dbConnection.RunQuryNoParameters(sqlquery);
             sda = new SqlDataAdapter(cmd);
             ds = new DataSet();
             sda.Fill(ds);
 
             int totalItems = ds.Tables[0].Rows.Count;
-            _totalItems = totalItems;
+            TotalItems = totalItems;
             _itemCount = 10;
 
-            sqlquery = "SELECT * FROM (SELECT ROW_NUMBER() over(ORDER BY tblProjSalesman.Project_Name) AS RowIndex, tblSalesmen.Salesman_Name, tblProjSalesman.* FROM tblSalesmen RIGHT JOIN (SELECT tblCustomers.Full_Name, tblProjCustomer.* FROM tblCustomers RIGHT JOIN(SELECT tblProjects.Project_ID, Project_Name, Customer_ID, Job_No, Salesman_ID FROM tblProjects INNER JOIN(SELECT DISTINCT tblProjectMat.Project_ID FROM tblProjectMaterialsTrack INNER JOIN(SELECT tblProjectMaterials.ProjMat_ID, tblProjectMat.* FROM tblProjectMaterials INNER JOIN(SELECT Project_ID, Project_Name, Customer_ID, Job_No, Salesman_ID FROM tblProjects) AS tblProjectMat ON tblProjectMat.Project_ID = tblProjectMaterials.Project_ID) AS tblProjectMat ON tblProjectMat.ProjMat_ID = tblProjectMaterialsTrack.ProjMat_ID) AS tblProj ON tblProj.Project_ID = tblProjects.Project_ID " + whereProjectClause + " AND tblProjects.Complete = 0) AS tblProjCustomer ON tblProjCustomer.Customer_ID = tblCustomers.Customer_ID) AS tblProjSalesman ON tblProjSalesman.Salesman_ID = tblSalesmen.Salesman_ID) AS tbl WHERE tbl.RowIndex >= " + Start + " and tbl.RowIndex <= " + End; ;
+            sqlquery = "SELECT * FROM (SELECT ROW_NUMBER() over(ORDER BY tblProjSalesman.Project_Name) AS RowIndex, tblSalesmen.Salesman_Name, tblProjSalesman.* FROM tblSalesmen RIGHT JOIN (SELECT tblCustomers.Full_Name, tblProjCustomer.* FROM tblCustomers RIGHT JOIN(SELECT tblProjects.Project_ID, Project_Name, Customer_ID, Job_No, Salesman_ID, Target_Date FROM tblProjects INNER JOIN(SELECT DISTINCT tblProjectMat.Project_ID FROM tblProjectMaterialsTrack INNER JOIN(SELECT tblProjectMaterials.ProjMat_ID, tblProjectMat.* FROM tblProjectMaterials INNER JOIN(SELECT Project_ID, Project_Name, Customer_ID, Job_No, Salesman_ID FROM tblProjects) AS tblProjectMat ON tblProjectMat.Project_ID = tblProjectMaterials.Project_ID) AS tblProjectMat ON tblProjectMat.ProjMat_ID = tblProjectMaterialsTrack.ProjMat_ID) AS tblProj ON tblProj.Project_ID = tblProjects.Project_ID " + whereProjectClause + " AND tblProjects.Complete = 0) AS tblProjCustomer ON tblProjCustomer.Customer_ID = tblCustomers.Customer_ID) AS tblProjSalesman ON tblProjSalesman.Salesman_ID = tblSalesmen.Salesman_ID) AS tbl WHERE tbl.RowIndex >= " + Start + " and tbl.RowIndex <= " + End + " ORDER BY Job_No";
             cmd = dbConnection.RunQuryNoParameters(sqlquery);
             sda = new SqlDataAdapter(cmd);
             ds = new DataSet();
             sda.Fill(ds);
 
-            ObservableCollection<ReportActiveProject> sb_reportActiveProject = new ObservableCollection<ReportActiveProject>();
+            ObservableCollection<ReportActiveProject> sb_reportActiveJobs = new ObservableCollection<ReportActiveProject>();
             foreach (DataRow row in ds.Tables[0].Rows)
             {
                 int _projectID = 0;
@@ -1572,6 +1588,7 @@ namespace WpfApp.ViewModel
                 string _salesmanName = "";
                 string _jobNo = "";
                 List<ProjectMatTracking> _projectMatTrackings = new List<ProjectMatTracking>();
+                DateTime _targetDate = DateTime.Now;
 
                 if (!row.IsNull("Project_ID"))
                     _projectID = int.Parse(row["Project_ID"].ToString());
@@ -1583,20 +1600,23 @@ namespace WpfApp.ViewModel
                     _salesmanName = row["Salesman_Name"].ToString();
                 if (!row.IsNull("Job_No"))
                     _jobNo = row["Job_No"].ToString();
+                if (!row.IsNull("Target_Date"))
+                    _targetDate = row.Field<DateTime>("Target_Date");
 
                 _projectMatTrackings = ProjectMatTrackings.Where(item => item.ProjectID == _projectID).ToList();
 
-                sb_reportActiveProject.Add(new ReportActiveProject
+                sb_reportActiveJobs.Add(new ReportActiveProject
                 {
                     ProjectID = _projectID,
                     ProjectName = _projectName,
                     CustomerName = _customerName,
                     SalesmanName = _salesmanName,
                     JobNo = _jobNo,
-                    ProjectMatTrackings = _projectMatTrackings
+                    ProjectMatTrackings = _projectMatTrackings,
+                    TargetDate = _targetDate
                 });
             }
-            ReportActiveProjects = sb_reportActiveProject;
+            ReportActiveJobs = sb_reportActiveJobs;
         }
 
         public void LoadPmMeetingData()
@@ -1726,17 +1746,17 @@ namespace WpfApp.ViewModel
             ProjectMatTrackings = sb_matTrackings;
 
             // total row
-            sqlquery = "SELECT * FROM tblProjectManagers RIGHT JOIN(SELECT PM_ID, tblProjPM.* FROM tblProjectPMs RIGHT JOIN(SELECT tblProjects.Project_ID, Project_Name, Target_Date, Complete, Architect_ID, Address, State, ZIP, Job_No, Estimator_ID, Customer_ID, Billing_Date, CIP_Project, C3, Contract_Rcvd, CertPay_Reqd, Stored_Materials FROM tblProjects INNER JOIN (SELECT DISTINCT tblProjectMat.Project_ID FROM tblProjectMaterialsTrack INNER JOIN(SELECT tblProjectMaterials.ProjMat_ID, tblProjectMat.* FROM tblProjectMaterials INNER JOIN(SELECT Project_ID, Project_Name, Customer_ID, Job_No, Salesman_ID FROM tblProjects) AS tblProjectMat ON tblProjectMat.Project_ID = tblProjectMaterials.Project_ID) AS tblProjectMat ON tblProjectMat.ProjMat_ID = tblProjectMaterialsTrack.ProjMat_ID) AS tblProj ON tblProj.Project_ID = tblProjects.Project_ID) AS tblProjPM ON tblProjPM.Project_ID = tblProjectPMs.Project_ID) AS tblProjPM ON tblProjPM.PM_ID = tblProjectManagers.PM_ID";
+            sqlquery = "SELECT * FROM tblProjectManagers RIGHT JOIN(SELECT PM_ID, tblProjPM.* FROM tblProjectPMs RIGHT JOIN(SELECT tblProjects.Project_ID, Project_Name, Target_Date, Complete, Architect_ID, Address, State, ZIP, Job_No, Estimator_ID, Customer_ID, Billing_Date, CIP_Project, C3, Contract_Rcvd, CertPay_Reqd, Stored_Materials FROM tblProjects INNER JOIN (SELECT DISTINCT tblProjectMat.Project_ID FROM tblProjectMaterialsTrack INNER JOIN(SELECT tblProjectMaterials.ProjMat_ID, tblProjectMat.* FROM tblProjectMaterials INNER JOIN(SELECT Project_ID, Project_Name, Customer_ID, Job_No, Salesman_ID FROM tblProjects "+ whereProjectClause +") AS tblProjectMat ON tblProjectMat.Project_ID = tblProjectMaterials.Project_ID) AS tblProjectMat ON tblProjectMat.ProjMat_ID = tblProjectMaterialsTrack.ProjMat_ID) AS tblProj ON tblProj.Project_ID = tblProjects.Project_ID) AS tblProjPM ON tblProjPM.Project_ID = tblProjectPMs.Project_ID) AS tblProjPM ON tblProjPM.PM_ID = tblProjectManagers.PM_ID";
             cmd = dbConnection.RunQuryNoParameters(sqlquery);
             sda = new SqlDataAdapter(cmd);
             ds = new DataSet();
             sda.Fill(ds);
 
             int totalItems = ds.Tables[0].Rows.Count;
-            _totalItems = totalItems;
+            TotalItems = totalItems;
             _itemCount = 10;
 
-            sqlquery = "SELECT * FROM (SELECT ROW_NUMBER() over(ORDER BY tblProjCustomer.Project_Name) AS RowIndex, tblCustomers.Full_Name, tblProjCustomer.* FROM tblCustomers RIGHT JOIN (SELECT Estimator_Name, tblProjEst.*FROM tblEstimators RIGHT JOIN(SELECT tblArchitects.Arch_Company, tblARch.* FROM tblArchitects RIGHT JOIN(SELECT tblProjectManagers.PM_Name, tblProjPM.* FROM tblProjectManagers RIGHT JOIN(SELECT PM_ID, tblProjPM.* FROM tblProjectPMs RIGHT JOIN(SELECT tblProjects.Project_ID, Project_Name, Target_Date, Complete, Architect_ID, Address, State, ZIP, Job_No, Estimator_ID, Customer_ID, Billing_Date, CIP_Project, C3, Contract_Rcvd, CertPay_Reqd, Stored_Materials FROM tblProjects INNER JOIN (SELECT DISTINCT tblProjectMat.Project_ID FROM tblProjectMaterialsTrack INNER JOIN(SELECT tblProjectMaterials.ProjMat_ID, tblProjectMat.* FROM tblProjectMaterials INNER JOIN(SELECT Project_ID, Project_Name, Customer_ID, Job_No, Salesman_ID FROM tblProjects) AS tblProjectMat ON tblProjectMat.Project_ID = tblProjectMaterials.Project_ID) AS tblProjectMat ON tblProjectMat.ProjMat_ID = tblProjectMaterialsTrack.ProjMat_ID) AS tblProj ON tblProj.Project_ID = tblProjects.Project_ID " + whereProjectClause + ") AS tblProjPM ON tblProjPM.Project_ID = tblProjectPMs.Project_ID) AS tblProjPM ON tblProjPM.PM_ID = tblProjectManagers.PM_ID) AS tblARch ON tblARch.Architect_ID = tblArchitects.Architect_ID) AS tblProjEst ON tblProjEst.Estimator_ID = tblEstimators.Estimator_ID) AS tblProjCustomer ON tblProjCustomer.Customer_ID = tblCustomers.Customer_ID) AS tbl WHERE tbl.RowIndex >= " + Start + " and tbl.RowIndex <= " + End;
+            sqlquery = "SELECT * FROM (SELECT ROW_NUMBER() over(ORDER BY tblProjCustomer.Project_Name) AS RowIndex, tblCustomers.Full_Name, tblProjCustomer.* FROM tblCustomers RIGHT JOIN (SELECT Estimator_Name, tblProjEst.*FROM tblEstimators RIGHT JOIN(SELECT tblArchitects.Arch_Company, tblARch.* FROM tblArchitects RIGHT JOIN(SELECT tblProjectManagers.PM_Name, tblProjPM.* FROM tblProjectManagers RIGHT JOIN(SELECT PM_ID, tblProjPM.* FROM tblProjectPMs RIGHT JOIN(SELECT tblProjects.Project_ID, Project_Name, Target_Date, Complete, Architect_ID, Address, State, ZIP, Job_No, Estimator_ID, Customer_ID, Billing_Date, CIP_Project, C3, Contract_Rcvd, CertPay_Reqd, Stored_Materials FROM tblProjects INNER JOIN (SELECT DISTINCT tblProjectMat.Project_ID FROM tblProjectMaterialsTrack INNER JOIN(SELECT tblProjectMaterials.ProjMat_ID, tblProjectMat.* FROM tblProjectMaterials INNER JOIN(SELECT Project_ID, Project_Name, Customer_ID, Job_No, Salesman_ID FROM tblProjects) AS tblProjectMat ON tblProjectMat.Project_ID = tblProjectMaterials.Project_ID) AS tblProjectMat ON tblProjectMat.ProjMat_ID = tblProjectMaterialsTrack.ProjMat_ID) AS tblProj ON tblProj.Project_ID = tblProjects.Project_ID " + whereProjectClause + ") AS tblProjPM ON tblProjPM.Project_ID = tblProjectPMs.Project_ID) AS tblProjPM ON tblProjPM.PM_ID = tblProjectManagers.PM_ID) AS tblARch ON tblARch.Architect_ID = tblArchitects.Architect_ID) AS tblProjEst ON tblProjEst.Estimator_ID = tblEstimators.Estimator_ID) AS tblProjCustomer ON tblProjCustomer.Customer_ID = tblCustomers.Customer_ID) AS tbl WHERE tbl.RowIndex >= " + Start + " and tbl.RowIndex <= " + End + "ORDER BY Job_No";
             cmd = dbConnection.RunQuryNoParameters(sqlquery);
             sda = new SqlDataAdapter(cmd);
             ds = new DataSet();
@@ -2931,7 +2951,22 @@ namespace WpfApp.ViewModel
                 }
             }
         }
-        
+
+        private ObservableCollection<ReportActiveProject> _reportActiveJobs;
+
+        public ObservableCollection<ReportActiveProject> ReportActiveJobs
+        {
+            get { return _reportActiveJobs; }
+            set
+            {
+                if (_reportActiveJobs != value)
+                {
+                    _reportActiveJobs = value;
+                    OnPropertyChanged();
+                }
+            }
+        }
+
         private ObservableCollection<ReportPmMeeting> _reportPmMeetings;
 
         public ObservableCollection<ReportPmMeeting> ReportPmMeetings

@@ -15,6 +15,7 @@ namespace WpfApp.Model
         private string _customerName;
         private string _salesman;
         private List<ProjectMatTracking> _projectMatTracking;
+        private DateTime _targetDate;
 
         public int ProjectID
         {
@@ -78,6 +79,17 @@ namespace WpfApp.Model
             {
                 if (value == _projectMatTracking) return;
                 _projectMatTracking = value;
+                OnPropertyChanged();
+            }
+        }
+
+        public DateTime TargetDate
+        {
+            get => _targetDate;
+            set
+            {
+                if (value == _targetDate) return;
+                _targetDate = value;
                 OnPropertyChanged();
             }
         }

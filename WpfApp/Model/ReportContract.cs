@@ -15,6 +15,7 @@ namespace WpfApp.Model
         private string _salesmanName;
         private string _customerName;
         private List<Contract> _contract;
+        private DateTime _targetDate;
 
         public int ProjectID
         {
@@ -82,6 +83,15 @@ namespace WpfApp.Model
             }
         }
 
-
+        public DateTime TargetDate
+        {
+            get => _targetDate;
+            set
+            {
+                if (value == _targetDate) return;
+                _targetDate = value;
+                OnPropertyChanged();
+            }
+        }
     }
 }

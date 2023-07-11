@@ -15,6 +15,7 @@ namespace WpfApp.Model
         private string _salesmanName;
         private string _customerName;
         private List<ReportCOItem> _reportCOItems;
+        private DateTime _targetDate;
 
         public int ProjectID
         {
@@ -78,6 +79,17 @@ namespace WpfApp.Model
             {
                 if (value == _reportCOItems) return;
                 _reportCOItems = value;
+                OnPropertyChanged();
+            }
+        }
+
+        public DateTime TargetDate
+        {
+            get => _targetDate;
+            set
+            {
+                if (value == _targetDate) return;
+                _targetDate = value;
                 OnPropertyChanged();
             }
         }
