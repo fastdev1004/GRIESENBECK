@@ -21,14 +21,14 @@
         <Setter Property="VerticalAlignment" Value="Center" />
     </Style>
     <Style x:Key="GridColumnHeaderBase" TargetType="DataGridColumnHeader">
-        <Setter Property="Background" Value="#648278" />
+        <Setter Property="Background" Value="#5C83B4" />
         <Setter Property="Foreground" Value="White" />
         <Setter Property="Height" Value="40" />
         <Setter Property="Padding" Value="10,0,0,0" />
         <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate TargetType="{x:Type DataGridColumnHeader}">
-                    <Grid Background="#C6D9F1">
+                    <Grid Background="#5C83B4">
                         <VisualStateManager.VisualStateGroups>
                             <VisualStateGroup x:Name="SortStates">
                                 <VisualState x:Name="Unsorted"/>

@@ -15,7 +15,7 @@ namespace WpfApp.Model
         private string _matName;
         private bool _stock;
         private DateTime _matlReqd;
-        private int _qtyReqd;
+        private float _qtyReqd;
         private int _qtyOrd;
         private int _qtyRecvd;
         private int _matQty;
@@ -88,7 +88,7 @@ namespace WpfApp.Model
             }
         }
 
-        public int QtyReqd
+        public float QtyReqd
         {
             get => _qtyReqd;
             set

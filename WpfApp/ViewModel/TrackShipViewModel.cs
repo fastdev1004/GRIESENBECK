@@ -108,9 +108,9 @@ namespace WpfApp.ViewModel
                 string matPhase = row["Mat_Phase"].ToString();
                 string matType = row["Mat_Type"].ToString();
                 string colorSelected = row["Color_Selected"].ToString();
-                string qtyReqd = "";
+                float qtyReqd = 0;
                 if (!row.IsNull("Qty_Reqd"))
-                    qtyReqd = row["Qty_Reqd"].ToString();
+                    qtyReqd = float.Parse(row["Qty_Reqd"].ToString());
                 string totalCost = row["TotalCost"].ToString();
                 int projmatID = -1;
                 if (!row.IsNull("ProjMat_ID"))

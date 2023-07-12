@@ -18,7 +18,7 @@ namespace WpfApp.Model
         private string _phase;
         private string _type;
         private string _color;
-        private string _qtyReqd;
+        private float _qtyReqd;
         private int _projMatID;
 
         public int ID
@@ -92,7 +92,7 @@ namespace WpfApp.Model
                 OnPropertyChanged();
             }
         }
-        public string QtyReqd
+        public float QtyReqd
         {
             get => _qtyReqd;
             set

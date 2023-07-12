@@ -19,7 +19,7 @@ namespace WpfApp.Model
         private string _matPhase;
         private string _matType;
         private string _color;
-        private int _qtyReqd;
+        private float _qtyReqd;
         private double _totalCost;
         private int _actionFlag;
         private int _projSovID;
@@ -205,7 +205,7 @@ namespace WpfApp.Model
             }
         }
 
-        public int QtyReqd
+        public float QtyReqd
         {
             get => _qtyReqd;
             set

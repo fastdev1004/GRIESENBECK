@@ -522,7 +522,7 @@ namespace WpfApp.ViewModel
                     string matPhase = _sovMaterial.MatPhase;
                     string matType = _sovMaterial.MatType;
                     string color = _sovMaterial.Color;
-                    int qtyReqd = _sovMaterial.QtyReqd;
+                    float qtyReqd = _sovMaterial.QtyReqd;
                     double totalCost = _sovMaterial.TotalCost;
                     int actionFlag = _sovMaterial.ActionFlag;
                     int matLine = _sovMaterial.MatLineNo;
@@ -576,7 +576,7 @@ namespace WpfApp.ViewModel
                     int labLineNo = _sovLabor.LabLineNo;
                     int laborID = _sovLabor.LaborID;
                     string phase = _sovLabor.LaborPhase;
-                    double qtyReqd = _sovLabor.QtyReqd;
+                    float qtyReqd = _sovLabor.QtyReqd;
                     int projectLabID = _sovLabor.ProjLabID;
                     bool laborComplete = _sovLabor.Complete;
                     int projSovID = 0;
@@ -1698,9 +1698,9 @@ namespace WpfApp.ViewModel
                 string matPhase = row["Mat_Phase"].ToString();
                 string matType = row["Mat_Type"].ToString();
                 string colorSelected = row["Color_Selected"].ToString();
-                string qtyReqd = "";
+                float qtyReqd = 0;
                 if (!row.IsNull("Qty_Reqd"))
-                    qtyReqd = row["Qty_Reqd"].ToString();
+                    qtyReqd = float.Parse(row["Qty_Reqd"].ToString());
                 string totalCost = row["TotalCost"].ToString();
                 int projmatID = 0;
                 if (!row.IsNull("ProjMat_ID"))
@@ -1737,7 +1737,7 @@ namespace WpfApp.ViewModel
                 string _manufName = "";
                 bool _stock = false;
                 DateTime _matlReqd = new DateTime();
-                int _qtyReqd = 0;
+                float _qtyReqd = 0;
                 int _qtyOrd = 0;
                 int _qtyRecvd = 0;
                 int _matQty = 0;
@@ -1757,7 +1757,7 @@ namespace WpfApp.ViewModel
                 if (!row.IsNull("MatReqdDate"))
                     _matlReqd = row.Field<DateTime>("MatReqdDate");
                 if (!row.IsNull("Qty_Reqd"))
-                    _qtyReqd = int.Parse(row["Qty_Reqd"].ToString());
+                    _qtyReqd = float.Parse(row["Qty_Reqd"].ToString());
                 if (!row.IsNull("Qty_Ord"))
                     _qtyOrd = int.Parse(row["Qty_Ord"].ToString());
                 if (!row.IsNull("Qty_Recvd"))
@@ -2228,7 +2228,7 @@ namespace WpfApp.ViewModel
                 string _matPhase = "";
                 string _matType = "";
                 string _color = "";
-                int _qtyReqd = 0;
+                float _qtyReqd = 0;
                 double _totalCost = 0;
                 int _projMatID = 0;
                 int _projSovID = 0;
@@ -2250,7 +2250,7 @@ namespace WpfApp.ViewModel
                 if (!row.IsNull("Color_Selected"))
                     _color = row["Color_Selected"].ToString();
                 if (!row.IsNull("Qty_Reqd"))
-                    _qtyReqd = int.Parse(row["Qty_Reqd"].ToString());
+                    _qtyReqd = float.Parse(row["Qty_Reqd"].ToString());
                 if (!row.IsNull("TotalCost"))
                     _totalCost = double.Parse(row["TotalCost"].ToString());
                 if (!row.IsNull("ProjMat_ID"))

@@ -1837,7 +1837,7 @@ namespace WpfApp.Utils
         }
 
         // Create ProjectMat
-        public int RunQueryToCreateProjectMat(string query, int projSovID, int matID, string matPhase, string matType, string color, int qtyReqd, double totalCost, bool matOnly, int projectID)
+        public int RunQueryToCreateProjectMat(string query, int projSovID, int matID, string matPhase, string matType, string color, float qtyReqd, double totalCost, bool matOnly, int projectID)
         {
             try
             {
@@ -1883,7 +1883,7 @@ namespace WpfApp.Utils
         }
 
         // Update ProjectMat
-        public SqlCommand RunQueryToUpdateProjectMat(string query, int projSovID, int matLine, int matID, string matPhase, string matType, string color, int qtyReqd, double totalCost, bool matLot, double matOrigRate, bool matOnly, int projectID, int projMatID)
+        public SqlCommand RunQueryToUpdateProjectMat(string query, int projSovID, int matLine, int matID, string matPhase, string matType, string color, float qtyReqd, double totalCost, bool matLot, double matOrigRate, bool matOnly, int projectID, int projMatID)
         {
             try
             {

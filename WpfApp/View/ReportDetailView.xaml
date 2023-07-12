@@ -126,10 +126,22 @@
                                                             <ColumnDefinition Width="1*" />
                                                             <ColumnDefinition Width="1*" />
                                                         </Grid.ColumnDefinitions>
-                                                        <WrapPanel>
-                                                            <Label Content="Customer:" FontWeight="Bold" />
-                                                            <TextBlock Text="{Binding CustomerName, Mode=TwoWay}" VerticalAlignment="Center" />
-                                                        </WrapPanel>
+                                                        <Grid>
+                                                            <Grid.Resources>
+                                                                <Style TargetType="TextBlock">
+                                                                    <Setter Property="VerticalAlignment" Value="Center" />
+                                                                </Style>
+                                                                <Style TargetType="TextBox">
+                                                                    <Setter Property="VerticalContentAlignment" Value="Center" />
+                                                                </Style>
+                                                            </Grid.Resources>
+                                                            <Grid.ColumnDefinitions>
+                                                                <ColumnDefinition Width="Auto" />
+                                                                <ColumnDefinition Width="*" />
+                                                            </Grid.ColumnDefinitions>
+                                                            <Label Content="Customer:" />
+                                                            <TextBlock Grid.Column="1" Text="{Binding CustomerName, Mode=TwoWay}" MouseLeftButtonDown="TextBlock_MouseLeftButtonDown" Tag="CustomerName" VerticalAlignment="Center" />
+                                                        </Grid>
                                                         <WrapPanel Grid.Column="1">
                                                             <Label Content="JobNo:" FontWeight="Bold" />
                                                             <TextBlock Text="{Binding JobNo, Mode=TwoWay}" VerticalAlignment="Center" />
@@ -3433,7 +3445,7 @@
                                 </DataTemplate>
                             </DataGridTemplateColumn.CellTemplate>
                         </DataGridTemplateColumn>
-                        <DataGridTemplateColumn IsReadOnly="False" Width="2*" SortMemberPath="Submitted">
+                        <DataGridTemplateColumn IsReadOnly="False" Width="2*" SortMemberPath="SubmIssue">
                             <DataGridTemplateColumn.Header>
                                 <Border BorderBrush="Black" BorderThickness="0,0,0,1">
                                     <TextBlock Text="Submitted" TextWrapping="Wrap" FontWeight="Bold" />
@@ -3724,7 +3736,7 @@
                                 </DataTemplate>
                             </DataGridTemplateColumn.CellTemplate>
                         </DataGridTemplateColumn>
-                        <DataGridTemplateColumn IsReadOnly="False" Width="2*" SortMemberPath="Submitted">
+                        <DataGridTemplateColumn IsReadOnly="False" Width="2*" SortMemberPath="SubmIssue">
                             <DataGridTemplateColumn.Header>
                                 <Border BorderBrush="Black" BorderThickness="0,0,0,1">
                                     <TextBlock Text="Submitted" TextWrapping="Wrap" FontWeight="Bold" />

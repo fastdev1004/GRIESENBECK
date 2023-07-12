@@ -286,7 +286,7 @@ namespace WpfApp.View
                 case "ShopsReqd":
                     sortColumn = "ShopReqDate";
                     break;
-                case "Submitted":
+                case "SubmIssue":
                     sortColumn = "SubmitIssue";
                     break;
                 case "Resubmit":
