@@ -1850,11 +1850,17 @@ namespace WpfApp.ViewModel
             ReportPmMeetings = sb_reportPmMeetings;
         }
         
-        public void LoadShipNotRecvData()
+        public void LoadShipNotRecvData(string st_sortClause)
         {
             string whereProjectClause = GetProjectWhereClasuse();
             string whereManufClause = " WHERE 1=1";
             string whereMatClause = " WHERE 1=1";
+            string sortClause = "ORDER BY Manuf_Name";
+
+            if (!string.IsNullOrEmpty(st_sortClause))
+            {
+                sortClause = st_sortClause;
+            }
 
             if (SelectedManufID != 0)
             {
@@ -1876,7 +1882,7 @@ namespace WpfApp.ViewModel
             _totalItems = totalItems;
             _itemCount = 30;
 
-            sqlquery = "SELECT * FROM (SELECT ROW_NUMBER() over(ORDER BY Job_No) AS RowIndex, Manuf_Name, tblProjSales.* FROM tblManufacturers RIGHT JOIN (SELECT Salesman_Name, tblProjSales.*FROM tblSalesmen RIGHT JOIN(SELECT Job_No, Project_Name, Salesman_ID, tblProjMat.* FROM tblProjects RIGHT JOIN(SELECT Project_ID, Material_ID, Mat_Type, Mat_Phase, tblProjTrack.* FROM tblProjectMaterials RIGHT JOIN(SELECT MatReqdDate, ProjMat_ID, Manuf_ID, PO_Number, tblProjShip.* FROM tblProjectMaterialsTrack INNER JOIN(SELECT SchedShipDate, ProjMT_ID, EstDelivDate FROM tblProjectMaterialsShip WHERE Date_Recvd IS NULL) AS tblProjShip ON tblProjectMaterialsTrack.ProjMT_ID = tblProjShip.ProjMT_ID) AS tblProjTrack ON tblProjTrack.ProjMat_ID = tblProjectMaterials.ProjMat_ID) AS tblProjMat ON tblProjMat.Project_ID = tblProjects.Project_ID " + whereProjectClause +") AS tblProjSales ON tblSalesmen.Salesman_ID = tblProjSales.Salesman_ID) AS tblProjSales ON tblProjSales.Salesman_ID = tblManufacturers.Manuf_ID) AS tbl WHERE tbl.RowIndex >= " + Start + " and tbl.RowIndex <= " + End;
+            sqlquery = "SELECT * FROM (SELECT ROW_NUMBER() over("+ sortClause +") AS RowIndex, Manuf_Name, tblProjSales.* FROM tblManufacturers RIGHT JOIN (SELECT Salesman_Name, tblProjSales.*FROM tblSalesmen RIGHT JOIN(SELECT Job_No, Project_Name, Salesman_ID, tblProjMat.* FROM tblProjects RIGHT JOIN(SELECT Project_ID, Material_ID, Mat_Type, Mat_Phase, tblProjTrack.* FROM tblProjectMaterials RIGHT JOIN(SELECT MatReqdDate, ProjMat_ID, Manuf_ID, PO_Number, tblProjShip.* FROM tblProjectMaterialsTrack INNER JOIN(SELECT SchedShipDate, ProjMT_ID, EstDelivDate FROM tblProjectMaterialsShip WHERE Date_Recvd IS NULL) AS tblProjShip ON tblProjectMaterialsTrack.ProjMT_ID = tblProjShip.ProjMT_ID) AS tblProjTrack ON tblProjTrack.ProjMat_ID = tblProjectMaterials.ProjMat_ID) AS tblProjMat ON tblProjMat.Project_ID = tblProjects.Project_ID " + whereProjectClause +") AS tblProjSales ON tblSalesmen.Salesman_ID = tblProjSales.Salesman_ID) AS tblProjSales ON tblProjSales.Salesman_ID = tblManufacturers.Manuf_ID) AS tbl WHERE tbl.RowIndex >= " + Start + " and tbl.RowIndex <= " + End;
             cmd = dbConnection.RunQuryNoParameters(sqlquery);
             sda = new SqlDataAdapter(cmd);
             ds = new DataSet();
@@ -1938,11 +1944,17 @@ namespace WpfApp.ViewModel
             ReportShipNotRecvs = sb_reportShipNotRecvs;
         }
 
-        public void LoadShopRecvData()
+        public void LoadShopRecvData(string st_sortClause)
         {
             string whereProjectClause = GetProjectWhereClasuse();
             string whereManufClause = " WHERE 1=1";
             string whereMatClause = " WHERE 1=1";
+
+            string sortClause = "ORDER BY MatReqdDate";
+            if (!string.IsNullOrEmpty(st_sortClause))
+            {
+                sortClause = st_sortClause;
+            }
 
             if (SelectedManufID != 0)
             {
@@ -1964,7 +1976,7 @@ namespace WpfApp.ViewModel
             _totalItems = totalItems;
             _itemCount = 30;
 
-            sqlquery = "SELECT* FROM(SELECT ROW_NUMBER() over(ORDER BY MatReqdDate) AS RowIndex, Manuf_Name, tblProjManuf.* FROM tblManufacturers RIGHT JOIN (SELECT Salesman_Name, tblProjSales.*FROM tblSalesmen RIGHT JOIN(SELECT tblMaterials.Material_Desc, tblProjMat.* FROM tblMaterials RIGHT JOIN(SELECT Job_No, Project_Name, Salesman_ID, tblProj.* FROM tblProjects RIGHT JOIN(SELECT MatReqdDate, ShopRecvdDate, SubmitIssue, Manuf_ID, tblProjectMaterials.Material_ID, tblProjectMaterials.Project_ID FROM tblProjectMaterials RIGHT JOIN(SELECT * FROM tblProjectMaterialsTrack " + whereManufClause + " AND ShopRecvdDate IS NOT NULL AND SubmitIssue is NULL AND No_Sub_Needed = 0 ) AS tblProjMat ON tblProjMat.ProjMat_ID = tblProjectMaterials.ProjMat_ID) AS tblProj ON tblProj.Project_ID = tblProjects.Project_ID " + whereProjectClause +") AS tblProjMat ON tblProjMat.Material_ID = tblMaterials.Material_ID) AS tblProjSales ON tblProjSales.Salesman_ID = tblSalesmen.Salesman_ID) AS tblProjManuf ON tblProjManuf.Manuf_ID = tblManufacturers.Manuf_ID) AS tbl WHERE tbl.RowIndex >= "+ Start +" and tbl.RowIndex <= " + End;
+            sqlquery = "SELECT* FROM(SELECT ROW_NUMBER() over("+ sortClause +") AS RowIndex, Manuf_Name, tblProjManuf.* FROM tblManufacturers RIGHT JOIN (SELECT Salesman_Name, tblProjSales.*FROM tblSalesmen RIGHT JOIN(SELECT tblMaterials.Material_Desc, tblProjMat.* FROM tblMaterials RIGHT JOIN(SELECT Job_No, Project_Name, Salesman_ID, tblProj.* FROM tblProjects RIGHT JOIN(SELECT MatReqdDate, ShopRecvdDate, SubmitIssue, Manuf_ID, tblProjectMaterials.Material_ID, tblProjectMaterials.Project_ID FROM tblProjectMaterials RIGHT JOIN(SELECT * FROM tblProjectMaterialsTrack " + whereManufClause + " AND ShopRecvdDate IS NOT NULL AND SubmitIssue is NULL AND No_Sub_Needed = 0 ) AS tblProjMat ON tblProjMat.ProjMat_ID = tblProjectMaterials.ProjMat_ID) AS tblProj ON tblProj.Project_ID = tblProjects.Project_ID " + whereProjectClause +") AS tblProjMat ON tblProjMat.Material_ID = tblMaterials.Material_ID) AS tblProjSales ON tblProjSales.Salesman_ID = tblSalesmen.Salesman_ID) AS tblProjManuf ON tblProjManuf.Manuf_ID = tblManufacturers.Manuf_ID) AS tbl WHERE tbl.RowIndex >= "+ Start +" and tbl.RowIndex <= " + End;
             cmd = dbConnection.RunQuryNoParameters(sqlquery);
             sda = new SqlDataAdapter(cmd);
             ds = new DataSet();
@@ -2018,11 +2030,17 @@ namespace WpfApp.ViewModel
             ReportShopRecvs = sb_reportShopRecv;
         }
         
-        public void LoadShopReqData()
+        public void LoadShopReqData(string st_sortClause)
         {
             string whereProjectClause = GetProjectWhereClasuse();
             string whereManufClause = " WHERE 1=1";
             string whereMatClause = " WHERE 1=1";
+
+            string sortClause = "ORDER BY Manuf_Name";
+            if (!string.IsNullOrEmpty(st_sortClause))
+            {
+                sortClause = st_sortClause;
+            }
 
             if (SelectedManufID != 0)
             {
@@ -2045,7 +2063,7 @@ namespace WpfApp.ViewModel
             _totalItems = totalItems;
             _itemCount = 30;
 
-            sqlquery = "SELECT * FROM(SELECT ROW_NUMBER() over(ORDER BY MatReqdDate) AS RowIndex, Material_Desc, tblProjMat.* FROM tblMaterials RIGHT JOIN (SELECT Manuf_Name, tblProManuf.*FROM tblManufacturers RIGHT JOIN(SELECT Salesman_Name, tblProj.* FROM tblSalesmen RIGHT JOIN(SELECT Job_No, Project_Name, Salesman_ID, tblProj.* FROM tblProjects RIGHT JOIN(SELECT MatReqdDate, ShopRecvdDate, ShopReqDate, SubmitIssue, Manuf_ID, tblProjectMaterials.Material_ID, tblProjectMaterials.Project_ID FROM tblProjectMaterials RIGHT JOIN(SELECT * FROM tblProjectMaterialsTrack "+ whereManufClause + " AND ShopReqDate IS NOT NULL AND No_Sub_Needed = 0 AND SubmitAppr IS NULL AND SubmitIssue IS NULL) AS tblProjMat ON tblProjMat.ProjMat_ID = tblProjectMaterials.ProjMat_ID) AS tblProj ON tblProj.Project_ID = tblProjects.Project_ID) AS tblProj ON tblProj.Salesman_ID = tblSalesmen.Salesman_ID) AS tblProManuf ON tblProManuf.Manuf_ID = tblManufacturers.Manuf_ID) AS tblProjMat ON tblProjMat.Material_ID = tblMaterials.Material_ID)  AS tbl WHERE tbl.RowIndex >= " + Start + " and tbl.RowIndex <= " + End;
+            sqlquery = "SELECT * FROM(SELECT ROW_NUMBER() over("+ sortClause +") AS RowIndex, Material_Desc, tblProjMat.* FROM tblMaterials RIGHT JOIN (SELECT Manuf_Name, tblProManuf.*FROM tblManufacturers RIGHT JOIN(SELECT Salesman_Name, tblProj.* FROM tblSalesmen RIGHT JOIN(SELECT Job_No, Project_Name, Salesman_ID, tblProj.* FROM tblProjects RIGHT JOIN(SELECT MatReqdDate, ShopRecvdDate, ShopReqDate, SubmitIssue, Manuf_ID, tblProjectMaterials.Material_ID, tblProjectMaterials.Project_ID FROM tblProjectMaterials RIGHT JOIN(SELECT * FROM tblProjectMaterialsTrack "+ whereManufClause + " AND ShopReqDate IS NOT NULL AND No_Sub_Needed = 0 AND SubmitAppr IS NULL AND SubmitIssue IS NULL) AS tblProjMat ON tblProjMat.ProjMat_ID = tblProjectMaterials.ProjMat_ID) AS tblProj ON tblProj.Project_ID = tblProjects.Project_ID) AS tblProj ON tblProj.Salesman_ID = tblSalesmen.Salesman_ID) AS tblProManuf ON tblProManuf.Manuf_ID = tblManufacturers.Manuf_ID) AS tblProjMat ON tblProjMat.Material_ID = tblMaterials.Material_ID)  AS tbl WHERE tbl.RowIndex >= " + Start + " and tbl.RowIndex <= " + End;
             cmd = dbConnection.RunQuryNoParameters(sqlquery);
             sda = new SqlDataAdapter(cmd);
             ds = new DataSet();
@@ -2099,11 +2117,16 @@ namespace WpfApp.ViewModel
             ReportShopReqs = sb_reportShopReq;
         }
         
-        public void LoadSubmitNotApprData()
+        public void LoadSubmitNotApprData(string st_sortClause)
         {
             string whereProjectClause = GetProjectWhereClasuse();
             string whereManufClause = " WHERE 1=1";
             string whereMatClause = " WHERE 1=1";
+            string sortClause = "ORDER BY MatReqdDate";
+            if (!string.IsNullOrEmpty(st_sortClause))
+            {
+                sortClause = st_sortClause;
+            }
 
             if (SelectedManufID != 0)
             {
@@ -2126,7 +2149,7 @@ namespace WpfApp.ViewModel
             _totalItems = totalItems;
             _itemCount = 30;
 
-            sqlquery = "SELECT * FROM(SELECT ROW_NUMBER() over(ORDER BY MatReqdDate) AS RowIndex, Material_Desc, tblProjMat.* FROM tblMaterials RIGHT JOIN (SELECT Manuf_Name, tblProManuf.*FROM tblManufacturers RIGHT JOIN(SELECT Salesman_Name, tblProj.* FROM tblSalesmen RIGHT JOIN(SELECT Job_No, Project_Name, Salesman_ID, tblProj.* FROM tblProjects RIGHT JOIN(SELECT MatReqdDate, ShopRecvdDate, ShopReqDate, SubmitIssue, Resubmit_Date, SubmitAppr, Manuf_ID, tblProjectMaterials.Material_ID, tblProjectMaterials.Project_ID FROM tblProjectMaterials RIGHT JOIN(SELECT * FROM tblProjectMaterialsTrack " + whereManufClause + " AND  ShopReqDate IS NOT NULL AND No_Sub_Needed = 0 AND SubmitAppr IS NULL AND SubmitIssue IS NOT NULL) AS tblProjMat ON tblProjMat.ProjMat_ID = tblProjectMaterials.ProjMat_ID "+ whereMatClause +") AS tblProj ON tblProj.Project_ID = tblProjects.Project_ID "+ whereProjectClause + ") AS tblProj ON tblProj.Salesman_ID = tblSalesmen.Salesman_ID) AS tblProManuf ON tblProManuf.Manuf_ID = tblManufacturers.Manuf_ID) AS tblProjMat ON tblProjMat.Material_ID = tblMaterials.Material_ID) AS tbl WHERE tbl.RowIndex >= " + Start + " and tbl.RowIndex <= " + End;
+            sqlquery = "SELECT * FROM(SELECT ROW_NUMBER() over("+ sortClause +") AS RowIndex, Material_Desc, tblProjMat.* FROM tblMaterials RIGHT JOIN (SELECT Manuf_Name, tblProManuf.*FROM tblManufacturers RIGHT JOIN(SELECT Salesman_Name, tblProj.* FROM tblSalesmen RIGHT JOIN(SELECT Job_No, Project_Name, Salesman_ID, tblProj.* FROM tblProjects RIGHT JOIN(SELECT MatReqdDate, ShopRecvdDate, ShopReqDate, SubmitIssue, Resubmit_Date, SubmitAppr, Manuf_ID, tblProjectMaterials.Material_ID, tblProjectMaterials.Project_ID FROM tblProjectMaterials RIGHT JOIN(SELECT * FROM tblProjectMaterialsTrack " + whereManufClause + " AND  ShopReqDate IS NOT NULL AND No_Sub_Needed = 0 AND SubmitAppr IS NULL AND SubmitIssue IS NOT NULL) AS tblProjMat ON tblProjMat.ProjMat_ID = tblProjectMaterials.ProjMat_ID "+ whereMatClause +") AS tblProj ON tblProj.Project_ID = tblProjects.Project_ID "+ whereProjectClause + ") AS tblProj ON tblProj.Salesman_ID = tblSalesmen.Salesman_ID) AS tblProManuf ON tblProManuf.Manuf_ID = tblManufacturers.Manuf_ID) AS tblProjMat ON tblProjMat.Material_ID = tblMaterials.Material_ID) AS tbl WHERE tbl.RowIndex >= " + Start + " and tbl.RowIndex <= " + End;
             cmd = dbConnection.RunQuryNoParameters(sqlquery);
             sda = new SqlDataAdapter(cmd);
             ds = new DataSet();
@@ -2184,12 +2207,16 @@ namespace WpfApp.ViewModel
             ReportSubmits = sb_reportSubmits;
         }
 
-        public void LoadVendorData()
+        public void LoadVendorData(string st_sortClause)
         {
             string whereProjectClause = GetProjectWhereClasuse();
             string whereManufClause = " WHERE 1=1";
             string whereMatClause = " WHERE 1=1";
-
+            string sortClause = "ORDER BY Manuf_Name";
+            if (!string.IsNullOrEmpty(st_sortClause))
+            {
+                sortClause = st_sortClause;
+            }
             if (SelectedManufID != 0)
             {
                 whereManufClause += $" AND tblManufacturers.Manuf_ID = '{SelectedManufID}'";
@@ -2211,7 +2238,7 @@ namespace WpfApp.ViewModel
             _totalItems = totalItems;
             _itemCount = 30;
 
-            sqlquery = "SELECT * FROM(SELECT ROW_NUMBER() over(ORDER BY Manuf_Name) AS RowIndex, tblManufacturers.Manuf_ID, tblManufacturers.Manuf_Name, tblManufacturers.Contact_Name, tblManufacturers.Contact_Phone, tblManufacturers.Contact_Email FROM tblManufacturers" + whereManufClause + ") AS tbl WHERE tbl.RowIndex >= " + Start + " and tbl.RowIndex <= " + End;
+            sqlquery = "SELECT * FROM(SELECT ROW_NUMBER() over("+ sortClause + ") AS RowIndex, tblManufacturers.Manuf_ID, tblManufacturers.Manuf_Name, tblManufacturers.Contact_Name, tblManufacturers.Contact_Phone, tblManufacturers.Contact_Email FROM tblManufacturers" + whereManufClause + ") AS tbl WHERE tbl.RowIndex >= " + Start + " and tbl.RowIndex <= " + End;
             cmd = dbConnection.RunQuryNoParameters(sqlquery);
             sda = new SqlDataAdapter(cmd);
             ds = new DataSet();
@@ -2250,11 +2277,17 @@ namespace WpfApp.ViewModel
             ReportVendors = sb_reportVendors;
         }
 
-        public void LoadReleaseNotShipData()
+        public void LoadReleaseNotShipData(string st_sortClause)
         {
             string whereProjectClause = GetProjectWhereClasuse();
             string whereManufClause = " WHERE 1=1";
             string whereMatClause = " WHERE 1=1";
+
+            string sortClause = "ORDER BY MatReqdDate";
+            if (!string.IsNullOrEmpty(st_sortClause))
+            {
+                sortClause = st_sortClause;
+            }
 
             if (SelectedManufID != 0)
             {
@@ -2276,7 +2309,8 @@ namespace WpfApp.ViewModel
             _totalItems = totalItems;
             _itemCount = 30;
 
-            sqlquery = "SELECT * FROM (SELECT ROW_NUMBER() over(ORDER BY MatReqdDate) AS RowIndex, tblMaterials.Material_Desc, tblProjMat.* FROM tblMaterials RIGHT JOIN (SELECT Salesman_Name, tblProjSales.*FROM tblSalesmen RIGHT JOIN(SELECT Project_Name, Salesman_ID, Job_No, tblProj.* FROM tblProjects RIGHT JOIN(SELECT Manuf_Name, tblProjManuf.* FROM tblManufacturers RIGHT JOIN(SELECT Material_ID, Mat_Phase, Project_ID, tblProjMat.* FROM tblProjectMaterials RIGHT JOIN(SELECT tblProjectMaterialsTrack.ProjMat_ID, tblProjectMaterialsTrack.Manuf_ID, MatReqdDate, ReleasedForFab, PO_Number FROM tblProjectMaterialsTrack LEFT JOIN tblProjectMaterialsShip ON tblProjectMaterialsTrack.ProjMT_ID = tblProjectMaterialsShip.ProjMT_ID WHERE tblProjectMaterialsShip.ProjMT_ID IS NULL AND tblProjectMaterialsTrack.ReleasedForFab IS NOT NULL) AS tblProjMat ON tblProjMat.ProjMat_ID = tblProjectMaterials.ProjMat_ID " + whereMatClause +") AS tblProjManuf ON tblProjManuf.Manuf_ID = tblManufacturers.Manuf_ID "+ whereManufClause  +") AS tblProj ON tblProj.Project_ID = tblProjects.Project_ID "+ whereProjectClause + ") AS tblProjSales ON tblProjSales.Salesman_ID = tblSalesmen.Salesman_ID) AS tblProjMat ON tblProjMat.Material_ID = tblMaterials.Material_ID) AS tbl WHERE tbl.RowIndex >= " + Start + " and tbl.RowIndex <= " + End;
+            sqlquery = "SELECT * FROM (SELECT ROW_NUMBER() over("+ sortClause +") AS RowIndex, tblMaterials.Material_Desc, tblProjMat.* FROM tblMaterials RIGHT JOIN (SELECT Salesman_Name, tblProjSales.*FROM tblSalesmen RIGHT JOIN(SELECT Project_Name, Salesman_ID, Job_No, tblProj.* FROM tblProjects RIGHT JOIN(SELECT Manuf_Name, tblProjManuf.* FROM tblManufacturers RIGHT JOIN(SELECT Material_ID, Mat_Phase, Project_ID, tblProjMat.* FROM tblProjectMaterials RIGHT JOIN(SELECT tblProjectMaterialsTrack.ProjMat_ID, tblProjectMaterialsTrack.Manuf_ID, MatReqdDate, ReleasedForFab, PO_Number FROM tblProjectMaterialsTrack LEFT JOIN tblProjectMaterialsShip ON tblProjectMaterialsTrack.ProjMT_ID = tblProjectMaterialsShip.ProjMT_ID WHERE tblProjectMaterialsShip.ProjMT_ID IS NULL AND tblProjectMaterialsTrack.ReleasedForFab IS NOT NULL) AS tblProjMat ON tblProjMat.ProjMat_ID = tblProjectMaterials.ProjMat_ID " + whereMatClause +") AS tblProjManuf ON tblProjManuf.Manuf_ID = tblManufacturers.Manuf_ID "+ whereManufClause  +") AS tblProj ON tblProj.Project_ID = tblProjects.Project_ID "+ whereProjectClause + ") AS tblProjSales ON tblProjSales.Salesman_ID = tblSalesmen.Salesman_ID) AS tblProjMat ON tblProjMat.Material_ID = tblMaterials.Material_ID) AS tbl WHERE tbl.RowIndex >= " + Start + " and tbl.RowIndex <= " + End;
+
             cmd = dbConnection.RunQuryNoParameters(sqlquery);
             sda = new SqlDataAdapter(cmd);
             ds = new DataSet();
@@ -2396,15 +2430,15 @@ namespace WpfApp.ViewModel
                     break;
                 case 7:
                     ShopReqVisibility = true;
-                    LoadShopReqData();
+                    LoadShopReqData("");
                     break;
                 case 8:
                     ShopRecvVisibility = true;
-                    LoadShopRecvData();
+                    LoadShopRecvData("");
                     break;
                 case 9:
                     SubmitVisibility = true;
-                    LoadSubmitNotApprData();
+                    LoadSubmitNotApprData("");
                     break;
                 case 10:
                     ApprovedVisibility = true;
@@ -2412,11 +2446,11 @@ namespace WpfApp.ViewModel
                     break;
                 case 11:
                     ShipNotRecvVisibility = true;
-                    LoadShipNotRecvData();
+                    LoadShipNotRecvData("");
                     break;
                 case 12:
                     ReleasedVisibility = true;
-                    LoadReleaseNotShipData();
+                    LoadReleaseNotShipData("");
                     break;
                 case 13:
                     ActiveLaborListVisibility = true;
@@ -2428,7 +2462,7 @@ namespace WpfApp.ViewModel
                     break;
                 case 15:
                     VendorVisibility = true;
-                    LoadVendorData();
+                    LoadVendorData("");
                     break;
                 case 17:
                     LeedVisibility = true;
@@ -3393,6 +3427,19 @@ namespace WpfApp.ViewModel
             {
                 if (value == _vendorVisibility) return;
                 _vendorVisibility = value;
+                OnPropertyChanged();
+            }
+        }
+
+        private string _sortType;
+
+        public string SortType
+        {
+            get { return _sortType; }
+            set
+            {
+                if (value == _sortType) return;
+                _sortType = value;
                 OnPropertyChanged();
             }
         }

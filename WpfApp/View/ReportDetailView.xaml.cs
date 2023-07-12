@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
+using System.ComponentModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -19,7 +21,6 @@ namespace WpfApp.View
 
         private ReportDetailViewModel ReportDetailVM;
         private FindComponentHelper findComponentHelper;
-        private bool datePickerLoaded = false;
 
         public ReportDetailView()
         {
@@ -206,6 +207,125 @@ namespace WpfApp.View
                         ReportDetailVM.LoadActiveProjectData();
                         break;
                 }
+            }
+        }
+
+        private void DataGrid_Sorting(object sender, DataGridSortingEventArgs e)
+        {
+            DataGrid dataGrid = sender as DataGrid;
+            e.Handled = true;
+            DataGridColumn clickedColumn = e.Column;
+            string clickedColumnName = clickedColumn.SortMemberPath;
+            string sortColumn = "";
+            string sortType = "ASC";
+            string sortClause = " ORDER BY";
+            string tagName = dataGrid.Tag as string;
+
+            ListSortDirection direction = (clickedColumn.SortDirection != ListSortDirection.Ascending) ? ListSortDirection.Ascending : ListSortDirection.Descending;
+
+            if (e.Column.SortDirection == null || e.Column.SortDirection == ListSortDirection.Descending)
+            {
+                e.Column.SortDirection = ListSortDirection.Ascending;
+                sortType = "ASC";
+            }
+            else
+            {
+                e.Column.SortDirection = ListSortDirection.Descending;
+                sortType = "DESC";
+            }
+            switch (clickedColumnName)
+            {
+                case "ManufName":
+                    sortColumn = "Manuf_Name";
+                    break;
+                case "Contact":
+                    sortColumn = "Contact_Name";
+                    break;
+                case "Phone":
+                    sortColumn = "Contact_Phone";
+                    break;
+                case "ContactEmail":
+                    sortColumn = "Contact_Email";
+                    break;
+                case "MatlReqd":
+                    sortColumn = "MatReqdDate";
+                    break;
+                case "JobNo":
+                    sortColumn = "Job_No";
+                    break;
+                case "ProjectName":
+                    sortColumn = "Project_Name";
+                    break;
+                case "SalesmanName":
+                    sortColumn = "Salesman_Name";
+                    break;
+                case "MaterialName":
+                    sortColumn = "Material_Desc";
+                    break;
+                case "MatType":
+                    sortColumn = "Mat_Type";
+                    break;
+                case "MatPhase":
+                    sortColumn = "Mat_Phase";
+                    break;
+                case "PoNumber":
+                    sortColumn = "PO_Number";
+                    break;
+                case "RFF":
+                    sortColumn = "ReleasedForFab";
+                    break;
+                case "SchedShip":
+                    sortColumn = "SchedShipDate";
+                    break;
+                case "EstDeliv":
+                    sortColumn = "EstDelivDate";
+                    break;
+                case "ShopsRecvd":
+                    sortColumn = "ShopRecvdDate";
+                    break;
+                case "ShopsReqd":
+                    sortColumn = "ShopReqDate";
+                    break;
+                case "Submitted":
+                    sortColumn = "SubmitIssue";
+                    break;
+                case "Resubmit":
+                    sortColumn = "Resubmit_Date";
+                    break;
+                case "SubmAppr":
+                    sortColumn = "SubmitAppr";
+                    break;
+
+            }
+            sortClause = " ORDER BY " + sortColumn + " " + sortType;
+            switch (tagName)
+            {
+                case "RptVendor":
+                    ReportDetailVM.LoadVendorData(sortClause);
+                    break;
+                case "RptReleasedNotShip":
+                    ReportDetailVM.LoadReleaseNotShipData(sortClause);
+                    break;
+                case "RptShipNotRecv":
+                    ReportDetailVM.LoadShipNotRecvData(sortClause);
+                    break;
+                case "RptShopNotSubm":
+                    ReportDetailVM.LoadShopRecvData(sortClause);
+                    break;
+                case "RptShopReqd":
+                    ReportDetailVM.LoadShopReqData(sortClause);
+                    break;
+                case "RptSubmNotAppr":
+                    ReportDetailVM.LoadSubmitNotApprData(sortClause);
+                    break;
+            }
+
+            if (sortType.Equals("ASC"))
+            {
+                e.Column.SortDirection = ListSortDirection.Ascending;
+            } else
+            {
+                e.Column.SortDirection = ListSortDirection.Descending;
             }
         }
     }

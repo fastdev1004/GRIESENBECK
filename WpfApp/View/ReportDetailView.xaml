@@ -3147,19 +3147,20 @@
                 <RowDefinition Height="Auto" />
             </Grid.RowDefinitions>
             <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="6*" />
-                <ColumnDefinition Width="4*" />
+                <ColumnDefinition Width="8*" />
+                <ColumnDefinition Width="2*" />
             </Grid.ColumnDefinitions>
             <Grid>
                 <TextBlock Style="{StaticResource ReportViewHeader}" Text="Shipped, Not Received" />
             </Grid>
             <Grid Grid.Row="1" >
-                <DataGrid ItemsSource="{Binding ReportShipNotRecvs, Mode=TwoWay}" GridLinesVisibility="None" AutoGenerateColumns="False" HeadersVisibility="Column" CanUserAddRows="False" BorderThickness="0">
+                <DataGrid ItemsSource="{Binding ReportShipNotRecvs, Mode=TwoWay}" GridLinesVisibility="None" AutoGenerateColumns="False" HeadersVisibility="Column" CanUserAddRows="False" BorderThickness="0" Sorting="DataGrid_Sorting" Tag="RptShipNotRecv">
                     <DataGrid.Resources>
                         <Style TargetType="DataGridColumnHeader" BasedOn="{StaticResource GridColumnHeaderBase}">
-                            <Setter Property="Background" Value="White" />
-                            <Setter Property="Height" Value="25" />
+                            <Setter Property="Height" Value="40" />
                             <Setter Property="Foreground" Value="Black" />
+                            <Setter Property="FontSize" Value="14" />
+                            <Setter Property="Cursor" Value="Hand"/>
                         </Style>
                         <Style TargetType="TextBlock">
                             <Setter Property="VerticalAlignment" Value="Center" />
@@ -3173,7 +3174,7 @@
                         </Style>
                     </DataGrid.Resources>
                     <DataGrid.Columns>
-                        <DataGridTemplateColumn IsReadOnly="False" Width="2*">
+                        <DataGridTemplateColumn IsReadOnly="False" Width="2*" SortMemberPath="MatlReqd">
                             <DataGridTemplateColumn.Header>
                                 <Border BorderBrush="Black" BorderThickness="0,0,0,1">
                                     <TextBlock Text="Matl Reqd" TextWrapping="Wrap" FontWeight="Bold" />
@@ -3185,7 +3186,7 @@
                                 </DataTemplate>
                             </DataGridTemplateColumn.CellTemplate>
                         </DataGridTemplateColumn>
-                        <DataGridTemplateColumn IsReadOnly="False" Width="1*">
+                        <DataGridTemplateColumn IsReadOnly="False" Width="2*" SortMemberPath="JobNo">
                             <DataGridTemplateColumn.Header>
                                 <Border BorderBrush="Black" BorderThickness="0,0,0,1">
                                     <TextBlock Text="Job #" TextWrapping="Wrap" FontWeight="Bold" />
@@ -3197,7 +3198,7 @@
                                 </DataTemplate>
                             </DataGridTemplateColumn.CellTemplate>
                         </DataGridTemplateColumn>
-                        <DataGridTemplateColumn IsReadOnly="False" Width="3*">
+                        <DataGridTemplateColumn IsReadOnly="False" Width="3*" SortMemberPath="ManufName">
                             <DataGridTemplateColumn.Header>
                                 <Border BorderBrush="Black" BorderThickness="0,0,0,1">
                                     <TextBlock Text="Project" TextWrapping="Wrap" FontWeight="Bold" />
@@ -3209,7 +3210,7 @@
                                 </DataTemplate>
                             </DataGridTemplateColumn.CellTemplate>
                         </DataGridTemplateColumn>
-                        <DataGridTemplateColumn IsReadOnly="False" Width="2*">
+                        <DataGridTemplateColumn IsReadOnly="False" Width="2*" SortMemberPath="SalesmanName">
                             <DataGridTemplateColumn.Header>
                                 <Border BorderBrush="Black" BorderThickness="0,0,0,1">
                                     <TextBlock Text="Salesman" TextWrapping="Wrap" FontWeight="Bold" />
@@ -3221,7 +3222,7 @@
                                 </DataTemplate>
                             </DataGridTemplateColumn.CellTemplate>
                         </DataGridTemplateColumn>
-                        <DataGridTemplateColumn IsReadOnly="False" Width="2*">
+                        <DataGridTemplateColumn IsReadOnly="False" Width="2*" SortMemberPath="MatType">
                             <DataGridTemplateColumn.Header>
                                 <Border BorderBrush="Black" BorderThickness="0,0,0,1">
                                     <TextBlock Text="Material" TextWrapping="Wrap" FontWeight="Bold" />
@@ -3233,7 +3234,7 @@
                                 </DataTemplate>
                             </DataGridTemplateColumn.CellTemplate>
                         </DataGridTemplateColumn>
-                        <DataGridTemplateColumn IsReadOnly="False" Width="2*">
+                        <DataGridTemplateColumn IsReadOnly="False" Width="2*" SortMemberPath="MatPhase">
                             <DataGridTemplateColumn.Header>
                                 <Border BorderBrush="Black" BorderThickness="0,0,0,1">
                                     <TextBlock Text="Phase" TextWrapping="Wrap" FontWeight="Bold" />
@@ -3245,7 +3246,7 @@
                                 </DataTemplate>
                             </DataGridTemplateColumn.CellTemplate>
                         </DataGridTemplateColumn>
-                        <DataGridTemplateColumn IsReadOnly="False" Width="3*">
+                        <DataGridTemplateColumn IsReadOnly="False" Width="3*" SortMemberPath="ManufName">
                             <DataGridTemplateColumn.Header>
                                 <Border BorderBrush="Black" BorderThickness="0,0,0,1">
                                     <TextBlock Text="Manufacturer" TextWrapping="Wrap" FontWeight="Bold" />
@@ -3257,7 +3258,7 @@
                                 </DataTemplate>
                             </DataGridTemplateColumn.CellTemplate>
                         </DataGridTemplateColumn>
-                        <DataGridTemplateColumn IsReadOnly="False" Width="1*">
+                        <DataGridTemplateColumn IsReadOnly="False" Width="1*" SortMemberPath="PoNumber">
                             <DataGridTemplateColumn.Header>
                                 <Border BorderBrush="Black" BorderThickness="0,0,0,1">
                                     <TextBlock Text="PO #" TextWrapping="Wrap" FontWeight="Bold" />
@@ -3269,7 +3270,7 @@
                                 </DataTemplate>
                             </DataGridTemplateColumn.CellTemplate>
                         </DataGridTemplateColumn>
-                        <DataGridTemplateColumn IsReadOnly="False" Width="2*">
+                        <DataGridTemplateColumn IsReadOnly="False" Width="2*" SortMemberPath="SchedShip">
                             <DataGridTemplateColumn.Header>
                                 <Border BorderBrush="Black" BorderThickness="0,0,0,1">
                                     <TextBlock Text="Sched Ship" TextWrapping="Wrap" FontWeight="Bold" />
@@ -3281,7 +3282,7 @@
                                 </DataTemplate>
                             </DataGridTemplateColumn.CellTemplate>
                         </DataGridTemplateColumn>
-                        <DataGridTemplateColumn IsReadOnly="False" Width="2*">
+                        <DataGridTemplateColumn IsReadOnly="False" Width="2*" SortMemberPath="EstDeliv">
                             <DataGridTemplateColumn.Header>
                                 <Border BorderBrush="Black" BorderThickness="0,0,0,1">
                                     <TextBlock Text="Est Delivery" TextWrapping="Wrap" FontWeight="Bold" />
@@ -3321,19 +3322,20 @@
                 <RowDefinition Height="Auto" />
             </Grid.RowDefinitions>
             <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="6*" />
-                <ColumnDefinition Width="4*" />
+                <ColumnDefinition Width="8*" />
+                <ColumnDefinition Width="2*" />
             </Grid.ColumnDefinitions>
             <Grid>
                 <TextBlock Style="{StaticResource ReportViewHeader}" Text="Shops Received, Not Submitted" />
             </Grid>
             <Grid Grid.Row="1" >
-                <DataGrid ItemsSource="{Binding ReportShopRecvs, Mode=TwoWay}" GridLinesVisibility="None" AutoGenerateColumns="False" HeadersVisibility="Column" CanUserAddRows="False" BorderThickness="0">
+                <DataGrid ItemsSource="{Binding ReportShopRecvs, Mode=TwoWay}" GridLinesVisibility="None" AutoGenerateColumns="False" HeadersVisibility="Column" CanUserAddRows="False" BorderThickness="0" Sorting="DataGrid_Sorting" Tag="RptShopNotSubm">
                     <DataGrid.Resources>
                         <Style TargetType="DataGridColumnHeader" BasedOn="{StaticResource GridColumnHeaderBase}">
-                            <Setter Property="Background" Value="White" />
-                            <Setter Property="Height" Value="Auto" />
+                            <Setter Property="Height" Value="40" />
                             <Setter Property="Foreground" Value="Black" />
+                            <Setter Property="FontSize" Value="14" />
+                            <Setter Property="Cursor" Value="Hand"/>
                         </Style>
                         <Style TargetType="TextBlock">
                             <Setter Property="VerticalAlignment" Value="Center" />
@@ -3347,7 +3349,7 @@
                         </Style>
                     </DataGrid.Resources>
                     <DataGrid.Columns>
-                        <DataGridTemplateColumn IsReadOnly="False" Width="2*">
+                        <DataGridTemplateColumn IsReadOnly="False" Width="2*" SortMemberPath="MatlReqd">
                             <DataGridTemplateColumn.Header>
                                 <Border BorderBrush="Black" BorderThickness="0,0,0,1">
                                     <TextBlock Text="Matl Reqd" TextWrapping="Wrap" FontWeight="Bold" />
@@ -3359,7 +3361,7 @@
                                 </DataTemplate>
                             </DataGridTemplateColumn.CellTemplate>
                         </DataGridTemplateColumn>
-                        <DataGridTemplateColumn IsReadOnly="False" Width="1*">
+                        <DataGridTemplateColumn IsReadOnly="False" Width="2*" SortMemberPath="JobNo">
                             <DataGridTemplateColumn.Header>
                                 <Border BorderBrush="Black" BorderThickness="0,0,0,1">
                                     <TextBlock Text="Job Number" TextWrapping="Wrap" FontWeight="Bold" />
@@ -3371,7 +3373,7 @@
                                 </DataTemplate>
                             </DataGridTemplateColumn.CellTemplate>
                         </DataGridTemplateColumn>
-                        <DataGridTemplateColumn IsReadOnly="False" Width="3*">
+                        <DataGridTemplateColumn IsReadOnly="False" Width="3*" SortMemberPath="ProjectName">
                             <DataGridTemplateColumn.Header>
                                 <Border BorderBrush="Black" BorderThickness="0,0,0,1">
                                     <TextBlock Text="Project" TextWrapping="Wrap" FontWeight="Bold" />
@@ -3383,7 +3385,7 @@
                                 </DataTemplate>
                             </DataGridTemplateColumn.CellTemplate>
                         </DataGridTemplateColumn>
-                        <DataGridTemplateColumn IsReadOnly="False" Width="2*">
+                        <DataGridTemplateColumn IsReadOnly="False" Width="2*" SortMemberPath="SalesmanName">
                             <DataGridTemplateColumn.Header>
                                 <Border BorderBrush="Black" BorderThickness="0,0,0,1">
                                     <TextBlock Text="Salesman" TextWrapping="Wrap" FontWeight="Bold" />
@@ -3395,7 +3397,7 @@
                                 </DataTemplate>
                             </DataGridTemplateColumn.CellTemplate>
                         </DataGridTemplateColumn>
-                        <DataGridTemplateColumn IsReadOnly="False" Width="2*">
+                        <DataGridTemplateColumn IsReadOnly="False" Width="2*" SortMemberPath="MaterialName">
                             <DataGridTemplateColumn.Header>
                                 <Border BorderBrush="Black" BorderThickness="0,0,0,1">
                                     <TextBlock Text="Material" TextWrapping="Wrap" FontWeight="Bold" />
@@ -3407,7 +3409,7 @@
                                 </DataTemplate>
                             </DataGridTemplateColumn.CellTemplate>
                         </DataGridTemplateColumn>
-                        <DataGridTemplateColumn IsReadOnly="False" Width="3*">
+                        <DataGridTemplateColumn IsReadOnly="False" Width="3*" SortMemberPath="ManufName">
                             <DataGridTemplateColumn.Header>
                                 <Border BorderBrush="Black" BorderThickness="0,0,0,1">
                                     <TextBlock Text="Manufacturer" TextWrapping="Wrap" FontWeight="Bold" />
@@ -3419,7 +3421,7 @@
                                 </DataTemplate>
                             </DataGridTemplateColumn.CellTemplate>
                         </DataGridTemplateColumn>
-                        <DataGridTemplateColumn IsReadOnly="False" Width="2*">
+                        <DataGridTemplateColumn IsReadOnly="False" Width="2*" SortMemberPath="ShopsRecvd">
                             <DataGridTemplateColumn.Header>
                                 <Border BorderBrush="Black" BorderThickness="0,0,0,1">
                                     <TextBlock Text="Shops Recvd" TextWrapping="Wrap" FontWeight="Bold" />
@@ -3431,7 +3433,7 @@
                                 </DataTemplate>
                             </DataGridTemplateColumn.CellTemplate>
                         </DataGridTemplateColumn>
-                        <DataGridTemplateColumn IsReadOnly="False" Width="2*">
+                        <DataGridTemplateColumn IsReadOnly="False" Width="2*" SortMemberPath="Submitted">
                             <DataGridTemplateColumn.Header>
                                 <Border BorderBrush="Black" BorderThickness="0,0,0,1">
                                     <TextBlock Text="Submitted" TextWrapping="Wrap" FontWeight="Bold" />
@@ -3471,19 +3473,20 @@
                 <RowDefinition Height="Auto" />
             </Grid.RowDefinitions>
             <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="6*" />
-                <ColumnDefinition Width="4*" />
+                <ColumnDefinition Width="8*" />
+                <ColumnDefinition Width="2*" />
             </Grid.ColumnDefinitions>
             <Grid>
                 <TextBlock Style="{StaticResource ReportViewHeader}" Text="Shops Requested, Not Received" />
             </Grid>
             <Grid Grid.Row="1" >
-                <DataGrid ItemsSource="{Binding ReportShopReqs, Mode=TwoWay}" GridLinesVisibility="None" AutoGenerateColumns="False" HeadersVisibility="Column" CanUserAddRows="False" BorderThickness="0">
+                <DataGrid ItemsSource="{Binding ReportShopReqs, Mode=TwoWay}" GridLinesVisibility="None" AutoGenerateColumns="False" HeadersVisibility="Column" CanUserAddRows="False" BorderThickness="0" Sorting="DataGrid_Sorting" Tag="RptShopReqd">
                     <DataGrid.Resources>
                         <Style TargetType="DataGridColumnHeader" BasedOn="{StaticResource GridColumnHeaderBase}">
-                            <Setter Property="Background" Value="White" />
-                            <Setter Property="Height" Value="Auto" />
+                            <Setter Property="Height" Value="40" />
                             <Setter Property="Foreground" Value="Black" />
+                            <Setter Property="FontSize" Value="14" />
+                            <Setter Property="Cursor" Value="Hand"/>
                         </Style>
                         <Style TargetType="TextBlock">
                             <Setter Property="VerticalAlignment" Value="Center" />
@@ -3497,7 +3500,7 @@
                         </Style>
                     </DataGrid.Resources>
                     <DataGrid.Columns>
-                        <DataGridTemplateColumn IsReadOnly="False" Width="2*">
+                        <DataGridTemplateColumn IsReadOnly="False" Width="2*" SortMemberPath="MatlReqd">
                             <DataGridTemplateColumn.Header>
                                 <Border BorderBrush="Black" BorderThickness="0,0,0,1">
                                     <TextBlock Text="Matl Reqd" TextWrapping="Wrap" FontWeight="Bold" />
@@ -3509,7 +3512,7 @@
                                 </DataTemplate>
                             </DataGridTemplateColumn.CellTemplate>
                         </DataGridTemplateColumn>
-                        <DataGridTemplateColumn IsReadOnly="False" Width="1*">
+                        <DataGridTemplateColumn IsReadOnly="False" Width="2*" SortMemberPath="JobNo">
                             <DataGridTemplateColumn.Header>
                                 <Border BorderBrush="Black" BorderThickness="0,0,0,1">
                                     <TextBlock Text="Job Number" TextWrapping="Wrap" FontWeight="Bold" />
@@ -3521,7 +3524,7 @@
                                 </DataTemplate>
                             </DataGridTemplateColumn.CellTemplate>
                         </DataGridTemplateColumn>
-                        <DataGridTemplateColumn IsReadOnly="False" Width="3*">
+                        <DataGridTemplateColumn IsReadOnly="False" Width="3*" SortMemberPath="ProjectName">
                             <DataGridTemplateColumn.Header>
                                 <Border BorderBrush="Black" BorderThickness="0,0,0,1">
                                     <TextBlock Text="Project" TextWrapping="Wrap" FontWeight="Bold" />
@@ -3533,7 +3536,7 @@
                                 </DataTemplate>
                             </DataGridTemplateColumn.CellTemplate>
                         </DataGridTemplateColumn>
-                        <DataGridTemplateColumn IsReadOnly="False" Width="2*">
+                        <DataGridTemplateColumn IsReadOnly="False" Width="2*" SortMemberPath="SalesmanName">
                             <DataGridTemplateColumn.Header>
                                 <Border BorderBrush="Black" BorderThickness="0,0,0,1">
                                     <TextBlock Text="Salesman" TextWrapping="Wrap" FontWeight="Bold" />
@@ -3545,7 +3548,7 @@
                                 </DataTemplate>
                             </DataGridTemplateColumn.CellTemplate>
                         </DataGridTemplateColumn>
-                        <DataGridTemplateColumn IsReadOnly="False" Width="2*">
+                        <DataGridTemplateColumn IsReadOnly="False" Width="2*" SortMemberPath="MaterialName">
                             <DataGridTemplateColumn.Header>
                                 <Border BorderBrush="Black" BorderThickness="0,0,0,1">
                                     <TextBlock Text="Material" TextWrapping="Wrap" FontWeight="Bold" />
@@ -3557,7 +3560,7 @@
                                 </DataTemplate>
                             </DataGridTemplateColumn.CellTemplate>
                         </DataGridTemplateColumn>
-                        <DataGridTemplateColumn IsReadOnly="False" Width="3*">
+                        <DataGridTemplateColumn IsReadOnly="False" Width="3*" SortMemberPath="ManufName">
                             <DataGridTemplateColumn.Header>
                                 <Border BorderBrush="Black" BorderThickness="0,0,0,1">
                                     <TextBlock Text="Manufacturer" TextWrapping="Wrap" FontWeight="Bold" />
@@ -3569,7 +3572,7 @@
                                 </DataTemplate>
                             </DataGridTemplateColumn.CellTemplate>
                         </DataGridTemplateColumn>
-                        <DataGridTemplateColumn IsReadOnly="False" Width="2*">
+                        <DataGridTemplateColumn IsReadOnly="False" Width="2*" SortMemberPath="ShopsReqd">
                             <DataGridTemplateColumn.Header>
                                 <Border BorderBrush="Black" BorderThickness="0,0,0,1">
                                     <TextBlock Text="Shop Reqd" TextWrapping="Wrap" FontWeight="Bold" />
@@ -3581,7 +3584,7 @@
                                 </DataTemplate>
                             </DataGridTemplateColumn.CellTemplate>
                         </DataGridTemplateColumn>
-                        <DataGridTemplateColumn IsReadOnly="False" Width="2*">
+                        <DataGridTemplateColumn IsReadOnly="False" Width="2*" SortMemberPath="ShopsRecvd">
                             <DataGridTemplateColumn.Header>
                                 <Border BorderBrush="Black" BorderThickness="0,0,0,1">
                                     <TextBlock Text="Shops Recvd" TextWrapping="Wrap" FontWeight="Bold" />
@@ -3622,19 +3625,20 @@
                 <RowDefinition Height="Auto" />
             </Grid.RowDefinitions>
             <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="6*" />
-                <ColumnDefinition Width="4*" />
+                <ColumnDefinition Width="8*" />
+                <ColumnDefinition Width="2*" />
             </Grid.ColumnDefinitions>
             <Grid>
                 <TextBlock Style="{StaticResource ReportViewHeader}" Text="Submitted, Not Approved" />
             </Grid>
             <Grid Grid.Row="1" >
-                <DataGrid ItemsSource="{Binding ReportSubmits, Mode=TwoWay}" GridLinesVisibility="None" AutoGenerateColumns="False" HeadersVisibility="Column" CanUserAddRows="False" BorderThickness="0">
+                <DataGrid ItemsSource="{Binding ReportSubmits, Mode=TwoWay}" GridLinesVisibility="None" AutoGenerateColumns="False" HeadersVisibility="Column" CanUserAddRows="False" BorderThickness="0" Sorting="DataGrid_Sorting" Tag="RptSubmNotAppr">
                     <DataGrid.Resources>
                         <Style TargetType="DataGridColumnHeader" BasedOn="{StaticResource GridColumnHeaderBase}">
-                            <Setter Property="Background" Value="White" />
-                            <Setter Property="Height" Value="Auto" />
+                            <Setter Property="Height" Value="40" />
                             <Setter Property="Foreground" Value="Black" />
+                            <Setter Property="FontSize" Value="14" />
+                            <Setter Property="Cursor" Value="Hand"/>
                         </Style>
                         <Style TargetType="TextBlock">
                             <Setter Property="VerticalAlignment" Value="Center" />
@@ -3648,7 +3652,7 @@
                         </Style>
                     </DataGrid.Resources>
                     <DataGrid.Columns>
-                        <DataGridTemplateColumn IsReadOnly="False" Width="2*">
+                        <DataGridTemplateColumn IsReadOnly="False" Width="2*" SortMemberPath="MatlReqd">
                             <DataGridTemplateColumn.Header>
                                 <Border BorderBrush="Black" BorderThickness="0,0,0,1">
                                     <TextBlock Text="Matl Reqd" TextWrapping="Wrap" FontWeight="Bold" />
@@ -3660,7 +3664,7 @@
                                 </DataTemplate>
                             </DataGridTemplateColumn.CellTemplate>
                         </DataGridTemplateColumn>
-                        <DataGridTemplateColumn IsReadOnly="False" Width="1*">
+                        <DataGridTemplateColumn IsReadOnly="False" Width="2*" SortMemberPath="JobNo">
                             <DataGridTemplateColumn.Header>
                                 <Border BorderBrush="Black" BorderThickness="0,0,0,1">
                                     <TextBlock Text="Job Number" TextWrapping="Wrap" FontWeight="Bold" />
@@ -3672,7 +3676,7 @@
                                 </DataTemplate>
                             </DataGridTemplateColumn.CellTemplate>
                         </DataGridTemplateColumn>
-                        <DataGridTemplateColumn IsReadOnly="False" Width="3*">
+                        <DataGridTemplateColumn IsReadOnly="False" Width="3*" SortMemberPath="ProjectName">
                             <DataGridTemplateColumn.Header>
                                 <Border BorderBrush="Black" BorderThickness="0,0,0,1">
                                     <TextBlock Text="Project" TextWrapping="Wrap" FontWeight="Bold" />
@@ -3684,7 +3688,7 @@
                                 </DataTemplate>
                             </DataGridTemplateColumn.CellTemplate>
                         </DataGridTemplateColumn>
-                        <DataGridTemplateColumn IsReadOnly="False" Width="2*">
+                        <DataGridTemplateColumn IsReadOnly="False" Width="2*" SortMemberPath="SalesmanName">
                             <DataGridTemplateColumn.Header>
                                 <Border BorderBrush="Black" BorderThickness="0,0,0,1">
                                     <TextBlock Text="Salesman" TextWrapping="Wrap" FontWeight="Bold" />
@@ -3696,7 +3700,7 @@
                                 </DataTemplate>
                             </DataGridTemplateColumn.CellTemplate>
                         </DataGridTemplateColumn>
-                        <DataGridTemplateColumn IsReadOnly="False" Width="2*">
+                        <DataGridTemplateColumn IsReadOnly="False" Width="2*" SortMemberPath="MaterialName">
                             <DataGridTemplateColumn.Header>
                                 <Border BorderBrush="Black" BorderThickness="0,0,0,1">
                                     <TextBlock Text="Material" TextWrapping="Wrap" FontWeight="Bold" />
@@ -3708,7 +3712,7 @@
                                 </DataTemplate>
                             </DataGridTemplateColumn.CellTemplate>
                         </DataGridTemplateColumn>
-                        <DataGridTemplateColumn IsReadOnly="False" Width="3*">
+                        <DataGridTemplateColumn IsReadOnly="False" Width="3*" SortMemberPath="ManufName">
                             <DataGridTemplateColumn.Header>
                                 <Border BorderBrush="Black" BorderThickness="0,0,0,1">
                                     <TextBlock Text="Manufacturer" TextWrapping="Wrap" FontWeight="Bold" />
@@ -3720,7 +3724,7 @@
                                 </DataTemplate>
                             </DataGridTemplateColumn.CellTemplate>
                         </DataGridTemplateColumn>
-                        <DataGridTemplateColumn IsReadOnly="False" Width="2*">
+                        <DataGridTemplateColumn IsReadOnly="False" Width="2*" SortMemberPath="Submitted">
                             <DataGridTemplateColumn.Header>
                                 <Border BorderBrush="Black" BorderThickness="0,0,0,1">
                                     <TextBlock Text="Submitted" TextWrapping="Wrap" FontWeight="Bold" />
@@ -3732,7 +3736,7 @@
                                 </DataTemplate>
                             </DataGridTemplateColumn.CellTemplate>
                         </DataGridTemplateColumn>
-                        <DataGridTemplateColumn IsReadOnly="False" Width="2*">
+                        <DataGridTemplateColumn IsReadOnly="False" Width="2*" SortMemberPath="Resubmit">
                             <DataGridTemplateColumn.Header>
                                 <Border BorderBrush="Black" BorderThickness="0,0,0,1">
                                     <TextBlock Text="Resubmit" TextWrapping="Wrap" FontWeight="Bold" />
@@ -3744,7 +3748,7 @@
                                 </DataTemplate>
                             </DataGridTemplateColumn.CellTemplate>
                         </DataGridTemplateColumn>
-                        <DataGridTemplateColumn IsReadOnly="False" Width="2*">
+                        <DataGridTemplateColumn IsReadOnly="False" Width="2*" SortMemberPath="SubmAppr">
                             <DataGridTemplateColumn.Header>
                                 <Border BorderBrush="Black" BorderThickness="0,0,0,1">
                                     <TextBlock Text="Subm Appr" TextWrapping="Wrap" FontWeight="Bold" />
@@ -3798,12 +3802,13 @@
                 <TextBlock Style="{StaticResource ReportViewHeader}" Text="Vendor Contacts" />
             </Grid>
             <Grid Grid.Row="1" >
-                <DataGrid ItemsSource="{Binding ReportVendors, Mode=TwoWay}" GridLinesVisibility="None" AutoGenerateColumns="False" HeadersVisibility="Column" CanUserAddRows="False" BorderThickness="0" AlternatingRowBackground="LightGray">
+                <DataGrid x:Name="RptVendors_DataGrid" ItemsSource="{Binding ReportVendors, Mode=TwoWay}" GridLinesVisibility="None" AutoGenerateColumns="False" HeadersVisibility="Column" CanUserAddRows="False" BorderThickness="0" AlternatingRowBackground="LightGray" CanUserSortColumns="True" Sorting="DataGrid_Sorting" Tag="RptVendor">
                     <DataGrid.Resources>
                         <Style TargetType="DataGridColumnHeader" BasedOn="{StaticResource GridColumnHeaderBase}">
-                            <Setter Property="Background" Value="White" />
-                            <Setter Property="Height" Value="Auto" />
+                            <Setter Property="Height" Value="40" />
                             <Setter Property="Foreground" Value="Black" />
+                            <Setter Property="FontSize" Value="14" />
+                            <Setter Property="Cursor" Value="Hand"/>
                         </Style>
                         <Style TargetType="TextBlock">
                             <Setter Property="VerticalAlignment" Value="Center" />
@@ -3817,7 +3822,7 @@
                         </Style>
                     </DataGrid.Resources>
                     <DataGrid.Columns>
-                        <DataGridTemplateColumn IsReadOnly="False" Width="2*">
+                        <DataGridTemplateColumn IsReadOnly="False" Width="2*" SortMemberPath="ManufName">
                             <DataGridTemplateColumn.Header>
                                 <Border BorderBrush="Black" BorderThickness="0,0,0,1">
                                     <TextBlock Text="Vendor" TextWrapping="Wrap" FontWeight="Bold" />
@@ -3829,7 +3834,7 @@
                                 </DataTemplate>
                             </DataGridTemplateColumn.CellTemplate>
                         </DataGridTemplateColumn>
-                        <DataGridTemplateColumn IsReadOnly="False" Width="2*">
+                        <DataGridTemplateColumn IsReadOnly="False" Width="2*" SortMemberPath="Contact" >
                             <DataGridTemplateColumn.Header>
                                 <Border BorderBrush="Black" BorderThickness="0,0,0,1">
                                     <TextBlock Text="Contact" TextWrapping="Wrap" FontWeight="Bold" />
@@ -3841,7 +3846,7 @@
                                 </DataTemplate>
                             </DataGridTemplateColumn.CellTemplate>
                         </DataGridTemplateColumn>
-                        <DataGridTemplateColumn IsReadOnly="False" Width="3*">
+                        <DataGridTemplateColumn IsReadOnly="False" Width="3*" SortMemberPath="Phone" >
                             <DataGridTemplateColumn.Header>
                                 <Border BorderBrush="Black" BorderThickness="0,0,0,1">
                                     <TextBlock Text="Phone" TextWrapping="Wrap" FontWeight="Bold" />
@@ -3853,7 +3858,7 @@
                                 </DataTemplate>
                             </DataGridTemplateColumn.CellTemplate>
                         </DataGridTemplateColumn>
-                        <DataGridTemplateColumn IsReadOnly="False" Width="2*">
+                        <DataGridTemplateColumn IsReadOnly="False" Width="2*" SortMemberPath="ContactEmail" >
                             <DataGridTemplateColumn.Header>
                                 <Border BorderBrush="Black" BorderThickness="0,0,0,1">
                                     <TextBlock Text="Contact Email" TextWrapping="Wrap" FontWeight="Bold" />
@@ -3893,19 +3898,20 @@
                 <RowDefinition Height="Auto" />
             </Grid.RowDefinitions>
             <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="6*" />
-                <ColumnDefinition Width="4*" />
+                <ColumnDefinition Width="8*" />
+                <ColumnDefinition Width="2*" />
             </Grid.ColumnDefinitions>
             <Grid>
                 <TextBlock Style="{StaticResource ReportViewHeader}" Text="Released, Not Shipped" />
             </Grid>
             <Grid Grid.Row="1" >
-                <DataGrid ItemsSource="{Binding ReportReleaseNotShips, Mode=TwoWay}" GridLinesVisibility="None" AutoGenerateColumns="False" HeadersVisibility="Column" CanUserAddRows="False" BorderThickness="0" AlternatingRowBackground="LightGray">
+                <DataGrid ItemsSource="{Binding ReportReleaseNotShips, Mode=TwoWay}" GridLinesVisibility="None" AutoGenerateColumns="False" HeadersVisibility="Column" CanUserAddRows="False" BorderThickness="0" AlternatingRowBackground="LightGray" Sorting="DataGrid_Sorting" Tag="RptReleasedNotShip">
                     <DataGrid.Resources>
                         <Style TargetType="DataGridColumnHeader" BasedOn="{StaticResource GridColumnHeaderBase}">
-                            <Setter Property="Background" Value="White" />
-                            <Setter Property="Height" Value="Auto" />
+                            <Setter Property="Height" Value="40" />
                             <Setter Property="Foreground" Value="Black" />
+                            <Setter Property="FontSize" Value="14" />
+                            <Setter Property="Cursor" Value="Hand"/>
                         </Style>
                         <Style TargetType="TextBlock">
                             <Setter Property="VerticalAlignment" Value="Center" />
@@ -3919,7 +3925,7 @@
                         </Style>
                     </DataGrid.Resources>
                     <DataGrid.Columns>
-                        <DataGridTemplateColumn IsReadOnly="False" Width="2*">
+                        <DataGridTemplateColumn IsReadOnly="False" Width="2*" SortMemberPath="MatlReqd">
                             <DataGridTemplateColumn.Header>
                                 <Border BorderBrush="Black" BorderThickness="0,0,0,1">
                                     <TextBlock Text="Matl Reqd" TextWrapping="Wrap" FontWeight="Bold" />
@@ -3931,7 +3937,7 @@
                                 </DataTemplate>
                             </DataGridTemplateColumn.CellTemplate>
                         </DataGridTemplateColumn>
-                        <DataGridTemplateColumn IsReadOnly="False" Width="1*">
+                        <DataGridTemplateColumn IsReadOnly="False" Width="2*" SortMemberPath="JobNo">
                             <DataGridTemplateColumn.Header>
                                 <Border BorderBrush="Black" BorderThickness="0,0,0,1">
                                     <TextBlock Text="Job Number" TextWrapping="Wrap" FontWeight="Bold" />
@@ -3943,7 +3949,7 @@
                                 </DataTemplate>
                             </DataGridTemplateColumn.CellTemplate>
                         </DataGridTemplateColumn>
-                        <DataGridTemplateColumn IsReadOnly="False" Width="3*">
+                        <DataGridTemplateColumn IsReadOnly="False" Width="3*" SortMemberPath="ProjectName">
                             <DataGridTemplateColumn.Header>
                                 <Border BorderBrush="Black" BorderThickness="0,0,0,1">
                                     <TextBlock Text="Project" TextWrapping="Wrap" FontWeight="Bold" />
@@ -3955,7 +3961,7 @@
                                 </DataTemplate>
                             </DataGridTemplateColumn.CellTemplate>
                         </DataGridTemplateColumn>
-                        <DataGridTemplateColumn IsReadOnly="False" Width="2*">
+                        <DataGridTemplateColumn IsReadOnly="False" Width="2*" SortMemberPath="SalesmanName">
                             <DataGridTemplateColumn.Header>
                                 <Border BorderBrush="Black" BorderThickness="0,0,0,1">
                                     <TextBlock Text="Salesman" TextWrapping="Wrap" FontWeight="Bold" />
@@ -3967,7 +3973,7 @@
                                 </DataTemplate>
                             </DataGridTemplateColumn.CellTemplate>
                         </DataGridTemplateColumn>
-                        <DataGridTemplateColumn IsReadOnly="False" Width="2*">
+                        <DataGridTemplateColumn IsReadOnly="False" Width="2*" SortMemberPath="MaterialName">
                             <DataGridTemplateColumn.Header>
                                 <Border BorderBrush="Black" BorderThickness="0,0,0,1">
                                     <TextBlock Text="Material" TextWrapping="Wrap" FontWeight="Bold" />
@@ -3979,7 +3985,7 @@
                                 </DataTemplate>
                             </DataGridTemplateColumn.CellTemplate>
                         </DataGridTemplateColumn>
-                        <DataGridTemplateColumn IsReadOnly="False" Width="3*">
+                        <DataGridTemplateColumn IsReadOnly="False" Width="3*" SortMemberPath="ManufName">
                             <DataGridTemplateColumn.Header>
                                 <Border BorderBrush="Black" BorderThickness="0,0,0,1">
                                     <TextBlock Text="Manufacturer" TextWrapping="Wrap" FontWeight="Bold" />
@@ -3991,7 +3997,7 @@
                                 </DataTemplate>
                             </DataGridTemplateColumn.CellTemplate>
                         </DataGridTemplateColumn>
-                        <DataGridTemplateColumn IsReadOnly="False" Width="2*">
+                        <DataGridTemplateColumn IsReadOnly="False" Width="2*" SortMemberPath="PoNumber">
                             <DataGridTemplateColumn.Header>
                                 <Border BorderBrush="Black" BorderThickness="0,0,0,1">
                                     <TextBlock Text="PO #" TextWrapping="Wrap" FontWeight="Bold" />
@@ -4003,7 +4009,7 @@
                                 </DataTemplate>
                             </DataGridTemplateColumn.CellTemplate>
                         </DataGridTemplateColumn>
-                        <DataGridTemplateColumn IsReadOnly="False" Width="2*">
+                        <DataGridTemplateColumn IsReadOnly="False" Width="2*" SortMemberPath="RFF" >
                             <DataGridTemplateColumn.Header>
                                 <Border BorderBrush="Black" BorderThickness="0,0,0,1">
                                     <TextBlock Text="R.F.F" TextWrapping="Wrap" FontWeight="Bold" />

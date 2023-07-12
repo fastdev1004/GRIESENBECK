@@ -25,12 +25,58 @@
         <Setter Property="Foreground" Value="White" />
         <Setter Property="Height" Value="40" />
         <Setter Property="Padding" Value="10,0,0,0" />
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="{x:Type DataGridColumnHeader}">
+                    <Grid Background="#C6D9F1">
+                        <VisualStateManager.VisualStateGroups>
+                            <VisualStateGroup x:Name="SortStates">
+                                <VisualState x:Name="Unsorted"/>
+                                <VisualState x:Name="SortAscending">
+                                    <Storyboard>
+                                        <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="Visibility" Storyboard.TargetName="SortAscIcon">
+                                            <DiscreteObjectKeyFrame KeyTime="0" Value="{x:Static Visibility.Visible}" />
+                                        </ObjectAnimationUsingKeyFrames>
+                                        <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="Visibility" Storyboard.TargetName="SortDescIcon">
+                                            <DiscreteObjectKeyFrame KeyTime="0" Value="{x:Static Visibility.Hidden}" />
+                                        </ObjectAnimationUsingKeyFrames>
+                                    </Storyboard>
+                                </VisualState>
+                                <VisualState x:Name="SortDescending">
+                                    <Storyboard>
+                                        <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="Visibility" Storyboard.TargetName="SortAscIcon">
+                                            <DiscreteObjectKeyFrame KeyTime="0" Value="{x:Static Visibility.Hidden}" />
+                                        </ObjectAnimationUsingKeyFrames>
+                                        <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="Visibility" Storyboard.TargetName="SortDescIcon">
+                                            <DiscreteObjectKeyFrame KeyTime="0" Value="{x:Static Visibility.Visible}" />
+                                        </ObjectAnimationUsingKeyFrames>
+                                    </Storyboard>
+                                </VisualState>
+                            </VisualStateGroup>
+                        </VisualStateManager.VisualStateGroups>
+                        <ContentPresenter HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}"
+                                      VerticalAlignment="{TemplateBinding VerticalContentAlignment}"
+                                      SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}"
+                                      RecognizesAccessKey="True"
+                                      Content="{TemplateBinding Content}"
+                                      ContentTemplate="{TemplateBinding ContentTemplate}"
+                                      Margin="0" />
+                        <Path x:Name="SortAscIcon" Margin="0,16,10,16" HorizontalAlignment="Right" Data="M0,4 L3.5,0 L7,4 L0,4 Z" Stretch="Uniform"
+                          Fill="{DynamicResource {x:Static SystemColors.ControlTextBrushKey}}"
+                          Visibility="Hidden" />
+                        <Path x:Name="SortDescIcon" Margin="0,16,10,16" HorizontalAlignment="Right" Data="M0,0 L3.5,4 L7,0 L0,0 Z" Stretch="Uniform"
+                          Fill="{DynamicResource {x:Static SystemColors.ControlTextBrushKey}}"
+                          Visibility="Hidden" />
+                    </Grid>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
         <Style.Resources>
             <Style TargetType="TextBlock">
                 <Setter Property="TextAlignment" Value="Center" />
                 <Setter Property="VerticalAlignment" Value="Center" />
             </Style>
-        </Style.Resources>
+        </Style.Resources> 
     </Style>
     <Style TargetType="DataGridRow">
         <Setter Property="Height" Value="25" />
