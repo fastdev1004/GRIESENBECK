@@ -1078,12 +1078,15 @@ namespace WpfApp.ViewModel
             ObservableCollection<Project> st_mb = new ObservableCollection<Project>();
             foreach (DataRow row in ds.Tables[0].Rows)
             {
-                if (!string.IsNullOrEmpty(row["Project_Name"].ToString()))
+                string projectName = "";
+                string fullName = "";
+                if (!row.IsNull("Project_Name"))
                 {
                     int projectID = int.Parse(row["Project_ID"].ToString());
-                    string projectName = row["Project_Name"].ToString();
-
-                    string fullName = row["Full_Name"].ToString();
+                    if(!row.IsNull("Project_Name"))
+                        projectName = row["Project_Name"].ToString();
+                    if(!row.IsNull("Full_Name"))
+                        fullName = row["Full_Name"].ToString();
                     st_mb.Add(new Project { ID = projectID, ProjectName = projectName });
                 }
             }
@@ -3949,7 +3952,7 @@ namespace WpfApp.ViewModel
                 if (!row.IsNull("Lab_Phase"))
                     labPhase = row["Lab_Phase"].ToString();
                 if (!row.IsNull("Qty_Reqd"))
-                    totalQty = int.Parse(row["Qty_Reqd"].ToString());
+                    totalQty = float.Parse(row["Qty_Reqd"].ToString());
                 if (!row.IsNull("Lab_Qty"))
                     labQty = float.Parse(row["Lab_Qty"].ToString());
                 if (!row.IsNull("UnitPrice"))
