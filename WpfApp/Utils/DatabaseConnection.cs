@@ -2939,6 +2939,82 @@ namespace WpfApp.Utils
             return cmd;
         }
 
+        // Update ProjectName
+        public SqlCommand RunQueryToUpdateField(string query, int id, string value, string fieldName)
+        {
+            try
+            {
+                connection.Open();
+                if (connection != null)
+                {
+                    cmd = connection.CreateCommand();
+                    cmd.CommandType = CommandType.Text;
+                    cmd.CommandText = query;
+
+                    switch (fieldName)
+                    {
+                        case "ProjectName":
+                            if (!string.IsNullOrEmpty(value))
+                                cmd.Parameters.AddWithValue("@ProjectName", value);
+                            else cmd.Parameters.AddWithValue("@ProjectName", DBNull.Value);
+                            cmd.Parameters.AddWithValue("@ProjectID", id);
+                            break;
+                        case "SalesmanName":
+                            if (!string.IsNullOrEmpty(value))
+                                cmd.Parameters.AddWithValue("@SalesmanName", value);
+                            else cmd.Parameters.AddWithValue("@SalesmanName", DBNull.Value);
+                            cmd.Parameters.AddWithValue("@SalesmanID", id);
+                            break;
+                        case "JobNo":
+                            if (!string.IsNullOrEmpty(value))
+                                cmd.Parameters.AddWithValue("@JobNo", value);
+                            else cmd.Parameters.AddWithValue("@JobNo", DBNull.Value);
+                            cmd.Parameters.AddWithValue("@ProjectID", id);
+                            break;
+                        case "CustomerName":
+                            if (!string.IsNullOrEmpty(value))
+                                cmd.Parameters.AddWithValue("@FullName", value);
+                            else cmd.Parameters.AddWithValue("@FullName", DBNull.Value);
+                            cmd.Parameters.AddWithValue("@CustomerID", id);
+                            break;
+                        case "ArchitectName":
+                            if (!string.IsNullOrEmpty(value))
+                                cmd.Parameters.AddWithValue("@ArchCompany", value);
+                            else cmd.Parameters.AddWithValue("@ArchCompany", DBNull.Value);
+                            cmd.Parameters.AddWithValue("@ArchitectID", id);
+                            break;
+                        case "ArchRepName":
+                            if (!string.IsNullOrEmpty(value))
+                                cmd.Parameters.AddWithValue("@ArchRepName", value);
+                            else cmd.Parameters.AddWithValue("@ArchRepName", DBNull.Value);
+                            cmd.Parameters.AddWithValue("@ArchRepID", id);
+                            break;
+                        case "EstimatorName":
+                            if (!string.IsNullOrEmpty(value))
+                                cmd.Parameters.AddWithValue("@EstimatorName", value);
+                            else cmd.Parameters.AddWithValue("@EstimatorName", DBNull.Value);
+                            cmd.Parameters.AddWithValue("@EstimatorID", id);
+                            break;
+                        case "PmName":
+                            if (!string.IsNullOrEmpty(value))
+                                cmd.Parameters.AddWithValue("@PmName", value);
+                            else cmd.Parameters.AddWithValue("@PmName", DBNull.Value);
+                            cmd.Parameters.AddWithValue("@PmID", id);
+                            break;
+                    }
+
+                    cmd.ExecuteNonQuery();
+                    connection.Close();
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex);
+                connection.Close();
+            }
+            return cmd;
+        }
+
         public void Open()
         {
            connection.Open();

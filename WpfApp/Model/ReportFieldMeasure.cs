@@ -17,7 +17,9 @@ namespace WpfApp.Model
         private string _state;
         private string _zip;
         private string _jobNo;
+        private int _salesmanID;
         private string _salesmanName;
+        private int _customerID;
         private string _customerName;
         private bool _storedMat;
         private string _notes;
@@ -112,6 +114,17 @@ namespace WpfApp.Model
             }
         }
 
+        public int SalesmanID
+        {
+            get => _salesmanID;
+            set
+            {
+                if (value == _salesmanID) return;
+                _salesmanID = value;
+                OnPropertyChanged();
+            }
+        }
+
         public string SalesmanName
         {
             get => _salesmanName;
@@ -119,6 +132,17 @@ namespace WpfApp.Model
             {
                 if (value == _salesmanName) return;
                 _salesmanName = value;
+                OnPropertyChanged();
+            }
+        }
+
+        public int CustomerID
+        {
+            get => _customerID;
+            set
+            {
+                if (value == _customerID) return;
+                _customerID = value;
                 OnPropertyChanged();
             }
         }

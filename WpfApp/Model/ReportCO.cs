@@ -12,7 +12,9 @@ namespace WpfApp.Model
         private int _projectID;
         private string _jobNo;
         private string _projectName;
+        private int _salesmanID;
         private string _salesmanName;
+        private int _customerID;
         private string _customerName;
         private List<ReportCOItem> _reportCOItems;
         private DateTime _targetDate;
@@ -38,7 +40,7 @@ namespace WpfApp.Model
                 OnPropertyChanged();
             }
         }
-
+        
         public string ProjectName
         {
             get => _projectName;
@@ -50,6 +52,17 @@ namespace WpfApp.Model
             }
         }
 
+        public int SalesmanID
+        {
+            get => _salesmanID;
+            set
+            {
+                if (value == _salesmanID) return;
+                _salesmanID = value;
+                OnPropertyChanged();
+            }
+        }
+
         public string SalesmanName
         {
             get => _salesmanName;
@@ -57,6 +70,17 @@ namespace WpfApp.Model
             {
                 if (value == _salesmanName) return;
                 _salesmanName = value;
+                OnPropertyChanged();
+            }
+        }
+
+        public int CustomerID
+        {
+            get => _customerID;
+            set
+            {
+                if (value == _customerID) return;
+                _customerID = value;
                 OnPropertyChanged();
             }
         }

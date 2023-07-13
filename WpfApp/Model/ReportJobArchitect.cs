@@ -12,13 +12,16 @@ namespace WpfApp.Model
         private int _projectID;
         private int _projectMatID;
         private DateTime _targetDate;
+        private int _architectID;
         private string _architect;
         private string _projectName;
+        private int _customerID;
         private string _customerName;
         private string _address;
         private string _state;
         private string _zip;
         private string _jobNo;
+        private int _salesmanID;
         private string _salesmanName;
         private List<ProjectMatTracking> _projectMatTracking;
 
@@ -55,6 +58,17 @@ namespace WpfApp.Model
             }
         }
 
+        public int ArchitectID
+        {
+            get => _architectID;
+            set
+            {
+                if (value == _architectID) return;
+                _architectID = value;
+                OnPropertyChanged();
+            }
+        }
+
         public string Architect
         {
             get => _architect;
@@ -62,6 +76,17 @@ namespace WpfApp.Model
             {
                 if (value == _architect) return;
                 _architect = value;
+                OnPropertyChanged();
+            }
+        }
+
+        public int CustomerID
+        {
+            get => _customerID;
+            set
+            {
+                if (value == _customerID) return;
+                _customerID = value;
                 OnPropertyChanged();
             }
         }
@@ -133,6 +158,17 @@ namespace WpfApp.Model
             {
                 if (value == _jobNo) return;
                 _jobNo = value;
+                OnPropertyChanged();
+            }
+        }
+
+        public int SalesmanID
+        {
+            get => _salesmanID;
+            set
+            {
+                if (value == _salesmanID) return;
+                _salesmanID = value;
                 OnPropertyChanged();
             }
         }

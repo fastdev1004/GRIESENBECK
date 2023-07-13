@@ -13,13 +13,17 @@ namespace WpfApp.Model
         private string _projectName;
         private DateTime _targetDate;
         private bool _complete;
+        private int _architectID;
         private string _architect;
         private string _address;
         private string _state;
         private string _zip;
         private string _jobNo;
+        private int _pmID;
         private string _pmName;
+        private int _estmatorID;
         private string _estimatorName;
+        private int _customerID;
         private string _customerName;
         private int _bilingDue;
         private bool _isCip;
@@ -69,6 +73,17 @@ namespace WpfApp.Model
             {
                 if (value == _complete) return;
                 _complete = value;
+                OnPropertyChanged();
+            }
+        }
+
+        public int ArchitectID
+        {
+            get => _architectID;
+            set
+            {
+                if (value == _architectID) return;
+                _architectID = value;
                 OnPropertyChanged();
             }
         }
@@ -125,6 +140,17 @@ namespace WpfApp.Model
             }
         }
 
+        public int PmID
+        {
+            get => _pmID;
+            set
+            {
+                if (value == _pmID) return;
+                _pmID = value;
+                OnPropertyChanged();
+            }
+        }
+
         public string PmName
         {
             get => _pmName;
@@ -132,6 +158,17 @@ namespace WpfApp.Model
             {
                 if (value == _pmName) return;
                 _pmName = value;
+                OnPropertyChanged();
+            }
+        }
+
+        public int EstimatorID
+        {
+            get => _estmatorID;
+            set
+            {
+                if (value == _estmatorID) return;
+                _estmatorID = value;
                 OnPropertyChanged();
             }
         }
@@ -209,6 +246,17 @@ namespace WpfApp.Model
             {
                 if (value == _storedMat) return;
                 _storedMat = value;
+                OnPropertyChanged();
+            }
+        }
+
+        public int CustomerID
+        {
+            get => _customerID;
+            set
+            {
+                if (value == _customerID) return;
+                _customerID = value;
                 OnPropertyChanged();
             }
         }

@@ -163,7 +163,9 @@ namespace WpfApp.ViewModel
                 int _projectID = 0;
                 string _projectName = "";
                 string _jobNo = "";
+                int _customerID = 0;
                 string _customerName = "";
+                int _salesmanID = 0;
                 string _salesmanName = "";
                 DateTime _targetDate = new DateTime();
 
@@ -173,8 +175,12 @@ namespace WpfApp.ViewModel
                     _projectName = row["Project_Name"].ToString();
                 if (!row.IsNull("Job_No"))
                     _jobNo = row["Job_No"].ToString();
+                if (!row.IsNull("Customer_ID"))
+                    _customerID = int.Parse(row["Customer_ID"].ToString());
                 if (!row.IsNull("Full_Name"))
                     _customerName = row["Full_Name"].ToString();
+                if (!row.IsNull("Salesman_ID"))
+                    _salesmanID = int.Parse(row["Salesman_ID"].ToString());
                 if (!row.IsNull("Salesman_Name"))
                     _salesmanName = row["Salesman_Name"].ToString();
                 if (!row.IsNull("Target_Date"))
@@ -182,7 +188,7 @@ namespace WpfApp.ViewModel
 
                 List<TrackLaborReport> _trackLaborReports = TrackLaborReports.Where(item => item.ProjectID == _projectID).ToList();
 
-                st_activeLabors.Add(new ReportActiveLabor { ProjectID = _projectID, ProjectName = _projectName, JobNo = _jobNo, CustomerName = _customerName, SalesmanName = _salesmanName, LaborReports= _trackLaborReports, TargetDate = _targetDate });
+                st_activeLabors.Add(new ReportActiveLabor { ProjectID = _projectID, ProjectName = _projectName, JobNo = _jobNo, CustomerID = _customerID, CustomerName = _customerName, SalesmanID = _salesmanID, SalesmanName = _salesmanName, LaborReports= _trackLaborReports, TargetDate = _targetDate });
             }
             ReportActiveLabors = st_activeLabors;
         }
@@ -266,9 +272,9 @@ namespace WpfApp.ViewModel
 
         public void LoadChangeOrders()
         {
-            string whereClause = GetProjectWhereClasuse();
+            string whereProjectClause = GetProjectWhereClasuse();
 
-            sqlquery = "SELECT Project_ID, Salesman_ID, Job_No, Customer_ID, Project_Name, Complete, tblCOTracking.COID, tblCOTracking.Contractnumber, tblCOTracking.DateOfCO, tblCOTracking.AmtOfCO, tblCOTracking.ChangeOrderNo, tblCOTracking.SignedoffbySales, tblCOTracking.Givenforfinalsignature, tblCOTracking.ExecutedForReturn, tblCOTracking.ReturnedVia, tblCOTracking.Comments, tblCOTracking.DateProcessed, tblCOTracking.Scope, tblCOTracking.Datereturnedback FROM tblProjects INNER JOIN tblCOTracking ON tblProjects.Project_ID = tblCOTracking.ProjectID" + whereClause;
+            sqlquery = "SELECT Project_ID, Salesman_ID, Job_No, Customer_ID, Project_Name, Complete, tblCOTracking.COID, tblCOTracking.Contractnumber, tblCOTracking.DateOfCO, tblCOTracking.AmtOfCO, tblCOTracking.ChangeOrderNo, tblCOTracking.SignedoffbySales, tblCOTracking.Givenforfinalsignature, tblCOTracking.ExecutedForReturn, tblCOTracking.ReturnedVia, tblCOTracking.Comments, tblCOTracking.DateProcessed, tblCOTracking.Scope, tblCOTracking.Datereturnedback FROM tblProjects INNER JOIN tblCOTracking ON tblProjects.Project_ID = tblCOTracking.ProjectID" + whereProjectClause;
             cmd = dbConnection.RunQuryNoParameters(sqlquery);
             sda = new SqlDataAdapter(cmd);
             ds = new DataSet();
@@ -333,7 +339,7 @@ namespace WpfApp.ViewModel
             }
             ReportCOItems = st_reportCOItems;
 
-            sqlquery = "SELECT Project_ID, Project_Name, Job_No, Salesman_ID, Customer_ID FROM tblProjects RIGHT JOIN(SELECT DISTINCT tblCOTracking.ProjectID FROM tblCOTracking) AS tblCOTracking ON tblCOTracking.ProjectID = tblProjects.Project_ID " + whereClause;
+            sqlquery = "SELECT Project_ID, Project_Name, Job_No, Salesman_ID, Customer_ID FROM tblProjects RIGHT JOIN(SELECT DISTINCT tblCOTracking.ProjectID FROM tblCOTracking) AS tblCOTracking ON tblCOTracking.ProjectID = tblProjects.Project_ID " + whereProjectClause;
             cmd = dbConnection.RunQuryNoParameters(sqlquery);
             sda = new SqlDataAdapter(cmd);
             ds = new DataSet();
@@ -343,7 +349,7 @@ namespace WpfApp.ViewModel
             TotalItems = totalItems;
             _itemCount = 10;
 
-            sqlquery = "SELECT * FROM (SELECT ROW_NUMBER() over(ORDER BY Project_Name) AS RowIndex, tblCustomers.Full_Name, tblProjects.* FROM tblCustomers INNER JOIN(SELECT tblSalesmen.Salesman_Name, tblProjects.* FROM tblSalesmen RIGHT JOIN(SELECT Project_ID, Project_Name, Job_No, Salesman_ID, Customer_ID, Target_Date FROM tblProjects RIGHT JOIN(SELECT DISTINCT tblCOTracking.ProjectID FROM tblCOTracking) AS tblCOTracking ON tblCOTracking.ProjectID = tblProjects.Project_ID " + whereClause +") AS tblProjects ON tblProjects.Salesman_ID = tblSalesmen.Salesman_ID) AS tblProjects ON tblProjects.Customer_ID = tblCustomers.Customer_ID) AS tbl WHERE tbl.RowIndex >= "+ Start +" and tbl.RowIndex <= " + End;
+            sqlquery = "SELECT * FROM (SELECT ROW_NUMBER() over(ORDER BY Project_Name) AS RowIndex, tblCustomers.Full_Name, tblProjects.* FROM tblCustomers INNER JOIN(SELECT tblSalesmen.Salesman_Name, tblProjects.* FROM tblSalesmen RIGHT JOIN(SELECT Project_ID, Project_Name, Job_No, Salesman_ID, Customer_ID, Target_Date FROM tblProjects RIGHT JOIN(SELECT DISTINCT tblCOTracking.ProjectID FROM tblCOTracking) AS tblCOTracking ON tblCOTracking.ProjectID = tblProjects.Project_ID " + whereProjectClause + ") AS tblProjects ON tblProjects.Salesman_ID = tblSalesmen.Salesman_ID) AS tblProjects ON tblProjects.Customer_ID = tblCustomers.Customer_ID) AS tbl WHERE tbl.RowIndex >= "+ Start +" and tbl.RowIndex <= " + End;
 
             cmd = dbConnection.RunQuryNoParameters(sqlquery);
             sda = new SqlDataAdapter(cmd);
@@ -367,8 +373,12 @@ namespace WpfApp.ViewModel
                     _jobNo = row["Job_No"].ToString();
                 if (!row.IsNull("Project_Name"))
                     _projectName = row["Project_Name"].ToString();
+                if (!row.IsNull("Salesman_ID"))
+                    _salesmanID = int.Parse(row["Salesman_ID"].ToString());
                 if (!row.IsNull("Salesman_Name"))
                     _salesmanName = row["Salesman_Name"].ToString();
+                if (!row.IsNull("Customer_ID"))
+                    _customerID = int.Parse(row["Customer_ID"].ToString());
                 if (!row.IsNull("Full_Name"))
                     _customerName = row["Full_Name"].ToString();
                 if (!row.IsNull("Target_Date"))
@@ -380,7 +390,9 @@ namespace WpfApp.ViewModel
                     ProjectID = _projectID,
                     JobNo = _jobNo,
                     ProjectName = _projectName,
+                    SalesmanID = _salesmanID,
                     SalesmanName = _salesmanName,
+                    CustomerID = _customerID,
                     CustomerName = _customerName,
                     ReportCOItems = _reportCOItems,
                     TargetDate = _targetDate
@@ -462,7 +474,9 @@ namespace WpfApp.ViewModel
                 int _projectID = 0;
                 string _jobNo = "";
                 DateTime _targetDate = new DateTime();
+                int _salesmanID = 0;
                 string _salesmanName = "";
+                int _customerID = 0;
                 string _customerName = "";
 
                 if (!row.IsNull("Project_ID"))
@@ -471,8 +485,12 @@ namespace WpfApp.ViewModel
                     _jobNo = row["Job_No"].ToString();
                 if (!row.IsNull("Target_Date"))
                     _targetDate = row.Field<DateTime>("Target_Date");
+                if (!row.IsNull("Salesman_ID"))
+                    _salesmanID = int.Parse(row["Salesman_ID"].ToString());
                 if (!row.IsNull("Salesman_Name"))
                     _salesmanName = row["Salesman_Name"].ToString();
+                if (!row.IsNull("Customer_ID"))
+                    _customerID = int.Parse(row["Customer_ID"].ToString());
                 if (!row.IsNull("Full_Name"))
                     _customerName = row["Full_Name"].ToString();
 
@@ -483,7 +501,9 @@ namespace WpfApp.ViewModel
                     ProjectID = _projectID,
                     JobNo = _jobNo,
                     TargetDate = _targetDate,
+                    SalesmanID = _salesmanID,
                     SalesmanName = _salesmanName,
+                    CustomerID = _customerID,
                     CustomerName = _customerName,
                     CIPs = sb_cipList
                 });
@@ -836,7 +856,9 @@ namespace WpfApp.ViewModel
                 string _state = "";
                 string _zip = "";
                 string _jobNo = "";
+                int _salesmanID = 0;
                 string _salesmanName = "";
+                int _customerID = 0;
                 string _customerName = "";
                 bool _storedMat = false;
                 string _notes = "";
@@ -859,8 +881,12 @@ namespace WpfApp.ViewModel
                     _zip = row["Zip"].ToString();
                 if (!row.IsNull("Job_No"))
                     _jobNo = row["Job_No"].ToString();
+                if (!row.IsNull("Salesman_ID"))
+                    _salesmanID = int.Parse(row["Salesman_ID"].ToString());
                 if (!row.IsNull("Salesman_Name"))
                     _salesmanName = row["Salesman_Name"].ToString();
+                if (!row.IsNull("Customer_ID"))
+                    _customerID = int.Parse(row["Customer_ID"].ToString());
                 if (!row.IsNull("Full_Name"))
                     _customerName = row["Full_Name"].ToString();
                 if (!row.IsNull("Stored_Materials"))
@@ -885,7 +911,9 @@ namespace WpfApp.ViewModel
                     State = _state,
                     Zip = _zip,
                     JobNo = _jobNo,
+                    SalesmanID = _salesmanID,
                     SalesmanName = _salesmanName,
+                    CustomerID = _customerID,
                     CustomerName = _customerName,
                     StoredMat = _storedMat,
                     Notes = _notes,
@@ -996,10 +1024,14 @@ namespace WpfApp.ViewModel
                 int _projectID = 0;
                 DateTime _targetDate = new DateTime();
                 _targetDate = DateTime.Now.Date;
+                int _architectID = 0;
                 string _architect = "";
+                int _archRepID = 0;
                 string _archRep = "";
                 string _projectName = "";
+                int _customerID = 0;
                 string _customerName = "";
+                int _salesmanID = 0;
                 string _salesmanName = "";
                 string _address = "";
                 string _state = "";
@@ -1013,12 +1045,20 @@ namespace WpfApp.ViewModel
                     _targetDate = row.Field<DateTime>("Target_Date");
                 if (!row.IsNull("Project_Name"))
                     _projectName = row["Project_Name"].ToString();
+                if (!row.IsNull("Architect_ID"))
+                    _architectID = int.Parse(row["Architect_ID"].ToString());
                 if (!row.IsNull("Arch_Company"))
                     _architect = row["Arch_Company"].ToString();
+                if (!row.IsNull("Arch_Rep_ID"))
+                    _archRepID = int.Parse(row["Arch_Rep_ID"].ToString());
                 if (!row.IsNull("Arch_Rep_Name"))
                     _archRep = row["Arch_Rep_Name"].ToString();
+                if (!row.IsNull("Customer_ID"))
+                    _customerID = int.Parse(row["Customer_ID"].ToString());
                 if (!row.IsNull("Full_Name"))
                     _customerName = row["Full_Name"].ToString();
+                if (!row.IsNull("Salesman_ID"))
+                    _salesmanID = int.Parse(row["Salesman_ID"].ToString());
                 if (!row.IsNull("Salesman_Name"))
                     _salesmanName = row["Salesman_Name"].ToString();
                 if (!row.IsNull("Address"))
@@ -1038,9 +1078,13 @@ namespace WpfApp.ViewModel
                     //ProjectMatID = _projMat,
                     ProjectName = _projectName,
                     TargetDate = _targetDate,
+                    ArchitectID = _architectID,
                     Architect = _architect,
+                    ArchRepID = _archRepID,
                     ArchRep = _archRep,
+                    CustomerID = _customerID,
                     CustomerName = _customerName,
+                    SalesmanID = _salesmanID,
                     SalesmanName = _salesmanName,
                     Address = _address,
                     State = _state,
@@ -1151,9 +1195,12 @@ namespace WpfApp.ViewModel
             {
                 int _projectID = 0;
                 DateTime _targetDate = new DateTime();
+                int _architectID = 0;
                 string _architect = "";
                 string _projectName = "";
+                int _customerID = 0;
                 string _customerName = "";
+                int _salesmanID = 0;
                 string _salesmanName = "";
                 string _address = "";
                 string _state = "";
@@ -1165,12 +1212,18 @@ namespace WpfApp.ViewModel
                     _projectID = int.Parse(row["Project_ID"].ToString());
                 if (!row.IsNull("Target_Date"))
                     _targetDate = row.Field<DateTime>("Target_Date");
+                if (!row.IsNull("Architect_ID"))
+                    _architectID = int.Parse(row["Architect_ID"].ToString());
                 if (!row.IsNull("Project_Name"))
                     _projectName = row["Project_Name"].ToString();
                 if (!row.IsNull("Arch_Company"))
                     _architect = row["Arch_Company"].ToString();
+                if (!row.IsNull("Customer_ID"))
+                    _customerID = int.Parse(row["Customer_ID"].ToString());
                 if (!row.IsNull("Full_Name"))
                     _customerName = row["Full_Name"].ToString();
+                if (!row.IsNull("Salesman_ID"))
+                    _salesmanID = int.Parse(row["Salesman_ID"].ToString());
                 if (!row.IsNull("Salesman_Name"))
                     _salesmanName = row["Salesman_Name"].ToString();
                 if (!row.IsNull("Address"))
@@ -1189,8 +1242,11 @@ namespace WpfApp.ViewModel
                     ProjectID = _projectID,
                     ProjectName = _projectName,
                     TargetDate = _targetDate,
+                    ArchitectID = _architectID,
                     Architect = _architect,
+                    CustomerID = _customerID,
                     CustomerName = _customerName,
+                    SalesmanID = _salesmanID,
                     SalesmanName = _salesmanName,
                     Address = _address,
                     State = _state,
@@ -1224,7 +1280,7 @@ namespace WpfApp.ViewModel
                 whereArchitectClause += $" AND tblArchitects.Architect_ID = '{SelectedArchitectID}'";
             }
 
-            sqlquery = "SELECT tblManufacturers.Manuf_Name, tblManuf.* FROM tblManufacturers RIGHT JOIN (SELECT tblProjectChangeOrders.CO_ItemNo, tblCOItem.* FROM tblProjectChangeOrders RIGHT JOIN(SELECT tblMaterials.Material_Desc, tblProjects.* FROM tblMaterials RIGHT JOIN(SELECT tblManufacturers.Manuf_Name, tblprojects.* FROM tblManufacturers RIGHT JOIN(SELECT tblProjectMaterialsTrack.MatReqdDate, tblProjectMaterialsTrack.ProjMat_ID, CO_ID, Manuf_ID, Mat_Phase, Mat_Type, SOV_Acronym, Material_ID, ReleasedForFab, Complete, tblProjects.Project_ID FROM tblProjectMaterialsTrack INNER JOIN(SELECT tblProjectSOV.CO_ID, tblProjectSOV.SOV_Acronym, tblprojects.* FROM tblProjectSOV RIGHT JOIN(SELECT tblProjectMaterials.ProjMat_ID, tblProjectMaterials.Material_ID, tblProjectMaterials.ProjSOV_ID, tblProjectMaterials.Mat_Only, tblProjectMaterials.Mat_Phase, tblProjectMaterials.Mat_Type, tblProjects.* FROM tblProjectMaterials RIGHT JOIN(SELECT * FROM tblProjects) AS tblProjects ON tblProjectMaterials.Project_ID = tblProjects.Project_ID) AS tblProjects ON tblProjects.ProjSOV_ID = tblProjectSOV.ProjSOV_ID) AS tblProjects ON tblProjectMaterialsTrack.ProjMat_ID = tblProjects.ProjMat_ID "+ whereManufClause + ") AS tblProjects ON tblProjects.Manuf_ID = tblManufacturers.Manuf_ID) AS tblProjects on tblProjects.Material_ID = tblMaterials.Material_ID " + whereMatClause + ") AS tblCOItem ON tblCOItem.CO_ID = tblProjectChangeOrders.CO_ID) AS tblManuf ON tblManuf.Manuf_ID = tblManufacturers.Manuf_ID ORDER BY Job_No;";
+            sqlquery = "SELECT tblManufacturers.Manuf_Name, tblManuf.* FROM tblManufacturers RIGHT JOIN (SELECT tblProjectChangeOrders.CO_ItemNo, tblCOItem.* FROM tblProjectChangeOrders RIGHT JOIN(SELECT tblMaterials.Material_Desc, tblProjects.* FROM tblMaterials RIGHT JOIN(SELECT tblManufacturers.Manuf_Name, tblprojects.* FROM tblManufacturers RIGHT JOIN(SELECT tblProjectMaterialsTrack.MatReqdDate, tblProjectMaterialsTrack.ProjMat_ID, CO_ID, Manuf_ID, Mat_Phase, Mat_Type, SOV_Acronym, Material_ID, ReleasedForFab, Complete, tblProjects.Project_ID FROM tblProjectMaterialsTrack INNER JOIN(SELECT tblProjectSOV.CO_ID, tblProjectSOV.SOV_Acronym, tblprojects.* FROM tblProjectSOV RIGHT JOIN(SELECT tblProjectMaterials.ProjMat_ID, tblProjectMaterials.Material_ID, tblProjectMaterials.ProjSOV_ID, tblProjectMaterials.Mat_Only, tblProjectMaterials.Mat_Phase, tblProjectMaterials.Mat_Type, tblProjects.* FROM tblProjectMaterials RIGHT JOIN(SELECT * FROM tblProjects) AS tblProjects ON tblProjectMaterials.Project_ID = tblProjects.Project_ID) AS tblProjects ON tblProjects.ProjSOV_ID = tblProjectSOV.ProjSOV_ID) AS tblProjects ON tblProjectMaterialsTrack.ProjMat_ID = tblProjects.ProjMat_ID "+ whereManufClause + ") AS tblProjects ON tblProjects.Manuf_ID = tblManufacturers.Manuf_ID) AS tblProjects on tblProjects.Material_ID = tblMaterials.Material_ID " + whereMatClause + ") AS tblCOItem ON tblCOItem.CO_ID = tblProjectChangeOrders.CO_ID) AS tblManuf ON tblManuf.Manuf_ID = tblManufacturers.Manuf_ID";
             cmd = dbConnection.RunQuryNoParameters(sqlquery);
             sda = new SqlDataAdapter(cmd);
             ds = new DataSet();
@@ -1302,9 +1358,12 @@ namespace WpfApp.ViewModel
             {
                 int _projectID = 0;
                 DateTime _targetDate = new DateTime();
+                int _architectID = 0;
                 string _architect = "";
                 string _projectName = "";
+                int _customerID = 0;
                 string _customerName = "";
+                int _salesmanID = 0;
                 string _salesmanName = "";
                 string _address = "";
                 string _state = "";
@@ -1318,10 +1377,16 @@ namespace WpfApp.ViewModel
                     _targetDate = row.Field<DateTime>("Target_Date");
                 if (!row.IsNull("Project_Name"))
                     _projectName = row["Project_Name"].ToString();
+                if (!row.IsNull("Architect_ID"))
+                    _architectID = int.Parse(row["Architect_ID"].ToString());
                 if (!row.IsNull("Arch_Company"))
                     _architect = row["Arch_Company"].ToString();
+                if (!row.IsNull("Customer_ID"))
+                    _customerID = int.Parse(row["Customer_ID"].ToString());
                 if (!row.IsNull("Full_Name"))
                     _customerName = row["Full_Name"].ToString();
+                if (!row.IsNull("Salesman_ID"))
+                    _salesmanID = int.Parse(row["Salesman_ID"].ToString());
                 if (!row.IsNull("Salesman_Name"))
                     _salesmanName = row["Salesman_Name"].ToString();
                 if (!row.IsNull("Address"))
@@ -1340,8 +1405,11 @@ namespace WpfApp.ViewModel
                     ProjectID = _projectID,
                     ProjectName = _projectName,
                     TargetDate = _targetDate,
+                    ArchitectID = _architectID,
                     Architect = _architect,
+                    CustomerID = _customerID,
                     CustomerName = _customerName,
+                    SalesmanID = _salesmanID,
                     SalesmanName = _salesmanName,
                     Address = _address,
                     State = _state,
@@ -1451,7 +1519,9 @@ namespace WpfApp.ViewModel
             {
                 int _projectID = 0;
                 string _projectName = "";
+                int _customerID = 0;
                 string _customerName = "";
+                int _salesmanID = 0;
                 string _salesmanName = "";
                 string _jobNo = "";
                 List<ProjectMatTracking> _projectMatTrackings = new List<ProjectMatTracking>();
@@ -1461,8 +1531,12 @@ namespace WpfApp.ViewModel
                     _projectID = int.Parse(row["Project_ID"].ToString());
                 if (!row.IsNull("Project_Name"))
                     _projectName = row["Project_Name"].ToString();
+                if (!row.IsNull("Customer_ID"))
+                    _customerID = int.Parse(row["Customer_ID"].ToString());
                 if (!row.IsNull("Full_Name"))
                     _customerName = row["Full_Name"].ToString();
+                if (!row.IsNull("Salesman_ID"))
+                    _salesmanID = int.Parse(row["Salesman_ID"].ToString());
                 if (!row.IsNull("Salesman_Name"))
                     _salesmanName = row["Salesman_Name"].ToString();
                 if (!row.IsNull("Job_No"))
@@ -1476,7 +1550,9 @@ namespace WpfApp.ViewModel
                 {
                     ProjectID = _projectID,
                     ProjectName = _projectName,
+                    CustomerID = _customerID,
                     CustomerName = _customerName,
+                    SalesmanID = _salesmanID,
                     SalesmanName = _salesmanName,
                     JobNo = _jobNo,
                     ProjectMatTrackings = _projectMatTrackings,
@@ -1587,6 +1663,9 @@ namespace WpfApp.ViewModel
                 string _customerName = "";
                 string _salesmanName = "";
                 string _jobNo = "";
+                int _customer_ID = 0;
+                int _salesman_ID = 0;
+
                 List<ProjectMatTracking> _projectMatTrackings = new List<ProjectMatTracking>();
                 DateTime _targetDate = DateTime.Now;
 
@@ -1602,6 +1681,10 @@ namespace WpfApp.ViewModel
                     _jobNo = row["Job_No"].ToString();
                 if (!row.IsNull("Target_Date"))
                     _targetDate = row.Field<DateTime>("Target_Date");
+                if (!row.IsNull("Customer_ID"))
+                    _customerID = int.Parse(row["Customer_ID"].ToString());
+                if (!row.IsNull("Salesman_ID"))
+                    _salesmanID = int.Parse(row["Salesman_ID"].ToString());
 
                 _projectMatTrackings = ProjectMatTrackings.Where(item => item.ProjectID == _projectID).ToList();
 
@@ -1613,7 +1696,9 @@ namespace WpfApp.ViewModel
                     SalesmanName = _salesmanName,
                     JobNo = _jobNo,
                     ProjectMatTrackings = _projectMatTrackings,
-                    TargetDate = _targetDate
+                    TargetDate = _targetDate,
+                    CustomerID = _customerID,
+                    SalesmanID = _salesmanID
                 });
             }
             ReportActiveJobs = sb_reportActiveJobs;
@@ -1783,8 +1868,20 @@ namespace WpfApp.ViewModel
                 bool _isCertPayroll = false;
                 bool _isContractRecvd = false;
                 bool _storedMat = false;
+                int _customerID = 0;
+                int _estimatorID = 0;
+                int _pmID = 0;
+                int _architectID = 0;
                 List<ProjectMatTracking> _projectMatTrackings = new List<ProjectMatTracking>();
 
+                if (!row.IsNull("Customer_ID"))
+                    _customerID = int.Parse(row["Customer_ID"].ToString());
+                if (!row.IsNull("Estimator_ID"))
+                    _estimatorID = int.Parse(row["Estimator_ID"].ToString());
+                if (!row.IsNull("Architect_ID"))
+                    _architectID = int.Parse(row["Architect_ID"].ToString());
+                if (!row.IsNull("PM_ID"))
+                    _pmID = int.Parse(row["PM_ID"].ToString());
                 if (!row.IsNull("Project_ID"))
                     _projectID = int.Parse(row["Project_ID"].ToString());
                 if (!row.IsNull("Project_Name"))
@@ -1844,7 +1941,11 @@ namespace WpfApp.ViewModel
                     IsCertPayroll = _isCertPayroll,
                     IsContractRecvd = _isContractRecvd,
                     StoredMat = _storedMat,
-                    ProjectMatTrackings = _projectMatTrackings
+                    ProjectMatTrackings = _projectMatTrackings,
+                    CustomerID = _customerID,
+                    EstimatorID = _estimatorID,
+                    PmID = _pmID,
+                    ArchitectID = _architectID
                 });
             }
             ReportPmMeetings = sb_reportPmMeetings;
